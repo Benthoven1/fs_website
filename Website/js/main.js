@@ -21,11 +21,13 @@ const STAR_RADIUS = 1.25;
 //   Z semi-axis = radius2D
 // Nesting check (must both grow outward): IFO(3.125,2.5) < Castles(3.375,4.5)
 //   < Education(7.15,6.5) < Zones(7.65,8.5) — verified non-overlapping.
+// The star is Mulvium; each planet is one of its companies. `status` is the
+// italic line under the name on hover; `comingSoon` planets are not clickable.
 const ORBITS = [
   {
     id: "ifo",
-    name: "Music",
-    href: "pages/meet-mulvium/international-festival-orchestra.html",
+    name: "FSOS",
+    status: "Explore",
     radius: 3.0,  radius2D: 2.5,  ellipseX: 1,  ringTube: 0.045,
     planetSize: 0.42, planetColor: PASTEL_IFO,
     tilt: [0, 0, 0],
@@ -33,7 +35,8 @@ const ORBITS = [
   },
   {
     id: "castles",
-    name: "Architecture",
+    name: "Fiscal Sponsorship",
+    status: "The Nonprofit Arm",
     comingSoon: true,
     radius: 3.8,  radius2D: 4.5,  ellipseX: 1,  ringTube: 0.045,
     planetSize: 0.42,  planetColor: PASTEL_CASTLES,
@@ -42,7 +45,8 @@ const ORBITS = [
   },
   {
     id: "education",
-    name: "Art",
+    name: "Oak",
+    status: "In Development",
     comingSoon: true,
     radius: 4.5,  radius2D: 6.5,  ellipseX: 1,  ringTube: 0.045,
     planetSize: 0.42, planetColor: PASTEL_EDU,
@@ -51,7 +55,8 @@ const ORBITS = [
   },
   {
     id: "zones",
-    name: "Horticulture",
+    name: "To Be Announced",
+    status: "",
     comingSoon: true,
     radius: 5.0,  radius2D: 8.5,  ellipseX: 1,  ringTube: 0.045,
     planetSize: 0.42, planetColor: PASTEL_ZONES,
@@ -238,6 +243,9 @@ function labelTexture(name, status, night, flip) {
     g.fillStyle = ink;
     g.font = "74px 'Cormorant SC', serif";
     if ("letterSpacing" in g) g.letterSpacing = "10px";
+    // Long names (e.g. "Fiscal Sponsorship") shrink to fit the texture
+    const nameW = g.measureText(name).width;
+    if (nameW > 960) g.font = `${Math.floor(74 * 960 / nameW)}px 'Cormorant SC', serif`;
     g.fillText(name, 512, nameY);
     if (status) {
       g.font = "italic 50px 'Cormorant Garamond', serif";
@@ -361,85 +369,85 @@ ORBITS.forEach((def) => {
   orbits.push({ def, pivot, rotator, ring, planet, angle: def.phase });
 });
 
-// ── Circle of Fifths ──────────────────────────────────────────────────────────────────────────────
-// Keys in circle-of-fifths order; alt = enharmonic equivalent where commonly used
+// ── Agent circle (formerly the Circle of Fifths) ────────────────────────────────────────────
+// The FSOS reference workforce: twelve specialist agents orbit the Chief of
+// Staff (the FSOS planet at the hub). The inner ring names each agent's focus
+// at the same angle as its agent. Long and short names alternate so
+// neighbours never collide at the front of the ring.
 const COF_KEY_PAIRS = [
-  { key: "C",   alt: null  },
-  { key: "G",   alt: null  },
-  { key: "D",   alt: null  },
-  { key: "A",   alt: null  },
-  { key: "E",   alt: null  },
-  { key: "B",   alt: "C♭" },
-  { key: "F♯",  alt: "G♭" },
-  { key: "D♭",  alt: "C♯" },
-  { key: "A♭",  alt: null  },
-  { key: "E♭",  alt: null  },
-  { key: "B♭",  alt: null  },
-  { key: "F",   alt: null  },
+  { key: "Research"          },
+  { key: "Grants"            },
+  { key: "Communications"    },
+  { key: "Venue"             },
+  { key: "Development"       },
+  { key: "Finance"           },
+  { key: "Artistic Planning" },
+  { key: "Rehearsal"         },
+  { key: "Marketing"         },
+  { key: "Personnel"         },
+  { key: "Operations"        },
+  { key: "Production"        },
 ];
 const COF_ACC_PAIRS = [
-  { main: null,  alt: null  },
-  { main: "1♯", alt: null  },
-  { main: "2♯", alt: null  },
-  { main: "3♯", alt: null  },
-  { main: "4♯", alt: null  },
-  { main: "5♯", alt: "7♭" },
-  { main: "6♯", alt: "6♭" },
-  { main: "5♭", alt: "7♯" },
-  { main: "4♭", alt: null  },
-  { main: "3♭", alt: null  },
-  { main: "2♭", alt: null  },
-  { main: "1♭", alt: null  },
+  { main: "Comparables" },
+  { main: "Funders"     },
+  { main: "Press"       },
+  { main: "Halls"       },
+  { main: "Donors"      },
+  { main: "Budgets"     },
+  { main: "Repertoire"  },
+  { main: "Schedules"   },
+  { main: "Audiences"   },
+  { main: "Musicians"   },
+  { main: "Logistics"   },
+  { main: "Staging"     },
 ];
 
 // IFO and Castles orbit rings scale/flatten into the CoF reference rings
 const COF_RING_TARGETS = { ifo: 2.8, castles: 1.55 };
 
-function makeCoFSprite(mainText, altText, { canvasSize = 256, fontSize = 108, color = "#5a3e1b" } = {}) {
+// Labels share one fixed canvas height, so every word renders at the same type
+// size; the canvas widens to fit the word and the sprite keeps its aspect.
+const COF_CANVAS_H = 256;
+function drawCoFLabel(text, fontSize, color) {
   const c = document.createElement("canvas");
-  c.width = canvasSize; c.height = canvasSize;
   const ctx = c.getContext("2d");
-  ctx.clearRect(0, 0, canvasSize, canvasSize);
+  const font = `${fontSize}px "Cormorant Garamond", serif`;
+  ctx.font = font;
+  c.width  = Math.max(COF_CANVAS_H, Math.ceil(ctx.measureText(text).width + fontSize * 0.6));
+  c.height = COF_CANVAS_H;
+  ctx.font = font;                       // resizing the canvas resets its state
   ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
   ctx.fillStyle = color;
-
-  if (altText) {
-    // Main letter stays at full fontSize — same size whether or not there's an alt
-    const fs2 = Math.round(fontSize * 0.44);
-    ctx.font = `${fontSize}px "Cormorant Garamond", serif`;
-    ctx.textBaseline = "alphabetic";
-    ctx.fillText(mainText, canvasSize / 2, canvasSize * 0.47);
-    ctx.font = `${fs2}px "Cormorant Garamond", serif`;
-    ctx.globalAlpha = 0.6;
-    ctx.fillText(altText, canvasSize / 2, canvasSize * 0.72);
-    ctx.globalAlpha = 1;
-  } else {
-    ctx.font = `${fontSize}px "Cormorant Garamond", serif`;
-    ctx.textBaseline = "middle";
-    ctx.fillText(mainText, canvasSize / 2, canvasSize / 2);
-  }
-
-  const tex = new THREE.CanvasTexture(c);
-  const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: true, depthWrite: true, opacity: 0 });
-  return new THREE.Sprite(mat);
+  ctx.fillText(text, c.width / 2, c.height / 2);
+  return c;
 }
 
-// Outer ring: key letter sprites
-const cofKeySprites = COF_KEY_PAIRS.map(({ key, alt }) => {
-  const s = makeCoFSprite(key, alt, { canvasSize: 256, fontSize: 108 });
-  s.scale.set(0.75, 0.75, 0.75);
+function makeCoFSprite(text, { fontSize = 72, height = 0.75, color = "#5a3e1b" } = {}) {
+  const mat = new THREE.SpriteMaterial({ transparent: true, depthTest: true, depthWrite: true, opacity: 0 });
+  const s = new THREE.Sprite(mat);
+  const paint = () => {
+    const c = drawCoFLabel(text, fontSize, color);
+    if (mat.map) mat.map.dispose();
+    mat.map = new THREE.CanvasTexture(c);
+    mat.needsUpdate = true;
+    s.scale.set(height * c.width / c.height, height, 1);
+  };
+  paint();
+  // Word widths depend on the web font: repaint once it has loaded if it
+  // wasn't ready when the sprite was first drawn
+  if (!document.fonts.check(`${fontSize}px "Cormorant Garamond"`)) document.fonts.ready.then(paint);
   scene.add(s);
   return s;
-});
+}
 
-// Inner ring: accidental sprites — index-matched so same i = same orbit angle as key
-const cofAccSprites = COF_ACC_PAIRS.map(({ main, alt }) => {
-  if (!main) return null;
-  const s = makeCoFSprite(main, alt, { canvasSize: 256, fontSize: 72, color: "#8a6030" });
-  s.scale.set(0.52, 0.52, 0.52);
-  scene.add(s);
-  return s;
-});
+// Outer ring: the specialist agents
+const cofKeySprites = COF_KEY_PAIRS.map(({ key }) => makeCoFSprite(key, { fontSize: 72, height: 0.75 }));
+
+// Inner ring: each agent's focus — index-matched so same i = same orbit angle as its agent
+const cofAccSprites = COF_ACC_PAIRS.map(({ main }) =>
+  makeCoFSprite(main, { fontSize: 72, height: 0.5, color: "#8a6030" }));
 
 // Track the actual IFO orbit for hub reparenting
 const ifoOrbit = orbits.find((o) => o.def.id === "ifo");
@@ -1178,7 +1186,7 @@ function updateHover() {
       if (state.hoverPlanet) {
         state.labelPlanet = state.hoverPlanet;
         state.labelStar   = false;
-        setLabel(state.hoverPlanet.def.name, "Explore");
+        setLabel(state.hoverPlanet.def.name, state.hoverPlanet.def.status);
         labelVisTarget = 1;
       } else {
         labelVisTarget = 0;
@@ -1188,7 +1196,7 @@ function updateHover() {
       state.labelStar   = false;
       // High planets get their label below them, clear of the hero halo
       hitPlanet.planet.getWorldPosition(worldPos);
-      setLabel(hitPlanet.def.name, hitPlanet.def.comingSoon ? "Coming Soon" : "Explore", worldPos.y > 0.9);
+      setLabel(hitPlanet.def.name, hitPlanet.def.status, worldPos.y > 0.9);
       labelVisTarget = 1;
     } else if (state.hoverStar) {
       state.labelPlanet = null;
@@ -1382,7 +1390,7 @@ function animate() {
     }
   }
 
-  // ── Circle of Fifths animation ─────────────────────────────────────────────────────────────────────────────
+  // ── Agent circle animation ─────────────────────────────────────────────────────────────────────────────
   if (easedIFO > 0.001) {
     cofAngle += dt * 0.18;
 
@@ -1401,7 +1409,7 @@ function animate() {
       s.material.opacity = easedIFO;
     });
 
-    // Accidentals share the exact same θ as their paired key (index i) at inner radius
+    // Focus words share the exact same θ as their agent (index i) at inner radius
     cofAccSprites.forEach((s, i) => {
       if (!s) return;
       const θ    = cofAngle + (i / 12) * Math.PI * 2;
@@ -1532,12 +1540,14 @@ const prBoxEls = ["pr-outer","pr-f1","pr-f2","pr-f3","pr-f4"].map(id => document
 
 const PR_SIZES = [
   { w: 0.80, h: 0.71 },  // outer border trace
-  { w: 0.80, h: 0.71 },  // Music (same as outer)
-  { w: 0.76, h: 0.68 },  // Art
-  { w: 0.72, h: 0.65 },  // Architecture
-  { w: 0.70, h: 0.635 }, // Horticulture
+  { w: 0.80, h: 0.71 },  // Idea (same as outer)
+  { w: 0.76, h: 0.68 },  // Blueprint
+  { w: 0.72, h: 0.65 },  // Workforce
+  { w: 0.70, h: 0.635 }, // Institution
 ];
-const PR_WORDS  = ["Reimagine Arts Patronage", "Music", "Art", "Architecture", "Horticulture"];
+// PR_WORDS[0] must match the hero tagline (#hero-sub) exactly: the two layers
+// hand the phrase off invisibly.
+const PR_WORDS  = ["From Idea to Institution", "Idea", "Blueprint", "Workforce", "Institution"];
 const PR_STARTS = [0.00, 0.20, 0.40, 0.60, 0.80]; // scroll thresholds where each frame opens
 // Rest stops — the scroll positions where each frame sits fully open. One
 // gesture can never travel past a stop (wheel gating on desktop, CSS
@@ -1545,8 +1555,8 @@ const PR_STARTS = [0.00, 0.20, 0.40, 0.60, 0.80]; // scroll thresholds where eac
 const PR_STOPS = [0.16, 0.36, 0.56, 0.76, 0.96];
 
 // Handoff state read by the animate() loop: while the hero tagline carries
-// "Reimagine Arts Patronage", the patronage gooey layer stays empty; once the
-// first frame starts morphing the phrase into "Music", ownership flips.
+// "From Idea to Institution", the patronage gooey layer stays empty; once the
+// first frame starts morphing the phrase into "Idea", ownership flips.
 let prP = 0;
 let prApproach = 0;          // 0 at top of the 2D view → 1 when the sticky pins
 let prPhraseOwned = false;
@@ -1674,7 +1684,7 @@ function updatePatronage(dt) {
 
   // Label morph — time-based snap toward the deepest open frame's word.
   // While the tagline (hero layer) owns the phrase, this layer stays hidden;
-  // ownership flips at the first morph into "Music" and flips back once the
+  // ownership flips at the first morph into "Idea" and flips back once the
   // phrase has fully settled again — both layers render the phrase with
   // identical metrics and position, so the swap is invisible.
   const targetWord = wordIdx >= 1 ? PR_WORDS[wordIdx] : PR_WORDS[0];
@@ -1716,12 +1726,12 @@ function resetPatronage() {
   resetGooey();
 }
 
-// ── Scroll reveal — letter, IFO prose, and footer rise in as they enter view ──
+// ── Scroll reveal — deck slides, FSOS prose, and footer rise in as they enter view ──
 {
   const rvSelectors = [
-    "#letter-section .letter-header",
-    "#letter-section .letter-body > *",
-    "#letter-section .letter-close",
+    "#deck-section .deck-header",
+    "#deck-section .deck-body > *",
+    "#deck-section .deck-close",
     ".ifo-prose-header",
     ".ifo-prose-body > p",
     ".ifo-prose-footnote",
