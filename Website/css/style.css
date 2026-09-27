@@ -308,53 +308,44 @@ body { transition: background-color 0.6s ease; }
 
 body.night-mode { background: #060412; }
 
-body.night-mode #letter-section {
+body.night-mode #deck-section {
   background: transparent;
   position: relative;
   z-index: 1;
 }
 
-body.night-mode .letter-to,
-body.night-mode .letter-sig {
+body.night-mode .deck-lede {
   color: #ffffff;
 }
 
-body.night-mode .letter-body p,
-body.night-mode .letter-close p {
+body.night-mode .deck-body p,
+body.night-mode .deck-close p {
   color: rgba(255, 255, 255, 0.95);
   font-weight: 600;
 }
 
-body.night-mode .letter-body em {
+body.night-mode .deck-body em {
   color: #ffffff;
 }
 
-body.night-mode .letter-quote {
+body.night-mode .deck-quote {
   border-left-color: rgba(255, 255, 255, 0.25);
 }
 
-body.night-mode .letter-quote p {
+body.night-mode .deck-quote p {
   color: rgba(255, 255, 255, 0.82);
 }
 
-body.night-mode .letter-title {
-  color: rgba(255, 255, 255, 0.60);
-}
-
-body.night-mode .letter-sig-img {
-  filter: invert(1);
-}
-
-body.night-mode .letter-ornament {
+body.night-mode .deck-ornament {
   color: rgba(255, 255, 255, 0.9);
 }
 
-body.night-mode .letter-ornament::before,
-body.night-mode .letter-ornament::after {
+body.night-mode .deck-ornament::before,
+body.night-mode .deck-ornament::after {
   background: rgba(255, 255, 255, 0.45);
 }
 
-body.night-mode .letter-close {
+body.night-mode .deck-close {
   border-top-color: rgba(255, 255, 255, 0.18);
 }
 
@@ -559,20 +550,20 @@ body.mode-2d .cosmos-hint,
 body.mode-ifo .cosmos-hint { opacity: 0; }
 
 
-/* ---------- Letter Section ---------- */
-#letter-section {
+/* ---------- Deck Section (Mulvium in brief) ---------- */
+#deck-section {
   background: var(--paper);
   padding: clamp(110px, 16vh, 190px) clamp(24px, 8vw, 160px) 140px;
 }
 
-.letter-article {
+.deck-article {
   max-width: 680px;
   margin: 0 auto;
 }
 
-.letter-header { margin-bottom: 52px; }
+.deck-header { margin-bottom: 52px; }
 
-.letter-to {
+.deck-lede {
   font-family: "Cormorant Garamond", serif;
   font-weight: 400;
   font-style: italic;
@@ -582,7 +573,7 @@ body.mode-ifo .cosmos-hint { opacity: 0; }
   line-height: 1.4;
 }
 
-.letter-body p {
+.deck-body p {
   font-family: "Cormorant Garamond", serif;
   font-weight: 500;
   font-size: 19px;
@@ -591,15 +582,15 @@ body.mode-ifo .cosmos-hint { opacity: 0; }
   margin: 0 0 28px;
 }
 
-.letter-body p:last-child { margin-bottom: 0; }
+.deck-body p:last-child { margin-bottom: 0; }
 
-.letter-quote {
+.deck-quote {
   margin: 4px 0 28px 0;
   padding: 20px 32px;
   border-left: 2px solid var(--hairline);
 }
 
-.letter-quote p {
+.deck-quote p {
   font-family: "Cormorant Garamond", serif;
   font-weight: 500;
   font-size: 17px;
@@ -609,7 +600,7 @@ body.mode-ifo .cosmos-hint { opacity: 0; }
   margin: 0;
 }
 
-.letter-ornament {
+.deck-ornament {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -620,8 +611,8 @@ body.mode-ifo .cosmos-hint { opacity: 0; }
   user-select: none;
 }
 
-.letter-ornament::before,
-.letter-ornament::after {
+.deck-ornament::before,
+.deck-ornament::after {
   content: '';
   flex: 1;
   max-width: 72px;
@@ -629,20 +620,13 @@ body.mode-ifo .cosmos-hint { opacity: 0; }
   background: rgba(27, 22, 19, 0.38);
 }
 
-.letter-sig-img {
-  display: block;
-  width: 300px;
-  height: auto;
-  margin: 12px 0 4px -61px; /* -61px aligns the B stroke with the text left edge */
-}
-
-.letter-close {
+.deck-close {
   margin-top: 56px;
   border-top: 1px solid var(--hairline);
   padding-top: 36px;
 }
 
-.letter-close p {
+.deck-close p {
   font-family: "Cormorant Garamond", serif;
   font-weight: 500;
   font-size: 17px;
@@ -650,22 +634,206 @@ body.mode-ifo .cosmos-hint { opacity: 0; }
   margin: 0 0 8px;
 }
 
-.letter-sig {
-  font-family: "Cormorant Garamond", serif;
-  font-weight: 600;
-  font-size: 18px;
-  color: var(--ink);
-  margin: 4px 0 2px;
+/* Slides — each numbered section of the deck rises in on its own */
+.deck-slide { margin: 0 0 clamp(72px, 12vh, 120px); }
+.deck-slide:last-child { margin-bottom: 0; }
+
+.deck-body .deck-num {
+  font-family: "Cormorant SC", serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  line-height: 1.4;
+  color: var(--clay-deep);
+  margin: 0 0 14px;
 }
 
-.letter-title {
+.deck-title {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 300;
+  font-size: clamp(32px, 4.4vw, 50px);
+  line-height: 1.1;
+  color: var(--ink);
+  margin: 0 0 28px;
+}
+
+/* Cards — the companies and the two arms */
+.deck-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 8px 0 28px;
+}
+
+.deck-grid:last-child { margin-bottom: 0; }
+
+.deck-card {
+  border: 1px solid var(--hairline);
+  padding: 24px 24px 22px;
+}
+
+.deck-card--tba { border-style: dashed; }
+
+.deck-card h3 {
   font-family: "Cormorant Garamond", serif;
   font-weight: 500;
+  font-size: 26px;
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 0 0 10px;
+}
+
+.deck-body .deck-card p {
+  font-size: 16px;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.deck-body .deck-card .deck-card-tag {
+  font-style: italic;
   font-size: 15px;
+  letter-spacing: 0.03em;
+  color: var(--clay-deep);
+  margin: 0 0 6px;
+}
+
+/* Steps — the journey, numbered down a hairline */
+.deck-steps {
+  list-style: none;
+  counter-reset: step;
+  margin: 0;
+  padding: 0;
+}
+
+.deck-steps li {
+  counter-increment: step;
+  position: relative;
+  padding: 0 0 28px 64px;
+}
+
+.deck-steps li:last-child { padding-bottom: 0; }
+
+.deck-steps li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 300;
+  font-size: 30px;
+  line-height: 1;
+  color: var(--clay-deep);
+}
+
+.deck-steps li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 16px;
+  top: 40px;
+  bottom: 10px;
+  width: 1px;
+  background: var(--hairline);
+}
+
+.deck-steps h3 {
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 0 0 6px;
+}
+
+.deck-body .deck-steps p {
+  font-size: 17px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Principles — term and gloss */
+.deck-principles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 32px;
+  margin: 0;
+}
+
+.deck-principles dt {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  font-style: italic;
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 0 0 6px;
+}
+
+.deck-principles dd {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.65;
   color: var(--ink-soft);
   margin: 0;
-  letter-spacing: 0.02em;
 }
+
+/* Call to action */
+.deck-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+  padding-bottom: 3px;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  transition: color 0.3s var(--ease), gap 0.3s var(--ease);
+}
+
+.deck-cta:hover { color: var(--clay); gap: 16px; }
+
+/* The deck is read in night mode, over the star-field */
+body.night-mode .deck-body .deck-num,
+body.night-mode .deck-body .deck-card .deck-card-tag,
+body.night-mode .deck-steps li::before {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+}
+
+body.night-mode .deck-title,
+body.night-mode .deck-card h3,
+body.night-mode .deck-steps h3,
+body.night-mode .deck-principles dt,
+body.night-mode .deck-cta {
+  color: #ffffff;
+}
+
+body.night-mode .deck-cta:hover { color: var(--pastel-hover); }
+
+body.night-mode .deck-principles dd {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 600;
+}
+
+body.night-mode .deck-card {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(6, 4, 18, 0.35);
+}
+
+body.night-mode .deck-steps li::after { background: rgba(255, 255, 255, 0.18); }
+
+@media (max-width: 640px) {
+  .deck-grid,
+  .deck-principles { grid-template-columns: 1fr; }
+  .deck-steps li { padding-left: 52px; }
+  .deck-steps li::before { font-size: 26px; }
+  .deck-steps li:not(:last-child)::after { left: 13px; top: 36px; }
+}
+
 
 /* ========== Contact card — an open two-page spread ========== */
 
@@ -956,7 +1124,7 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
 
 /* Tablet and below (≤ 900px) */
 @media (max-width: 900px) {
-  .letter-body p { font-size: 16px; }
+  .deck-body p { font-size: 16px; }
   .ifo-prose-body p { font-size: 16px; line-height: 1.78; }
 }
 
@@ -965,7 +1133,7 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
   .nav-links { gap: 14px; }
   .nav-trigger { font-size: 11px; letter-spacing: 0.10em; }
   .dropdown { min-width: 220px; }
-  #letter-section { padding: 72px clamp(20px, 7vw, 80px); }
+  #deck-section { padding: 72px clamp(20px, 7vw, 80px); }
   .ifo-prose-body p { font-size: 16px; line-height: 1.75; }
 }
 
@@ -997,12 +1165,11 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
   .nav-trigger { font-size: 10px; letter-spacing: 0.08em; padding: 10px 8px; }
   .dropdown { min-width: 200px; }
 
-  #letter-section { padding: 56px clamp(18px, 5.5vw, 36px); }
-  .letter-header { margin-bottom: 32px; }
-  .letter-to { font-size: clamp(17px, 5.2vw, 22px); }
-  .letter-body p { font-size: 15px; line-height: 1.75; margin-bottom: 20px; }
-  .letter-close { margin-top: 36px; padding-top: 26px; }
-  .letter-sig { font-size: 22px; }
+  #deck-section { padding: 56px clamp(18px, 5.5vw, 36px); }
+  .deck-header { margin-bottom: 32px; }
+  .deck-lede { font-size: clamp(17px, 5.2vw, 22px); }
+  .deck-body p { font-size: 15px; line-height: 1.75; margin-bottom: 20px; }
+  .deck-close { margin-top: 36px; padding-top: 26px; }
 
   .cosmos-hint { font-size: 11px; bottom: 22px; letter-spacing: 0.18em; }
   .ifo-prose { padding-bottom: 72px; }
@@ -1017,9 +1184,9 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
 @media (max-height: 500px) and (orientation: landscape) {
   :root { --nav-h: 52px; }
   .cosmos-hint { bottom: 14px; font-size: 10px; letter-spacing: 0.18em; }
-  #letter-section { padding-top: 48px; padding-bottom: 48px; }
-  .letter-header { margin-bottom: 24px; }
-  .letter-close { margin-top: 32px; padding-top: 22px; }
+  #deck-section { padding-top: 48px; padding-bottom: 48px; }
+  .deck-header { margin-bottom: 24px; }
+  .deck-close { margin-top: 32px; padding-top: 22px; }
   .ifo-prose { padding-bottom: 64px; }
   .ifo-prose-header { margin-top: 28px; margin-bottom: 24px; }
   .footer-copy { font-size: 10px; letter-spacing: 0.10em; }
@@ -1046,7 +1213,7 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
   pointer-events: none;
 }
 
-body.mode-ifo #letter-section { display: none; }
+body.mode-ifo #deck-section { display: none; }
 body.mode-ifo #card-section   { display: none; }
 
 body.mode-ifo .ifo-mode {
@@ -1225,8 +1392,8 @@ body.night-mode .dropdown a:hover { color: rgba(255, 255, 255, 0.92); }
 .nav-trigger          { font-size: 17px; }
 .dropdown a           { font-size: 15px; }
 .cosmos-hint          { font-size: 15px; }
-.letter-body p        { font-size: 21px; }
-.letter-quote p       { font-size: 19px; }
+.deck-body p        { font-size: 21px; }
+.deck-quote p       { font-size: 19px; }
 .footer-copy          { font-size: 15px; }
 .eyebrow              { font-size: 14px; }
 .page-shell .back     { font-size: 14px; }
@@ -1377,16 +1544,16 @@ body.night-mode .dropdown a:hover { color: rgba(255, 255, 255, 0.92); }
 
   /* Pull back the big desktop bumps to sensible mobile sizes */
   .nav-trigger        { font-size: 15px; }
-  .letter-body p      { font-size: 17px; }
-  .letter-quote p     { font-size: 15px; }
+  .deck-body p      { font-size: 17px; }
+  .deck-quote p     { font-size: 15px; }
   .footer-copy        { font-size: 13px; }
   .cosmos-hint        { font-size: 12px; }
 }
 
 @media (max-width: 480px) {
   .nav-trigger      { font-size: 14px; }
-  .letter-body p    { font-size: 15px; }
-  .letter-quote p   { font-size: 14px; }
+  .deck-body p    { font-size: 15px; }
+  .deck-quote p   { font-size: 14px; }
 }
 
 /* =====================================================================
@@ -1512,8 +1679,8 @@ body.night-mode .hero-sub { color: rgba(255, 255, 255, 0.96); }
   transform: translateY(0);
 }
 
-/* ---------- Letter storytelling — kicker, drop cap, signature wipe ---------- */
-.letter-kicker {
+/* ---------- Deck storytelling — kicker and drop cap ---------- */
+.deck-kicker {
   font-family: "Cormorant SC", serif;
   font-size: 14px;
   letter-spacing: 0.28em;
@@ -1524,7 +1691,7 @@ body.night-mode .hero-sub { color: rgba(255, 255, 255, 0.96); }
   gap: 14px;
 }
 
-.letter-kicker::after {
+.deck-kicker::after {
   content: '';
   flex: 1;
   max-width: 64px;
@@ -1533,9 +1700,9 @@ body.night-mode .hero-sub { color: rgba(255, 255, 255, 0.96); }
   opacity: 0.5;
 }
 
-body.night-mode .letter-kicker { color: rgba(255, 255, 255, 0.6); }
+body.night-mode .deck-kicker { color: rgba(255, 255, 255, 0.6); }
 
-.letter-body > p:first-of-type::first-letter {
+.deck-slide:first-child > .deck-title + p::first-letter {
   font-family: "Cormorant Garamond", serif;
   font-weight: 500;
   font-size: 3.55em;
@@ -1545,17 +1712,7 @@ body.night-mode .letter-kicker { color: rgba(255, 255, 255, 0.6); }
   color: var(--ink);
 }
 
-body.night-mode .letter-body > p:first-of-type::first-letter { color: #ffffff; }
-
-/* Signature draws in from left, like ink being written */
-.letter-sig-img {
-  clip-path: inset(-8% 102% -8% -2%);
-  transition: clip-path 1.8s cubic-bezier(0.5, 0.05, 0.2, 1) 0.35s;
-}
-
-.letter-close.rv-in .letter-sig-img {
-  clip-path: inset(-8% -2% -8% -2%);
-}
+body.night-mode .deck-slide:first-child > .deck-title + p::first-letter { color: #ffffff; }
 
 /* ---------- IFO prose eyebrow ---------- */
 .ifo-eyebrow {
@@ -1656,7 +1813,6 @@ body.night-mode ::selection { background: rgba(124, 92, 232, 0.45); color: #ffff
 @media (prefers-reduced-motion: reduce) {
   .rv { opacity: 1; transform: none; transition: none; }
   .ar, body.contact-page .card { opacity: 1; animation: none !important; }
-  .letter-sig-img { clip-path: none; transition: none; }
   .page-shell > * { animation: none; }
 }
 
