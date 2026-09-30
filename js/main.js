@@ -22,7 +22,8 @@ const STAR_RADIUS = 1.25;
 // Nesting check (must both grow outward): IFO(3.125,2.5) < Castles(3.375,4.5)
 //   < Education(7.15,6.5) < Zones(7.65,8.5) — verified non-overlapping.
 // The star is Mulvium; each planet is one of its companies. `status` is the
-// italic line under the name on hover; `comingSoon` planets are not clickable.
+// italic line under the name on hover; `comingSoon` planets are not clickable;
+// `href` planets open their company's page.
 const ORBITS = [
   {
     id: "ifo",
@@ -46,8 +47,8 @@ const ORBITS = [
   {
     id: "education",
     name: "Oak",
-    status: "In Development",
-    comingSoon: true,
+    status: "Explore",
+    href: "pages/offerings/oak.html",
     radius: 4.5,  radius2D: 6.5,  ellipseX: 1,  ringTube: 0.045,
     planetSize: 0.42, planetColor: PASTEL_EDU,
     tilt: [Math.PI / 3.2, Math.PI / 5 + Math.PI / 2, 0],
@@ -494,7 +495,7 @@ let cachedScrollTotal = 0;
 // Reduced-motion preference — gates camera parallax and shooting stars
 const motionOK = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 // Hover-capable fine pointer (mouse/trackpad) — gates the cinematic wheel
-// system; touch devices scroll natively with CSS snap stops instead
+// system; touch devices scroll natively
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
 // Pointer-driven camera parallax — normalized viewport coords, lerped each frame
@@ -504,28 +505,10 @@ window.addEventListener("pointermove", (e) => {
   camDrift.ty = (e.clientY / lsVH) * 2 - 1;
 }, { passive: true });
 
-// ── Hero — brand dissolves on entry, the tagline persists and later
-// parallax-descends to the centre where the patronage frames take it over.
-const heroBrand  = document.getElementById("hero-brand");
-const heroSub    = document.getElementById("hero-sub");
-const heroKicker = document.getElementById("hero-kicker");
-const heroTravel = document.getElementById("hero-travel");
-const heroHalo   = document.getElementById("hero-halo");
-
-// Distance (px) from the tagline's resting spot down to the patronage centre
-// line; measured with the travel transform reset so it is scroll-independent.
-let heroTravelDist = 0;
-function measureHeroTravel() {
-  const prev = heroTravel.style.transform;
-  heroTravel.style.transform = "";
-  const wrapRect = canvasWrap.getBoundingClientRect();
-  const subRect  = heroSub.getBoundingClientRect();
-  const navH     = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--nav-h")) || 72;
-  const restY    = subRect.top + subRect.height / 2 - wrapRect.top;
-  heroTravelDist = (lsVH / 2 + (navH + 12) / 2) - restY;
-  heroTravel.style.transform = prev;
-}
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(measureHeroTravel);
+// ── Hero — the brand dissolves on entry and the statements fade with it
+const heroBrand      = document.getElementById("hero-brand");
+const heroHalo       = document.getElementById("hero-halo");
+const heroStatements = document.getElementById("hero-statements");
 
 // Gooey visibility at fraction f (0 hidden → 1 settled); blur only when motion allowed
 function applyGoo(el, f) {
@@ -547,7 +530,6 @@ function resize() {
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
-  measureHeroTravel();
 }
 resize();
 window.addEventListener("resize", resize);
@@ -584,6 +566,7 @@ canvas.addEventListener("click", () => {
   if (state.mode === "3d") {
     if (state.hoverPlanet) {
       if (state.hoverPlanet.def.id === "ifo") goToIFO();
+      else if (state.hoverPlanet.def.href) coverAndNavigate(state.hoverPlanet.def.href);
     } else if (state.hoverStar) goTo2D();
   } else if (state.mode === "2d") {
     if (state.hoverStar) {
@@ -934,7 +917,6 @@ function goTo3D() {
   document.querySelectorAll(".nav-item.open").forEach((el) => el.classList.remove("open"));
   state.expansionP1 = 0;
   state.lsRevealP    = 1;
-  resetPatronage();
   bgColor.copy(PAPER_COLOR);
 }
 
@@ -961,7 +943,6 @@ function jumpToIFO() {
 
   state.expansionP1  = 0;
   state.lsRevealP    = 1;
-  resetPatronage();
   bgColor.copy(PAPER_COLOR);
   canvasWrap.style.height = window.innerHeight + "px";
 
@@ -1003,7 +984,6 @@ function snapTo3D() {
   state.labelStar    = false;
   state.expansionP1  = 0;
   state.lsRevealP    = 1;
-  resetPatronage();
   bgColor.copy(PAPER_COLOR);
 }
 
@@ -1478,27 +1458,16 @@ function animate() {
     if (navCap) navCap.style.backgroundColor =
       `rgb(${_r(236,6)},${_r(234,4)},${_r(229,18)})`; }
 
-  // Patronage frames + label morphs (snap animations driven by dt)
-  updatePatronage(dt);
-
   // ── Hero choreography ───────────────────────────────────────────────────────
-  // MULVIUM dissolves over the first half of the 3D→2D camera transition and
-  // "Our Mission" materializes in its place. The tagline keeps its position,
-  // font, and style, then parallax-descends to the patronage centre line as
-  // the frames approach (prApproach, scroll-driven).
+  // MULVIUM dissolves over the first half of the 3D→2D camera transition, and
+  // the statement and mission fade out with it.
   {
-    const introOn   = body.classList.contains("cosmos-intro") ? 1 : 0;
-    const brandVis  = Math.max(0, 1 - state.t * 2) * (1 - easedIFO) * introOn;
-    const kickerVis = Math.max(0, state.t * 2 - 1) * (1 - easedIFO) * introOn;
-    const subVis    = introOn * (1 - easedIFO) * (prPhraseOwned ? 0 : 1);
+    const introOn  = body.classList.contains("cosmos-intro") ? 1 : 0;
+    const brandVis = Math.max(0, 1 - state.t * 2) * (1 - easedIFO) * introOn;
 
     applyGoo(heroBrand, brandVis);
-    applyGoo(heroSub, subVis);
-    heroKicker.style.opacity = (Math.pow(kickerVis, 0.6) * (1 - clamp01(prP / 0.08))).toFixed(3);
-    heroHalo.style.opacity   = String((1 - p1e) * introOn);
-
-    const travel = heroTravelDist * easeInOut(clamp01(prApproach));
-    heroTravel.style.transform = `translate3d(0, ${travel.toFixed(1)}px, 0)`;
+    heroStatements.style.opacity = Math.pow(brandVis, 0.6).toFixed(3);
+    heroHalo.style.opacity       = String((1 - p1e) * introOn);
   }
 
   updateHover();
@@ -1516,8 +1485,7 @@ function updateExpansionScroll() {
   if (!body.classList.contains("expansion-active")) return;
   if (cachedScrollTotal <= 0) return;
   // Rings expand, star goes radiant, night sky fades in — completed over the
-  // first ~half-viewport of scroll so the next act (the phrase descending to
-  // the patronage frames) takes over without a dead stretch
+  // first ~half-viewport of scroll, just before the letter rises into view
   const ramp = Math.max(1, Math.min(cachedScrollTotal, 480));
   state.expansionP1 = Math.max(0, Math.min(1, window.scrollY / ramp));
 
@@ -1530,208 +1498,12 @@ function updateExpansionScroll() {
 }
 
 
-// ── Patronage scroll scrub ────────────────────────────────────────────────────
-// Fully scroll-driven: every pixel of scroll continuously maps to frame growth
-// and label morphing, in both directions. No thresholds, no fire-and-forget
-// animations — the sequence is a single timeline the user scrubs by scrolling,
-// so there is always visible response and never a dead zone between frames.
-const patronageSection = document.getElementById("patronage-section");
-const prBoxEls = ["pr-outer","pr-f1","pr-f2","pr-f3","pr-f4"].map(id => document.getElementById(id));
-
-const PR_SIZES = [
-  { w: 0.80, h: 0.71 },  // outer border trace
-  { w: 0.80, h: 0.71 },  // Idea (same as outer)
-  { w: 0.76, h: 0.68 },  // Blueprint
-  { w: 0.72, h: 0.65 },  // Workforce
-  { w: 0.70, h: 0.635 }, // Institution
-];
-// PR_WORDS[0] must match the hero tagline (#hero-sub) exactly: the two layers
-// hand the phrase off invisibly.
-const PR_WORDS  = ["From Idea to Institution", "Idea", "Blueprint", "Workforce", "Institution"];
-const PR_STARTS = [0.00, 0.20, 0.40, 0.60, 0.80]; // scroll thresholds where each frame opens
-// Rest stops — the scroll positions where each frame sits fully open. One
-// gesture can never travel past a stop (wheel gating on desktop, CSS
-// scroll-snap sentinels on touch — see index.html .pr-stop).
-const PR_STOPS = [0.16, 0.36, 0.56, 0.76, 0.96];
-
-// Handoff state read by the animate() loop: while the hero tagline carries
-// "From Idea to Institution", the patronage gooey layer stays empty; once the
-// first frame starts morphing the phrase into "Idea", ownership flips.
-let prP = 0;
-let prApproach = 0;          // 0 at top of the 2D view → 1 when the sticky pins
-let prPhraseOwned = false;
-
-function clamp01(v) { return Math.max(0, Math.min(1, v)); }
-function prEaseRise(t) { return 1 - Math.pow(1 - t, 3); }
-function prEaseSlit(t) { return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t); }
-
-// ── Gooey text morphing — ported from the GooeyText React component.
-// Two overlapping spans crossfade under an SVG alpha-threshold filter
-// (#threshold in index.html): blur = min(8/fraction − 8, 100) px and
-// opacity = fraction^0.4 on each side, which the threshold matrix turns
-// into a liquid merge. The morph fraction is scrubbed directly by scroll.
-const gooeyA = document.getElementById("pr-gooey-1");
-const gooeyB = document.getElementById("pr-gooey-2");
-const gooeyShade = document.getElementById("pr-gooey-shade");
-
-function gooeySetText(el, word) {
-  if (el.textContent !== word) {
-    el.textContent = word;
-    el.classList.toggle("pr-gooey-long", word.length > 14);
-  }
-}
-
-// Renders the morph at fraction f: 0 = fromWord settled, 1 = toWord settled.
-function gooeyApply(fromWord, toWord, f) {
-  gooeySetText(gooeyA, fromWord);
-  gooeySetText(gooeyB, toWord);
-
-  if (!motionOK) {
-    const showTo = f >= 0.5;
-    gooeyA.style.filter = ""; gooeyA.style.opacity = showTo ? "0%" : "100%";
-    gooeyB.style.filter = ""; gooeyB.style.opacity = showTo ? "100%" : "0%";
-    return;
-  }
-
-  if (f <= 0) {
-    gooeyA.style.filter = ""; gooeyA.style.opacity = "100%";
-    gooeyB.style.filter = ""; gooeyB.style.opacity = "0%";
-  } else if (f >= 1) {
-    gooeyA.style.filter = ""; gooeyA.style.opacity = "0%";
-    gooeyB.style.filter = ""; gooeyB.style.opacity = "100%";
-  } else {
-    // Blur constant 6 (component default is 8): Cormorant's thin serif
-    // strokes fall below the alpha threshold sooner than the demo's bold
-    // sans, so a slightly gentler blur keeps the goo visible mid-scrub.
-    const fIn  = Math.max(f, 1e-4);       // incoming word sharpens
-    const fOut = Math.max(1 - f, 1e-4);   // outgoing word dissolves
-    gooeyB.style.filter  = `blur(${Math.min(6 / fIn - 6, 100)}px)`;
-    gooeyB.style.opacity = `${Math.pow(fIn, 0.4) * 100}%`;
-    gooeyA.style.filter  = `blur(${Math.min(6 / fOut - 6, 100)}px)`;
-    gooeyA.style.opacity = `${Math.pow(fOut, 0.4) * 100}%`;
-  }
-}
-
-function resetGooey() {
-  gooeyA.textContent = ""; gooeyB.textContent = "";
-  gooeyA.style.filter = ""; gooeyA.style.opacity = "0%";
-  gooeyB.style.filter = ""; gooeyB.style.opacity = "0%";
-  gooeyShade.classList.remove("on");
-}
-
-// ── Patronage scrub engine — driven from animate() every frame ───────────────
-// Frame geometry is a pure function of scroll position: frames open and close
-// at the exact rate of scrolling, in both directions, so no amount of scroll
-// speed can skip one. Only the LABELS run on their own short clock — text can
-// never be parked half-dissolved by stopping mid-window.
-const prFrameP = PR_SIZES.map(() => -1);         // scrubbed open progress per frame
-const PR_OPEN  = 0.16;                           // timeline fraction over which a frame opens
-let prSizedW = 0, prSizedH = 0;                  // viewport the frames were last sized for
-const prGoo    = { from: PR_WORDS[0], to: PR_WORDS[0], f: 1 };
-const PR_GOO_SNAP = 0.85;                        // seconds for a label morph
-
-function updatePatronage(dt) {
-  if (!body.classList.contains("expansion-active")) { prApproach = 0; return; }
-
-  // Parallax descent driver: how far the user has scrolled toward the
-  // patronage section pinning (the tagline arrives at centre exactly then)
-  const secTop = patronageSection.offsetTop;
-  prApproach = secTop > 0 ? clamp01(window.scrollY / secTop) : 0;
-
-  const rect = patronageSection.getBoundingClientRect();
-  const scrollable = patronageSection.offsetHeight - lsVH;
-  if (scrollable <= 0) return;
-  const P = clamp01(-rect.top / scrollable);
-  prP = P;
-
-  // Touch devices: CSS scroll-snap (sentinels with scroll-snap-stop: always)
-  // locks native momentum at each frame; only active inside the section so
-  // the rest of the page scrolls freely
-  if (!finePointer) {
-    const lastStop = secTop + PR_STOPS[PR_STOPS.length - 1] * scrollable;
-    const snapOn = window.scrollY > secTop - lsVH * 0.6 && window.scrollY < lastStop + 8;
-    document.documentElement.classList.toggle("pr-snap", snapOn);
-  }
-  const vw = window.innerWidth, vh = window.innerHeight;
-  const resized = vw !== prSizedW || vh !== prSizedH;
-  prSizedW = vw; prSizedH = vh;
-
-  let wordIdx = -1;
-  for (let i = 0; i < prBoxEls.length; i++) {
-    // Scrubbed progress — geometry tracks the scroll position exactly
-    const q = i === 0
-      ? clamp01(P / 0.10)
-      : clamp01((P - PR_STARTS[i]) / PR_OPEN);
-    // The label leads once its frame is well open
-    if (i > 0 && q >= 0.35) wordIdx = i;
-    if (!resized && q === prFrameP[i]) continue; // idle — no style writes, no layout work
-    prFrameP[i] = q;
-    const el = prBoxEls[i];
-    if (i === 0) {
-      // First frame: no slit/dot reveal — it simply fades in at full size
-      el.style.width   = (vw * PR_SIZES[i].w) + "px";
-      el.style.height  = (vh * PR_SIZES[i].h) + "px";
-      el.style.opacity = String(easeInOut(q));
-    } else {
-      // Slit character: width races ahead, height follows with an expo tail
-      const wP = prEaseRise(Math.min(1, q / 0.25));
-      const hP = prEaseSlit(q);
-      el.style.width  = (vw * PR_SIZES[i].w * wP) + "px";
-      el.style.height = (q > 0 ? Math.max(2, vh * PR_SIZES[i].h * hP) : 0) + "px";
-    }
-    el.classList.toggle("pr-active", q > 0.01);
-  }
-
-  // Label morph — time-based snap toward the deepest open frame's word.
-  // While the tagline (hero layer) owns the phrase, this layer stays hidden;
-  // ownership flips at the first morph into "Idea" and flips back once the
-  // phrase has fully settled again — both layers render the phrase with
-  // identical metrics and position, so the swap is invisible.
-  const targetWord = wordIdx >= 1 ? PR_WORDS[wordIdx] : PR_WORDS[0];
-  if (targetWord !== prGoo.to) {
-    prGoo.from = prGoo.to;
-    prGoo.to   = targetWord;
-    prGoo.f    = 0;
-  }
-  if (prGoo.f < 1) prGoo.f = Math.min(1, prGoo.f + dt / PR_GOO_SNAP);
-
-  if (wordIdx >= 1) prPhraseOwned = true;
-  else if (prGoo.to === PR_WORDS[0] && prGoo.f >= 1) prPhraseOwned = false;
-
-  if (prPhraseOwned) {
-    gooeyApply(prGoo.from, prGoo.to, prGoo.f);
-  } else {
-    gooeyA.style.opacity = "0%";
-    gooeyB.style.opacity = "0%";
-  }
-  // Shade only behind single-word labels over photographs (not the phrase)
-  gooeyShade.classList.toggle("on", wordIdx >= 1);
-}
-
-function resetPatronage() {
-  prBoxEls.forEach((el, i) => {
-    el.style.width  = "0";
-    el.style.height = "0";
-    el.style.opacity = "";
-    el.classList.remove("pr-active");
-    prFrameP[i] = -1;
-  });
-  prP = 0;
-  prApproach = 0;
-  prPhraseOwned = false;
-  document.documentElement.classList.remove("pr-snap");
-  prGoo.from = PR_WORDS[0];
-  prGoo.to   = PR_WORDS[0];
-  prGoo.f    = 1;
-  resetGooey();
-}
-
-// ── Scroll reveal — deck slides, FSOS prose, and footer rise in as they enter view ──
+// ── Scroll reveal — letter, FSOS prose, and footer rise in as they enter view ──
 {
   const rvSelectors = [
-    "#deck-section .deck-header",
-    "#deck-section .deck-body > *",
-    "#deck-section .deck-close",
+    "#letter-section .letter-header",
+    "#letter-section .letter-body > *",
+    "#letter-section .letter-close",
     ".ifo-prose-header",
     ".ifo-prose-body > p",
     ".ifo-prose-footnote",
@@ -1787,41 +1559,12 @@ if (finePointer) {
     scrollRafId = requestAnimationFrame(cinematicStep);
   }
 
-  // A pause in wheel events marks a new gesture; within one gesture the
-  // target may never pass the next patronage stop in the travel direction —
-  // however hard the fling, the screen locks at each frame.
-  let lastWheelTs   = 0;
-  let gestureStartY = 0;
-
   window.addEventListener("wheel", (e) => {
     // Don't intercept when the 3D canvas has focus (canvas wheel = zoom)
     if (body.classList.contains("cosmos-only")) return;
     e.preventDefault();
-    const now = performance.now();
-    // Anchor at the real scroll position: a gesture made while still gliding
-    // toward a stop re-targets that same stop instead of skipping past it
-    if (now - lastWheelTs > 300) gestureStartY = window.scrollY;
-    lastWheelTs = now;
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     scrollTarget    = Math.max(0, Math.min(maxScroll, scrollTarget + e.deltaY * 1.6));
-
-    if (body.classList.contains("expansion-active")) {
-      const span = patronageSection.offsetHeight - window.innerHeight;
-      const top  = patronageSection.offsetTop;
-      if (span > 0 && top > 0) {
-        if (e.deltaY > 0) {
-          for (let i = 0; i < PR_STOPS.length; i++) {
-            const s = top + PR_STOPS[i] * span;
-            if (s > gestureStartY + 4) { scrollTarget = Math.min(scrollTarget, s); break; }
-          }
-        } else if (e.deltaY < 0) {
-          for (let i = PR_STOPS.length - 1; i >= 0; i--) {
-            const s = top + PR_STOPS[i] * span;
-            if (s < gestureStartY - 4) { scrollTarget = Math.max(scrollTarget, s); break; }
-          }
-        }
-      }
-    }
     if (!scrollRafId) scrollRafId = requestAnimationFrame(cinematicStep);
   }, { passive: false });
 

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
+  <script>document.documentElement.classList.add('ls-instant-cover');</script>
+  <title>Mulvium &mdash; A New Kind of Institution</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preload" as="image" href="Musical.png" />
+  <link rel="preload" as="image" href="Pictorial.png" />
+  <link rel="preload" as="image" href="image (13).png" />
+  <link rel="preload" as="image" href="Horticulture.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Cormorant+SC:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,900;1,300;1,400&family=Great+Vibes&family=Inter:wght@300;400;500;600&family=Italiana&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- Gooey threshold filter — dissolves the MULVIUM wordmark on entering
+       the cosmos. Lives at body level so it works while hidden. -->
+  <svg class="goo-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="threshold">
+        <feColorMatrix
+          in="SourceGraphic"
+          type="matrix"
+          values="1 0 0 0 0
+                  0 1 0 0 0
+                  0 0 1 0 0
+                  0 0 0 255 -140" />
+      </filter>
+    </defs>
+  </svg>
+  <div id="nav-cap" aria-hidden="true"></div>
+  <nav id="navbar" class="navbar hidden" aria-hidden="true">
+    <div class="nav-brand">
+      <a href="#" id="brand-link"><span class="bl bl-1">M</span><span class="bl bl-2">U</span><span class="bl bl-3">L</span><span class="bl bl-4">V</span><span class="bl bl-5">i</span><span class="bl bl-6">u</span><span class="bl bl-7">M</span></a>
+    </div>
+    <button class="nav-burger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li class="nav-item">
+        <button id="home-link" class="nav-trigger">Home</button>
+      </li>
+      <li class="nav-item has-dropdown">
+        <button class="nav-trigger" aria-haspopup="true" aria-expanded="false">Offerings</button>
+        <ul class="dropdown">
+          <li><a href="pages/offerings/fiscal-sponsorship.html">Fiscal Sponsorship</a></li>
+          <li><a href="#" data-ifo-link>FSOS</a></li>
+          <li><a href="pages/offerings/oak.html">Oak</a></li>
+        </ul>
+      </li>
+      <li class="nav-item has-dropdown">
+        <button class="nav-trigger" aria-haspopup="true" aria-expanded="false">About Us</button>
+        <ul class="dropdown">
+          <li><a href="pages/about/about.html#people">People</a></li>
+          <li><a href="pages/about/about.html#careers">Careers</a></li>
+          <li><a href="pages/about/about.html#contact">Contact Us</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <main id="stage">
+    <div id="expansion-wrapper">
+      <div id="canvas-wrap">
+        <canvas id="cosmos"></canvas>
+        <!-- Hero — the brand in a soft paper halo. On entering the cosmos,
+             MULVIUM gooey-dissolves and the two statements fade with it. -->
+        <div class="hero-wrap" id="hero-wrap">
+          <div class="hero-halo" id="hero-halo" aria-hidden="true"></div>
+          <div class="hero-stack">
+            <h1 class="hero-brand-goo"><span class="hero-brand" id="hero-brand">Mulvium</span></h1>
+          </div>
+        </div>
+        <!-- The statement and the mission flank the cosmos on wide screens
+             and sit above and below it on narrow ones -->
+        <div class="hero-statements" id="hero-statements">
+          <p class="hero-statement">Beautify the world around you through a new kind of institution</p>
+          <p class="hero-mission">Mulvium&rsquo;s mission is to advance charitable, educational, artistic, scientific, and other public-benefit endeavors by providing emerging projects with fiscal sponsorship, organizational infrastructure, and by mobilizing the power of patronage.</p>
+        </div>
+        <div id="cosmos-hint" class="cosmos-hint">
+          <p>Click a sphere to explore our offerings and our mission.</p>
+        </div>
+      </div>
+      <div id="expansion-space"></div>
+    </div>
+
+    <!-- Letter by Benjamin T. Rossen -->
+    <section id="letter-section">
+      <article class="letter-article">
+        <header class="letter-header">
+          <p class="letter-kicker">A letter from the Founder</p>
+        </header>
+
+        <div class="letter-body">
+          <p>
+            When we think of &ldquo;institutions,&rdquo; we tend to think of two
+            things. They&rsquo;re either large organizations with stature that do
+            things of consequence. Think of universities with billion-dollar
+            endowments; religious practices and ecclesiastical denominations with
+            global influence; or the financial trading and services apparatuses
+            that touch every aspect of our lives. Or, they&rsquo;re the
+            institutions of practice. These are social customs that provide
+            structure to our perceptual and moral lives. Think of family,
+            marriage, holidays, and etiquette, to name a few.
+          </p>
+          <p>
+            Most of the time, institutions are large, distinguished, enduring
+            entities.
+          </p>
+          <p>Institutions change the world.</p>
+
+          <div class="letter-ornament" aria-hidden="true">&#10022;</div>
+
+          <p>
+            Be that as it may, we actually believe that changing the world starts
+            with helping your neighbor. A neighbor is not just someone you live
+            next to. It is anyone who is in need or whom you encounter, regardless
+            of their background or beliefs. If everyone went out of their way to
+            improve the lives of a single neighbor, the world would immediately
+            become a more beautiful place.
+          </p>
+          <p>
+            Why don&rsquo;t we celebrate the beautiful and the authentic over the
+            grotesque and the artificial?
+          </p>
+          <p>
+            Institutions are simply a series of norms organized by a system of
+            functions. If these norms centered around improving other
+            people&rsquo;s lives physically, emotionally, spiritually,
+            intellectually, mentally, and culturally, we would certainly like to
+            see as many institutions as possible popping up and changing the
+            norm.
+          </p>
+          <p>
+            Institutions can simply be one person with a vision to do something
+            beautiful and something authentic.
+          </p>
+          <p>
+            At Mulvium, we change the norm and we build the organization beneath
+            you. You don&rsquo;t need an army of employees under you. No
+            billion-dollar endowments and spheres of influence required. All you
+            need is an appetite for good, a vision, and the willingness to bring
+            it to life.
+          </p>
+
+          <div class="letter-mission" role="note" aria-label="Mulvium&rsquo;s mission statement">
+            <p class="letter-mission-label">Our Mission Statement</p>
+            <p class="letter-mission-text">
+              Mulvium&rsquo;s mission is to advance charitable, educational,
+              artistic, scientific, and other public-benefit endeavors by
+              providing emerging projects with fiscal sponsorship, organizational
+              infrastructure, and by mobilizing the power of patronage.
+            </p>
+          </div>
+
+          <p>
+            Particularly if you are doing this solo, we want to be the
+            organization that makes your idea an institution. Our vision is that
+            regardless of domain, your project beautifies your community through
+            feelings of connection and empathy; restoration of the world around
+            you; curiosity in the awe-some and the original; and love of truth.
+            Because one neighbor at a time, we make the world a place worth
+            living.
+          </p>
+
+          <div class="letter-ornament" aria-hidden="true">&#10022;</div>
+
+          <p>
+            Thank you so much for reading. Please take this leap of faith with
+            us! Mulvium started as a leap of faith just the same. Whether you
+            believe in fate or free will, let us not take ourselves for granted:
+            we have the power to make a difference if we set our minds to it.
+          </p>
+        </div>
+
+        <footer class="letter-close" id="letter-close">
+          <p>Sincerely yours,</p>
+          <img src="signature.png" alt="Benjamin T. Rossen signature" class="letter-sig-img" />
+          <p class="letter-sig">Benjamin T. Rossen</p>
+          <p class="letter-title">Founder, The Mulvium Foundation</p>
+        </footer>
+      </article>
+    </section>
+
+    <!-- ===========================================================
+         FSOS MODE (ids keep their original "ifo" names): shown when the
+         FSOS planet is clicked. The Three.js canvas circles the planet —
+         now the Chief of Staff — with the specialist agents of the
+         reference workforce; prose appears below by scrolling.
+         =========================================================== -->
+    <section id="ifo-mode" class="ifo-mode" aria-hidden="true">
+
+      <!-- The agent circle runs in the Three.js canvas above; no HTML diagram here -->
+      <article class="ifo-prose">
+        <header class="ifo-prose-header">
+          <p class="ifo-eyebrow">A Mulvium Company</p>
+          <h2 class="ifo-prose-title">FSOS</h2>
+        </header>
+
+        <div class="ifo-prose-body">
+          <p>
+            FSOS, the FiscalSponsor Operating System, is the software our
+            engagement leads use to turn a founder&rsquo;s idea into an
+            operating institution. From a first consultation it drafts the
+            institution&rsquo;s complete plan, the <em>blueprint</em>: its
+            mission, programs, audiences, legal and operational requirements,
+            funding model, timeline, and the decisions still open. Every value
+            states its basis&mdash;stated by the founder, inferred, or
+            assumed&mdash;so nothing is invented without saying so, and no
+            work waits on an answer: open questions carry sensible defaults
+            until the founder decides.
+          </p>
+          <p>
+            From the blueprint, FSOS assembles an AI workforce organized like
+            a small, real organization. A Chief of Staff turns goals into
+            tasks and sequences the work; specialists research, analyze, and
+            draft. For the Beethoven
+            festival<sup><a href="#ifo-fn-1" class="ifo-fnref">1</a></sup>,
+            that is thirteen agents: the Chief of Staff at the center of the
+            circle above, and twelve specialists around it. Every agent is drawn
+            from an approved catalogue, holds only the tools its job requires,
+            and hands its drafts to the engagement lead for review. A permanent,
+            sourced memory records everything decided and learned.
+          </p>
+          <p>
+            Agents draft; people decide. When work reaches a step with
+            real-world effect&mdash;signing a contract, accepting a gift,
+            submitting a grant, spending money&mdash;the agent does not act.
+            It files a request tied to the exact draft. The founder approves
+            it, the Sponsor approves it where required, and a person carries
+            it out. Founders never log in to FSOS: they meet their
+            engagement lead and receive finished work.
+          </p>
+        </div>
+
+        <footer class="ifo-prose-footnote" id="ifo-fn-1">
+          <p>
+            <sup>1</sup> The Beethoven festival is FSOS&rsquo;s reference
+            case: a founder&rsquo;s idea for &ldquo;a three-day festival
+            dedicated to Beethoven&rsquo;s solo, chamber, and orchestral
+            music, including panel discussions and intellectual
+            discourse.&rdquo; FSOS is built and tested end to end against it.
+          </p>
+        </footer>
+      </article>
+    </section>
+
+    <!-- Site footer with expanded nav menu and copyright -->
+    <footer id="site-footer">
+      <div class="footer-copy">
+        <p>&copy; <span id="year"></span> Mulvium Foundation. All rights reserved.</p>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Loading screen overlay — three nested image frames that compress into a canvas
+       window, then the window expands to reveal the destination animation. The canvas
+       shows through a clip-path polygon hole so WebGL content is always visible. -->
+  <div id="loading-screen" aria-hidden="true">
+    <div id="ls-f1" class="ls-frame"><div class="ls-img"></div></div>
+    <div id="ls-f2" class="ls-frame"><div class="ls-img"></div></div>
+    <div id="ls-f3" class="ls-frame"><div class="ls-img"></div></div>
+    <div id="ls-f4" class="ls-frame"><div class="ls-img"></div></div>
+    <div id="ls-border" class="ls-frame"></div>
+  </div>
+
+  <script type="importmap">
+    { "imports": { "three": "https://unpkg.com/three@0.161.0/build/three.module.js" } }
+  </script>
+  <script src="js/cursor.js" defer></script>
+  <script type="module" src="js/main.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
