@@ -22,13 +22,14 @@ const STAR_RADIUS = 1.25;
 // Nesting check (must both grow outward): IFO(3.125,2.5) < Castles(3.375,4.5)
 //   < Education(7.15,6.5) < Zones(7.65,8.5) — verified non-overlapping.
 // The star is Mulvium; each planet is one of its companies. `status` is the
-// italic line under the name on hover; `comingSoon` planets are not clickable;
-// `href` planets open their company's page.
+// italic line under the name on hover; planets with an `href` open their
+// company's page.
 const ORBITS = [
   {
     id: "ifo",
     name: "FSOS",
     status: "Explore",
+    href: "pages/offerings/fsos.html",
     radius: 3.0,  radius2D: 2.5,  ellipseX: 1,  ringTube: 0.045,
     planetSize: 0.42, planetColor: PASTEL_IFO,
     tilt: [0, 0, 0],
@@ -37,8 +38,8 @@ const ORBITS = [
   {
     id: "castles",
     name: "Fiscal Sponsorship",
-    status: "The Nonprofit Arm",
-    comingSoon: true,
+    status: "Explore",
+    href: "pages/offerings/fiscal-sponsorship.html",
     radius: 3.8,  radius2D: 4.5,  ellipseX: 1,  ringTube: 0.045,
     planetSize: 0.42,  planetColor: PASTEL_CASTLES,
     tilt: [Math.PI / 2, 0, 0],
@@ -58,7 +59,6 @@ const ORBITS = [
     id: "zones",
     name: "To Be Announced",
     status: "",
-    comingSoon: true,
     radius: 5.0,  radius2D: 8.5,  ellipseX: 1,  ringTube: 0.045,
     planetSize: 0.42, planetColor: PASTEL_ZONES,
     tilt: [Math.PI / 3.2, Math.PI / 5, 0],
@@ -370,97 +370,9 @@ ORBITS.forEach((def) => {
   orbits.push({ def, pivot, rotator, ring, planet, angle: def.phase });
 });
 
-// ── Agent circle (formerly the Circle of Fifths) ────────────────────────────────────────────
-// The FSOS reference workforce: twelve specialist agents orbit the Chief of
-// Staff (the FSOS planet at the hub). The inner ring names each agent's focus
-// at the same angle as its agent. Long and short names alternate so
-// neighbours never collide at the front of the ring.
-const COF_KEY_PAIRS = [
-  { key: "Research"          },
-  { key: "Grants"            },
-  { key: "Communications"    },
-  { key: "Venue"             },
-  { key: "Development"       },
-  { key: "Finance"           },
-  { key: "Artistic Planning" },
-  { key: "Rehearsal"         },
-  { key: "Marketing"         },
-  { key: "Personnel"         },
-  { key: "Operations"        },
-  { key: "Production"        },
-];
-const COF_ACC_PAIRS = [
-  { main: "Comparables" },
-  { main: "Funders"     },
-  { main: "Press"       },
-  { main: "Halls"       },
-  { main: "Donors"      },
-  { main: "Budgets"     },
-  { main: "Repertoire"  },
-  { main: "Schedules"   },
-  { main: "Audiences"   },
-  { main: "Musicians"   },
-  { main: "Logistics"   },
-  { main: "Staging"     },
-];
-
-// IFO and Castles orbit rings scale/flatten into the CoF reference rings
-const COF_RING_TARGETS = { ifo: 2.8, castles: 1.55 };
-
-// Labels share one fixed canvas height, so every word renders at the same type
-// size; the canvas widens to fit the word and the sprite keeps its aspect.
-const COF_CANVAS_H = 256;
-function drawCoFLabel(text, fontSize, color) {
-  const c = document.createElement("canvas");
-  const ctx = c.getContext("2d");
-  const font = `${fontSize}px "Cormorant Garamond", serif`;
-  ctx.font = font;
-  c.width  = Math.max(COF_CANVAS_H, Math.ceil(ctx.measureText(text).width + fontSize * 0.6));
-  c.height = COF_CANVAS_H;
-  ctx.font = font;                       // resizing the canvas resets its state
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillStyle = color;
-  ctx.fillText(text, c.width / 2, c.height / 2);
-  return c;
-}
-
-function makeCoFSprite(text, { fontSize = 72, height = 0.75, color = "#5a3e1b" } = {}) {
-  const mat = new THREE.SpriteMaterial({ transparent: true, depthTest: true, depthWrite: true, opacity: 0 });
-  const s = new THREE.Sprite(mat);
-  const paint = () => {
-    const c = drawCoFLabel(text, fontSize, color);
-    if (mat.map) mat.map.dispose();
-    mat.map = new THREE.CanvasTexture(c);
-    mat.needsUpdate = true;
-    s.scale.set(height * c.width / c.height, height, 1);
-  };
-  paint();
-  // Word widths depend on the web font: repaint once it has loaded if it
-  // wasn't ready when the sprite was first drawn
-  if (!document.fonts.check(`${fontSize}px "Cormorant Garamond"`)) document.fonts.ready.then(paint);
-  scene.add(s);
-  return s;
-}
-
-// Outer ring: the specialist agents
-const cofKeySprites = COF_KEY_PAIRS.map(({ key }) => makeCoFSprite(key, { fontSize: 72, height: 0.75 }));
-
-// Inner ring: each agent's focus — index-matched so same i = same orbit angle as its agent
-const cofAccSprites = COF_ACC_PAIRS.map(({ main }) =>
-  makeCoFSprite(main, { fontSize: 72, height: 0.5, color: "#8a6030" }));
-
-// Track the actual IFO orbit for hub reparenting
-const ifoOrbit = orbits.find((o) => o.def.id === "ifo");
-let cofPlanetInScene = false;
-const cofHubStartPos = new THREE.Vector3();
-
-let cofAngle = 0; // single angle drives all CoF elements at the same rate
-
 // Camera — 2D is overhead; Y=24 gives visible radius ≈9.2 which frames max Z semi-axis (8.5)
 const CAM_3D  = new THREE.Vector3(0, 2.6, 14.5);
 const CAM_2D  = new THREE.Vector3(0, 24, 0.001);
-const CAM_IFO = new THREE.Vector3(0, 1.8, 6.8);
 const LOOK_AT = new THREE.Vector3(0, 0, 0);
 
 camera.position.copy(CAM_3D);
@@ -476,8 +388,6 @@ const state = {
   mode: "3d",
   t: 0,
   target: 0,
-  ifoT: 0,
-  ifoTarget: 0,
   hoverStar: false,
   hoverPlanet: null,
   labelPlanet: null,
@@ -518,6 +428,126 @@ function applyGoo(el, f) {
   el.style.filter  = motionOK ? `blur(${Math.min(6 / f - 6, 60)}px)` : "";
 }
 
+// ── Framing — the cosmos's starting zoom, and the statements around it ──────
+// Phones in portrait start fully zoomed out; phones in landscape start with
+// the solar system exactly as wide as the MULVIUM wordmark, first M to last.
+// The statement and mission are then placed around the cosmos's measured
+// bounds: beside it when there is room, above and below it otherwise.
+const heroStatement = heroStatements.querySelector(".hero-statement");
+const heroMission   = heroStatements.querySelector(".hero-mission");
+const cosmosHint    = document.getElementById("cosmos-hint");
+const fitCam = new THREE.PerspectiveCamera(FOV_DEFAULT, 1, 0.1, 200);
+const fitPts = [];
+ORBITS.forEach((def) => {
+  const tilt = new THREE.Euler(...def.tilt);
+  const r = def.radius;
+  for (let i = 0; i < 96; i++) {
+    const a = (i / 96) * Math.PI * 2;
+    fitPts.push(new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, 0).applyEuler(tilt));
+  }
+});
+
+// The cosmos's extent in normalized device coordinates at the default zoom.
+// Every point scales about the centre by tan(fov/2), so one pass serves all.
+function cosmosNdc(aspect) {
+  fitCam.aspect = aspect;
+  fitCam.updateProjectionMatrix();
+  fitCam.position.copy(CAM_3D);
+  fitCam.lookAt(LOOK_AT);
+  fitCam.updateMatrixWorld();
+  const b = { l: Infinity, r: -Infinity, t: -Infinity, b: Infinity }, v = new THREE.Vector3();
+  for (const p of fitPts) {
+    v.copy(p).project(fitCam);
+    b.l = Math.min(b.l, v.x); b.r = Math.max(b.r, v.x);
+    b.t = Math.max(b.t, v.y); b.b = Math.min(b.b, v.y);
+  }
+  return b;
+}
+const tanHalf = (fov) => Math.tan((fov * Math.PI) / 360);
+
+// The wordmark's width from the left edge of its first M to the right edge
+// of its last (letter-spacing trails each glyph, so the last one's is removed)
+function brandWidth() {
+  const node = heroBrand.firstChild;
+  if (!node || !node.length) return 0;
+  const range = document.createRange();
+  range.setStart(node, 0); range.setEnd(node, 1);
+  const first = range.getBoundingClientRect();
+  range.setStart(node, node.length - 1); range.setEnd(node, node.length);
+  const last = range.getBoundingClientRect();
+  const spacing = parseFloat(getComputedStyle(heroBrand).letterSpacing) || 0;
+  return last.right - spacing - first.left;
+}
+
+// The zoom each layout opens at (the wheel and pinch zoom from there)
+function baseFov(w, h) {
+  if (finePointer) return FOV_DEFAULT;
+  if (h > w) return FOV_MAX;                                // phone, portrait
+  const width = brandWidth();                               // phone, landscape
+  if (!width) return FOV_DEFAULT;
+  const b = cosmosNdc(w / h);
+  const wDefault = ((b.r - b.l) / 2) * w;
+  const fov = (360 / Math.PI) * Math.atan(tanHalf(FOV_DEFAULT) * wDefault / width);
+  return Math.max(FOV_MIN, Math.min(FOV_MAX, fov));
+}
+
+let heroFramed = false;
+function layoutHero() {
+  const w = lastW || window.innerWidth, h = lastH || window.innerHeight;
+  const fov = baseFov(w, h);
+  if (state.mode === "3d") {
+    targetFov = fov;
+    if (!heroFramed) { camera.fov = fov; camera.updateProjectionMatrix(); } // open already framed
+  }
+  heroFramed = true;
+
+  // The cosmos's bounds on screen at that zoom
+  const b = cosmosNdc(w / h), k = tanHalf(FOV_DEFAULT) / tanHalf(fov);
+  const L = ((1 + b.l * k) / 2) * w, T = ((1 - b.t * k) / 2) * h, B = ((1 - b.b * k) / 2) * h;
+  const edge = Math.max(20, Math.min(88, w * 0.045));
+  const gap  = Math.max(12, Math.min(28, w * 0.012));
+  const col  = Math.min(360, L - edge - gap);
+  const side = w >= h && col >= 150;
+  const root = document.documentElement;
+  root.dataset.heroLayout = side ? "side" : "stack";
+
+  if (side) {
+    root.style.setProperty("--hero-edge", `${edge}px`);
+    root.style.setProperty("--hero-col", `${col}px`);
+    root.style.setProperty("--hero-mid", `${(T + B) / 2}px`);
+  } else {
+    // Statement under the wordmark; mission under the cosmos, clear of the hint
+    const vgap = Math.max(12, Math.min(22, h * 0.02));
+    root.style.setProperty("--st-top", `${heroBrand.getBoundingClientRect().bottom + vgap}px`);
+    const hintTop = cosmosHint.firstElementChild.getBoundingClientRect().top || h;
+    const mh = heroMission.offsetHeight;
+    root.style.setProperty("--mi-top", `${Math.max(0, Math.min(B + vgap, hintTop - mh - vgap))}px`);
+  }
+}
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutHero);
+
+// The statement's words rise into place at their own speeds on the intro
+{
+  const text = heroStatement.textContent.trim();
+  heroStatement.textContent = "";
+  const spoken = document.createElement("span"); // read once, whole
+  spoken.className = "hidden-text";
+  spoken.textContent = text;
+  heroStatement.append(spoken);
+  const DUR = [1.05, 1.3, 0.95, 1.4, 1.15, 0.9, 1.35, 1.0, 1.25];
+  text.split(/\s+/).forEach((word, i) => {
+    const mask = document.createElement("span");
+    mask.className = "hw";
+    mask.setAttribute("aria-hidden", "true");
+    const inner = document.createElement("span");
+    inner.textContent = word;
+    inner.style.setProperty("--d",   `${(0.08 * i + 0.05 * ((i * 7) % 3)).toFixed(2)}s`);
+    inner.style.setProperty("--dur", `${DUR[i % DUR.length]}s`);
+    mask.appendChild(inner);
+    heroStatement.append(mask, " ");
+  });
+}
+
 let lastW = 0, lastH = 0;
 function resize() {
   lsVW = window.innerWidth;
@@ -530,6 +560,7 @@ function resize() {
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
+  layoutHero();
 }
 resize();
 window.addEventListener("resize", resize);
@@ -564,22 +595,13 @@ canvas.addEventListener("pointerdown", (e) => {
 
 canvas.addEventListener("click", () => {
   if (state.mode === "3d") {
-    if (state.hoverPlanet) {
-      if (state.hoverPlanet.def.id === "ifo") goToIFO();
-      else if (state.hoverPlanet.def.href) coverAndNavigate(state.hoverPlanet.def.href);
-    } else if (state.hoverStar) goTo2D();
+    if (state.hoverPlanet) coverAndNavigate(state.hoverPlanet.def.href);
+    else if (state.hoverStar) goTo2D();
   } else if (state.mode === "2d") {
-    if (state.hoverStar) {
-      fadeInLoadingScreen(() => snapTo3D());
-    } else if (state.hoverPlanet && state.hoverPlanet.def.id === "ifo") {
-      fadeInLoadingScreen(() => jumpToIFO());
-    }
-  } else if ((state.mode === "ifo" || state.mode === "ifo-transitioning") && state.hoverPlanet) {
-    returnFromIFO();
+    if (state.hoverStar) fadeInLoadingScreen(() => snapTo3D());
+    else if (state.hoverPlanet) coverAndNavigate(state.hoverPlanet.def.href);
   }
 });
-
-const ifoModeEl = document.getElementById("ifo-mode");
 
 // ── Loading screen ────────────────────────────────────────────────────────────
 // Plays a nested-rectangle reveal sequence when navigating via top/footer nav.
@@ -668,6 +690,7 @@ function showLoadingScreen(onReady, duration, startOpaque) {
     state.lsRevealP = 1;
     // First reveal complete — play the hero title entrance over the cosmos
     body.classList.add("cosmos-intro");
+    layoutHero();
     [lsF1, lsF2, lsF3, lsF4, lsBorder].forEach(f => {
       f.style.width = "0"; f.style.height = "0";
       f.style.transform = "translate(-50%, -50%)";
@@ -809,48 +832,6 @@ function showLoadingScreen(onReady, duration, startOpaque) {
   lsRaf = requestAnimationFrame(tick);
 }
 
-function goToIFO() {
-  if (state.mode !== "3d") return;
-  labelVisTarget = 0;
-  state.labelPlanet = null;
-  state.labelStar = false;
-  document.querySelectorAll(".nav-item.open").forEach((el) => el.classList.remove("open"));
-  navbar.classList.add("visible");
-  navbar.setAttribute("aria-hidden", "false");
-  body.classList.remove("cosmos-only");
-  body.classList.add("mode-ifo");
-  ifoModeEl.setAttribute("aria-hidden", "false");
-  // Lock canvas height to the current viewport so mobile address-bar
-  // collapse during IFO scroll doesn't cause a sudden resize.
-  canvasWrap.style.height = window.innerHeight + "px";
-  window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
-  resetCinematicScroll();
-  state.ifoTarget = 1;
-  state.mode = "ifo-transitioning";
-}
-
-function returnFromIFO() {
-  if (state.mode !== "ifo" && state.mode !== "ifo-transitioning") return;
-  state.ifoTarget = 0;
-  state.mode = "ifo-transitioning";
-  window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
-  resetCinematicScroll();
-  canvasWrap.style.height = "";   // release the pinned height
-  body.classList.add("cosmos-only");
-  requestAnimationFrame(() => {
-    body.classList.remove("mode-ifo");
-    ifoModeEl.setAttribute("aria-hidden", "true");
-  });
-}
-
-document.querySelectorAll("[data-ifo-link]").forEach((el) => {
-  el.addEventListener("click", (e) => {
-    e.preventDefault();
-    if (state.mode === "ifo") return;
-    fadeInLoadingScreen(() => jumpToIFO());
-  });
-});
-
 canvas.setAttribute("tabindex", "0");
 canvas.setAttribute("role", "application");
 canvas.setAttribute("aria-label", "Mulvium cosmos. Click or tap a planet to explore. Click or tap the center to enter.");
@@ -907,7 +888,7 @@ function goTo2D() {
 
 function goTo3D() {
   if (state.mode !== "2d") return;
-  targetFov = FOV_DEFAULT;
+  targetFov = baseFov(lastW, lastH);
   window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
   resetCinematicScroll();
   state.mode = "transitioning";
@@ -920,54 +901,11 @@ function goTo3D() {
   bgColor.copy(PAPER_COLOR);
 }
 
-// Instantly snaps to full IFO state without playing the animated 3D→IFO
-// camera fly. Used when entering IFO via the navbar/footer (loading screen
-// covers the snap); the animated entry is reserved for the direct planet click.
-function jumpToIFO() {
-  targetFov       = FOV_DEFAULT;
-  state.t         = 1;
-  state.target    = 1;
-  state.ifoT      = 1;
-  state.ifoTarget = 1;
-  state.mode      = "ifo";
-
-  document.querySelectorAll(".nav-item.open").forEach((el) => el.classList.remove("open"));
-  navbar.classList.add("visible");
-  navbar.setAttribute("aria-hidden", "false");
-  body.classList.remove("cosmos-only", "mode-2d", "expansion-active", "night-mode");
-  body.classList.add("mode-ifo");
-  ifoModeEl.setAttribute("aria-hidden", "false");
-  labelVisTarget = 0;
-  state.labelPlanet = null;
-  state.labelStar   = false;
-
-  state.expansionP1  = 0;
-  state.lsRevealP    = 1;
-  bgColor.copy(PAPER_COLOR);
-  canvasWrap.style.height = window.innerHeight + "px";
-
-  window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
-  resetCinematicScroll();
-}
-
 // Instantly snaps all state to the 3D opening view from any mode.
 // Called under cover of the loading screen so the snap is never visible.
 function snapTo3D() {
-  targetFov = FOV_DEFAULT;
-  // Reparent IFO planet back to its orbit if it was detached
-  if (cofPlanetInScene) {
-    scene.remove(ifoOrbit.planet);
-    ifoOrbit.rotator.add(ifoOrbit.planet);
-    ifoOrbit.planet.position.set(ifoOrbit.def.radius, 0, 0);
-    ifoOrbit.planet.rotation.set(0, 0, 0);
-    cofPlanetInScene = false;
-  }
-  ifoModeEl.setAttribute("aria-hidden", "true");
-  body.classList.remove("mode-ifo");
-  canvasWrap.style.height = "";
-
-  state.ifoT      = 0;
-  state.ifoTarget = 0;
+  targetFov = camera.fov = baseFov(lastW, lastH); // under cover: no visible zoom
+  camera.updateProjectionMatrix();
   state.t         = 0;
   state.target    = 0;
   state.mode      = "3d";
@@ -990,7 +928,7 @@ function snapTo3D() {
 // Fade the current page content out to white, then start the loading animation.
 // This is the "fade-out before the loading screen" — the overlay fades IN
 // (covering the page) which from the viewer's perspective is a fade-out of
-// whatever was visible (IFO prose, 3D cosmos, etc.).
+// whatever was visible (the night sky, the letter, etc.).
 function fadeInLoadingScreen(onReady) {
   if (lsActive) return;
   lsActive = true;
@@ -1065,7 +1003,7 @@ document.addEventListener("click", (ev) => {
   try {
     const url = new URL(href, location.href);
     if (url.origin !== location.origin) return;       // external
-    if (url.pathname === location.pathname) return;   // same page (IFO, brand handled elsewhere)
+    if (url.pathname === location.pathname) return;   // same page (brand handled elsewhere)
     ev.preventDefault();
     coverAndNavigate(href);
   } catch (e) {}
@@ -1134,12 +1072,10 @@ function easeInOut(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2)
 
 const tmpVec   = new THREE.Vector3();
 const worldPos = new THREE.Vector3();
-const baseCamPos = new THREE.Vector3();
 
 function updateHover() {
-  const inCoFMode = state.mode === "ifo" || state.mode === "ifo-transitioning";
   const in2DMode  = state.mode === "2d";
-  if (!pointerInside || (state.mode !== "3d" && !inCoFMode && !in2DMode)) {
+  if (!pointerInside || (state.mode !== "3d" && !in2DMode)) {
     state.hoverStar = false;
     state.hoverPlanet = null;
     canvas.style.cursor = "default";
@@ -1151,18 +1087,12 @@ function updateHover() {
 
   if (hits.length > 0) {
     const obj = hits[0].object;
-    state.hoverStar   = obj.userData.type === "star" && !inCoFMode;
+    state.hoverStar   = obj.userData.type === "star";
     const hitPlanet   = obj.userData.type === "planet" ? orbits.find((o) => o.planet === obj) : null;
-    if (inCoFMode) {
-      state.hoverPlanet = hitPlanet && hitPlanet.def.id === "ifo" ? hitPlanet : null;
-    } else if (in2DMode) {
-      state.hoverPlanet = hitPlanet && hitPlanet.def.id === "ifo" ? hitPlanet : null;
-    } else {
-      state.hoverPlanet = hitPlanet && !hitPlanet.def.comingSoon ? hitPlanet : null;
-    }
+    state.hoverPlanet = hitPlanet && hitPlanet.def.href ? hitPlanet : null;
     canvas.style.cursor = (state.hoverPlanet || state.hoverStar) ? "pointer" : "default";
 
-    if (inCoFMode || in2DMode) {
+    if (in2DMode) {
       if (state.hoverPlanet) {
         state.labelPlanet = state.hoverPlanet;
         state.labelStar   = false;
@@ -1195,9 +1125,8 @@ function updateHover() {
 // Tracks the annotation sprite to its sphere and eases its opacity. Runs in
 // animate(); the sprite's depthTest handles occlusion by rings and spheres.
 function trackLabel(dt) {
-  const inCoFMode = state.mode === "ifo" || state.mode === "ifo-transitioning";
   let target = labelVisTarget;
-  if (inCoFMode || lsActive) target = 0;
+  if (lsActive) target = 0;
   const cur = labelSprite.material.opacity;
   const nxt = cur + (target - cur) * (1 - Math.pow(0.0005, dt));
   labelSprite.material.opacity = nxt;
@@ -1221,70 +1150,34 @@ function trackLabel(dt) {
 function animate() {
   const dt       = Math.min(state.clock.getDelta(), 0.05);
   const eased    = easeInOut(state.t);
-  const easedIFO = easeInOut(Math.max(0, Math.min(1, state.ifoT)));
   const p1e      = easeInOut(state.expansionP1);
 
-  // Constant circular orbiting (pause while in ifo)
-  const orbitActive = state.ifoT < 0.01;
+  // Constant circular orbiting
   orbits.forEach((o) => {
-    if (orbitActive) o.angle += o.def.speed * dt;
+    o.angle += o.def.speed * dt;
     o.rotator.rotation.z = o.angle;
-    o.planet.rotation.y += 0.08 * dt * (1 - easedIFO);
+    o.planet.rotation.y += 0.08 * dt;
   });
 
-  // 3D↔2D tilt/scale transition; IFO+Castles rings transform into CoF rings
+  // 3D↔2D tilt/scale transition, then scale-out during expansion
   const revealMul = lerp(7.0, 1.0, easeInOut(state.lsRevealP));
   orbits.forEach((o) => {
     const [rx, ry, rz] = o.pivot.userData.baseTilt;
-    const cofR = COF_RING_TARGETS[o.def.id];
-
-    const expF         = 1 + easeInOut(state.expansionP1) * 10;
+    const expF          = 1 + easeInOut(state.expansionP1) * 10;
     const expansionFade = 1 - easeInOut(state.expansionP1);
-    const isExpanding  = state.expansionP1 > 0;
+    const isExpanding   = state.expansionP1 > 0;
 
-    if (cofR !== undefined) {
-      // This ring becomes a CoF ring: flatten to XZ, scale toward cofR
-      const flatT  = Math.max(eased, easedIFO);
-      const scaleT = lerp(lerp(1, o.def.radius2D / o.def.radius, eased), cofR / o.def.radius, easedIFO);
-      o.pivot.rotation.x = lerp(rx, Math.PI / 2, flatT);
-      o.pivot.rotation.y = lerp(ry, 0, flatT);
-      o.pivot.rotation.z = lerp(rz, 0, flatT);
-      o.pivot.scale.setScalar(scaleT * expF * revealMul);
-      // Only enter transparent pass during expansion — avoids depth-order
-      // conflicts with the Circle of Fifths sprites in IFO mode.
-      if (isExpanding) {
-        o.ring.material.opacity     = expansionFade;
-        o.ring.material.transparent = true;
-      } else {
-        o.ring.material.opacity     = 1;
-        o.ring.material.transparent = false;
-      }
-    } else {
-      // Standard 3D↔2D transition + fade during IFO + scale-out during expansion
-      o.pivot.rotation.x = lerp(rx, Math.PI / 2, eased);
-      o.pivot.rotation.y = lerp(ry, 0, eased);
-      o.pivot.rotation.z = lerp(rz, 0, eased);
-      const s  = lerp(1, o.def.radius2D / o.def.radius, eased);
-      const ex = lerp(1, o.def.ellipseX,                eased);
-      o.pivot.scale.set(s * ex * expF * revealMul, s * expF * revealMul, s * expF * revealMul);
-      o.ring.material.opacity     = lerp(1, 0, easedIFO) * expansionFade;
-      o.ring.material.transparent = true;
-    }
+    o.pivot.rotation.x = lerp(rx, Math.PI / 2, eased);
+    o.pivot.rotation.y = lerp(ry, 0, eased);
+    o.pivot.rotation.z = lerp(rz, 0, eased);
+    const s  = lerp(1, o.def.radius2D / o.def.radius, eased);
+    const ex = lerp(1, o.def.ellipseX,                eased);
+    o.pivot.scale.set(s * ex * expF * revealMul, s * expF * revealMul, s * expF * revealMul);
 
-    // Orbiting planets fade during IFO and/or expansion
-    if (o.def.id !== "ifo") {
-      o.planet.material.opacity     = lerp(1, 0, easedIFO) * expansionFade;
-      o.planet.material.transparent = true;
-    } else if (!cofPlanetInScene) {
-      // IFO planet: only go transparent during expansion to preserve opaque
-      // depth ordering with CoF sprites in 3D / IFO modes.
-      if (isExpanding) {
-        o.planet.material.opacity     = expansionFade;
-        o.planet.material.transparent = true;
-      } else {
-        o.planet.material.opacity     = 1;
-        o.planet.material.transparent = false;
-      }
+    // Rings and planets stay opaque until the expansion fades them out
+    for (const m of [o.ring.material, o.planet.material]) {
+      m.opacity     = expansionFade;
+      m.transparent = isExpanding;
     }
 
     // On wide viewports (mobile landscape / tablet) the camera frustum is
@@ -1296,28 +1189,6 @@ function animate() {
     o.ring.visible   = !fullyFaded;
     o.planet.visible = !fullyFaded;
   });
-
-  // Star fully disappears during ifo
-  star.material.opacity     = lerp(1, 0, easedIFO);
-  star.material.transparent  = true;
-
-  // IFO planet: detach from orbit and fly to origin, no opacity change
-  if (easedIFO > 0 && !cofPlanetInScene) {
-    scene.attach(ifoOrbit.planet);            // preserves world transform
-    cofHubStartPos.copy(ifoOrbit.planet.position);
-    cofPlanetInScene = true;
-  }
-  if (cofPlanetInScene) {
-    ifoOrbit.planet.position.lerpVectors(cofHubStartPos, LOOK_AT, easedIFO);
-  }
-  // Re-attach to orbit once fully returned to 3D
-  if (cofPlanetInScene && state.ifoT <= 0 && state.mode === "3d") {
-    scene.remove(ifoOrbit.planet);
-    ifoOrbit.rotator.add(ifoOrbit.planet);
-    ifoOrbit.planet.position.set(ifoOrbit.def.radius, 0, 0);
-    ifoOrbit.planet.rotation.set(0, 0, 0);
-    cofPlanetInScene = false;
-  }
 
   // Star: shrinks as expansion progresses, then drifts to a flower centre once tiny
   const pulse      = 1 + Math.sin(performance.now() * 0.0011) * 0.01;
@@ -1355,74 +1226,23 @@ function animate() {
     }
   }
 
-  // IFO entry/exit transition
-  if (state.mode === "ifo-transitioning") {
-    const dir = state.ifoTarget > state.ifoT ? 1 : -1;
-    state.ifoT += dir * dt * 0.75;
-    if (dir === 1 && state.ifoT >= 1) {
-      state.ifoT = 1;
-      state.mode = "ifo";
-    } else if (dir === -1 && state.ifoT <= 0) {
-      state.ifoT = 0;
-      state.mode = "3d";
-      navbar.classList.remove("visible");
-      navbar.setAttribute("aria-hidden", "true");
-    }
-  }
+  // Camera: blend 3D→2D
+  lerpVec(CAM_3D, CAM_2D, eased, camera.position);
 
-  // ── Agent circle animation ─────────────────────────────────────────────────────────────────────────────
-  if (easedIFO > 0.001) {
-    cofAngle += dt * 0.18;
-
-    const R_KEY  = 3.6;  // orbit outside the outer ring (2.8)
-    const R_ACC  = 2.2;  // orbit between/outside the rings
-    const now    = performance.now() * 0.0004;
-    // Mirrors the ring revealMul: sprites collapse from 7× orbit radius during the
-    // loading screen, reaching normal radius as lsRevealP approaches 1.
-    const cofMul = lerp(7.0, 1.0, easeInOut(state.lsRevealP));
-
-    cofKeySprites.forEach((s, i) => {
-      const θ    = cofAngle + (i / 12) * Math.PI * 2;
-      const yBob = Math.sin(now + i * 0.52) * 0.12;
-      const r    = R_KEY * cofMul;
-      s.position.set(Math.sin(θ) * r, yBob, Math.cos(θ) * r);
-      s.material.opacity = easedIFO;
-    });
-
-    // Focus words share the exact same θ as their agent (index i) at inner radius
-    cofAccSprites.forEach((s, i) => {
-      if (!s) return;
-      const θ    = cofAngle + (i / 12) * Math.PI * 2;
-      const yBob = Math.sin(now + i * 0.52 + 0.3) * 0.08;
-      const r    = R_ACC * cofMul;
-      s.position.set(Math.sin(θ) * r, yBob, Math.cos(θ) * r);
-      s.material.opacity = easedIFO * 0.85;
-    });
-
-  } else {
-    cofKeySprites.forEach((s) => { s.material.opacity = 0; });
-    cofAccSprites.forEach((s) => { if (s) s.material.opacity = 0; });
-  }
-
-  // Camera: blend 3D→2D then blend toward CAM_IFO
-  lerpVec(CAM_3D, CAM_2D, eased, baseCamPos);
-  lerpVec(baseCamPos, CAM_IFO, easedIFO, camera.position);
-
-  // Pointer parallax — gentle camera drift for depth. Strongest in 3D,
-  // subtle in IFO, fully off in the overhead 2D/expansion view so the
-  // scroll-driven framing stays exact.
+  // Pointer parallax — gentle camera drift for depth in 3D, fully off in the
+  // overhead 2D/expansion view so the scroll-driven framing stays exact.
   if (motionOK) {
     const k = 1 - Math.pow(0.02, dt);
     camDrift.x += (camDrift.tx - camDrift.x) * k;
     camDrift.y += (camDrift.ty - camDrift.y) * k;
-    const amp = 0.5 * (1 - eased) * (1 - easedIFO) + 0.16 * easedIFO;
+    const amp = 0.5 * (1 - eased);
     camera.position.x += camDrift.x * amp;
     camera.position.y += -camDrift.y * amp * 0.55;
   }
   camera.lookAt(LOOK_AT);
 
-  // Zoom: smoothly lerp FOV toward target (only in 3D mode)
-  if (state.mode === "3d" && Math.abs(camera.fov - targetFov) > 0.01) {
+  // Zoom: smoothly lerp FOV toward target (in 3D, and while moving to or from 2D)
+  if ((state.mode === "3d" || state.mode === "transitioning") && Math.abs(camera.fov - targetFov) > 0.01) {
     camera.fov = camera.fov + (targetFov - camera.fov) * 0.12;
     camera.updateProjectionMatrix();
   }
@@ -1463,7 +1283,7 @@ function animate() {
   // the statement and mission fade out with it.
   {
     const introOn  = body.classList.contains("cosmos-intro") ? 1 : 0;
-    const brandVis = Math.max(0, 1 - state.t * 2) * (1 - easedIFO) * introOn;
+    const brandVis = Math.max(0, 1 - state.t * 2) * introOn;
 
     applyGoo(heroBrand, brandVis);
     heroStatements.style.opacity = Math.pow(brandVis, 0.6).toFixed(3);
@@ -1498,15 +1318,11 @@ function updateExpansionScroll() {
 }
 
 
-// ── Scroll reveal — letter, FSOS prose, and footer rise in as they enter view ──
+// ── Scroll reveal — the letter and footer rise in as they enter view ──
 {
   const rvSelectors = [
-    "#letter-section .letter-header",
     "#letter-section .letter-body > *",
     "#letter-section .letter-close",
-    ".ifo-prose-header",
-    ".ifo-prose-body > p",
-    ".ifo-prose-footnote",
     "#site-footer .footer-copy",
   ];
   const rvEls = document.querySelectorAll(rvSelectors.join(", "));
@@ -1534,7 +1350,7 @@ window.addEventListener("resize", () => {
 });
 
 // Cinematic scroll — intercept wheel events and apply smooth inertia
-// resetCinematicScroll is called by mode transitions (jumpToIFO, snapTo3D, …)
+// resetCinematicScroll is called by mode transitions (snapTo3D, goTo3D, …)
 // after their programmatic window.scrollTo: it cancels any in-flight inertia
 // so a stale scrollTarget can't drag the page back away from the top.
 let resetCinematicScroll = () => {};
@@ -1583,13 +1399,10 @@ animate();
 // is invisible — both are #ffffff until the frames appear.
 {
   const _entering = sessionStorage.getItem("ls-entering");
-  const _ifoHash  = window.location.hash === "#ifo";
-  if (_ifoHash) history.replaceState(null, "", window.location.pathname);
-
   if (_entering) {
     sessionStorage.removeItem("ls-entering");
   }
-  showLoadingScreen(() => { if (_ifoHash) jumpToIFO(); }, _entering ? 5000 : 4000, true);
+  showLoadingScreen(() => {}, _entering ? 5000 : 4000, true);
 }
 
 // When the page is restored from the browser back-forward cache the WebGL

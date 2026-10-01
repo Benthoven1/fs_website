@@ -528,26 +528,18 @@ scene.add(esplanade);
     esplanade.add(b);
   }
 
-  // Clipped trees and lamps along the avenues
+  // Lamps along the avenues
   const CAP_N = 96;
-  const topiaryTrunk = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.16, 0.2, 1.6, 10), porcelain(BARK, 0.66), CAP_N);
-  const topiaryCrown = new THREE.InstancedMesh(new THREE.SphereGeometry(1.35, 24, 18), porcelain(0xb3ca9d, 0.5), CAP_N);
   const lampPost = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.06, 0.08, 3.4, 8), porcelain(CREAM_DEEP, 0.4), CAP_N);
   const lampGlobe = new THREE.InstancedMesh(new THREE.SphereGeometry(0.28, 16, 12), porcelain(0xf0d5bb, 0.3), CAP_N);
   const m = new THREE.Matrix4();
-  let ti = 0, li = 0;
+  let li = 0;
   for (let k = 0; k < 4; k++) {
     const a = k * (Math.PI / 2);
     const along = V(Math.sin(a), 0, Math.cos(a)), across = V(Math.cos(a), 0, -Math.sin(a));
     for (let d = PLAZA + 6; d < PLAZA + 96; d += 10) {
       for (const side of [-1, 1]) {
-        const p = along.clone().multiplyScalar(d).addScaledVector(across, side * 5.4);
-        if (ti < CAP_N) {
-          topiaryTrunk.setMatrixAt(ti, m.makeTranslation(p.x, 0.8, p.z));
-          topiaryCrown.setMatrixAt(ti, m.makeTranslation(p.x, 2.6, p.z));
-          ti++;
-        }
-        const lp = p.clone().addScaledVector(along, 5);
+        const lp = along.clone().multiplyScalar(d + 5).addScaledVector(across, side * 5.4);
         if (li < CAP_N) {
           lampPost.setMatrixAt(li, m.makeTranslation(lp.x, 1.7, lp.z));
           lampGlobe.setMatrixAt(li, m.makeTranslation(lp.x, 3.5, lp.z));
@@ -556,9 +548,8 @@ scene.add(esplanade);
       }
     }
   }
-  topiaryTrunk.count = topiaryCrown.count = ti;
   lampPost.count = lampGlobe.count = li;
-  esplanade.add(topiaryTrunk, topiaryCrown, lampPost, lampGlobe);
+  esplanade.add(lampPost, lampGlobe);
 }
 
 // ── Camera path ──────────────────────────────────────────────────────────────
@@ -596,6 +587,23 @@ function placeCamera(p, open) {
   const shown = p > 0.002;
   tree.visible = shown;
   esplanade.visible = shown;
+}
+
+// ── Scroll lock — the page waits for the planet to become an acorn ──────────
+// oak.html locks it before first paint (html.oak-locked); it is released
+// once the acorn and its leaves have formed.
+let scrollLocked = document.documentElement.classList.contains("oak-locked");
+window.scrollTo(0, 0);
+const holdScroll = (e) => { if (scrollLocked) e.preventDefault(); };
+window.addEventListener("wheel", holdScroll, { passive: false });
+window.addEventListener("touchmove", holdScroll, { passive: false });
+window.addEventListener("keydown", (e) => {
+  if (scrollLocked && [" ", "PageDown", "PageUp", "ArrowDown", "ArrowUp", "End", "Home"].includes(e.key)) e.preventDefault();
+});
+function releaseScroll() {
+  if (!scrollLocked) return;
+  scrollLocked = false;
+  document.documentElement.classList.remove("oak-locked");
 }
 
 // ── Scroll → progress ────────────────────────────────────────────────────────
@@ -686,6 +694,7 @@ function animate() {
   // Title fades as the camera retreats; the scroll cue waits for the acorn
   if (heroText) heroText.style.opacity = String(1 - smooth(0.02, 0.14, pSmooth));
   if (cue) cue.style.opacity = String(smooth(0.85, 1, m) * (1 - smooth(0.01, 0.06, pSmooth)));
+  if (m >= 0.95) releaseScroll();
 
   renderer.render(scene, camera);
   requestAnimationFrame(animate);

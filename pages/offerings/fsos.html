@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>document.documentElement.classList.add('ls-instant-cover');</script>
+  <title>FSOS &mdash; Mulvium</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Cormorant+SC:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,900;1,300;1,400&family=Great+Vibes&family=Inter:wght@300;400;500;600&family=Italiana&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+</head>
+<body style="opacity:0" class="fsos-page">
+  <div id="nav-cap" aria-hidden="true"></div>
+  <nav class="navbar visible" aria-hidden="false">
+    <div class="nav-brand">
+      <a href="../../index.html" id="brand-link"><span class="bl bl-1">M</span><span class="bl bl-2">U</span><span class="bl bl-3">L</span><span class="bl bl-4">V</span><span class="bl bl-5">i</span><span class="bl bl-6">u</span><span class="bl bl-7">M</span></a>
+    </div>
+    <button class="nav-burger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li class="nav-item">
+        <a href="../../index.html" class="nav-trigger">Home</a>
+      </li>
+      <li class="nav-item has-dropdown">
+        <button class="nav-trigger" aria-haspopup="true" aria-expanded="false">Offerings</button>
+        <ul class="dropdown">
+          <li><a href="fiscal-sponsorship.html">Fiscal Sponsorship</a></li>
+          <li><a href="fsos.html">FSOS</a></li>
+          <li><a href="oak.html">Oak</a></li>
+        </ul>
+      </li>
+      <li class="nav-item has-dropdown">
+        <button class="nav-trigger" aria-haspopup="true" aria-expanded="false">About Us</button>
+        <ul class="dropdown">
+          <li><a href="../../pages/about/about.html#people">People</a></li>
+          <li><a href="../../pages/about/about.html#careers">Careers</a></li>
+          <li><a href="../../pages/about/about.html#contact">Contact Us</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+  <!-- The reference workforce: twelve agents orbit the Chief of Staff
+       (js/fsos.js). The central planet leads back home. -->
+  <section class="fsos-stage">
+    <canvas id="fsos-canvas"></canvas>
+  </section>
+
+  <main class="fsos-prose">
+    <header class="fsos-prose-header">
+      <p class="fsos-eyebrow">A Mulvium Company</p>
+      <h1 class="fsos-prose-title">FSOS</h1>
+    </header>
+
+      <div class="fsos-prose-body">
+        <p>
+          FSOS, the FiscalSponsor Operating System, is the software our
+          engagement leads use to turn a founder&rsquo;s idea into an
+          operating institution. From a first consultation it drafts the
+          institution&rsquo;s complete plan, the <em>blueprint</em>: its
+          mission, programs, audiences, legal and operational requirements,
+          funding model, timeline, and the decisions still open. Every value
+          states its basis&mdash;stated by the founder, inferred, or
+          assumed&mdash;so nothing is invented without saying so, and no
+          work waits on an answer: open questions carry sensible defaults
+          until the founder decides.
+        </p>
+        <p>
+          From the blueprint, FSOS assembles an AI workforce organized like
+          a small, real organization. A Chief of Staff turns goals into
+          tasks and sequences the work; specialists research, analyze, and
+          draft. For the Beethoven
+          festival<sup><a href="#fsos-fn-1" class="fsos-fnref">1</a></sup>,
+          that is thirteen agents: the Chief of Staff at the center of the
+          circle above, and twelve specialists around it. Every agent is drawn
+          from an approved catalogue, holds only the tools its job requires,
+          and hands its drafts to the engagement lead for review. A permanent,
+          sourced memory records everything decided and learned.
+        </p>
+        <p>
+          Agents draft; people decide. When work reaches a step with
+          real-world effect&mdash;signing a contract, accepting a gift,
+          submitting a grant, spending money&mdash;the agent does not act.
+          It files a request tied to the exact draft. The founder approves
+          it, the Sponsor approves it where required, and a person carries
+          it out. Founders never log in to FSOS: they meet their
+          engagement lead and receive finished work.
+        </p>
+      </div>
+
+      <footer class="fsos-prose-footnote" id="fsos-fn-1">
+        <p>
+          <sup>1</sup> The Beethoven festival is FSOS&rsquo;s reference
+          case: a founder&rsquo;s idea for &ldquo;a three-day festival
+          dedicated to Beethoven&rsquo;s solo, chamber, and orchestral
+          music, including panel discussions and intellectual
+          discourse.&rdquo; FSOS is built and tested end to end against it.
+        </p>
+      </footer>
+  </main>
+  <footer id="site-footer">
+    <div class="footer-copy">
+      <p>&copy; <span id="year"></span> Mulvium Foundation. All rights reserved.</p>
+    </div>
+  </footer>
+  <!-- Loading screen — nested image frames reveal the agent circle beneath -->
+  <div id="loading-screen" aria-hidden="true">
+    <div id="ls-f1" class="ls-frame"><div class="ls-img"></div></div>
+    <div id="ls-f2" class="ls-frame"><div class="ls-img"></div></div>
+    <div id="ls-f3" class="ls-frame"><div class="ls-img"></div></div>
+    <div id="ls-f4" class="ls-frame"><div class="ls-img"></div></div>
+    <div id="ls-border" class="ls-frame"></div>
+  </div>
+
+  <script src="../../js/ls.js"></script>
+  <script type="importmap">
+    { "imports": { "three": "https://unpkg.com/three@0.161.0/build/three.module.js" } }
+  </script>
+  <script type="module" src="../../js/fsos.js"></script>
+  <script src="../../js/cursor.js" defer></script>
+  <script src="../../js/nav.js"></script>
+  <script src="../../js/page-transition.js"></script>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

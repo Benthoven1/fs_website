@@ -345,24 +345,9 @@ body.night-mode .letter-sig-img {
   filter: invert(1);
 }
 
-body.night-mode .letter-mission {
-  border-color: rgba(255, 255, 255, 0.45);
-}
-
-body.night-mode .letter-body .letter-mission-label { color: rgba(255, 255, 255, 0.6); font-weight: 500; }
-
-body.night-mode .letter-body .letter-mission p.letter-mission-text {
+body.night-mode .letter-body p.letter-mission {
   color: #ffffff;
   font-weight: 600;
-}
-
-body.night-mode .letter-ornament {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-body.night-mode .letter-ornament::before,
-body.night-mode .letter-ornament::after {
-  background: rgba(255, 255, 255, 0.45);
 }
 
 body.night-mode .letter-close {
@@ -419,8 +404,7 @@ body.cosmos-only canvas#cosmos { touch-action: none; }
   pointer-events: none;
 }
 
-body.mode-2d .cosmos-hint,
-body.mode-ifo .cosmos-hint { opacity: 0; }
+body.mode-2d .cosmos-hint { opacity: 0; }
 
 
 /* ---------- Letter Section ---------- */
@@ -433,8 +417,6 @@ body.mode-ifo .cosmos-hint { opacity: 0; }
   max-width: 680px;
   margin: 0 auto;
 }
-
-.letter-header { margin-bottom: 52px; }
 
 .letter-to {
   font-family: "Cormorant Garamond", serif;
@@ -471,26 +453,6 @@ body.mode-ifo .cosmos-hint { opacity: 0; }
   line-height: 1.85;
   color: var(--ink-soft);
   margin: 0;
-}
-
-.letter-ornament {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
-  margin: 44px 0;
-  color: var(--ink);
-  font-size: 18px;
-  user-select: none;
-}
-
-.letter-ornament::before,
-.letter-ornament::after {
-  content: '';
-  flex: 1;
-  max-width: 72px;
-  height: 1px;
-  background: rgba(27, 22, 19, 0.38);
 }
 
 .letter-close {
@@ -531,30 +493,14 @@ body.mode-ifo .cosmos-hint { opacity: 0; }
   letter-spacing: 0.02em;
 }
 
-/* The mission statement, set apart inside the letter */
-.letter-mission {
-  margin: 8px 0 36px;
-  padding: 30px 0 32px;
-  border-top: 1px solid rgba(27, 22, 19, 0.38);
-  border-bottom: 1px solid rgba(27, 22, 19, 0.38);
-}
-
-.letter-body .letter-mission-label {
-  font-family: "Cormorant SC", serif;
-  font-size: 14px;
-  letter-spacing: 0.28em;
-  color: var(--clay-deep);
-  margin: 0 0 14px;
-}
-
-.letter-body .letter-mission p.letter-mission-text {
+/* The mission statement, emphasized within the letter */
+.letter-body p.letter-mission {
   font-family: "Cormorant Garamond", serif;
   font-weight: 500;
   font-style: italic;
   font-size: clamp(21px, 2.3vw, 26px);
   line-height: 1.55;
   color: var(--ink);
-  margin: 0;
 }
 
 /* ========== Contact card — an open two-page spread ========== */
@@ -847,7 +793,7 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
 /* Tablet and below (≤ 900px) */
 @media (max-width: 900px) {
   .letter-body p { font-size: 16px; }
-  .ifo-prose-body p { font-size: 16px; line-height: 1.78; }
+  .fsos-prose-body p { font-size: 16px; line-height: 1.78; }
 }
 
 /* Small tablet and large phone (≤ 720px) */
@@ -856,7 +802,7 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
   .nav-trigger { font-size: 11px; letter-spacing: 0.10em; }
   .dropdown { min-width: 220px; }
   #letter-section { padding: 72px clamp(20px, 7vw, 80px); }
-  .ifo-prose-body p { font-size: 16px; line-height: 1.75; }
+  .fsos-prose-body p { font-size: 16px; line-height: 1.75; }
 }
 
 /* Card responsive — pages stack on narrow screens */
@@ -888,17 +834,16 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
   .dropdown { min-width: 200px; }
 
   #letter-section { padding: 56px clamp(18px, 5.5vw, 36px); }
-  .letter-header { margin-bottom: 32px; }
   .letter-to { font-size: clamp(17px, 5.2vw, 22px); }
   .letter-body p { font-size: 15px; line-height: 1.75; margin-bottom: 20px; }
   .letter-close { margin-top: 36px; padding-top: 26px; }
   .letter-sig { font-size: 22px; }
 
   .cosmos-hint { font-size: 11px; bottom: 22px; letter-spacing: 0.18em; }
-  .ifo-prose { padding-bottom: 72px; }
-  .ifo-prose-header { margin: 32px 0 28px; }
-  .ifo-prose-body p { font-size: 15px; line-height: 1.75; }
-  .ifo-prose-footnote p { font-size: 12px; }
+  .fsos-prose { padding-bottom: 72px; }
+  .fsos-prose-header { margin: 32px 0 28px; }
+  .fsos-prose-body p { font-size: 15px; line-height: 1.75; }
+  .fsos-prose-footnote p { font-size: 12px; }
 
   .footer-copy { font-size: 10px; letter-spacing: 0.10em; }
 }
@@ -908,10 +853,9 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
   :root { --nav-h: 52px; }
   .cosmos-hint { bottom: 14px; font-size: 10px; letter-spacing: 0.18em; }
   #letter-section { padding-top: 48px; padding-bottom: 48px; }
-  .letter-header { margin-bottom: 24px; }
   .letter-close { margin-top: 32px; padding-top: 22px; }
-  .ifo-prose { padding-bottom: 64px; }
-  .ifo-prose-header { margin-top: 28px; margin-bottom: 24px; }
+  .fsos-prose { padding-bottom: 64px; }
+  .fsos-prose-header { margin-top: 28px; margin-bottom: 24px; }
   .footer-copy { font-size: 10px; letter-spacing: 0.10em; }
 }
 
@@ -924,54 +868,32 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
 }
 
 /* =====================================================================
-   INTERNATIONAL FESTIVAL ORCHESTRA — IFO MODE
-   Clicking the IFO planet starts a Circle of Fifths animation in the
-   Three.js canvas. The canvas stays visible; prose appears below.
+   FSOS PAGE — the agent circle on a stage, prose below
    ===================================================================== */
-
-/* ---- IFO mode body toggles: keep canvas, hide pillars and letter ---- */
-.ifo-mode {
-  display: none;
-  padding-top: 48px;
-  pointer-events: none;
+.fsos-stage {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
 }
 
-body.mode-ifo #letter-section { display: none; }
-body.mode-ifo #card-section   { display: none; }
-
-body.mode-ifo .ifo-mode {
+#fsos-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   display: block;
-  pointer-events: auto;
-  animation: ifoModeFade 0.6s var(--ease) 0.5s both;
-}
-
-@keyframes ifoModeFade {
-  from { opacity: 0; }
-  to   { opacity: 1; }
 }
 
 /* ---- Prose below the canvas ---- */
-.ifo-prose {
+.fsos-prose {
   max-width: 680px;
-  margin: 32px auto 0;
+  margin: 0 auto;
   padding: 0 clamp(22px, 5vw, 48px) 120px;
-  animation: ifoProseRise 0.9s var(--ease) 0.55s both;
 }
 
-body:not(.mode-ifo) .ifo-prose {
-  animation: none;
-  opacity: 0;
-  pointer-events: none;
-}
+.fsos-prose-header { text-align: center; margin: 24px 0 40px; }
 
-@keyframes ifoProseRise {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.ifo-prose-header { text-align: center; margin: 48px 0 40px; }
-
-.ifo-prose-title {
+.fsos-prose-title {
   font-family: "Cormorant Garamond", serif;
   font-weight: 300;
   font-size: clamp(34px, 4.6vw, 52px);
@@ -980,7 +902,7 @@ body:not(.mode-ifo) .ifo-prose {
   margin: 0;
 }
 
-.ifo-prose-body p {
+.fsos-prose-body p {
   font-size: 17px;
   line-height: 1.85;
   color: var(--ink-soft);
@@ -988,28 +910,28 @@ body:not(.mode-ifo) .ifo-prose {
   text-indent: 1.6em;
 }
 
-.ifo-prose-body p:first-child { text-indent: 0; }
+.fsos-prose-body p:first-child { text-indent: 0; }
 
-.ifo-prose-body em {
+.fsos-prose-body em {
   font-style: italic;
   font-size: 1.0em;
   color: var(--ink);
 }
 
-.ifo-prose-footnote {
+.fsos-prose-footnote {
   border-top: 1px solid var(--hairline);
   margin-top: 40px;
   padding-top: 20px;
 }
 
-.ifo-prose-footnote p {
+.fsos-prose-footnote p {
   font-size: 13px;
   line-height: 1.65;
   color: var(--ink-soft);
   margin: 0;
 }
 
-.ifo-fnref {
+.fsos-fnref {
   text-decoration: none;
   color: var(--purple);
   border-bottom: 1px dotted var(--purple);
@@ -1344,8 +1266,10 @@ body.cosmos-intro .hero-wrap { opacity: 1; }
 }
 
 /* ---------- Hero statements — the statement and the mission ----------
-   Narrow screens (the default): above and below the cosmos. Wide screens:
-   left and right of it. Faded out with the wordmark by JS on entering. */
+   Positioned by js/main.js (layoutHero) around the cosmos's measured bounds:
+   "stack" puts the statement under the wordmark and the mission under the
+   cosmos; "side" puts them left and right of it. The wrapper fades out with
+   the wordmark on entering the night sky. */
 .hero-statements {
   position: absolute;
   inset: 0;
@@ -1358,7 +1282,7 @@ body.cosmos-intro .hero-wrap { opacity: 1; }
 .hero-mission {
   position: absolute;
   left: 50%;
-  width: min(88vw, 580px);
+  width: min(90vw, 560px);
   transform: translateX(-50%);
   margin: 0;
   text-align: center;
@@ -1369,49 +1293,69 @@ body.cosmos-intro .hero-wrap { opacity: 1; }
 }
 
 .hero-statement {
-  top: calc(clamp(52px, 11vh, 130px) + clamp(38px, 6.5vw, 84px) * 1.05 + clamp(12px, 2vh, 22px));
+  top: var(--st-top, 24vh);
   font-weight: 700;
-  font-size: clamp(21px, 3.4vw, 30px);
+  font-size: clamp(20px, 5.4vw, 30px);
   line-height: 1.2;
 }
 
 .hero-mission {
-  bottom: calc(36px + 3.9em);
+  top: var(--mi-top, 72vh);
   font-weight: 500;
-  font-size: clamp(14px, 2vw, 17px);
+  font-size: clamp(13px, 3.5vw, 17px);
   line-height: 1.55;
   color: var(--ink-soft);
 }
 
-@media (max-width: 480px) {
-  .hero-mission { bottom: calc(22px + 4.2em); }
+html[data-hero-layout="side"] .hero-statement,
+html[data-hero-layout="side"] .hero-mission {
+  top: var(--hero-mid, 50%);
+  width: var(--hero-col, 300px);
+  transform: translateY(-50%);
+  text-align: left;
 }
 
-@media (min-aspect-ratio: 3/2) and (min-width: 700px) {
-  .hero-statement,
-  .hero-mission {
-    top: 50%;
-    bottom: auto;
-    left: auto;
-    width: clamp(200px, calc((100vw - 80vh) / 2 - 64px), 360px);
-    transform: translateY(-50%);
-    text-align: left;
-  }
-  .hero-statement {
-    left: clamp(24px, 4.5vw, 88px);
-    font-size: clamp(24px, 2.5vw, 40px);
-    line-height: 1.16;
-  }
-  .hero-mission {
-    right: clamp(24px, 4.5vw, 88px);
-    font-size: clamp(14px, 1.3vw, 20px);
-    line-height: 1.65;
-  }
+html[data-hero-layout="side"] .hero-statement {
+  left: var(--hero-edge, 48px);
+  font-size: clamp(17px, min(2.5vw, 4.6vh), 40px);
+  line-height: 1.16;
 }
 
-@media (min-aspect-ratio: 3/2) and (max-height: 500px) {
-  .hero-statement { font-size: 20px; }
-  .hero-mission   { font-size: 13px; line-height: 1.5; }
+html[data-hero-layout="side"] .hero-mission {
+  left: auto;
+  right: var(--hero-edge, 48px);
+  font-size: clamp(12px, min(1.3vw, 2.7vh), 20px);
+  line-height: 1.6;
+}
+
+/* Mission: fades in the way the wordmark does, a beat after it */
+.hero-mission {
+  opacity: 0;
+  transition: opacity 1s var(--ease) 0.25s;
+}
+
+body.cosmos-intro .hero-mission { opacity: 1; }
+
+/* Statement: each word rises out of its own mask at its own pace */
+.hero-statement .hw {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0 0.12em 0.14em;
+  margin: 0 -0.12em -0.14em;
+}
+
+.hero-statement .hw > span {
+  display: inline-block;
+  transform: translateY(115%);
+  transition: transform var(--dur, 1.1s) cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s);
+}
+
+body.cosmos-intro .hero-statement .hw > span { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-statement .hw > span { transform: none; transition: none; }
+  .hero-mission { transition: none; }
 }
 
 /* ---------- Scroll reveal — content rises in as it enters the viewport ---------- */
@@ -1429,29 +1373,7 @@ body.cosmos-intro .hero-wrap { opacity: 1; }
   transform: translateY(0);
 }
 
-/* ---------- Letter storytelling — kicker, drop cap, signature wipe ---------- */
-.letter-kicker {
-  font-family: "Cormorant SC", serif;
-  font-size: 14px;
-  letter-spacing: 0.28em;
-  color: var(--clay-deep);
-  margin: 0 0 18px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.letter-kicker::after {
-  content: '';
-  flex: 1;
-  max-width: 64px;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.5;
-}
-
-body.night-mode .letter-kicker { color: rgba(255, 255, 255, 0.6); }
-
+/* ---------- Letter storytelling — drop cap, signature wipe ---------- */
 .letter-body > p:first-of-type::first-letter {
   font-family: "Cormorant Garamond", serif;
   font-weight: 500;
@@ -1474,8 +1396,8 @@ body.night-mode .letter-body > p:first-of-type::first-letter { color: #ffffff; }
   clip-path: inset(-8% -2% -8% -2%);
 }
 
-/* ---------- IFO prose eyebrow ---------- */
-.ifo-eyebrow {
+/* ---------- FSOS prose eyebrow ---------- */
+.fsos-eyebrow {
   font-family: "Cormorant SC", serif;
   font-size: 14px;
   letter-spacing: 0.26em;
@@ -1729,6 +1651,13 @@ body.contact-page #site-footer {
   color: var(--ink-soft);
   opacity: 0;
   pointer-events: none;
+}
+
+/* No scrolling until the planet has become an acorn (released by js/oak.js) */
+html.oak-locked,
+html.oak-locked body {
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 /* Scroll length for the camera's pull-back */
