@@ -477,27 +477,27 @@ body.mode-2d .cosmos-hint { opacity: 0; }
 
 .letter-close { margin-top: 56px; }
 
-/* Reply — answers the letter through the contact card */
+/* Reply — answers the letter through the contact card: a plain line of
+   text, centred well below the signature, underlined as the pointer nears */
 .letter-reply {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 28px;
-  padding: 11px 26px 12px;
-  border: 1px solid currentColor;
-  border-radius: 999px;
+  width: fit-content;
+  margin: clamp(64px, 10vh, 104px) auto 0;
+  padding: 6px 2px;
   font-family: "Cormorant Garamond", serif;
   font-style: italic;
-  font-size: 19px;
+  font-size: 22px;
   color: var(--ink);
   text-decoration: none;
-  transition: background 0.35s var(--ease), color 0.35s var(--ease), gap 0.35s var(--ease);
+  background: linear-gradient(currentColor, currentColor) left 90% / 0 1px no-repeat;
+  transition: background-size 0.4s var(--ease), gap 0.35s var(--ease), color 0.3s var(--ease);
 }
 
-.letter-reply:hover { gap: 16px; background: var(--ink); color: var(--paper); }
+.letter-reply:hover { gap: 16px; background-size: 100% 1px; }
 
 body.night-mode .letter-reply { color: #ffffff; }
-body.night-mode .letter-reply:hover { background: #ffffff; color: #060412; }
 
 .letter-close p {
   font-family: "Cormorant Garamond", serif;
@@ -760,16 +760,6 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
   text-decoration: none;
 }
 
-.sf-tagline {
-  font-family: "Cormorant Garamond", serif;
-  font-style: italic;
-  font-size: 18px;
-  line-height: 1.5;
-  color: var(--ink-soft);
-  max-width: 20em;
-  margin: 12px 0 0;
-}
-
 .sf-cols {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -801,7 +791,6 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
 
 body.night-mode .sf-wordmark,
 body.night-mode .sf-col a { color: rgba(255, 255, 255, 0.92); }
-body.night-mode .sf-tagline { color: rgba(255, 255, 255, 0.6); }
 body.night-mode .sf-head { color: rgba(205, 190, 255, 0.82); }
 body.night-mode .sf-col a:hover { color: #ffffff; }
 
