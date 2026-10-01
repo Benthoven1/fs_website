@@ -8,16 +8,16 @@ of the for-profit arm), Oak, and a fourth to be announced.
 
 - `index.html` — landing page. A 3D clay-colored solar system on paper: the star is
   Mulvium and each planet is one of its companies. The statement and the mission
-  flank the cosmos (above and below it on phones). Hover a planet for its name;
-  hover the star to enter the night sky, then scroll to the founder's letter. The
-  FSOS planet opens a deep-dive (its agent workforce, with prose below); the Oak
-  planet opens the Oak page.
+  sit beside the cosmos on wide screens and above and below it on narrow ones.
+  Hover a planet for its name; click one to open its company's page. Hover the
+  star to enter the night sky, then scroll to the founder's letter.
 - `css/style.css` — shared stylesheet.
-- `js/main.js` — Three.js module for the landing page: the cosmos, the 2D night
-  transition, the FSOS deep-dive, and interactions.
-- `js/oak.js` — Three.js module for the Oak page: the planet becomes an acorn among
-  leaves, and scrolling pulls back to the whole oak on its esplanade.
-- `pages/offerings/` — Fiscal Sponsorship and Oak.
+- `js/main.js` — Three.js module for the landing page: the cosmos and its framing
+  per layout, the hero, the 2D night transition, and interactions.
+- `js/fsos.js` — the FSOS page: the agent workforce circling its Chief of Staff.
+- `js/oak.js` — the Oak page: the planet becomes an acorn among leaves, and
+  scrolling pulls back to the whole oak on its esplanade.
+- `pages/offerings/` — Fiscal Sponsorship, FSOS, and Oak.
 - `pages/about/` — People, Careers, Contact Us.
 
 ## Running locally
