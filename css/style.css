@@ -134,6 +134,51 @@ button {
 .nav-brand a:hover .bl-6 { animation-delay: 225ms; }
 .nav-brand a:hover .bl-7 { animation-delay: 270ms; }
 
+/* Glimmer — every few seconds a soft warm light passes across the letters and
+   a small star glints after the last one: a quiet hint that the wordmark is
+   the way home. Hovering swaps it for the wiggle above. */
+@keyframes blGlint {
+  0%, 84%, 100% { text-shadow: 0 0 0 rgba(222, 178, 112, 0); }
+  89%           { text-shadow: 0 0 7px rgba(222, 178, 112, 0.8), 0 0 1px rgba(255, 240, 210, 0.9); }
+}
+
+@keyframes blSpark {
+  0%, 89%, 100% { opacity: 0;   transform: scale(0.3) rotate(0deg); }
+  93%           { opacity: 0.9; transform: scale(1) rotate(45deg); }
+  97%           { opacity: 0;   transform: scale(0.5) rotate(90deg); }
+}
+
+.nav-brand a { position: relative; }
+
+.nav-brand .bl { animation: blGlint 7s ease-in-out 2.5s infinite; }
+.nav-brand .bl-2 { animation-delay: 2.59s; }
+.nav-brand .bl-3 { animation-delay: 2.68s; }
+.nav-brand .bl-4 { animation-delay: 2.77s; }
+.nav-brand .bl-5 { animation-delay: 2.86s; }
+.nav-brand .bl-6 { animation-delay: 2.95s; }
+.nav-brand .bl-7 { animation-delay: 3.04s; }
+
+.nav-brand a::after {
+  content: "\2726";
+  position: absolute;
+  top: -0.3em;
+  right: -0.6em;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 0.42em;
+  line-height: 1;
+  color: #d9b27a;
+  opacity: 0;
+  pointer-events: none;
+  animation: blSpark 7s ease-in-out 2.5s infinite;
+}
+
+body.night-mode .nav-brand a::after { color: #f0d5bb; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-brand .bl,
+  .nav-brand a::after { animation: none; }
+}
+
 .nav-links {
   display: flex;
   gap: clamp(16px, 3vw, 36px);
@@ -843,7 +888,6 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
   .fsos-prose { padding-bottom: 72px; }
   .fsos-prose-header { margin: 32px 0 28px; }
   .fsos-prose-body p { font-size: 15px; line-height: 1.75; }
-  .fsos-prose-footnote p { font-size: 12px; }
 
   .footer-copy { font-size: 10px; letter-spacing: 0.10em; }
 }
@@ -916,25 +960,6 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
   font-style: italic;
   font-size: 1.0em;
   color: var(--ink);
-}
-
-.fsos-prose-footnote {
-  border-top: 1px solid var(--hairline);
-  margin-top: 40px;
-  padding-top: 20px;
-}
-
-.fsos-prose-footnote p {
-  font-size: 13px;
-  line-height: 1.65;
-  color: var(--ink-soft);
-  margin: 0;
-}
-
-.fsos-fnref {
-  text-decoration: none;
-  color: var(--purple);
-  border-bottom: 1px dotted var(--purple);
 }
 
 /* ---------- Loading screen ---------- */
@@ -1684,4 +1709,621 @@ html.oak-locked body {
 .oak-page #site-footer {
   position: relative;
   z-index: 2;
+}
+
+/* =====================================================================
+   FISCAL SPONSORSHIP PAGE — what a sponsor is, how it works, four projects
+   Domain colours are the home page's planet pastels.
+   ===================================================================== */
+.fs-page {
+  --fs-art: #e0b8c8; --fs-art-deep: #b98a9e; --fs-art-ink: #8f4f69; --fs-art-wash: rgba(224, 184, 200, 0.30);
+  --fs-sci: #b8cae0; --fs-sci-deep: #8c9fb8; --fs-sci-ink: #4a6690; --fs-sci-wash: rgba(184, 202, 224, 0.32);
+  --fs-edu: #c4ddb8; --fs-edu-deep: #97b289; --fs-edu-ink: #4e7541; --fs-edu-wash: rgba(196, 221, 184, 0.34);
+  --fs-cha: #b8ddd8; --fs-cha-deep: #88b1ab; --fs-cha-ink: #387770; --fs-cha-wash: rgba(184, 221, 216, 0.34);
+}
+
+.fs-art { --dom: var(--fs-art); --dom-deep: var(--fs-art-deep); --dom-ink: var(--fs-art-ink); --dom-wash: var(--fs-art-wash); }
+.fs-sci { --dom: var(--fs-sci); --dom-deep: var(--fs-sci-deep); --dom-ink: var(--fs-sci-ink); --dom-wash: var(--fs-sci-wash); }
+.fs-edu { --dom: var(--fs-edu); --dom-deep: var(--fs-edu-deep); --dom-ink: var(--fs-edu-ink); --dom-wash: var(--fs-edu-wash); }
+.fs-cha { --dom: var(--fs-cha); --dom-deep: var(--fs-cha-deep); --dom-ink: var(--fs-cha-ink); --dom-wash: var(--fs-cha-wash); }
+
+.fs-main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: calc(var(--nav-h) + 48px) clamp(20px, 5vw, 56px) 110px;
+  font-family: "Cormorant Garamond", serif;
+}
+
+/* ---- Hero ---- */
+.fs-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 56px);
+  min-height: min(76svh, 660px);
+}
+
+.fs-eyebrow {
+  font-family: "Cormorant SC", serif;
+  font-size: 14px;
+  letter-spacing: 0.26em;
+  color: var(--clay-deep);
+  margin: 0 0 14px;
+}
+
+.fs-title {
+  font-weight: 300;
+  font-size: clamp(48px, 7vw, 92px);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0 0 24px;
+}
+
+.fs-lede {
+  font-weight: 500;
+  font-size: clamp(19px, 1.8vw, 23px);
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 30em;
+  margin: 0 0 28px;
+}
+
+.fs-jump { display: flex; flex-wrap: wrap; gap: 24px; margin: 0; }
+
+.fs-jump a {
+  font-style: italic;
+  font-size: 19px;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+  transition: color 0.3s var(--ease);
+}
+
+.fs-jump a::after { content: "\2009\2193"; }
+.fs-jump a:hover { color: var(--clay); }
+
+.fs-orbit { width: 112%; margin-right: -12%; height: auto; overflow: visible; }
+.fs-ring { fill: none; stroke: #cdbe96; stroke-width: 2.4; }
+.fs-ring-thin { stroke-width: 1.2; opacity: 0.6; }
+
+.fs-orbit-center {
+  font-family: "Cormorant SC", serif;
+  font-size: 15px;
+  letter-spacing: 0.18em;
+  fill: #5a3e1b;
+  text-anchor: middle;
+}
+
+.fs-planet text {
+  font-style: italic;
+  font-size: 15px;
+  fill: var(--ink-soft);
+  text-anchor: middle;
+}
+
+/* ---- Sections ---- */
+.fs-section {
+  padding-top: clamp(72px, 12vh, 140px);
+  scroll-margin-top: calc(var(--nav-h) - 40px);
+}
+
+.fs-kicker {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-weight: 300;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  color: var(--clay-deep);
+  margin: 0 0 6px;
+}
+
+.fs-kicker::after {
+  content: "";
+  width: 56px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+.fs-h2 {
+  font-weight: 300;
+  font-size: clamp(36px, 4.8vw, 60px);
+  line-height: 1.05;
+  color: var(--ink);
+  margin: 0 0 24px;
+}
+
+.fs-definition {
+  font-style: italic;
+  font-size: clamp(24px, 2.8vw, 34px);
+  line-height: 1.35;
+  color: var(--ink);
+  max-width: 24em;
+  margin: 0 0 30px;
+  padding-left: 22px;
+  border-left: 2px solid #cdbe96;
+}
+
+.fs-prose { max-width: 40em; }
+
+.fs-prose p,
+.fs-intro {
+  font-weight: 500;
+  font-size: 19px;
+  line-height: 1.75;
+  color: var(--ink-soft);
+  margin: 0 0 18px;
+}
+
+.fs-intro { font-style: italic; font-weight: 400; font-size: 21px; margin-bottom: 36px; }
+
+/* ---- On your own vs. with Mulvium ---- */
+.fs-compare { margin-top: 44px; border-top: 1px solid var(--hairline); }
+
+.fs-compare-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 2fr) minmax(0, 2fr);
+  gap: 28px;
+  align-items: baseline;
+  padding: 18px 4px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.fs-compare-row > span {
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.fs-compare-row > span:first-child {
+  font-family: "Cormorant SC", serif;
+  font-size: 17px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+}
+
+.fs-compare-row > span:last-child { color: var(--ink); font-weight: 600; }
+
+.fs-compare-row:not(.fs-compare-head) > span:last-child::before {
+  content: "\2726\2002";
+  color: #b39056;
+  font-weight: 400;
+}
+
+.fs-compare-head > span {
+  font-family: "Cormorant SC", serif;
+  font-size: 14px !important;
+  letter-spacing: 0.22em !important;
+  color: var(--clay-deep) !important;
+  font-weight: 500 !important;
+}
+
+/* ---- The path money and responsibility take ---- */
+.fs-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 72px;
+}
+
+.fs-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.fs-node strong { font-weight: 600; font-size: 21px; color: var(--ink); }
+
+.fs-node > span:last-child {
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  max-width: 15em;
+}
+
+.fs-node-orb {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  margin-bottom: 8px;
+  box-shadow: inset -6px -9px 16px rgba(0, 0, 0, 0.12), 0 8px 20px rgba(60, 40, 20, 0.12);
+}
+
+.fs-orb-donor   { background: radial-gradient(circle at 36% 30%, #fffaf2 0, #e9dcc4 55%, #bfa98a 100%); }
+.fs-orb-sponsor { width: 88px; height: 88px; background: radial-gradient(circle at 36% 30%, #fbf1e6 0, #f0d5bb 55%, #c8a483 100%); }
+.fs-orb-project { background: radial-gradient(circle at 36% 30%, #e7eef7 0, #b8cae0 55%, #8c9fb8 100%); }
+
+.fs-link { display: flex; flex-direction: column; gap: 16px; }
+
+.fs-link > span {
+  position: relative;
+  display: block;
+  padding: 0 10px 9px;
+  text-align: center;
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+
+/* Forward: a solid line, an arrowhead, and a small light travelling along it */
+.fs-link-fwd {
+  background: linear-gradient(var(--ink-soft), var(--ink-soft)) left bottom / calc(100% - 6px) 1px no-repeat;
+}
+
+.fs-link-fwd::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -4px;
+  border-left: 8px solid var(--ink-soft);
+  border-top: 4.5px solid transparent;
+  border-bottom: 4.5px solid transparent;
+}
+
+.fs-link-fwd::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #d9b27a;
+  box-shadow: 0 0 8px rgba(217, 178, 122, 0.9);
+  animation: fsTravel 3.2s ease-in-out infinite;
+}
+
+.fs-flow .fs-link:nth-of-type(4) .fs-link-fwd::after { animation-delay: 1.6s; }
+
+@keyframes fsTravel {
+  0%   { left: 0;                  opacity: 0; }
+  12%  { opacity: 1; }
+  88%  { opacity: 1; }
+  100% { left: calc(100% - 14px);  opacity: 0; }
+}
+
+/* Back: a quieter dashed line pointing the other way */
+.fs-link-back {
+  opacity: 0.8;
+  background: repeating-linear-gradient(90deg, var(--ink-soft) 0 5px, transparent 5px 10px) right bottom / calc(100% - 6px) 1px no-repeat;
+}
+
+.fs-link-back::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  border-right: 8px solid var(--ink-soft);
+  border-top: 4.5px solid transparent;
+  border-bottom: 4.5px solid transparent;
+}
+
+/* ---- Five steps ---- */
+.fs-steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 26px;
+  list-style: none;
+  counter-reset: fsstep;
+  margin: 0 0 64px;
+  padding: 0;
+}
+
+.fs-steps::before {
+  content: "";
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  right: 22px;
+  height: 1px;
+  background: #cdbe96;
+}
+
+.fs-steps li { position: relative; counter-increment: fsstep; }
+
+.fs-steps li::before {
+  content: counter(fsstep, decimal-leading-zero);
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 16px;
+  border: 1px solid #cdbe96;
+  border-radius: 50%;
+  background: var(--paper);
+  font-size: 17px;
+  color: var(--clay-deep);
+}
+
+.fs-steps h3 {
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  font-size: 19px;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+
+.fs-steps p {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* ---- In plain terms ---- */
+.fs-terms {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.fs-term {
+  padding: 24px 24px 26px;
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.fs-term h3 {
+  font-style: italic;
+  font-weight: 600;
+  font-size: 21px;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+
+.fs-term p {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* ---- Four projects ---- */
+.fs-chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 40px; }
+
+.fs-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px 8px 12px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+  font-size: 17px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
+}
+
+.fs-chip::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 36% 30%, #fff 0, var(--dom) 55%, var(--dom-deep) 100%);
+}
+
+.fs-chip:hover { border-color: var(--dom-ink); background: var(--dom-wash); }
+
+html:has(body.fs-page) { scroll-behavior: smooth; }
+
+.fs-project {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  margin: 0 0 28px;
+  padding: clamp(32px, 5vh, 52px) clamp(22px, 4vw, 48px);
+  border: 1px solid var(--hairline);
+  border-radius: 24px;
+  background: linear-gradient(135deg, var(--dom-wash) 0%, rgba(255, 255, 255, 0.35) 62%);
+  scroll-margin-top: calc(var(--nav-h) + 24px);
+}
+
+.fs-project:nth-of-type(even) { grid-template-columns: minmax(0, 1fr) 210px; }
+.fs-project:nth-of-type(even) .fs-emblem { order: 2; }
+
+/* Each emblem is a porcelain planet in its domain's colour */
+.fs-emblem {
+  align-self: start;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 210px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 36% 30%, #fff 0, var(--dom) 58%, var(--dom-deep) 100%);
+  box-shadow: inset -10px -14px 26px rgba(0, 0, 0, 0.10), 0 14px 30px rgba(60, 40, 20, 0.12);
+  animation: fsFloat 7s ease-in-out infinite;
+}
+
+.fs-project:nth-of-type(2) .fs-emblem { animation-delay: -2s; }
+.fs-project:nth-of-type(3) .fs-emblem { animation-delay: -4s; }
+.fs-project:nth-of-type(4) .fs-emblem { animation-delay: -6s; }
+
+@keyframes fsFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+
+.fs-emblem svg {
+  width: 58%;
+  height: auto;
+  fill: none;
+  stroke: var(--dom-ink);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.fs-emblem .fs-thin { stroke-width: 1.5; opacity: 0.75; }
+.fs-emblem .fs-fill { fill: var(--dom-ink); stroke: none; }
+.fs-emblem .fs-beam { stroke-width: 4.5; }
+
+.fs-domain {
+  font-family: "Cormorant SC", serif;
+  font-size: 14px;
+  letter-spacing: 0.26em;
+  color: var(--dom-ink);
+  margin: 0 0 8px;
+}
+
+.fs-project h3 {
+  font-weight: 400;
+  font-size: clamp(28px, 3.2vw, 40px);
+  line-height: 1.1;
+  color: var(--ink);
+  margin: 0 0 6px;
+}
+
+.fs-meta { font-style: italic; font-size: 17px; color: var(--ink-soft); margin: 0 0 18px; }
+
+.fs-idea {
+  font-weight: 500;
+  font-size: 18.5px;
+  line-height: 1.75;
+  color: var(--ink);
+  margin: 0 0 20px;
+}
+
+.fs-needs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0 0 26px;
+  padding: 0;
+}
+
+.fs-needs li {
+  padding: 4px 12px;
+  border: 1px solid var(--dom-deep);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.65);
+  font-size: 15px;
+  letter-spacing: 0.03em;
+  color: var(--dom-ink);
+}
+
+.fs-can {
+  font-family: "Cormorant SC", serif;
+  font-size: 15px;
+  letter-spacing: 0.16em;
+  color: var(--ink);
+  margin: 0 0 12px;
+}
+
+.fs-list { display: grid; gap: 10px; list-style: none; margin: 0; padding: 0; }
+
+.fs-list li {
+  position: relative;
+  padding-left: 28px;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.fs-list li::before {
+  content: "\2726";
+  position: absolute;
+  left: 2px;
+  top: 0.1em;
+  font-size: 14px;
+  color: var(--dom-ink);
+}
+
+/* ---- Close ---- */
+.fs-close { padding: clamp(80px, 12vh, 140px) 0 10px; text-align: center; }
+
+.fs-close p { font-style: italic; font-size: 21px; color: var(--ink-soft); margin: 0 0 26px; }
+
+.fs-close .fs-close-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px;
+  font-style: normal;
+}
+
+.fs-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid currentColor;
+  font-style: italic;
+  font-size: 23px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.3s var(--ease), gap 0.3s var(--ease);
+}
+
+.fs-cta:hover { color: var(--clay); gap: 16px; }
+.fs-cta-quiet { font-size: 20px; color: var(--ink-soft); }
+
+/* ---- Narrow screens ---- */
+@media (max-width: 860px) {
+  .fs-hero { grid-template-columns: 1fr; min-height: 0; }
+  .fs-orbit { width: 100%; max-width: 520px; margin: 8px auto 0; }
+
+  .fs-flow { grid-template-columns: 1fr; gap: 6px; }
+  .fs-link { gap: 4px; padding: 10px 0; }
+  .fs-link > span { padding: 0; background: none; }
+  .fs-link > span::after { display: none; }
+  .fs-link-fwd::before { content: "\2193\2002"; position: static; border: 0; }
+  .fs-link-back::before { content: "\2191\2002"; position: static; border: 0; }
+
+  .fs-steps { grid-template-columns: 1fr; gap: 22px; }
+  .fs-steps::before { top: 22px; bottom: 22px; left: 22px; right: auto; width: 1px; height: auto; }
+  .fs-steps li { padding-left: 64px; }
+  .fs-steps li::before { position: absolute; left: 0; top: -6px; margin: 0; }
+
+  .fs-terms { grid-template-columns: 1fr; }
+
+  .fs-project,
+  .fs-project:nth-of-type(even) { grid-template-columns: 1fr; }
+  .fs-project:nth-of-type(even) .fs-emblem { order: 0; }
+  .fs-emblem { max-width: 132px; }
+}
+
+@media (max-width: 720px) {
+  .fs-compare-head { display: none; }
+  .fs-compare-row { grid-template-columns: 1fr; gap: 6px; padding: 16px 2px; }
+  .fs-compare-row > span:nth-child(2)::before,
+  .fs-compare-row > span:nth-child(3)::before {
+    display: block;
+    font-family: "Cormorant SC", serif;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: var(--clay-deep);
+    font-weight: 500;
+  }
+  .fs-compare-row > span:nth-child(2)::before { content: "On your own"; }
+  .fs-compare-row:not(.fs-compare-head) > span:nth-child(3)::before {
+    content: "With Mulvium";
+    color: var(--clay-deep);
+    font-weight: 500;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fs-link-fwd::after { animation: none; opacity: 0; }
+  .fs-emblem { animation: none; }
+  html:has(body.fs-page) { scroll-behavior: auto; }
 }
