@@ -14,10 +14,13 @@ of the for-profit arm), Oak, and a fourth to be announced.
 - `css/style.css` — shared stylesheet.
 - `js/main.js` — Three.js module for the landing page: the cosmos and its framing
   per layout, the hero, the 2D night transition, and interactions.
-- `js/fsos.js` — the FSOS page: the agent workforce circling its Chief of Staff.
+- `js/fsos.js` — the FSOS page: a nonprofit's AI workforce circling its Chief of Staff.
+- `js/fiscal.js` — the Fiscal Sponsorship page's text motion and navigation: section
+  index, reading progress, comparison switch, timeline, and project tabs.
 - `js/oak.js` — the Oak page: the planet becomes an acorn among leaves, and
   scrolling pulls back to the whole oak on its esplanade.
-- `pages/offerings/` — Fiscal Sponsorship, FSOS, and Oak.
+- `pages/offerings/` — Fiscal Sponsorship (what a fiscal sponsor is, how it works, and
+  four hypothetical projects), FSOS, and Oak.
 - `pages/about/` — People, Careers, Contact Us.
 
 ## Running locally

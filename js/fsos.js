@@ -1,6 +1,7 @@
-// fsos.js — the FSOS page scene: the reference workforce.
+// fsos.js — the FSOS page scene: an institution's AI workforce.
 // FSOS's green planet is the hub (the Chief of Staff); twelve specialist
-// agents orbit it, each with its focus on the inner ring at the same angle.
+// agents for the work every nonprofit shares orbit it, each with its focus
+// on the inner ring at the same angle.
 // As the loading screen opens, the rings and labels collapse inward from far
 // out, as they did when this view lived on the home page.
 import * as THREE from "three";
@@ -63,13 +64,13 @@ const rings = RINGS.map(({ r, tube }) => {
 });
 
 // ── Agent circle ─────────────────────────────────────────────────────────────
-// The FSOS reference workforce. Long and short names alternate so neighbours
-// never collide at the front of the ring.
+// The work every nonprofit shares, each with its focus on the inner ring.
+// Long and short names alternate so neighbours never collide at the front.
 const AGENTS = [
-  ["Research", "Comparables"], ["Grants", "Funders"], ["Communications", "Press"],
-  ["Venue", "Halls"], ["Development", "Donors"], ["Finance", "Budgets"],
-  ["Artistic Planning", "Repertoire"], ["Rehearsal", "Schedules"], ["Marketing", "Audiences"],
-  ["Personnel", "Musicians"], ["Operations", "Logistics"], ["Production", "Staging"],
+  ["Research", "Evidence"], ["Grants", "Funders"], ["Communications", "Press"],
+  ["Governance", "Board"], ["Development", "Donors"], ["Finance", "Budgets"],
+  ["Compliance", "Filings"], ["Programs", "Services"], ["Volunteers", "Recruiting"],
+  ["Marketing", "Outreach"], ["Operations", "Logistics"], ["Evaluation", "Impact"],
 ];
 
 // Labels share one canvas height, so every word renders at the same type size;
@@ -142,7 +143,7 @@ function goHome() {
 
 // ── Prose rises in as it scrolls into view (same .rv classes as the home page)
 {
-  const els = document.querySelectorAll(".fsos-prose-header, .fsos-prose-body > p, .fsos-prose-footnote");
+  const els = document.querySelectorAll(".fsos-prose-header, .fsos-prose-body > p");
   els.forEach((el) => el.classList.add("rv"));
   const io = new IntersectionObserver((entries) => {
     entries.forEach((en) => {

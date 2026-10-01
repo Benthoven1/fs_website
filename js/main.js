@@ -837,7 +837,7 @@ canvas.setAttribute("role", "application");
 canvas.setAttribute("aria-label", "Mulvium cosmos. Click or tap a planet to explore. Click or tap the center to enter.");
 if (('ontouchstart' in window) || navigator.maxTouchPoints > 0) {
   const hint = document.querySelector("#cosmos-hint p");
-  if (hint) hint.textContent = "Tap a sphere to explore our offerings and our mission.";
+  if (hint) hint.textContent = "Tap a sphere.";
 }
 canvas.addEventListener("keydown", (e) => {
   if ((e.key === "Enter" || e.key === " ") && state.mode === "3d") { goTo2D(); e.preventDefault(); }
