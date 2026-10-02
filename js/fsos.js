@@ -66,26 +66,24 @@ ground.receiveShadow = true;
 scene.add(ground);
 
 // ── The vocabulary ───────────────────────────────────────────────────────────
-const AGENTS = ["Research", "Grants", "Communications", "Governance", "Development", "Finance",
-  "Compliance", "Programs", "Volunteers", "Marketing", "Operations", "Evaluation"];
-const FOCUS = ["Evidence", "Funders", "Press", "Board", "Donors", "Budgets",
-  "Filings", "Services", "Recruiting", "Outreach", "Logistics", "Impact"];
-const WORK = ["grant report", "form 990", "gift receipt", "board minutes", "bylaws", "budget variance",
-  "cash flow", "audit trail", "donor letter", "press release", "newsletter", "annual report",
-  "logic model", "theory of change", "survey", "outcomes", "volunteer roster", "onboarding",
-  "schedule", "venues", "contracts", "insurance", "payroll", "invoices", "reconciliation", "policies",
-  "conflict of interest", "approvals", "timeline", "milestones", "partners", "sponsors", "campaign",
-  "appeal", "pledges", "stewardship", "thank-you notes", "case for support", "letter of inquiry",
-  "proposal", "deadlines", "renewals", "metrics", "dashboard", "interviews", "literature review",
-  "citations", "permits", "risk register", "memo", "agenda", "resolution", "fiscal year",
-  "restricted funds", "gift agreement", "grant agreement", "blueprint", "mission", "audiences",
-  "decisions", "sources", "memory", "drafts", "review", "site visits", "vendor quotes",
-  "state filings", "annual meeting", "committees", "job descriptions", "hiring", "training",
-  "data privacy", "accessibility", "translations", "social posts", "media list", "op-ed", "website",
-  "event plan", "run of show", "tickets", "budget to actuals", "forecast", "grant calendar",
-  "prospects", "major gifts", "in-kind gifts", "acknowledgments", "impact report",
-  "evaluation plan", "baseline", "indicators", "feedback", "lessons learned", "handoffs",
-  "requests", "sign-off"];
+// The twelve agents, what each looks after, and eight pieces of everyday work
+// each one handles; the Chief of Staff's own words coordinate them. Every
+// word keeps its owner.
+const WORKFORCE = [
+  { agent: "Research", focus: "Evidence", work: ["interviews", "literature review", "citations", "sources", "memo", "field notes", "data sets", "peer review"] },
+  { agent: "Grants", focus: "Funders", work: ["grant report", "letter of inquiry", "proposal", "deadlines", "renewals", "grant agreement", "grant calendar", "budget narrative"] },
+  { agent: "Communications", focus: "Press", work: ["press release", "newsletter", "annual report", "media list", "op-ed", "translations", "talking points", "story bank"] },
+  { agent: "Governance", focus: "Board", work: ["board minutes", "bylaws", "policies", "conflict of interest", "agenda", "resolution", "annual meeting", "committees"] },
+  { agent: "Development", focus: "Donors", work: ["gift receipt", "donor letter", "appeal", "pledges", "stewardship", "thank-you notes", "case for support", "major gifts"] },
+  { agent: "Finance", focus: "Budgets", work: ["budget variance", "cash flow", "payroll", "invoices", "reconciliation", "fiscal year", "restricted funds", "forecast"] },
+  { agent: "Compliance", focus: "Filings", work: ["form 990", "audit trail", "insurance", "permits", "risk register", "state filings", "data privacy", "gift agreement"] },
+  { agent: "Programs", focus: "Services", work: ["theory of change", "milestones", "partners", "site visits", "accessibility", "curriculum", "participants", "enrollment"] },
+  { agent: "Volunteers", focus: "Recruiting", work: ["volunteer roster", "onboarding", "training", "shift schedule", "background checks", "volunteer hours", "recognition", "sign-up forms"] },
+  { agent: "Marketing", focus: "Outreach", work: ["audiences", "social posts", "website", "tickets", "campaign", "sponsors", "email list", "brand"] },
+  { agent: "Operations", focus: "Logistics", work: ["schedule", "venues", "contracts", "timeline", "vendor quotes", "event plan", "run of show", "hiring"] },
+  { agent: "Evaluation", focus: "Impact", work: ["logic model", "survey", "outcomes", "metrics", "impact report", "baseline", "feedback", "lessons learned"] },
+];
+const CHIEF_OF_STAFF = ["blueprint", "mission", "decisions", "memory", "drafts", "approvals", "handoffs", "sign-off"];
 
 // Each style: atlas font, and the word's height on a head of radius 1
 const STYLES = {
@@ -95,10 +93,12 @@ const STYLES = {
 };
 
 // ── Figure geometry ──────────────────────────────────────────────────────────
-// A stock figure about five heads tall, standing on a round porcelain base.
+// A short, round stock figure about three heads tall, on a porcelain base.
 const HEAD_R = 1.15;
-const HEAD_C = new THREE.Vector3(0, 9.15, 0);
-const FIG_TOP = HEAD_C.y + HEAD_R, FIG_C = new THREE.Vector3(0, 5.6, 0);
+const HEAD_C = new THREE.Vector3(0, 6.15, 0);
+// The final view: three-quarters of the figure, from the head to the knees,
+// seen a little from one side
+const Q_C = new THREE.Vector3(0, 4.9, 0), Q_HALF_H = 3.6, Q_HALF_W = 1.8;
 
 // Deterministic randomness, so the cloud packs the same way every visit
 function mulberry32(a) {
@@ -109,9 +109,10 @@ function mulberry32(a) {
 const ATLAS_W = 2048, PAD = 6;
 const atlasCanvas = document.createElement("canvas");
 const entries = [
-  ...AGENTS.map((text) => ({ text, kind: "agent" })),
-  ...FOCUS.map((text) => ({ text, kind: "focus" })),
-  ...WORK.map((text) => ({ text, kind: "work" })),
+  ...WORKFORCE.map((a) => ({ text: a.agent, kind: "agent", owner: a.agent })),
+  ...WORKFORCE.map((a) => ({ text: a.focus, kind: "focus", owner: a.agent })),
+  ...WORKFORCE.flatMap((a) => a.work.map((text) => ({ text, kind: "work", owner: a.agent }))),
+  ...CHIEF_OF_STAFF.map((text) => ({ text, kind: "work", owner: "Chief of Staff" })),
 ];
 function layoutAtlas() {
   const ctx = atlasCanvas.getContext("2d");
@@ -203,7 +204,7 @@ function makeHash() {
 function packCloud() {
   const rnd = mulberry32(20261002);
   const hash = makeHash();
-  const GAP = 0.008;
+  const GAP = 0.006;
   let rMax = 0;
   const placed = [];
   const M = 6000, golden = Math.PI * (3 - Math.sqrt(5));
@@ -249,13 +250,18 @@ function packCloud() {
   // Fill: wherever a small word still fits, put one, smaller each pass, so
   // the words huddle together
   const pool = entries.filter((en) => en.kind !== "agent");
-  for (const scale of [0.8, 0.62, 0.48]) {
+  // Short words plug small gaps best: of two picks, take the shorter
+  const pick = () => {
+    const a = pool[Math.floor(rnd() * pool.length)], b = pool[Math.floor(rnd() * pool.length)];
+    return a.aspect <= b.aspect ? a : b;
+  };
+  for (const scale of [0.8, 0.62, 0.48, 0.38]) {
     const h = STYLES.work.h * scale, start = Math.floor(rnd() * M);
     for (let j = 0; j < M; j++) {
       const n = cand[(start + j * 2311) % M];
       if (hash.hits({ c: n, r: h / 2 }, GAP, rMax)) continue;
-      for (let k = 0; k < 4; k++) {
-        const en = pool[Math.floor(rnd() * pool.length)];
+      for (let k = 0; k < 8; k++) {
+        const en = pick();
         const hh = h * (en.kind === "focus" ? 1.3 : 1), vertical = rnd() < 0.3;
         if (tryPlace(en, hh, n, vertical) || tryPlace(en, hh, n, !vertical)) break;
       }
@@ -311,7 +317,7 @@ function buildCloud() {
       }
       if (i < S) { const a = first + i * 2; index.push(a, a + 2, a + 1, a + 1, a + 2, a + 3); }
     }
-    wordSpans.push({ first, count: v - first, tone, kind: p.en.kind, n: p.n, lit: 0, delay: 0 });
+    wordSpans.push({ first, count: v - first, tone, kind: p.en.kind, owner: p.en.owner, n: p.n, lit: 0, delay: 0 });
   });
   const geo = new THREE.BufferGeometry();
   geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
@@ -427,41 +433,43 @@ function blob(anchor, c, sx, sy, sz, order) {
   parts.push({ g, order });
 }
 {
-  // Neck and torso
-  limb(V(0, 7.95), V(0, 7.25), 0.25, 0.3, 0);
-  // One smooth piece from hips to shoulders
+  // Neck, and one round piece from hips to shoulders
+  limb(V(0, 4.98), V(0, 4.55), 0.34, 0.38, 0);
   const torso = new THREE.LatheGeometry([
-    [0.0, 4.4], [0.34, 4.44], [0.58, 4.6], [0.68, 4.85], [0.66, 5.25], [0.6, 5.7], [0.68, 6.3],
-    [0.82, 6.85], [0.88, 7.1], [0.78, 7.33], [0.52, 7.46], [0.28, 7.5], [0.0, 7.5],
+    [0.0, 2.05], [0.4, 2.1], [0.78, 2.3], [0.95, 2.65], [1.0, 3.1], [0.97, 3.6], [0.9, 4.05],
+    [0.8, 4.4], [0.6, 4.65], [0.32, 4.78], [0.0, 4.8],
   ].map(([x, y]) => new THREE.Vector2(x, y)), 64);
   const tg = new THREE.Group();
-  tg.position.set(0, 7.45, 0);
+  tg.position.set(0, 4.75, 0);
   const tm = shade(new THREE.Mesh(torso, porcelain));
-  tm.position.y = -7.45;
-  tm.scale.z = 0.64;
+  tm.position.y = -4.75;
+  tm.scale.z = 0.78;
   tg.add(tm);
   body.add(tg);
   parts.push({ g: tg, order: 1 });
-  // Arms: relaxed, a little away from the body
+  for (const s of [-1, 1]) blob(V(s * 0.82, 4.3), V(s * 0.88, 4.28), 0.36, 0.36, 0.36, 2);
+  // Thinking: one hand up at the chin...
+  const elbowR = V(0.95, 3.5, 0.95), wristR = V(0.3, 4.8, 0.95);
+  limb(V(0.92, 4.22, 0.08), elbowR, 0.3, 0.26, 3);
+  limb(elbowR, wristR, 0.25, 0.21, 4);
+  blob(wristR, V(0.2, 5.05, 0.88), 0.25, 0.27, 0.24, 5);
+  // ...the other arm across the middle, its hand cupping that elbow
+  const elbowL = V(-1.05, 3.3, 0.6), wristL = V(0.55, 3.35, 1.08);
+  limb(V(-0.92, 4.22, 0.08), elbowL, 0.3, 0.26, 3);
+  limb(elbowL, wristL, 0.25, 0.21, 4);
+  blob(wristL, V(0.76, 3.4, 1.06), 0.26, 0.22, 0.24, 5);
+  // Short, sturdy legs and round feet
   for (const s of [-1, 1]) {
-    blob(V(s * 0.84, 7.1), V(s * 0.9, 7.08), 0.3, 0.3, 0.3, 2);
-    limb(V(s * 0.95, 7.02), V(s * 1.13, 5.55, 0.04), 0.23, 0.19, 3);
-    limb(V(s * 1.13, 5.55, 0.04), V(s * 1.21, 4.25, 0.16), 0.185, 0.145, 4);
-    blob(V(s * 1.21, 4.25, 0.16), V(s * 1.22, 3.97, 0.18), 0.15, 0.27, 0.11, 5);
-  }
-  // Legs and feet
-  for (const s of [-1, 1]) {
-    limb(V(s * 0.36, 4.7), V(s * 0.42, 2.6, 0.02), 0.38, 0.28, 4);
-    limb(V(s * 0.42, 2.6, 0.02), V(s * 0.43, 0.64), 0.27, 0.19, 5);
-    blob(V(s * 0.43, 0.64), V(s * 0.44, 0.48, 0.18), 0.19, 0.16, 0.36, 6);
+    limb(V(s * 0.45, 2.35), V(s * 0.48, 0.62, 0.02), 0.46, 0.36, 4);
+    blob(V(s * 0.48, 0.62), V(s * 0.5, 0.5, 0.2), 0.3, 0.22, 0.46, 5);
   }
   // Round porcelain base
   const bg = new THREE.Group();
-  const base = shade(new THREE.Mesh(new THREE.CylinderGeometry(1.75, 1.85, 0.3, 96), porcelain));
+  const base = shade(new THREE.Mesh(new THREE.CylinderGeometry(1.65, 1.75, 0.3, 96), porcelain));
   base.position.y = 0.15;
   bg.add(base);
   body.add(bg);
-  parts.push({ g: bg, order: 7 });
+  parts.push({ g: bg, order: 6 });
 }
 parts.forEach((p) => p.g.scale.setScalar(0.0001));
 
@@ -508,7 +516,7 @@ function goHome() {
 
 // ── Framing: close on the head, then the whole figure ────────────────────────
 // Both views fit their subject to the screen; tall screens step back.
-let distHead = 5, distFig = 20;
+let distHead = 5, distQ = 10;
 function resize() {
   const w = canvas.clientWidth, h = canvas.clientHeight;
   if (!w || !h) return;
@@ -516,7 +524,7 @@ function resize() {
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
   distHead = Math.max(HEAD_R / 0.62 / tanHalf, (HEAD_R + 0.45) / (tanHalf * camera.aspect));
-  distFig = Math.max((FIG_TOP / 2 + 1.5) / tanHalf, 2.6 / (tanHalf * camera.aspect));
+  distQ = Math.max(Q_HALF_H / tanHalf, Q_HALF_W / (tanHalf * camera.aspect));
 }
 window.addEventListener("resize", resize);
 resize();
@@ -551,7 +559,7 @@ const easeOutBack = (t) => { const c = 1.4; return 1 + (c + 1) * Math.pow(t - 1,
 
 const tmpColor = new THREE.Color(), camDir = new THREE.Vector3(), nWorld = new THREE.Vector3();
 const target = new THREE.Vector3(), viewDir = new THREE.Vector3();
-const viewHead = new THREE.Vector3(0, 0.16, 1).normalize(), viewFig = new THREE.Vector3(0, 0.1, 1).normalize();
+const viewHead = new THREE.Vector3(0, 0.16, 1).normalize(), viewQ = new THREE.Vector3(0.35, 0.1, 1).normalize();
 let lastT = 0, nextGlint = 0, colorsDirty = false, settled = false;
 
 function animate() {
@@ -606,9 +614,9 @@ function animate() {
     p.g.scale.setScalar(Math.max(0.0001, easeOutBack(k)));
   });
   const c = easeInOut(clamp01((g - 0.04) / 0.9));
-  target.lerpVectors(HEAD_C, FIG_C, c);
-  viewDir.lerpVectors(viewHead, viewFig, c).normalize();
-  const dist = distHead * Math.pow(distFig / distHead, c);
+  target.lerpVectors(HEAD_C, Q_C, c);
+  viewDir.lerpVectors(viewHead, viewQ, c).normalize();
+  const dist = distHead * Math.pow(distQ / distHead, c);
   camera.position.copy(target).addScaledVector(viewDir, dist);
   if (motionOK) {
     const k = 1 - Math.pow(0.02, dt);
@@ -622,7 +630,7 @@ function animate() {
 
   // Once whole, the head turns a little, as if thinking, and words light up
   if (motionOK && g >= 1 && settled) {
-    headGroup.rotation.y = Math.sin((since - RESOLVE - HOLD - REVEAL) * 0.35) * 0.4;
+    headGroup.rotation.y = Math.sin((since - RESOLVE - HOLD - REVEAL) * 0.35) * 0.3;
     headGroup.updateMatrixWorld();
     if (t >= nextGlint) {
       const front = wordSpans.filter((s) => s.lit <= 0 && nWorld.copy(s.n).transformDirection(headGroup.matrixWorld).dot(camDir) > 0.3);
