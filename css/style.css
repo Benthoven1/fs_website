@@ -1994,6 +1994,36 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
 
 .fs-words.is-in .fs-w > span { transform: none; }
 
+/* ---- Opening stage: the planet becomes the bowl (js/bowl.js) ---- */
+.fs-stage {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+}
+
+#fs-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.fs-cue {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(18px, 4vh, 36px);
+  margin: 0;
+  text-align: center;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* ---- Reading progress ---- */
 .fs-progress {
   position: fixed;
@@ -2027,6 +2057,9 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
 }
 
 @media (min-width: 1240px) { .fs-rail { display: flex; } }
+
+.fs-rail { transition: opacity 0.5s var(--ease); }
+.fs-rail.is-away { opacity: 0; pointer-events: none; }
 
 .fs-rail-track {
   position: absolute;
