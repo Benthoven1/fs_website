@@ -18,6 +18,8 @@ of the for-profit arm), Oak, and a fourth to be announced.
 - `js/main.js` — Three.js module for the landing page: the cosmos and its framing
   per layout, the hero, the 2D night transition, and interactions.
 - `js/fsos.js` — the FSOS page: a nonprofit's AI workforce circling its Chief of Staff.
+- `js/bowl.js` — the Fiscal Sponsorship page's opening: the blue planet's upper half
+  lifts away, revealing a bowl, and four ivory projects settle into it.
 - `js/fiscal.js` — the Fiscal Sponsorship page's text motion and navigation: section
   index, reading progress, comparison switch, timeline, and project tabs.
 - `js/oak.js` — the Oak page: the planet becomes an acorn among leaves, and

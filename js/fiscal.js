@@ -1,4 +1,5 @@
-// fiscal.js — the Fiscal Sponsorship page's text motion and navigation:
+// fiscal.js — the Fiscal Sponsorship page's text motion and navigation
+// (the opening scene is js/bowl.js):
 // headings whose words rise, a rotating word in the headline, reveals, a
 // section index and reading progress that follow the scroll, a timeline that
 // fills as it is read, the "on your own / with Mulvium" switch, plain-terms
@@ -68,6 +69,7 @@
   var railLinks = rail ? Array.prototype.slice.call(rail.querySelectorAll("a")) : [];
   var sections = railLinks.map(function (a) { return document.getElementById(a.dataset.spy); });
   var progress = document.querySelector(".fs-progress span");
+  var stage = document.querySelector(".fs-stage");
   var steps = document.querySelector(".fs-steps");
   var stepItems = steps ? steps.querySelectorAll("li") : [];
   var ticking = false;
@@ -89,6 +91,8 @@
       if (i === current) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
     });
     if (rail) rail.style.setProperty("--rail", (current / Math.max(1, railLinks.length - 1)).toFixed(3));
+    // The index stays out of the way while the opening scene fills the view
+    if (rail && stage) rail.classList.toggle("is-away", stage.getBoundingClientRect().bottom > vh * 0.5);
 
     // The timeline fills as it moves up through the view
     if (steps) {
