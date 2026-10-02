@@ -1,12 +1,15 @@
 // fsos.js — the FSOS page scene: a mind made of the work.
 // FSOS's green planet arrives as the loading screen opens. Then it dissolves
 // into words: the solid planet falls away and leaves a sphere made only of
-// words, huddled together like a word cloud, the vocabulary of running a
-// nonprofit: the twelve agents, what each looks after, and the everyday work
-// between them. The camera draws back as a porcelain figure grows beneath
-// it, and the word sphere turns out to be the figure's head, turning slowly
-// as words light up across it. Clicking the head returns home.
+// words fitted into one another like puzzle pieces, the vocabulary of running
+// a nonprofit: the twelve agents, what each looks after, and the everyday work
+// between them. As it does, a porcelain figure grows beneath it and the camera
+// draws back: the word sphere is the figure's head. The figure thinks, its head
+// turning a little as words light up; hovering (or tapping) a word lights every
+// word of its agent and names the agent.
 import * as THREE from "three";
+import { WORKFORCE, CHIEF_OF_STAFF, STYLES, vocabulary, slotSize, drawWord } from "./fsos-words.js";
+import CLOUD from "./fsos-cloud.js";
 
 const canvas = document.getElementById("fsos-canvas");
 if (!canvas) throw new Error("fsos: #fsos-canvas not found");
@@ -18,6 +21,7 @@ const PAPER       = 0xeceae5;
 const PASTEL_FSOS = 0xc4ddb8;
 const PORCELAIN   = 0xf3eee6;
 const GLINT       = new THREE.Color(0xc19a5b);   // a word lit up, in gold
+const HILITE      = new THREE.Color(0x94641c);   // an agent's words, on hover
 // The words take the planet's green, deepened so they read on paper
 const TONES = {
   agent: [0x3f5a38],
@@ -65,33 +69,6 @@ ground.rotation.x = -Math.PI / 2;
 ground.receiveShadow = true;
 scene.add(ground);
 
-// ── The vocabulary ───────────────────────────────────────────────────────────
-// The twelve agents, what each looks after, and eight pieces of everyday work
-// each one handles; the Chief of Staff's own words coordinate them. Every
-// word keeps its owner.
-const WORKFORCE = [
-  { agent: "Research", focus: "Evidence", work: ["interviews", "literature review", "citations", "sources", "memo", "field notes", "data sets", "peer review"] },
-  { agent: "Grants", focus: "Funders", work: ["grant report", "letter of inquiry", "proposal", "deadlines", "renewals", "grant agreement", "grant calendar", "budget narrative"] },
-  { agent: "Communications", focus: "Press", work: ["press release", "newsletter", "annual report", "media list", "op-ed", "translations", "talking points", "story bank"] },
-  { agent: "Governance", focus: "Board", work: ["board minutes", "bylaws", "policies", "conflict of interest", "agenda", "resolution", "annual meeting", "committees"] },
-  { agent: "Development", focus: "Donors", work: ["gift receipt", "donor letter", "appeal", "pledges", "stewardship", "thank-you notes", "case for support", "major gifts"] },
-  { agent: "Finance", focus: "Budgets", work: ["budget variance", "cash flow", "payroll", "invoices", "reconciliation", "fiscal year", "restricted funds", "forecast"] },
-  { agent: "Compliance", focus: "Filings", work: ["form 990", "audit trail", "insurance", "permits", "risk register", "state filings", "data privacy", "gift agreement"] },
-  { agent: "Programs", focus: "Services", work: ["theory of change", "milestones", "partners", "site visits", "accessibility", "curriculum", "participants", "enrollment"] },
-  { agent: "Volunteers", focus: "Recruiting", work: ["volunteer roster", "onboarding", "training", "shift schedule", "background checks", "volunteer hours", "recognition", "sign-up forms"] },
-  { agent: "Marketing", focus: "Outreach", work: ["audiences", "social posts", "website", "tickets", "campaign", "sponsors", "email list", "brand"] },
-  { agent: "Operations", focus: "Logistics", work: ["schedule", "venues", "contracts", "timeline", "vendor quotes", "event plan", "run of show", "hiring"] },
-  { agent: "Evaluation", focus: "Impact", work: ["logic model", "survey", "outcomes", "metrics", "impact report", "baseline", "feedback", "lessons learned"] },
-];
-const CHIEF_OF_STAFF = ["blueprint", "mission", "decisions", "memory", "drafts", "approvals", "handoffs", "sign-off"];
-
-// Each style: atlas font, and the word's height on a head of radius 1
-const STYLES = {
-  agent: { font: '500 72px "Cormorant SC"', px: 72, h: 0.24 },
-  focus: { font: '500 64px "Cormorant Garamond"', px: 64, h: 0.17 },
-  work:  { font: '400 48px "DM Mono"', px: 48, h: 0.115 },
-};
-
 // ── Figure geometry ──────────────────────────────────────────────────────────
 // A short, round stock figure about three heads tall, on a porcelain base.
 const HEAD_R = 1.15;
@@ -100,7 +77,7 @@ const HEAD_C = new THREE.Vector3(0, 6.15, 0);
 // seen a little from one side
 const Q_C = new THREE.Vector3(0, 4.9, 0), Q_HALF_H = 3.6, Q_HALF_W = 1.8;
 
-// Deterministic randomness, so the cloud packs the same way every visit
+// Deterministic randomness, so tones and depths are the same every visit
 function mulberry32(a) {
   return () => { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
 }
@@ -108,167 +85,31 @@ function mulberry32(a) {
 // ── The atlas: every word drawn once, in white, tinted per word ──────────────
 const ATLAS_W = 2048, PAD = 6;
 const atlasCanvas = document.createElement("canvas");
-const entries = [
-  ...WORKFORCE.map((a) => ({ text: a.agent, kind: "agent", owner: a.agent })),
-  ...WORKFORCE.map((a) => ({ text: a.focus, kind: "focus", owner: a.agent })),
-  ...WORKFORCE.flatMap((a) => a.work.map((text) => ({ text, kind: "work", owner: a.agent }))),
-  ...CHIEF_OF_STAFF.map((text) => ({ text, kind: "work", owner: "Chief of Staff" })),
-];
+const actx = atlasCanvas.getContext("2d", { willReadFrequently: true }); // read back when picking
+const entries = vocabulary();
 function layoutAtlas() {
-  const ctx = atlasCanvas.getContext("2d");
   let x = 0, y = 0, rowH = 0;
   entries.forEach((en) => {
-    const st = STYLES[en.kind];
-    ctx.font = st.font;
-    const w = Math.ceil(ctx.measureText(en.text).width + st.px * 0.2) + PAD * 2;
-    const h = Math.ceil(st.px * 1.25) + PAD * 2;
+    const slot = slotSize(actx, en.text, STYLES[en.kind]);
+    const w = slot.w + PAD * 2, h = slot.h + PAD * 2;
     if (x + w > ATLAS_W) { x = 0; y += rowH; rowH = 0; }
-    Object.assign(en, { x, y, w, h, aspect: (w - PAD * 2) / (h - PAD * 2) });
+    Object.assign(en, { x, y, w, h });
     x += w; rowH = Math.max(rowH, h);
   });
   atlasCanvas.width = ATLAS_W;
   atlasCanvas.height = THREE.MathUtils.ceilPowerOfTwo(y + rowH);
 }
+let atlasHasFonts = false;
 function paintAtlas() {
-  const ctx = atlasCanvas.getContext("2d");
-  ctx.clearRect(0, 0, atlasCanvas.width, atlasCanvas.height);
-  ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  entries.forEach((en) => {
-    // Squeeze to fit the slot, in case the fonts changed since it was measured
-    const st = STYLES[en.kind];
-    ctx.font = st.font;
-    const fit = Math.min(1, (en.w - PAD * 2) / (ctx.measureText(en.text).width + st.px * 0.2));
-    ctx.save();
-    ctx.translate(en.x + en.w / 2, en.y + en.h / 2 + st.px * 0.04);
-    ctx.scale(fit, 1);
-    ctx.fillText(en.text, 0, 0);
-    ctx.restore();
-  });
+  actx.clearRect(0, 0, atlasCanvas.width, atlasCanvas.height);
+  actx.fillStyle = "#ffffff";
+  entries.forEach((en) => drawWord(actx, en.text, STYLES[en.kind], en.x + en.w / 2, en.y + en.h / 2, en.w - PAD * 2));
+  atlasHasFonts = fontsIn();
 }
 const atlas = new THREE.CanvasTexture(atlasCanvas);
 atlas.colorSpace = THREE.SRGBColorSpace;
 atlas.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-
-// ── Packing the words onto the sphere ────────────────────────────────────────
-// Each word runs along a great circle, curved onto the surface. A chain of
-// circles stands in for its footprint; a word fits where its chain meets no
-// other. Largest first, then the vocabulary again at smaller sizes until the
-// surface is full.
 const UP = new THREE.Vector3(0, 1, 0);
-function frameAt(n, vertical) {
-  const e = new THREE.Vector3().crossVectors(UP, n);
-  if (e.lengthSq() < 1e-6) e.set(1, 0, 0);
-  e.normalize();
-  const u = new THREE.Vector3().crossVectors(n, e);
-  return vertical ? { e: u, u: e.clone().negate() } : { e, u };
-}
-function chain(n, e, w, h) {
-  const r = h / 2, out = [];
-  const span = Math.max(0, w - h), count = Math.max(1, Math.ceil(span / (h * 0.85)) + 1);
-  for (let k = 0; k < count; k++) {
-    const s = count === 1 ? 0 : -span / 2 + (span * k) / (count - 1);
-    out.push({ c: n.clone().multiplyScalar(Math.cos(s)).addScaledVector(e, Math.sin(s)), r });
-  }
-  return out;
-}
-// Spatial hash over latitude/longitude cells
-const CELL = 0.1, NLAT = Math.ceil(Math.PI / CELL), NLON = Math.ceil((2 * Math.PI) / CELL);
-const cellOf = (c) => {
-  const lat = Math.acos(THREE.MathUtils.clamp(c.y, -1, 1)), lon = Math.atan2(c.z, c.x) + Math.PI;
-  return [Math.min(NLAT - 1, Math.floor(lat / CELL)), Math.min(NLON - 1, Math.floor(lon / CELL))];
-};
-function makeHash() {
-  const cells = new Map();
-  return {
-    add(circle) { const [a, b] = cellOf(circle.c); const k = a * NLON + b; (cells.get(k) || cells.set(k, []).get(k)).push(circle); },
-    hits(circle, gap, rMax) {
-      const [a, b] = cellOf(circle.c);
-      const reach = circle.r + rMax + gap, dl = Math.ceil(reach / CELL);
-      const sinLat = Math.sqrt(Math.max(0, 1 - circle.c.y * circle.c.y));
-      const dn = sinLat < 0.2 ? NLON : Math.ceil(reach / CELL / sinLat) + 1;
-      const lonCells = new Set();
-      for (let j = -Math.min(dn, NLON); j <= Math.min(dn, NLON); j++) lonCells.add((b + j + NLON * 2) % NLON);
-      for (let i = Math.max(0, a - dl); i <= Math.min(NLAT - 1, a + dl); i++) {
-        for (const j of lonCells) {
-          const list = cells.get(i * NLON + j);
-          if (!list) continue;
-          for (const o of list) if (circle.c.dot(o.c) > Math.cos(circle.r + o.r + gap)) return true;
-        }
-      }
-      return false;
-    },
-  };
-}
-function packCloud() {
-  const rnd = mulberry32(20261002);
-  const hash = makeHash();
-  const GAP = 0.006;
-  let rMax = 0;
-  const placed = [];
-  const M = 6000, golden = Math.PI * (3 - Math.sqrt(5));
-  const cand = Array.from({ length: M }, (_, i) => {
-    const y = 1 - ((i + 0.5) / M) * 2, r = Math.sqrt(1 - y * y), th = i * golden;
-    return new THREE.Vector3(Math.cos(th) * r, y, Math.sin(th) * r);
-  });
-  function tryPlace(en, h, n, vertical) {
-    const { e, u } = frameAt(n, vertical);
-    const w = h * en.aspect;
-    if (w > 2.2) return false;
-    const circles = chain(n, e, w, h);
-    if (circles.some((c) => hash.hits(c, GAP, rMax))) return false;
-    circles.forEach((c) => hash.add(c));
-    rMax = Math.max(rMax, h / 2);
-    placed.push({ en, n, e, u, w, h });
-    return true;
-  }
-  function place(en, h, tries, verticalChance) {
-    const start = Math.floor(rnd() * M), step = 2311;
-    for (let j = 0; j < tries; j++) {
-      const n = cand[(start + j * step) % M];
-      const vertical = rnd() < verticalChance;
-      if (tryPlace(en, h, n, vertical) || tryPlace(en, h, n, !vertical)) return true;
-    }
-    return false;
-  }
-  // The twelve agents sit at the twelve corners of an icosahedron, so they
-  // spread evenly round the head; one faces front
-  const ico = new THREE.IcosahedronGeometry(1, 0).getAttribute("position");
-  const corners = [];
-  for (let i = 0; i < ico.count; i++) {
-    const v = new THREE.Vector3().fromBufferAttribute(ico, i).normalize();
-    if (!corners.some((c) => c.distanceTo(v) < 1e-3)) corners.push(v);
-  }
-  const tilt = new THREE.Quaternion().setFromUnitVectors(corners[0], new THREE.Vector3(0.18, 0.12, 1).normalize());
-  entries.filter((en) => en.kind === "agent").forEach((en, i) => {
-    const n = corners[i].clone().applyQuaternion(tilt);
-    if (!tryPlace(en, STYLES.agent.h, n, false)) place(en, STYLES.agent.h, M, 0);
-  });
-  entries.filter((en) => en.kind === "focus").forEach((en) => place(en, STYLES.focus.h, M, 0.15));
-  entries.filter((en) => en.kind === "work").forEach((en) => place(en, STYLES.work.h, M, 0.3));
-  // Fill: wherever a small word still fits, put one, smaller each pass, so
-  // the words huddle together
-  const pool = entries.filter((en) => en.kind !== "agent");
-  // Short words plug small gaps best: of two picks, take the shorter
-  const pick = () => {
-    const a = pool[Math.floor(rnd() * pool.length)], b = pool[Math.floor(rnd() * pool.length)];
-    return a.aspect <= b.aspect ? a : b;
-  };
-  for (const scale of [0.8, 0.62, 0.48, 0.38]) {
-    const h = STYLES.work.h * scale, start = Math.floor(rnd() * M);
-    for (let j = 0; j < M; j++) {
-      const n = cand[(start + j * 2311) % M];
-      if (hash.hits({ c: n, r: h / 2 }, GAP, rMax)) continue;
-      for (let k = 0; k < 8; k++) {
-        const en = pick();
-        const hh = h * (en.kind === "focus" ? 1.3 : 1), vertical = rnd() < 0.3;
-        if (tryPlace(en, hh, n, vertical) || tryPlace(en, hh, n, !vertical)) break;
-      }
-    }
-  }
-  return { placed, rnd };
-}
 
 // ── Building the word surface: one mesh, every word curved onto the sphere ───
 const WORD_R = HEAD_R * 1.004;
@@ -281,16 +122,27 @@ const planet = new THREE.Mesh(new THREE.SphereGeometry(HEAD_R, 96, 64), planetMa
 planet.castShadow = true;
 headGroup.add(planet);
 
-let wordMesh = null, wordColors = null;
+let wordMesh = null, wordColors = null, faceSpan = null;
 const wordSpans = [];
 function buildCloud() {
   layoutAtlas();
   paintAtlas();
   atlas.needsUpdate = true;
-  const { placed, rnd } = packCloud();
-  let verts = 0;
+  // Where each word sits comes from js/fsos-cloud.js, packed ahead of time by
+  // the shape of its letters (tools/pack-fsos-cloud.html)
+  const rnd = mulberry32(20261002);
+  const byKey = new Map(entries.map((en) => [en.kind + ":" + en.text, en]));
+  const placed = [];
+  for (const [kind, text, nx, ny, nz, ex, ey, ez, w, h] of CLOUD) {
+    const en = byKey.get(kind + ":" + text);
+    if (!en) continue; // a word no longer in the vocabulary
+    const n = new THREE.Vector3(nx, ny, nz), e = new THREE.Vector3(ex, ey, ez);
+    placed.push({ en, n, e, u: new THREE.Vector3().crossVectors(n, e), w, h });
+  }
+  let verts = 0, tris = 0;
   const segs = placed.map((p) => Math.max(2, Math.ceil(p.w / 0.06)));
-  segs.forEach((s) => { verts += (s + 1) * 2; });
+  segs.forEach((s) => { verts += (s + 1) * 2; tris += s * 2; });
+  faceSpan = new Int32Array(tris);
   const pos = new Float32Array(verts * 3), nor = new Float32Array(verts * 3), uv = new Float32Array(verts * 2);
   const col = new Float32Array(verts * 3), index = [];
   const W = atlasCanvas.width, H = atlasCanvas.height;
@@ -301,7 +153,7 @@ function buildCloud() {
     const tones = TONES[p.en.kind], tone = new THREE.Color(tones[Math.floor(rnd() * tones.length)]);
     // A little depth, like a cloud: words sit at slightly different heights
     const rad = WORD_R * (p.en.kind === "agent" ? 1.04 : 1 + rnd() * 0.035);
-    const u0 = (p.en.x + PAD) / W, u1 = (p.en.x + p.en.w - PAD) / W;
+    const u0 = (p.en.x + PAD) / W, u1 = (p.en.x + p.en.w - PAD) / W;  // the word's slot
     const vTop = 1 - (p.en.y + PAD) / H, vBot = 1 - (p.en.y + p.en.h - PAD) / H;
     for (let i = 0; i <= S; i++) {
       const s = -p.w / 2 + (p.w * i) / S;
@@ -315,9 +167,13 @@ function buildCloud() {
         col.set([planetColor.r, planetColor.g, planetColor.b], v * 3);
         v++;
       }
-      if (i < S) { const a = first + i * 2; index.push(a, a + 2, a + 1, a + 1, a + 2, a + 3); }
+      if (i < S) {
+        const a = first + i * 2;
+        faceSpan[index.length / 3] = faceSpan[index.length / 3 + 1] = wi;
+        index.push(a, a + 2, a + 1, a + 1, a + 2, a + 3);
+      }
     }
-    wordSpans.push({ first, count: v - first, tone, kind: p.en.kind, owner: p.en.owner, n: p.n, lit: 0, delay: 0 });
+    wordSpans.push({ first, count: v - first, tone, kind: p.en.kind, owner: p.en.owner, n: p.n, lit: 0, hl: 0, delay: 0 });
   });
   const geo = new THREE.BufferGeometry();
   geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
@@ -353,9 +209,22 @@ function setWordColor(span, color) {
   for (let k = 0; k < span.count; k++) wordColors.setXYZ(span.first + k, color.r, color.g, color.b);
 }
 
-// Words are measured and drawn with their web fonts, so wait for the font
-// stylesheet and the fonts (but not forever); if they arrive later, repaint.
+// Words are drawn with their web fonts, so wait for the font stylesheet and
+// the fonts (but not forever); if they arrive later, repaint.
 const FONTS = [STYLES.agent.font, STYLES.focus.font, STYLES.work.font];
+const FAMILIES = ["Cormorant SC", "Cormorant Garamond", "DM Mono"];
+// Each family has a face actually loaded (document.fonts.check() also says
+// yes when the stylesheet hasn't arrived to declare any faces at all)
+function fontsIn() {
+  const faces = [...document.fonts];
+  return FAMILIES.every((fam) => faces.some((f) => f.family.replace(/"/g, "") === fam && f.status === "loaded"));
+}
+function repaintIfFontsArrived() {
+  if (!cloudReady || atlasHasFonts || !fontsIn()) return;
+  paintAtlas();
+  atlas.needsUpdate = true;
+}
+document.fonts.addEventListener("loadingdone", repaintIfFontsArrived);
 function fontsReady() {
   const link = document.querySelector('link[href*="fonts.googleapis"]');
   const sheet = !link || link.sheet ? Promise.resolve() : new Promise((r) => {
@@ -370,9 +239,7 @@ const fontsLoaded = fontsReady().catch(() => {});
 Promise.race([fontsLoaded, new Promise((r) => setTimeout(r, 4000))]).then(() => {
   buildCloud();
   cloudReady = true;
-  fontsLoaded.then(() => {
-    if (FONTS.every((f) => document.fonts.check(f))) { paintAtlas(); atlas.needsUpdate = true; }
-  });
+  fontsLoaded.then(repaintIfFontsArrived);
 });
 
 // ── The porcelain figure ─────────────────────────────────────────────────────
@@ -473,34 +340,77 @@ function blob(anchor, c, sx, sy, sz, order) {
 }
 parts.forEach((p) => p.g.scale.setScalar(0.0001));
 
-// ── Head → home ──────────────────────────────────────────────────────────────
+// ── Hover: a word names its agent and lights all of that agent's work ───────
 const raycaster = new THREE.Raycaster();
 const pointerNdc = new THREE.Vector2(-2, -2);
 const drift = { x: 0, y: 0, tx: 0, ty: 0 };
+const FOCUS_OF = new Map([...WORKFORCE, CHIEF_OF_STAFF].map((a) => [a.agent, a.focus]));
 
 window.addEventListener("pointermove", (e) => {
   drift.tx = (e.clientX / window.innerWidth) * 2 - 1;
   drift.ty = (e.clientY / window.innerHeight) * 2 - 1;
-  const r = canvas.getBoundingClientRect();
-  pointerNdc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
 }, { passive: true });
 
-canvas.setAttribute("role", "link");
-canvas.setAttribute("aria-label", "Return to the Mulvium home page via the figure's head");
-canvas.addEventListener("click", (e) => {
-  const r = canvas.getBoundingClientRect();
-  pointerNdc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
-  raycaster.setFromCamera(pointerNdc, camera);
-  if (raycaster.intersectObject(planet).length) goHome();
-});
+canvas.setAttribute("role", "img");
+canvas.setAttribute("aria-label", "A porcelain figure, thinking, whose head is a sphere of words: FSOS's twelve agents and the work each one handles");
 
-function goHome() {
-  // Same exit as page-transition.js: flag the loading screen, fade, navigate
-  sessionStorage.setItem("ls-entering", "1");
-  document.body.style.transition = "opacity 350ms ease";
-  document.body.style.opacity = "0";
-  setTimeout(() => { window.location.href = "../../index.html"; }, 350);
+const tag = document.createElement("div");
+tag.className = "fsos-tag";
+tag.setAttribute("aria-hidden", "true");
+tag.innerHTML = '<span class="fsos-tag-agent"></span><span class="fsos-tag-focus"></span>';
+canvas.parentElement.appendChild(tag);
+
+let interactive = false, activeOwner = null, pinned = false;
+let pointer = null, pointerMoved = false;
+const faceNormal = new THREE.Vector3();
+
+// The word under a screen point: nearest face turned toward the viewer, and
+// only where its letters have ink (words' slots overlap, their letters don't)
+function wordAt(x, y) {
+  if (!wordMesh) return null;
+  const r = canvas.getBoundingClientRect();
+  pointerNdc.set(((x - r.left) / r.width) * 2 - 1, -((y - r.top) / r.height) * 2 + 1);
+  raycaster.setFromCamera(pointerNdc, camera);
+  const W = atlasCanvas.width, H = atlasCanvas.height;
+  for (const hit of raycaster.intersectObject(wordMesh)) {
+    faceNormal.copy(hit.face.normal).transformDirection(wordMesh.matrixWorld);
+    if (faceNormal.dot(raycaster.ray.direction) > 0) continue;
+    const px = Math.min(W - 1, Math.floor(hit.uv.x * W)), py = Math.min(H - 1, Math.floor((1 - hit.uv.y) * H));
+    if (actx.getImageData(px, py, 1, 1).data[3] < 90) continue;
+    return wordSpans[faceSpan[hit.faceIndex]];
+  }
+  return null;
 }
+
+function show(owner, x, y) {
+  activeOwner = owner;
+  tag.classList.toggle("is-on", !!owner);
+  canvas.style.cursor = owner ? "help" : "";
+  if (!owner) return;
+  tag.firstChild.textContent = owner;
+  tag.lastChild.textContent = FOCUS_OF.get(owner) || "";
+  const r = canvas.getBoundingClientRect();
+  const left = Math.min(r.width - tag.offsetWidth - 12, x - r.left + 18);
+  const top = Math.min(r.height - tag.offsetHeight - 12, y - r.top + 18);
+  tag.style.transform = `translate(${Math.max(12, left)}px, ${Math.max(12, top)}px)`;
+}
+
+canvas.addEventListener("pointermove", (e) => {
+  if (e.pointerType !== "mouse") return;
+  pointer = { x: e.clientX, y: e.clientY };
+  pointerMoved = true;
+});
+canvas.addEventListener("pointerleave", () => { pointer = null; if (!pinned) show(null); });
+// Touch: tap a word to see its agent; tap anywhere else to let go
+let downAt = null;
+canvas.addEventListener("pointerdown", (e) => { downAt = { x: e.clientX, y: e.clientY }; });
+canvas.addEventListener("pointerup", (e) => {
+  if (e.pointerType === "mouse" || !interactive || !downAt) return;
+  if (Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y) > 10) return; // a scroll, not a tap
+  const word = wordAt(e.clientX, e.clientY);
+  pinned = !!word;
+  show(word ? word.owner : null, e.clientX, e.clientY);
+});
 
 // ── Prose rises in as it scrolls into view (same .rv classes as the home page)
 {
@@ -534,9 +444,9 @@ let onScreen = true;
 new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; }).observe(canvas);
 
 // ── Timeline ─────────────────────────────────────────────────────────────────
-// The planet arrives as the loading screen opens; once the overlay has gone,
-// its surface resolves into words; then the body grows and the camera draws
-// back to show the figure.
+// The planet arrives as the loading screen opens. Once the overlay has gone it
+// dissolves into words while, in the same breath, the body grows beneath it
+// and the camera draws back to show the figure.
 const clock = new THREE.Clock();
 let holeT = Infinity, doneT = Infinity, openT = Infinity;
 function onHole() { if (!isFinite(holeT)) holeT = clock.getElapsedTime(); }
@@ -546,9 +456,10 @@ if (window["__mulvium_ls-hole"]) onHole(); else document.addEventListener("mulvi
 if (window["__mulvium_ls-done"]) onDone(); else document.addEventListener("mulvium:ls-done", onDone);
 setTimeout(onDone, 10000); // safety if the overlay never reports
 
-const RESOLVE = 2.2;        // planet surface → words
-const HOLD = 0.9;           // a moment to read them
-const REVEAL = 3.2;         // body grows, camera draws back
+const RESOLVE = 2.6;        // planet → words
+const GROW = 2.8;           // the body grows, from the neck down
+const PULL = 3.0;           // the camera draws back
+const THINK = 3.2;          // then the figure thinks
 const GLINT_EVERY = 0.35;
 
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
@@ -560,7 +471,8 @@ const easeOutBack = (t) => { const c = 1.4; return 1 + (c + 1) * Math.pow(t - 1,
 const tmpColor = new THREE.Color(), camDir = new THREE.Vector3(), nWorld = new THREE.Vector3();
 const target = new THREE.Vector3(), viewDir = new THREE.Vector3();
 const viewHead = new THREE.Vector3(0, 0.16, 1).normalize(), viewQ = new THREE.Vector3(0.35, 0.1, 1).normalize();
-let lastT = 0, nextGlint = 0, colorsDirty = false, settled = false;
+const paperColor = new THREE.Color(PAPER);
+let lastT = 0, nextGlint = 0, colorsDirty = false, settled = false, turn = 0, turnSpeed = 1, dim = 0;
 
 function animate() {
   requestAnimationFrame(animate);
@@ -572,7 +484,7 @@ function animate() {
   // The resolve begins once the overlay has gone and the cloud is built;
   // words facing the viewer go first
   if (!isFinite(openT) && isFinite(doneT) && cloudReady) {
-    openT = motionOK ? Math.max(t, doneT + 0.5) : -100;
+    openT = motionOK ? Math.max(t, doneT + 0.4) : -100;
     wordMesh.visible = true;
     headGroup.updateMatrixWorld();
     wordSpans.forEach((s) => {
@@ -607,13 +519,13 @@ function animate() {
     colorsDirty = true;
   }
 
-  // Reveal: the body grows down from the head as the camera draws back
-  const g = isFinite(openT) ? clamp01((since - RESOLVE - HOLD) / REVEAL) : 0;
+  // Meanwhile the body grows down from the head and the camera draws back
+  const g = isFinite(openT) ? clamp01((since - 0.1) / GROW) : 0;
   parts.forEach((p) => {
     const k = clamp01((g - p.order * 0.075) / 0.4);
     p.g.scale.setScalar(Math.max(0.0001, easeOutBack(k)));
   });
-  const c = easeInOut(clamp01((g - 0.04) / 0.9));
+  const c = isFinite(openT) ? easeInOut(clamp01((since - 0.05) / PULL)) : 0;
   target.lerpVectors(HEAD_C, Q_C, c);
   viewDir.lerpVectors(viewHead, viewQ, c).normalize();
   const dist = distHead * Math.pow(distQ / distHead, c);
@@ -628,25 +540,45 @@ function animate() {
   camera.lookAt(target);
   camDir.copy(camera.position).sub(HEAD_C).normalize();
 
-  // Once whole, the head turns a little, as if thinking, and words light up
-  if (motionOK && g >= 1 && settled) {
-    headGroup.rotation.y = Math.sin((since - RESOLVE - HOLD - REVEAL) * 0.35) * 0.3;
+  // Once whole, the figure thinks: its head turns a little and words light
+  // up. A hovered agent holds its attention: the head stills.
+  interactive = settled && since > THINK;
+  const ease = 1 - Math.exp(-dt * 8);
+  if (motionOK && interactive) {
+    turnSpeed += ((activeOwner ? 0 : 1) - turnSpeed) * ease;
+    turn += dt * 0.35 * turnSpeed;
+    headGroup.rotation.y = Math.sin(turn) * 0.3;
     headGroup.updateMatrixWorld();
-    if (t >= nextGlint) {
+    if (t >= nextGlint && !activeOwner) {
       const front = wordSpans.filter((s) => s.lit <= 0 && nWorld.copy(s.n).transformDirection(headGroup.matrixWorld).dot(camDir) > 0.3);
       if (front.length) front[Math.floor(Math.random() * front.length)].lit = 1e-4;
       nextGlint = t + GLINT_EVERY * (0.6 + Math.random() * 0.8);
     }
   }
+  if (interactive && pointer && !pinned && (pointerMoved || turnSpeed > 0.05)) {
+    const word = wordAt(pointer.x, pointer.y);
+    show(word ? word.owner : null, pointer.x, pointer.y);
+    pointerMoved = false;
+  }
+
+  // Word colours: an agent's words in gold while it is shown, the rest
+  // stepping back toward the paper; and the passing glints
   if (settled) {
+    dim += ((activeOwner ? 1 : 0) - dim) * ease;
+    let busy = dim > 0.002 || activeOwner;
     wordSpans.forEach((s) => {
-      if (s.lit <= 0) return;
-      s.lit += dt / 1.6;
-      const k = s.lit >= 1 ? 0 : Math.sin(Math.PI * s.lit);
-      setWordColor(s, tmpColor.copy(s.tone).lerp(GLINT, k * 0.85));
-      if (s.lit >= 1) s.lit = 0;
-      colorsDirty = true;
+      s.hl += ((activeOwner && s.owner === activeOwner ? 1 : 0) - s.hl) * ease;
+      if (s.lit > 0) { s.lit += dt / 1.6; if (s.lit >= 1) s.lit = 0; busy = true; }
+      if (s.hl > 0.002) busy = true;
     });
+    if (busy || colorsDirty) {
+      wordSpans.forEach((s) => {
+        tmpColor.copy(s.tone).lerp(paperColor, 0.42 * dim * (1 - s.hl)).lerp(HILITE, s.hl);
+        if (s.lit > 0) tmpColor.lerp(GLINT, Math.sin(Math.PI * s.lit) * 0.85);
+        setWordColor(s, tmpColor);
+      });
+      colorsDirty = true;
+    }
   }
   if (colorsDirty) { wordColors.needsUpdate = true; colorsDirty = false; }
 

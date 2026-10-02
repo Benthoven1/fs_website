@@ -18,7 +18,12 @@ of the for-profit arm), Oak, and a fourth to be announced.
 - `js/main.js` — Three.js module for the landing page: the cosmos and its framing
   per layout, the hero, the 2D night transition, and interactions.
 - `js/fsos.js` — the FSOS page: the green planet dissolves into a sphere made only of words
-  (the twelve agents and the work they handle), which becomes the head of a porcelain figure.
+  (the twelve agents and the work they handle) as a porcelain figure grows beneath it; the
+  sphere is its head. Hovering or tapping a word lights all of its agent's words and names it.
+- `js/fsos-words.js` — the FSOS vocabulary: each agent, its focus and its eight words.
+- `js/fsos-cloud.js` — generated: where each word sits on the sphere, packed by the shape of
+  its letters so the words fit together like puzzle pieces. After changing the vocabulary,
+  open `tools/pack-fsos-cloud.html` over HTTP and save its output over this file.
 - `js/bowl.js` — the Fiscal Sponsorship page's opening: the blue planet's upper half
   lifts away, revealing a bowl, and four ivory projects settle into it.
 - `js/fiscal.js` — the Fiscal Sponsorship page's text motion and navigation: section
