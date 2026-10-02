@@ -41,6 +41,10 @@ keyLight.castShadow = true;
 const SHADOW_MAP = window.innerWidth < 720 ? 1024 : 2048;
 keyLight.shadow.mapSize.set(SHADOW_MAP, SHADOW_MAP);
 keyLight.shadow.radius = 8;
+// Bias keeps the bowl's own curved walls from shadowing themselves in
+// stripes once the lid is off
+keyLight.shadow.bias = -0.0005;
+keyLight.shadow.normalBias = 0.03;
 Object.assign(keyLight.shadow.camera, { left: -5, right: 5, top: 5, bottom: -5 });
 scene.add(keyLight);
 const fillLight = new THREE.DirectionalLight(0xfff1d8, 0.5);
@@ -93,6 +97,19 @@ const lid = new THREE.Mesh(shellGeo, lidMat);
 lid.scale.y = -1;
 lid.position.y = R;
 lid.castShadow = true;
+// The lid's shadow shrinks away as the lid begins to lift: in the shadow
+// pass alone, the lid is drawn shrinking toward its own middle, so its
+// shadow gets smaller and is gone before it can travel off across the floor
+const lidFade = { value: 1 };
+const lidDepth = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking, side: THREE.DoubleSide });
+lidDepth.onBeforeCompile = (sh) => {
+  sh.uniforms.uFade = lidFade;
+  sh.vertexShader = sh.vertexShader
+    .replace("#include <common>", "#include <common>\nuniform float uFade;")
+    .replace("#include <begin_vertex>", `#include <begin_vertex>
+      transformed = mix(vec3(0.0, ${(R * 0.55).toFixed(3)}, 0.0), transformed, uFade);`);
+};
+lid.customDepthMaterial = lidDepth;
 lidPivot.add(lid);
 
 // ── The projects: four ivory spheres that settle against the bowl's floor ────
@@ -119,7 +136,7 @@ scene.add(ring);
 
 // ── Framing: the ring always fits the width; tall screens step back ──────────
 const RING_HALF_W = 3.1;
-const BASE_DIST = 9.0;
+const BASE_DIST = 10.6;
 let dist = BASE_DIST;
 function resize() {
   const w = canvas.clientWidth, h = canvas.clientHeight;
@@ -196,7 +213,8 @@ function animate() {
   lidMat.opacity = 1 - smooth(0.25, 1, o);
   planet.visible = o === 0;
   bowl.visible = o > 0;
-  lid.castShadow = o < 0.35;
+  lidFade.value = 1 - smooth(0.04, 0.42, o);
+  lid.castShadow = lidFade.value > 0.001;
   lid.visible = o > 0 && o < 1;
 
   // The projects drop in one after another and settle with a small rebound

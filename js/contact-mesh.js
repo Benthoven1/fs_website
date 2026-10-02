@@ -4,8 +4,11 @@
 // a shell of small vertices distributed by golden angle and banded away
 // from the title and card. Every vertex connects to its k nearest
 // neighbours, edge weight falls off with length, and signal pulses travel
-// the edges. Focusing a form field energizes the graph: a ripple spreads
-// outward through the edges and sparks stream from the field's vertex.
+// the edges. As the loading screen opens, every sphere appears gathered
+// together in the middle, then they separate into the network, its edges
+// stretching out between them. Focusing a form field energizes the graph: a
+// ripple spreads outward through the edges and sparks stream from the
+// field's vertex.
 import * as THREE from "three";
 
 const canvas = document.getElementById("mesh-bg");
@@ -67,6 +70,8 @@ function addNode(pos, size, color, isMain) {
   const node = {
     mesh, size, isMain,
     base: pos.clone(),
+    from: pos.clone(),      // where it starts: gathered with the others
+    spreadDelay: -Infinity,
     bobPhase: Math.random() * Math.PI * 2,
     bobSpeed: 0.4 + Math.random() * 0.3,
     scaleT: 0,
@@ -174,9 +179,21 @@ addEdge(star, nMusic, 0.5); addEdge(star, nArt, 0.5);
 addEdge(star, nArch, 0.5);  addEdge(star, nHort, 0.5);
 nodes.forEach((n) => connectKNearest(n, 3));
 
-// Entrance stagger — relative to the loading screen's window opening
-nodes.forEach((n, i) => { n.scaleDelay = 0.12 + i * 0.04; });
-edges.forEach((e, i) => { e.drawDelay = 0.4 + i * 0.024; });
+// Entrance — relative to the loading screen's window opening. Every sphere
+// appears gathered in a tight cluster at the centre, the principal spheres
+// at its heart; then they separate to their places in the network while
+// the edges draw out between them.
+const CLUSTER = new THREE.Vector3(0, 0.3, 0);
+const SPREAD = 1.6;
+nodes.forEach((n, i) => {
+  const k = (i + 0.5) / nodes.length;
+  const y = 1 - 2 * k, r = Math.sqrt(1 - y * y), th = GOLDEN * i;
+  const reach = n.isMain ? 0.22 : 0.45 + 0.45 * Math.cbrt(k);
+  n.from.set(CLUSTER.x + Math.cos(th) * r * reach, CLUSTER.y + y * reach, CLUSTER.z + Math.sin(th) * r * reach);
+  n.scaleDelay = 0.05 + i * 0.008;
+  n.spreadDelay = 0.85 + (n.isMain ? 0 : Math.random() * 0.3);
+});
+edges.forEach((e, i) => { e.drawDelay = 0.95 + i * 0.006; });
 
 // te (entrance time) starts when the loading screen's hole first opens.
 // ls.js also sets a window flag in case this module loads after the event.
@@ -188,10 +205,11 @@ function startEntrance() {
   if (motionOK) {
     setTimeout(() => {
       mains.forEach((n, i) => setTimeout(() => energize(n, 0.7), i * 90));
-    }, 1700);
+    }, 2900);
   }
 }
-if (window.__mulvium_ls_hole) startEntrance();
+// (deferred a tick: the clock below must exist first)
+if (window["__mulvium_ls-hole"]) setTimeout(startEntrance); // flag set by ls.js
 else document.addEventListener("mulvium:ls-hole", startEntrance);
 setTimeout(startEntrance, 3500); // safety if the overlay is absent
 
@@ -377,10 +395,10 @@ window.addEventListener("resize", resize);
 
 // ── Animation loop ────────────────────────────────────────────────────────────
 const clock = new THREE.Clock();
-const tmp = new THREE.Vector3();
+const tmp = new THREE.Vector3(), at = new THREE.Vector3();
 
-function easeOutBack(t) {
-  const c1 = 1.4, c3 = c1 + 1;
+function easeOutBack(t, c1 = 1.4) {
+  const c3 = c1 + 1;
   return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
 }
 
@@ -420,9 +438,11 @@ function animate() {
     n.mesh.scale.setScalar(Math.max(0.0001, s));
     n.mesh.material.emissiveIntensity = n.glow * 0.45 + n.pulse * 0.5;
 
-    // Tight float — the lattice stays precise
-    const bob = motionOK ? Math.sin(t * n.bobSpeed + n.bobPhase) * 0.05 : 0;
-    n.mesh.position.set(n.base.x, n.base.y + bob, n.base.z);
+    // From the cluster to its place in the network, then a tight float
+    const k = motionOK ? easeOutBack(Math.min(1, Math.max(0, (te - n.spreadDelay) / SPREAD)), 0.9) : 1;
+    at.lerpVectors(n.from, n.base, k);
+    const bob = motionOK ? Math.sin(t * n.bobSpeed + n.bobPhase) * 0.05 * Math.min(1, k) : 0;
+    n.mesh.position.set(at.x, at.y + bob, at.z);
   });
 
   edges.forEach((e) => {

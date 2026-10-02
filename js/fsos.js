@@ -5,10 +5,10 @@
 // a nonprofit: the twelve agents, what each looks after, and the everyday work
 // between them. As it does, a porcelain figure grows beneath it and the camera
 // draws back: the word sphere is the figure's head. The figure thinks, its head
-// turning a little as words light up; hovering (or tapping) a word lights every
-// word of its agent and names the agent.
+// turning a little as words light up. The page's text then scrolls up over
+// the scene, as on the Oak page.
 import * as THREE from "three";
-import { WORKFORCE, CHIEF_OF_STAFF, STYLES, vocabulary, slotSize, drawWord } from "./fsos-words.js";
+import { STYLES, vocabulary, slotSize, drawWord } from "./fsos-words.js";
 import CLOUD from "./fsos-cloud.js";
 
 const canvas = document.getElementById("fsos-canvas");
@@ -21,7 +21,6 @@ const PAPER       = 0xeceae5;
 const PASTEL_FSOS = 0xc4ddb8;
 const PORCELAIN   = 0xf3eee6;
 const GLINT       = new THREE.Color(0xc19a5b);   // a word lit up, in gold
-const HILITE      = new THREE.Color(0x94641c);   // an agent's words, on hover
 // The words take the planet's green, deepened so they read on paper
 const TONES = {
   agent: [0x3f5a38],
@@ -85,7 +84,7 @@ function mulberry32(a) {
 // ── The atlas: every word drawn once, in white, tinted per word ──────────────
 const ATLAS_W = 2048, PAD = 6;
 const atlasCanvas = document.createElement("canvas");
-const actx = atlasCanvas.getContext("2d", { willReadFrequently: true }); // read back when picking
+const actx = atlasCanvas.getContext("2d");
 const entries = vocabulary();
 function layoutAtlas() {
   let x = 0, y = 0, rowH = 0;
@@ -122,7 +121,7 @@ const planet = new THREE.Mesh(new THREE.SphereGeometry(HEAD_R, 96, 64), planetMa
 planet.castShadow = true;
 headGroup.add(planet);
 
-let wordMesh = null, wordColors = null, faceSpan = null;
+let wordMesh = null, wordColors = null;
 const wordSpans = [];
 function buildCloud() {
   layoutAtlas();
@@ -139,10 +138,9 @@ function buildCloud() {
     const n = new THREE.Vector3(nx, ny, nz), e = new THREE.Vector3(ex, ey, ez);
     placed.push({ en, n, e, u: new THREE.Vector3().crossVectors(n, e), w, h });
   }
-  let verts = 0, tris = 0;
+  let verts = 0;
   const segs = placed.map((p) => Math.max(2, Math.ceil(p.w / 0.06)));
-  segs.forEach((s) => { verts += (s + 1) * 2; tris += s * 2; });
-  faceSpan = new Int32Array(tris);
+  segs.forEach((s) => { verts += (s + 1) * 2; });
   const pos = new Float32Array(verts * 3), nor = new Float32Array(verts * 3), uv = new Float32Array(verts * 2);
   const col = new Float32Array(verts * 3), index = [];
   const W = atlasCanvas.width, H = atlasCanvas.height;
@@ -167,13 +165,9 @@ function buildCloud() {
         col.set([planetColor.r, planetColor.g, planetColor.b], v * 3);
         v++;
       }
-      if (i < S) {
-        const a = first + i * 2;
-        faceSpan[index.length / 3] = faceSpan[index.length / 3 + 1] = wi;
-        index.push(a, a + 2, a + 1, a + 1, a + 2, a + 3);
-      }
+      if (i < S) { const a = first + i * 2; index.push(a, a + 2, a + 1, a + 1, a + 2, a + 3); }
     }
-    wordSpans.push({ first, count: v - first, tone, kind: p.en.kind, owner: p.en.owner, n: p.n, lit: 0, hl: 0, delay: 0 });
+    wordSpans.push({ first, count: v - first, tone, n: p.n, lit: 0, delay: 0 });
   });
   const geo = new THREE.BufferGeometry();
   geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
@@ -340,12 +334,8 @@ function blob(anchor, c, sx, sy, sz, order) {
 }
 parts.forEach((p) => p.g.scale.setScalar(0.0001));
 
-// ── Hover: a word names its agent and lights all of that agent's work ───────
-const raycaster = new THREE.Raycaster();
-const pointerNdc = new THREE.Vector2(-2, -2);
+// ── Pointer parallax ─────────────────────────────────────────────────────────
 const drift = { x: 0, y: 0, tx: 0, ty: 0 };
-const FOCUS_OF = new Map([...WORKFORCE, CHIEF_OF_STAFF].map((a) => [a.agent, a.focus]));
-
 window.addEventListener("pointermove", (e) => {
   drift.tx = (e.clientX / window.innerWidth) * 2 - 1;
   drift.ty = (e.clientY / window.innerHeight) * 2 - 1;
@@ -353,64 +343,6 @@ window.addEventListener("pointermove", (e) => {
 
 canvas.setAttribute("role", "img");
 canvas.setAttribute("aria-label", "A porcelain figure, thinking, whose head is a sphere of words: FSOS's twelve agents and the work each one handles");
-
-const tag = document.createElement("div");
-tag.className = "fsos-tag";
-tag.setAttribute("aria-hidden", "true");
-tag.innerHTML = '<span class="fsos-tag-agent"></span><span class="fsos-tag-focus"></span>';
-canvas.parentElement.appendChild(tag);
-
-let interactive = false, activeOwner = null, pinned = false;
-let pointer = null, pointerMoved = false;
-const faceNormal = new THREE.Vector3();
-
-// The word under a screen point: nearest face turned toward the viewer, and
-// only where its letters have ink (words' slots overlap, their letters don't)
-function wordAt(x, y) {
-  if (!wordMesh) return null;
-  const r = canvas.getBoundingClientRect();
-  pointerNdc.set(((x - r.left) / r.width) * 2 - 1, -((y - r.top) / r.height) * 2 + 1);
-  raycaster.setFromCamera(pointerNdc, camera);
-  const W = atlasCanvas.width, H = atlasCanvas.height;
-  for (const hit of raycaster.intersectObject(wordMesh)) {
-    faceNormal.copy(hit.face.normal).transformDirection(wordMesh.matrixWorld);
-    if (faceNormal.dot(raycaster.ray.direction) > 0) continue;
-    const px = Math.min(W - 1, Math.floor(hit.uv.x * W)), py = Math.min(H - 1, Math.floor((1 - hit.uv.y) * H));
-    if (actx.getImageData(px, py, 1, 1).data[3] < 90) continue;
-    return wordSpans[faceSpan[hit.faceIndex]];
-  }
-  return null;
-}
-
-function show(owner, x, y) {
-  activeOwner = owner;
-  tag.classList.toggle("is-on", !!owner);
-  canvas.style.cursor = owner ? "help" : "";
-  if (!owner) return;
-  tag.firstChild.textContent = owner;
-  tag.lastChild.textContent = FOCUS_OF.get(owner) || "";
-  const r = canvas.getBoundingClientRect();
-  const left = Math.min(r.width - tag.offsetWidth - 12, x - r.left + 18);
-  const top = Math.min(r.height - tag.offsetHeight - 12, y - r.top + 18);
-  tag.style.transform = `translate(${Math.max(12, left)}px, ${Math.max(12, top)}px)`;
-}
-
-canvas.addEventListener("pointermove", (e) => {
-  if (e.pointerType !== "mouse") return;
-  pointer = { x: e.clientX, y: e.clientY };
-  pointerMoved = true;
-});
-canvas.addEventListener("pointerleave", () => { pointer = null; if (!pinned) show(null); });
-// Touch: tap a word to see its agent; tap anywhere else to let go
-let downAt = null;
-canvas.addEventListener("pointerdown", (e) => { downAt = { x: e.clientX, y: e.clientY }; });
-canvas.addEventListener("pointerup", (e) => {
-  if (e.pointerType === "mouse" || !interactive || !downAt) return;
-  if (Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y) > 10) return; // a scroll, not a tap
-  const word = wordAt(e.clientX, e.clientY);
-  pinned = !!word;
-  show(word ? word.owner : null, e.clientX, e.clientY);
-});
 
 // ── Prose rises in as it scrolls into view (same .rv classes as the home page)
 {
@@ -433,15 +365,20 @@ function resize() {
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
-  distHead = Math.max(HEAD_R / 0.62 / tanHalf, (HEAD_R + 0.45) / (tanHalf * camera.aspect));
+  distHead = Math.max(HEAD_R / 0.5 / tanHalf, (HEAD_R + 0.6) / (tanHalf * camera.aspect));
   distQ = Math.max(Q_HALF_H / tanHalf, Q_HALF_W / (tanHalf * camera.aspect));
 }
 window.addEventListener("resize", resize);
 resize();
 
-// Don't render while the stage is scrolled out of view
+// The scene stays fixed behind the page; once the text has covered it, stop
+// drawing. The scroll cue fades in once the figure is whole and leaves as
+// soon as the reader scrolls.
 let onScreen = true;
-new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; }).observe(canvas);
+const cue = document.getElementById("fsos-cue");
+function readScroll() { onScreen = window.scrollY < window.innerHeight * 1.8; }
+window.addEventListener("scroll", readScroll, { passive: true });
+readScroll();
 
 // ── Timeline ─────────────────────────────────────────────────────────────────
 // The planet arrives as the loading screen opens. Once the overlay has gone it
@@ -471,8 +408,7 @@ const easeOutBack = (t) => { const c = 1.4; return 1 + (c + 1) * Math.pow(t - 1,
 const tmpColor = new THREE.Color(), camDir = new THREE.Vector3(), nWorld = new THREE.Vector3();
 const target = new THREE.Vector3(), viewDir = new THREE.Vector3();
 const viewHead = new THREE.Vector3(0, 0.16, 1).normalize(), viewQ = new THREE.Vector3(0.35, 0.1, 1).normalize();
-const paperColor = new THREE.Color(PAPER);
-let lastT = 0, nextGlint = 0, colorsDirty = false, settled = false, turn = 0, turnSpeed = 1, dim = 0;
+let lastT = 0, nextGlint = 0, colorsDirty = false, settled = false;
 
 function animate() {
   requestAnimationFrame(animate);
@@ -540,46 +476,28 @@ function animate() {
   camera.lookAt(target);
   camDir.copy(camera.position).sub(HEAD_C).normalize();
 
-  // Once whole, the figure thinks: its head turns a little and words light
-  // up. A hovered agent holds its attention: the head stills.
-  interactive = settled && since > THINK;
-  const ease = 1 - Math.exp(-dt * 8);
-  if (motionOK && interactive) {
-    turnSpeed += ((activeOwner ? 0 : 1) - turnSpeed) * ease;
-    turn += dt * 0.35 * turnSpeed;
-    headGroup.rotation.y = Math.sin(turn) * 0.3;
+  // Once whole, the figure thinks: its head turns a little and words light up
+  const thinking = settled && since > THINK;
+  if (motionOK && thinking) {
+    headGroup.rotation.y = Math.sin((since - THINK) * 0.35) * 0.3;
     headGroup.updateMatrixWorld();
-    if (t >= nextGlint && !activeOwner) {
+    if (t >= nextGlint) {
       const front = wordSpans.filter((s) => s.lit <= 0 && nWorld.copy(s.n).transformDirection(headGroup.matrixWorld).dot(camDir) > 0.3);
       if (front.length) front[Math.floor(Math.random() * front.length)].lit = 1e-4;
       nextGlint = t + GLINT_EVERY * (0.6 + Math.random() * 0.8);
     }
   }
-  if (interactive && pointer && !pinned && (pointerMoved || turnSpeed > 0.05)) {
-    const word = wordAt(pointer.x, pointer.y);
-    show(word ? word.owner : null, pointer.x, pointer.y);
-    pointerMoved = false;
-  }
-
-  // Word colours: an agent's words in gold while it is shown, the rest
-  // stepping back toward the paper; and the passing glints
   if (settled) {
-    dim += ((activeOwner ? 1 : 0) - dim) * ease;
-    let busy = dim > 0.002 || activeOwner;
     wordSpans.forEach((s) => {
-      s.hl += ((activeOwner && s.owner === activeOwner ? 1 : 0) - s.hl) * ease;
-      if (s.lit > 0) { s.lit += dt / 1.6; if (s.lit >= 1) s.lit = 0; busy = true; }
-      if (s.hl > 0.002) busy = true;
-    });
-    if (busy || colorsDirty) {
-      wordSpans.forEach((s) => {
-        tmpColor.copy(s.tone).lerp(paperColor, 0.42 * dim * (1 - s.hl)).lerp(HILITE, s.hl);
-        if (s.lit > 0) tmpColor.lerp(GLINT, Math.sin(Math.PI * s.lit) * 0.85);
-        setWordColor(s, tmpColor);
-      });
+      if (s.lit <= 0) return;
+      s.lit += dt / 1.6;
+      const k = s.lit >= 1 ? 0 : Math.sin(Math.PI * s.lit);
+      setWordColor(s, tmpColor.copy(s.tone).lerp(GLINT, k * 0.85));
+      if (s.lit >= 1) s.lit = 0;
       colorsDirty = true;
-    }
+    });
   }
+  if (cue) cue.style.opacity = String((thinking || !motionOK ? 1 : 0) * (window.scrollY > 24 ? 0 : 1));
   if (colorsDirty) { wordColors.needsUpdate = true; colorsDirty = false; }
 
   renderer.render(scene, camera);

@@ -19,7 +19,7 @@ of the for-profit arm), Oak, and a fourth to be announced.
   per layout, the hero, the 2D night transition, and interactions.
 - `js/fsos.js` — the FSOS page: the green planet dissolves into a sphere made only of words
   (the twelve agents and the work they handle) as a porcelain figure grows beneath it; the
-  sphere is its head. Hovering or tapping a word lights all of its agent's words and names it.
+  sphere is its head. The page's text then scrolls up over the scene, as on the Oak page.
 - `js/fsos-words.js` — the FSOS vocabulary: each agent, its focus and its eight words.
 - `js/fsos-cloud.js` — generated: where each word sits on the sphere, packed by the shape of
   its letters so the words fit together like puzzle pieces. After changing the vocabulary,
