@@ -380,7 +380,7 @@ camera.lookAt(LOOK_AT);
 
 // Zoom — FOV-based; 42 is the default. Only active in 3D mode.
 const FOV_DEFAULT = 42;
-const FOV_MIN     = 20;
+const FOV_MIN     = 30;   // zooming in further crops the solar system
 const FOV_MAX     = 75;
 let targetFov     = FOV_DEFAULT;
 
@@ -594,6 +594,7 @@ canvas.addEventListener("pointerdown", (e) => {
 });
 
 canvas.addEventListener("click", () => {
+  if (footerOpen) { closeFooter(); return; }
   if (state.mode === "3d") {
     if (state.hoverPlanet) coverAndNavigate(state.hoverPlanet.def.href);
     else if (state.hoverStar) goTo2D();
@@ -602,6 +603,65 @@ canvas.addEventListener("click", () => {
     else if (state.hoverPlanet) coverAndNavigate(state.hoverPlanet.def.href);
   }
 });
+
+// ── Footer drawer — on the 3D landing, scrolling down brings up the site's
+// footer navigation, the way scrolling reaches the bottom of any page; the
+// cosmos rises with it. Scrolling back up (or tapping the cosmos) returns.
+const siteFooter = document.getElementById("site-footer");
+let footerOpen = false;
+function setFooterHeight() {
+  if (siteFooter) document.documentElement.style.setProperty("--sf-h", siteFooter.offsetHeight + "px");
+}
+function openFooter() {
+  if (footerOpen || state.mode !== "3d" || lsActive || !body.classList.contains("cosmos-only")) return;
+  setFooterHeight();
+  footerOpen = true;
+  body.classList.add("footer-open");
+  labelVisTarget = 0;
+}
+function closeFooter() {
+  if (!footerOpen) return;
+  footerOpen = false;
+  body.classList.remove("footer-open");
+}
+window.addEventListener("resize", setFooterHeight);
+{
+  // One gesture, one move: a burst of wheel events counts once
+  let wheelLock = 0;
+  window.addEventListener("wheel", (e) => {
+    if (!body.classList.contains("cosmos-only") || e.ctrlKey) return;
+    e.preventDefault();
+    const now = performance.now();
+    if (now < wheelLock || Math.abs(e.deltaY) < 4) return;
+    if (e.deltaY > 0 && !footerOpen) { openFooter(); wheelLock = now + 650; }
+    else if (e.deltaY < 0 && footerOpen) { closeFooter(); wheelLock = now + 650; }
+  }, { passive: false });
+
+  let touchY = null, touchX = null;
+  const onStart = (e) => {
+    if (e.touches.length !== 1) { touchY = null; return; }
+    touchY = e.touches[0].clientY; touchX = e.touches[0].clientX;
+  };
+  const onEnd = (e) => {
+    if (touchY === null || !body.classList.contains("cosmos-only")) return;
+    const dy = e.changedTouches[0].clientY - touchY, dx = e.changedTouches[0].clientX - touchX;
+    touchY = null;
+    if (Math.abs(dy) < 50 || Math.abs(dx) > Math.abs(dy)) return;
+    if (dy < 0) openFooter(); else closeFooter();
+  };
+  canvas.addEventListener("touchstart", onStart, { passive: true });
+  canvas.addEventListener("touchend", onEnd, { passive: true });
+  if (siteFooter) {
+    siteFooter.addEventListener("touchstart", onStart, { passive: true });
+    siteFooter.addEventListener("touchend", onEnd, { passive: true });
+  }
+
+  window.addEventListener("keydown", (e) => {
+    if (!body.classList.contains("cosmos-only")) return;
+    if (["ArrowDown", "PageDown", "End"].includes(e.key)) { e.preventDefault(); openFooter(); }
+    else if (["ArrowUp", "PageUp", "Home", "Escape"].includes(e.key)) { e.preventDefault(); closeFooter(); }
+  });
+}
 
 // ── Loading screen ────────────────────────────────────────────────────────────
 // Plays a nested-rectangle reveal sequence when navigating via top/footer nav.
@@ -843,12 +903,25 @@ canvas.addEventListener("keydown", (e) => {
   if ((e.key === "Enter" || e.key === " ") && state.mode === "3d") { goTo2D(); e.preventDefault(); }
 });
 
-// Scroll-wheel zoom (3D mode only)
+// Zoom (3D mode only) answers zoom gestures, never plain scrolling: a trackpad
+// pinch (and ctrl/⌘ + wheel) arrives as a wheel event with ctrlKey set; Safari
+// sends gesture events instead. Plain scrolling reveals the footer below.
+const zoomBy = (deg) => { targetFov = Math.max(FOV_MIN, Math.min(FOV_MAX, targetFov + deg)); };
 canvas.addEventListener("wheel", (e) => {
-  if (state.mode !== "3d") return;
+  if (state.mode !== "3d" || !e.ctrlKey) return;
   e.preventDefault();
-  targetFov = Math.max(FOV_MIN, Math.min(FOV_MAX, targetFov + e.deltaY * 0.04));
+  zoomBy(Math.sign(e.deltaY) * Math.min(Math.abs(e.deltaY), 10) * 0.35);
 }, { passive: false });
+{
+  let gestureFov = null;
+  canvas.addEventListener("gesturestart", (e) => { if (state.mode === "3d") { e.preventDefault(); gestureFov = targetFov; } });
+  canvas.addEventListener("gesturechange", (e) => {
+    if (gestureFov === null) return;
+    e.preventDefault();
+    targetFov = Math.max(FOV_MIN, Math.min(FOV_MAX, gestureFov / e.scale));
+  });
+  canvas.addEventListener("gestureend", () => { gestureFov = null; });
+}
 
 // Pinch-to-zoom (3D mode only)
 {
@@ -874,6 +947,7 @@ canvas.addEventListener("wheel", (e) => {
 
 function goTo2D() {
   if (state.mode !== "3d") return;
+  closeFooter();
   targetFov = FOV_DEFAULT;
   state.mode = "transitioning";
   state.target = 1;
@@ -906,6 +980,12 @@ function goTo3D() {
 function snapTo3D() {
   targetFov = camera.fov = baseFov(lastW, lastH); // under cover: no visible zoom
   camera.updateProjectionMatrix();
+  // Rewind the hero (wordmark, statement, mission) so its entrance plays
+  // again when the loading screen lifts, instead of simply being there
+  body.classList.add("hero-reset");
+  body.classList.remove("cosmos-intro");
+  void body.offsetWidth;
+  body.classList.remove("hero-reset");
   state.t         = 0;
   state.target    = 0;
   state.mode      = "3d";
@@ -923,6 +1003,35 @@ function snapTo3D() {
   state.expansionP1  = 0;
   state.lsRevealP    = 1;
   bgColor.copy(PAPER_COLOR);
+}
+
+// Instantly sets the overhead orbit view (the 2D state), skipping the 3D
+// landing. Used under cover of the loading screen when arriving at
+// index.html#orbit, i.e. from "Dear Leader" on another page.
+function jumpTo2D() {
+  closeFooter();
+  targetFov = camera.fov = FOV_DEFAULT;
+  camera.updateProjectionMatrix();
+  state.t      = 1;
+  state.target = 1;
+  state.mode   = "2d";
+  navbar.classList.add("visible");
+  navbar.setAttribute("aria-hidden", "false");
+  body.classList.remove("cosmos-only");
+  body.classList.add("mode-2d", "expansion-active");
+  labelVisTarget = 0;
+  state.labelPlanet = null;
+  state.labelStar   = false;
+  window.scrollTo(0, 0);
+  resetCinematicScroll();
+}
+
+// "Dear Leader": the overhead orbit view, wherever the visitor is on the page
+function goToOrbit() {
+  if (state.mode === "3d") { goTo2D(); return; }
+  document.querySelectorAll(".nav-item.open").forEach((el) => el.classList.remove("open"));
+  resetCinematicScroll();
+  window.scrollTo({ top: 0, behavior: motionOK ? "smooth" : "auto" });
 }
 
 // Fade the current page content out to white, then start the loading animation.
@@ -959,13 +1068,14 @@ brandLink.addEventListener("click", (e) => {
   window.location.reload();
 });
 
-const homeLink = document.getElementById("home-link");
-if (homeLink) {
-  homeLink.addEventListener("click", (e) => {
+// "Dear Leader" links (navbar and footer) open the overhead orbit view
+document.querySelectorAll("#home-link, [data-orbit-link]").forEach((el) => {
+  el.addEventListener("click", (e) => {
     e.preventDefault();
-    window.location.reload();
+    navbar.classList.remove("menu-open");
+    goToOrbit();
   });
-}
+});
 
 // Fade to white before navigating to any sub-page from index.html.
 // Uses the existing #loading-screen overlay so the WebGL canvas is covered
@@ -1075,7 +1185,7 @@ const worldPos = new THREE.Vector3();
 
 function updateHover() {
   const in2DMode  = state.mode === "2d";
-  if (!pointerInside || (state.mode !== "3d" && !in2DMode)) {
+  if (!pointerInside || footerOpen || (state.mode !== "3d" && !in2DMode)) {
     state.hoverStar = false;
     state.hoverPlanet = null;
     canvas.style.cursor = "default";
@@ -1402,7 +1512,9 @@ animate();
   if (_entering) {
     sessionStorage.removeItem("ls-entering");
   }
-  showLoadingScreen(() => {}, _entering ? 5000 : 4000, true);
+  const _orbit = window.location.hash === "#orbit";
+  if (_orbit) history.replaceState(null, "", window.location.pathname);
+  showLoadingScreen(() => { if (_orbit) jumpTo2D(); }, _entering ? 5000 : 4000, true);
 }
 
 // When the page is restored from the browser back-forward cache the WebGL

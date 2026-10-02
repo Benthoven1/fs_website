@@ -142,17 +142,17 @@ button {
 body.night-mode .nav-brand { --glint-base: rgba(255, 255, 255, 0.92); --glint-hi: #f3d9a8; }
 
 @keyframes blGlint {
-  0%, 86%, 100% { color: var(--glint-base); }
-  90%           { color: var(--glint-hi); }
+  0%, 72%, 100% { color: var(--glint-base); }
+  80%           { color: var(--glint-hi); }
 }
 
-.nav-brand .bl   { animation: blGlint 7s ease-in-out 2.5s infinite; }
-.nav-brand .bl-2 { animation-delay: 2.57s; }
-.nav-brand .bl-3 { animation-delay: 2.64s; }
-.nav-brand .bl-4 { animation-delay: 2.71s; }
-.nav-brand .bl-5 { animation-delay: 2.78s; }
-.nav-brand .bl-6 { animation-delay: 2.85s; }
-.nav-brand .bl-7 { animation-delay: 2.92s; }
+.nav-brand .bl   { animation: blGlint 3.5s ease-in-out 1.5s infinite; }
+.nav-brand .bl-2 { animation-delay: 1.57s; }
+.nav-brand .bl-3 { animation-delay: 1.64s; }
+.nav-brand .bl-4 { animation-delay: 1.71s; }
+.nav-brand .bl-5 { animation-delay: 1.78s; }
+.nav-brand .bl-6 { animation-delay: 1.85s; }
+.nav-brand .bl-7 { animation-delay: 1.92s; }
 
 @media (prefers-reduced-motion: reduce) {
   .nav-brand .bl { animation: none; }
@@ -374,10 +374,6 @@ body.night-mode .letter-body p.letter-mission {
   font-weight: 600;
 }
 
-body.night-mode .letter-close {
-  border-top-color: rgba(255, 255, 255, 0.18);
-}
-
 body.night-mode #site-footer {
   background: transparent;
   border-top-color: rgba(195, 175, 255, 0.20);
@@ -479,11 +475,29 @@ body.mode-2d .cosmos-hint { opacity: 0; }
   margin: 0;
 }
 
-.letter-close {
-  margin-top: 56px;
-  border-top: 1px solid var(--hairline);
-  padding-top: 36px;
+.letter-close { margin-top: 56px; }
+
+/* Reply — answers the letter through the contact card: a plain line of
+   text, centred well below the signature, underlined as the pointer nears */
+.letter-reply {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  margin: clamp(64px, 10vh, 104px) auto 0;
+  padding: 6px 2px;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--ink);
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) left 90% / 0 1px no-repeat;
+  transition: background-size 0.4s var(--ease), gap 0.35s var(--ease), color 0.3s var(--ease);
 }
+
+.letter-reply:hover { gap: 16px; background-size: 100% 1px; }
+
+body.night-mode .letter-reply { color: #ffffff; }
 
 .letter-close p {
   font-family: "Cormorant Garamond", serif;
@@ -721,11 +735,99 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
   margin: 0;
 }
 
-/* ---------- Site Footer ---------- */
+/* ---------- Site Footer — navigation to every part of the site ---------- */
 #site-footer {
   background: var(--paper-warm);
   border-top: 1px solid var(--hairline);
 }
+
+.sf-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 2fr);
+  gap: clamp(28px, 5vw, 80px);
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: clamp(40px, 6vh, 64px) clamp(24px, 5vw, 64px) 8px;
+}
+
+.sf-wordmark {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 300;
+  font-size: 30px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.sf-cols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.sf-head {
+  font-family: "Cormorant SC", serif;
+  font-size: 14px;
+  letter-spacing: 0.22em;
+  color: var(--clay-deep);
+  margin: 6px 0 12px;
+}
+
+.sf-col ul { list-style: none; margin: 0; padding: 0; }
+
+.sf-col a {
+  display: inline-block;
+  padding: 5px 0;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 18px;
+  color: var(--ink);
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) left 85% / 0 1px no-repeat;
+  transition: background-size 0.4s var(--ease), color 0.3s var(--ease);
+}
+
+.sf-col a:hover { background-size: 100% 1px; color: var(--clay-deep); }
+
+body.night-mode .sf-wordmark,
+body.night-mode .sf-col a { color: rgba(255, 255, 255, 0.92); }
+body.night-mode .sf-head { color: rgba(205, 190, 255, 0.82); }
+body.night-mode .sf-col a:hover { color: #ffffff; }
+
+@media (max-width: 720px) {
+  .sf-inner { grid-template-columns: 1fr; gap: 26px; }
+  .sf-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 20px; }
+  .sf-wordmark { font-size: 24px; }
+}
+
+/* On the 3D landing the page doesn't scroll; the footer rises from below
+   instead, and the cosmos lifts with it (js/main.js: openFooter) */
+body.cosmos-only #site-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 25;
+  transform: translateY(100%);
+  transition: transform 0.75s var(--ease);
+  box-shadow: 0 -12px 40px rgba(27, 22, 19, 0.08);
+}
+
+body.cosmos-only.footer-open #site-footer { transform: none; }
+body.cosmos-only #site-footer .rv { opacity: 1; transform: none; }
+
+body.cosmos-only #canvas-wrap { transition: transform 0.75s var(--ease); }
+
+body.cosmos-only.footer-open #canvas-wrap {
+  transform: translateY(calc(var(--sf-h, 260px) * -0.55));
+}
+
+body.cosmos-only.footer-open .cosmos-hint { opacity: 0; }
+
+/* Rewinds the hero without animating, so its entrance can replay */
+body.hero-reset .hero-wrap,
+body.hero-reset .hero-mission,
+body.hero-reset .hero-statement .hw > span { transition: none !important; }
 
 .footer-copy {
   text-align: center;
@@ -860,7 +962,7 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
   #letter-section { padding: 56px clamp(18px, 5.5vw, 36px); }
   .letter-to { font-size: clamp(17px, 5.2vw, 22px); }
   .letter-body p { font-size: 15px; line-height: 1.75; margin-bottom: 20px; }
-  .letter-close { margin-top: 36px; padding-top: 26px; }
+  .letter-close { margin-top: 36px; }
   .letter-sig { font-size: 22px; }
 
   .cosmos-hint { font-size: 11px; bottom: 22px; letter-spacing: 0.18em; }
@@ -876,7 +978,7 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
   :root { --nav-h: 52px; }
   .cosmos-hint { bottom: 14px; font-size: 10px; letter-spacing: 0.18em; }
   #letter-section { padding-top: 48px; padding-bottom: 48px; }
-  .letter-close { margin-top: 32px; padding-top: 22px; }
+  .letter-close { margin-top: 32px; }
   .fsos-prose { padding-bottom: 64px; }
   .fsos-prose-header { margin-top: 28px; margin-bottom: 24px; }
   .footer-copy { font-size: 10px; letter-spacing: 0.10em; }
@@ -1197,6 +1299,161 @@ body.night-mode .dropdown a:hover { color: rgba(255, 255, 255, 0.92); }
   .letter-quote p     { font-size: 15px; }
   .footer-copy        { font-size: 13px; }
   .cosmos-hint        { font-size: 12px; }
+}
+
+/* ---------- Offerings: a floating panel of illustrated cards ---------- */
+/* The panel hangs from the navbar itself rather than its menu item: a
+   separate rounded card a little below the bar's right edge, holding a
+   still of each company's animation. */
+.nav-item.has-offerings { position: static; }
+
+.dropdown.offer-grid {
+  top: calc(100% + 14px);
+  right: 0;
+  width: min(780px, calc(100vw - 32px));
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid rgba(27, 22, 19, 0.06);
+  border-radius: 22px;
+  background: rgba(250, 249, 246, 0.97);
+  box-shadow: 0 28px 70px rgba(27, 22, 19, 0.16), 0 3px 12px rgba(27, 22, 19, 0.06);
+  transform: translateY(-10px) scale(0.985);
+  transform-origin: top right;
+  transition: opacity 0.3s var(--ease), transform 0.45s var(--ease);
+}
+
+/* An invisible bridge over the gap, so the pointer can travel from the
+   trigger down to the panel without it closing */
+.dropdown.offer-grid::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 100%;
+  height: calc(16px + (var(--nav-h) - 44px) / 2);
+}
+
+/* Cards rise in one after another as the panel opens */
+.offer-grid > li {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.35s var(--ease), transform 0.5s var(--ease);
+}
+.nav-item.open .offer-grid > li {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(60ms + var(--i, 0) * 60ms);
+}
+
+.offer-grid .offer-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  height: 100%;
+  min-height: 0;
+  padding: 8px 8px 16px;
+  border-radius: 16px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: background-color 0.3s var(--ease);
+}
+.offer-grid .offer-card:hover,
+.offer-grid .offer-card:focus-visible {
+  background: rgba(27, 22, 19, 0.045);
+  color: var(--ink);
+}
+
+.offer-art {
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px rgba(27, 22, 19, 0.06);
+}
+.offer-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--ease);
+}
+.offer-card:hover .offer-art img { transform: scale(1.045); }
+
+.offer-name {
+  display: block;
+  margin: 14px 6px 4px;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: 0;
+  transition: color 0.25s var(--ease);
+}
+.offer-card:hover .offer-name { color: var(--clay); }
+
+.offer-line {
+  display: block;
+  margin: 0 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: 0.005em;
+  color: rgba(27, 22, 19, 0.62);
+}
+
+body.night-mode .dropdown.offer-grid {
+  background: rgba(10, 8, 24, 0.97);
+  border-color: rgba(255, 255, 255, 0.10);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.5);
+}
+body.night-mode .offer-grid .offer-card { color: rgba(255, 255, 255, 0.92); }
+body.night-mode .offer-grid .offer-card:hover,
+body.night-mode .offer-grid .offer-card:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.92);
+}
+body.night-mode .offer-card:hover .offer-name { color: #f3d9a8; }
+body.night-mode .offer-line { color: rgba(255, 255, 255, 0.55); }
+body.night-mode .offer-art { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08); }
+
+/* In the phone menu the panel folds into compact rows, each with a small still */
+@media (max-width: 720px) {
+  .dropdown.offer-grid {
+    width: auto;
+    gap: 0;
+    padding: 0 12px 10px 16px;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    transition: max-height 0.30s ease, opacity 0.22s ease;
+  }
+  .dropdown.offer-grid::before { display: none; }
+  .nav-item.open .dropdown.offer-grid { max-height: 380px; }
+  .offer-grid > li { transform: translateY(6px); }
+
+  .offer-grid .offer-card {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    grid-template-rows: auto auto;
+    gap: 0 14px;
+    align-items: center;
+    height: auto;
+    padding: 8px 10px;
+    border-radius: 12px;
+  }
+  .offer-grid .offer-card::before { display: none; }
+  .offer-art { grid-row: 1 / 3; width: 64px; border-radius: 9px; }
+  .offer-name { margin: 0; font-size: 19px; align-self: end; }
+  .offer-line { margin: 2px 0 0; font-size: 12.5px; line-height: 1.35; align-self: start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dropdown.offer-grid { transform: none; }
+  .offer-grid > li { transform: none; transition: opacity 0.2s ease; }
+  .offer-art img,
+  .offer-card:hover .offer-art img { transition: none; transform: none; }
 }
 
 @media (max-width: 480px) {

@@ -18,14 +18,26 @@
     </button>
     <ul class="nav-links">
       <li class="nav-item">
-        <a href="../../index.html" class="nav-trigger">Home</a>
+        <a href="../../index.html#orbit" class="nav-trigger">Dear Leader</a>
       </li>
-      <li class="nav-item has-dropdown">
+      <li class="nav-item has-dropdown has-offerings">
         <button class="nav-trigger" aria-haspopup="true" aria-expanded="false">Offerings</button>
-        <ul class="dropdown">
-          <li><a href="fiscal-sponsorship.html">Fiscal Sponsorship</a></li>
-          <li><a href="fsos.html">FSOS</a></li>
-          <li><a href="oak.html">Oak</a></li>
+        <ul class="dropdown offer-grid">
+          <li style="--i:0"><a class="offer-card" href="fiscal-sponsorship.html">
+            <span class="offer-art"><img src="../../images/offer-fiscal.jpg" alt="" width="960" height="720" decoding="async"></span>
+            <span class="offer-name">Fiscal Sponsorship</span>
+            <span class="offer-line">A legal and financial home for your project</span>
+          </a></li>
+          <li style="--i:1"><a class="offer-card" href="fsos.html">
+            <span class="offer-art"><img src="../../images/offer-fsos.jpg" alt="" width="960" height="720" decoding="async"></span>
+            <span class="offer-name">FSOS</span>
+            <span class="offer-line">The operating system that turns an idea into an institution</span>
+          </a></li>
+          <li style="--i:2"><a class="offer-card" href="oak.html">
+            <span class="offer-art"><img src="../../images/offer-oak.jpg" alt="" width="960" height="720" decoding="async"></span>
+            <span class="offer-name">Oak</span>
+            <span class="offer-line">Keep what mattered. Let the rest go.</span>
+          </a></li>
         </ul>
       </li>
       <li class="nav-item has-dropdown">
@@ -55,7 +67,6 @@
 
     <!-- ── Overview ─────────────────────────────────────────────────────── -->
     <header class="fs-hero" id="overview">
-      <p class="fs-eyebrow fs-reveal">A Mulvium Company</p>
       <h1 class="fs-title fs-words">Fiscal Sponsorship</h1>
       <p class="fs-rotor-line fs-reveal">
         <span class="hidden-text">A nonprofit home for your project.</span>
@@ -339,7 +350,37 @@
       </p>
     </section>
   </main>
-  <footer id="site-footer">
+  <footer id="site-footer" class="site-footer">
+    <div class="sf-inner">
+      <div class="sf-brand">
+        <a class="sf-wordmark" href="../../index.html">Mulvium</a>
+      </div>
+      <nav class="sf-cols" aria-label="Site">
+        <div class="sf-col">
+          <p class="sf-head">Mulvium</p>
+          <ul>
+            <li><a href="../../index.html#orbit">Dear Leader</a></li>
+            <li><a href="../../index.html">The Cosmos</a></li>
+          </ul>
+        </div>
+        <div class="sf-col">
+          <p class="sf-head">Offerings</p>
+          <ul>
+            <li><a href="../../pages/offerings/fiscal-sponsorship.html">Fiscal Sponsorship</a></li>
+            <li><a href="../../pages/offerings/fsos.html">FSOS</a></li>
+            <li><a href="../../pages/offerings/oak.html">Oak</a></li>
+          </ul>
+        </div>
+        <div class="sf-col">
+          <p class="sf-head">About Us</p>
+          <ul>
+            <li><a href="../../pages/about/about.html#people">People</a></li>
+            <li><a href="../../pages/about/about.html#careers">Careers</a></li>
+            <li><a href="../../pages/about/about.html#contact">Contact Us</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
     <div class="footer-copy">
       <p>&copy; <span id="year"></span> Mulvium Foundation. All rights reserved.</p>
     </div>
