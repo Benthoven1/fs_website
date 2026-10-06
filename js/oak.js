@@ -610,10 +610,14 @@ function releaseScroll() {
 const track = document.getElementById("oak-track");
 const heroText = document.getElementById("oak-hero");
 const cue = document.getElementById("oak-cue");
-let pTarget = 0, pSmooth = 0;
+const shell = document.querySelector(".oak-shell");
+let pTarget = 0, pSmooth = 0, covered = false;
 function readScroll() {
   const span = track ? track.offsetHeight - window.innerHeight : 1;
   pTarget = span > 0 ? clamp01(window.scrollY / span) : 0;
+  // Once the copy's paper has risen over the whole screen the scene can't be
+  // seen, so it stops being drawn until the reader scrolls back up
+  covered = !!shell && shell.getBoundingClientRect().top < -240;
 }
 window.addEventListener("scroll", readScroll, { passive: true });
 
@@ -696,7 +700,7 @@ function animate() {
   if (cue) cue.style.opacity = String(smooth(0.85, 1, m) * (1 - smooth(0.01, 0.06, pSmooth)));
   if (m >= 0.95) releaseScroll();
 
-  renderer.render(scene, camera);
+  if (!covered) renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
 animate();

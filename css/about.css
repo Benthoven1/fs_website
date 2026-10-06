@@ -1,0 +1,91 @@
+/* about.css — People, Careers and Contact Us (pages/about/about.html).
+   Loaded after css/style.css by that page alone, so other pages don't
+   download these rules. */
+
+/* =====================================================================
+   CONTACT PAGE — mesh-network constellation + greeting card
+   ===================================================================== */
+#mesh-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  display: block;
+}
+
+.contact-shell {
+  position: relative;
+  z-index: 2;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  /* Headroom for the star crowning the page (it is the way home) */
+  padding: calc(var(--nav-h) + clamp(120px, 21vh, 200px)) 20px 56px;
+  /* Let the canvas receive hover/click on the star; interactive children re-enable */
+  pointer-events: none;
+}
+
+body.contact-page #card-section { pointer-events: auto; }
+
+/* Consolidated About sections — People, Careers, Contact Us, top down */
+.about-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  padding-bottom: clamp(56px, 9vh, 110px);
+  scroll-margin-top: calc(var(--nav-h) + 36px);
+}
+
+.about-section:last-of-type { padding-bottom: clamp(40px, 6vh, 72px); }
+
+.about-text {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(16px, 1.8vw, 19px);
+  line-height: 1.7;
+  color: var(--ink-soft);
+  max-width: 580px;
+  margin: 14px 0 0;
+}
+
+/* Anchor navigation glides on this page only */
+html:has(body.contact-page) { scroll-behavior: smooth; }
+
+
+.contact-title {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 300;
+  font-size: clamp(38px, 5.4vw, 64px);
+  line-height: 1.05;
+  color: var(--ink);
+  margin: 0 0 10px;
+}
+
+.contact-sub {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: clamp(15px, 1.8vw, 20px);
+  color: var(--ink-soft);
+  margin: 10px 0 clamp(22px, 3.5vh, 36px);
+}
+
+/* The card floats directly on the constellation */
+body.contact-page #card-section {
+  background: transparent;
+  padding: 0;
+}
+
+body.contact-page #site-footer {
+  position: relative;
+  z-index: 2;
+  background: transparent;
+  border-top: none;
+}
+
+@media (max-height: 720px) {
+  .contact-shell { padding-top: calc(var(--nav-h) + clamp(96px, 17vh, 150px)); }
+}

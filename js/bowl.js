@@ -19,7 +19,7 @@ const CREAM_DEEP  = 0xcdbe96;
 const IVORY       = [0xf4ede0, 0xe9ddc6, 0xf0e5d0, 0xe4d6ba];   // until the pictures load
 // The loading screen's pictures, in its order (css/style.css, #ls-f1 to #ls-f4).
 // The same files, so they are already in the browser's cache.
-const PICTURES    = ["../../Musical.png", "../../Pictorial.png", "../../image (13).png", "../../Horticulture.png"];
+const PICTURES    = ["../../Musical.webp", "../../Pictorial.webp", "../../image-13.webp", "../../Horticulture.webp"];
 
 // ── Renderer, scene, lights (same sculptural lighting as the home cosmos) ────
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });

@@ -564,12 +564,23 @@ function resize() {
 }
 resize();
 window.addEventListener("resize", resize);
+// Layout is read only when it can have changed (the window, the canvas or the
+// scroll wrapper resizing), never once a frame
+if ("ResizeObserver" in window) {
+  const layoutWatch = new ResizeObserver(() => resize());
+  layoutWatch.observe(canvas);
+  layoutWatch.observe(expansionWrapper);
+}
+
+let canvasOnScreen = true;
+new IntersectionObserver(([e]) => { canvasOnScreen = e.isIntersecting; }).observe(canvas);
 
 const raycaster = new THREE.Raycaster();
 const pointer   = new THREE.Vector2();
 let pointerInside = false;
 
 canvas.addEventListener("pointermove", (e) => {
+  cachedCanvasRect = canvas.getBoundingClientRect();
   pointer.x = ((e.clientX - cachedCanvasRect.left) / cachedCanvasRect.width)  * 2 - 1;
   pointer.y = -((e.clientY - cachedCanvasRect.top)  / cachedCanvasRect.height) * 2 + 1;
   pointerInside = true;
@@ -587,6 +598,7 @@ canvas.addEventListener("pointerleave", (e) => {
 // Touch: update pointer on tap so the click handler finds the right object via raycasting
 canvas.addEventListener("pointerdown", (e) => {
   if (e.pointerType !== "touch") return;
+  cachedCanvasRect = canvas.getBoundingClientRect();
   pointer.x = ((e.clientX - cachedCanvasRect.left) / cachedCanvasRect.width)  * 2 - 1;
   pointer.y = -((e.clientY - cachedCanvasRect.top)  / cachedCanvasRect.height) * 2 + 1;
   pointerInside = true;
@@ -666,7 +678,7 @@ window.addEventListener("resize", setFooterHeight);
 // ── Loading screen ────────────────────────────────────────────────────────────
 // Plays a nested-rectangle reveal sequence when navigating via top/footer nav.
 // Five concentric frames animate up from the bottom: Musical → Pictorial →
-// image (13) → Horticulture (images from the repo) → transparent knockout that
+// image-13 → Horticulture (images from the repo) → transparent knockout that
 // shows the live Three.js canvas. The knockout expands to fill the viewport,
 // seamlessly becoming the destination animation before the overlay fades away.
 const loadingScreen = document.getElementById("loading-screen");
@@ -1402,11 +1414,11 @@ function animate() {
 
   updateHover();
   trackLabel(dt);
-  resize();
 
-  // Skip GPU render while the loading screen fully covers the canvas (hole not open yet).
-  // All scene state still updates so the 3D world is at the correct position when visible.
-  if (!lsActive || lsHoleVisible) renderer.render(scene, camera);
+  // Skip the GPU render while the loading screen fully covers the canvas (hole
+  // not open yet) or the canvas is scrolled out of view. All scene state still
+  // updates, so the 3D world is in the right place when it is seen again.
+  if ((!lsActive || lsHoleVisible) && canvasOnScreen) renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
 

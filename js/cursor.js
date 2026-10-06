@@ -28,16 +28,31 @@
 
   var INTERACTIVE = "a, button, input, textarea, select, label, [role='button'], summary";
 
+  // The loop runs only while something is changing: the pointer moving, a
+  // press, a hover change, or the scales still easing; then it rests
+  var running = false;
+  function wake() { if (!running) { running = true; requestAnimationFrame(frame); } }
+
   document.addEventListener("pointermove", function (e) {
     if (e.pointerType && e.pointerType !== "mouse") return;
     x = e.clientX; y = e.clientY;
     hoverEl = e.target;
     if (!seen) { seen = true; }
     root.classList.remove("cur-hidden");
+    wake();
   }, { passive: true });
 
-  document.addEventListener("pointerdown", function () { down = true; });
-  document.addEventListener("pointerup", function () { down = false; });
+  document.addEventListener("pointerdown", function () { down = true; wake(); });
+  document.addEventListener("pointerup", function () { down = false; wake(); });
+
+  // A 3D scene can make the spot under a still pointer hoverable (a planet
+  // passing beneath it); it says so through its canvas's cursor style
+  if (window.MutationObserver) {
+    var watch = new MutationObserver(function () { if (hoverEl && hoverEl.tagName === "CANVAS") wake(); });
+    Array.prototype.forEach.call(document.querySelectorAll("canvas"), function (c) {
+      watch.observe(c, { attributes: true, attributeFilter: ["style"] });
+    });
+  }
   root.addEventListener("mouseleave", function () { root.classList.add("cur-hidden"); });
   root.addEventListener("mouseenter", function () { if (seen) root.classList.remove("cur-hidden"); });
 
@@ -61,7 +76,14 @@
 
     star.style.transform = "translate3d(" + (x - 7) + "px," + (y - 7) + "px,0) scale(" + starScale.toFixed(3) + ")";
     ring.style.transform = "translate3d(" + (x - 17) + "px," + (y - 17) + "px,0) scale(" + ringScale.toFixed(3) + ")";
+
+    // Settled: snap to the targets and rest until the next change
+    if (Math.abs(starTarget - starScale) < 0.002 && Math.abs(ringTarget - ringScale) < 0.002) {
+      starScale = starTarget; ringScale = ringTarget;
+      running = false;
+      return;
+    }
     requestAnimationFrame(frame);
   }
-  requestAnimationFrame(frame);
+  wake();
 })();

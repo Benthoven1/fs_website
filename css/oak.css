@@ -1,0 +1,82 @@
+/* oak.css — the Oak page (pages/offerings/oak.html).
+   Loaded after css/style.css by that page alone, so other pages don't
+   download these rules. */
+
+/* =====================================================================
+   OAK PAGE — the planet becomes an acorn; scrolling reveals the oak
+   ===================================================================== */
+#oak-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.oak-hero {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: calc(var(--nav-h) + clamp(28px, 6vh, 64px));
+  z-index: 2;
+  text-align: center;
+  pointer-events: none;
+}
+
+.oak-hero .eyebrow { margin: 0 0 10px; }
+
+.oak-title {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 300;
+  font-size: clamp(44px, 6vw, 76px);
+  letter-spacing: 0.3em;
+  text-indent: 0.3em; /* recentres tracked text */
+  text-transform: uppercase;
+  line-height: 1.05;
+  color: var(--ink);
+  margin: 0;
+}
+
+.oak-lede {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: clamp(17px, 1.8vw, 22px);
+  color: var(--ink-soft);
+  margin: 10px 0 0;
+}
+
+
+/* No scrolling until the planet has become an acorn (released by js/oak.js) */
+html.oak-locked,
+html.oak-locked body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* Scroll length for the camera's pull-back */
+.oak-track { height: 320vh; }
+
+/* The copy rises over the finished scene on a paper wash */
+.oak-page .oak-shell {
+  position: relative;
+  z-index: 2;
+  max-width: none;
+  padding: clamp(120px, 22vh, 220px) clamp(22px, 5vw, 64px) 120px;
+  background: linear-gradient(to bottom,
+    rgba(236, 234, 229, 0) 0,
+    rgba(236, 234, 229, 0.94) clamp(90px, 16vh, 170px),
+    var(--paper) 100%);
+}
+
+.oak-page .oak-shell > * {
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.oak-page #site-footer {
+  position: relative;
+  z-index: 2;
+}
