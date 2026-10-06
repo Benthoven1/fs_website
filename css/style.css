@@ -1068,7 +1068,19 @@ body.hero-reset .hero-statement .hw > span { transition: none !important; }
   text-indent: 1.6em;
 }
 
-.fsos-prose-body p:first-child { text-indent: 0; }
+.fsos-prose-body p:first-child,
+.fsos-prose-body h2 + p { text-indent: 0; }
+
+/* Section heads within the essay, in the small capitals of the site's eyebrows */
+.fsos-prose-body h2 {
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0.24em;
+  text-align: center;
+  color: var(--clay-deep);
+  margin: 60px 0 22px;
+}
 
 .fsos-prose-body em {
   font-style: italic;
@@ -1845,7 +1857,8 @@ body.ls-done .ar {
   animation-delay: var(--ard, 0s);
 }
 
-/* The "Scroll" cue on the Oak and FSOS pages */
+/* The "Scroll" cue on the Oak and FSOS pages: js/scroll-cue.js shows it
+   (.is-shown); it leaves quickly and returns slowly */
 .oak-cue,
 .fsos-cue {
   position: fixed;
@@ -1860,4 +1873,7 @@ body.ls-done .ar {
   color: var(--ink-soft);
   opacity: 0;
   pointer-events: none;
+  transition: opacity 0.45s var(--ease);
 }
+.oak-cue.is-shown,
+.fsos-cue.is-shown { opacity: 1; transition-duration: 1.2s; }

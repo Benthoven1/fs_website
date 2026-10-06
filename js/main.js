@@ -1278,6 +1278,40 @@ window.addEventListener("resize", () => {
   if (body.classList.contains("expansion-active")) updateExpansionScroll();
 });
 
+// ── The letter's opening, at a reading pace ─────────────────────────────────
+// Readers tended to scroll straight past the start of the letter. Through its
+// first paragraphs the wheel and trackpad move no faster than READ_SPEED, and
+// a fast touch fling that would carry past a reading stop (the paragraphs
+// marked data-read-stop) is caught and eased to rest with that paragraph near
+// the top of the screen. Drags are the reader's own and are left alone.
+const readStops = [...document.querySelectorAll("#letter-section [data-read-stop]")];
+const READ_SPEED = 720; // px/s
+const STOP_AT = 0.18;   // a stopped paragraph rests this far down the screen
+
+// Where each stop rests (as page scroll), and the stretch the limit covers:
+// from the first stop's top entering the screen to the last stop's end.
+// Measured from layout, so a paragraph still rising into view (.rv) counts
+// where it will settle.
+function pageTop(el) {
+  let y = 0;
+  for (let e = el; e; e = e.offsetParent) y += e.offsetTop;
+  return y;
+}
+function readingLayout() {
+  const vh = window.innerHeight;
+  const tops = readStops.map(pageTop);
+  const last = readStops[readStops.length - 1];
+  const end = pageTop(last) + last.offsetHeight;
+  return { vh, stops: tops.map((t) => t - vh * STOP_AT), from: tops[0] - vh, to: end - vh * 0.5 };
+}
+
+// How firmly the opening holds the pace at scroll position y, from 0 to 1,
+// easing in and out over half a screen at either end
+function readingHold(y, L) {
+  const ease = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  return ease(L.from - L.vh * 0.5, L.from, y) * (1 - ease(L.to, L.to + L.vh * 0.5, y));
+}
+
 // Cinematic scroll — intercept wheel events and apply smooth inertia
 // resetCinematicScroll is called by mode transitions (snapTo3D, goTo3D, …)
 // after their programmatic window.scrollTo: it cancels any in-flight inertia
@@ -1286,21 +1320,30 @@ let resetCinematicScroll = () => {};
 if (finePointer) {
   let scrollTarget = 0;
   let scrollRafId  = null;
+  let lastStep     = 0;
 
   resetCinematicScroll = () => {
     if (scrollRafId) { cancelAnimationFrame(scrollRafId); scrollRafId = null; }
+    lastStep = 0;
     scrollTarget = window.scrollY;
   };
 
-  function cinematicStep() {
+  function cinematicStep(ts) {
+    const dt = lastStep ? Math.min(0.05, (ts - lastStep) / 1000) : 1 / 60;
+    lastStep = ts;
     const cur  = window.scrollY;
     const diff = scrollTarget - cur;
     if (Math.abs(diff) < 0.5) {
       window.scrollTo(0, scrollTarget);
       scrollRafId = null;
+      lastStep = 0;
       return;
     }
-    window.scrollBy(0, diff * 0.10);
+    let step = diff * 0.10;
+    // Down through the letter's opening, no faster than a reading pace
+    const cap = READ_SPEED * dt;
+    if (step > cap && readStops.length) step -= (step - cap) * readingHold(cur, readingLayout());
+    window.scrollBy(0, step);
     scrollRafId = requestAnimationFrame(cinematicStep);
   }
 
@@ -1310,12 +1353,52 @@ if (finePointer) {
     e.preventDefault();
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     scrollTarget    = Math.max(0, Math.min(maxScroll, scrollTarget + e.deltaY * 1.6));
+    // In the opening, a burst of wheel events can't bank distance to coast
+    // through later: the page runs at most half a screen ahead of itself
+    if (e.deltaY > 0 && readStops.length) {
+      const L = readingLayout(), hold = readingHold(window.scrollY, L);
+      if (hold > 0) scrollTarget = Math.min(scrollTarget, window.scrollY + lerp(maxScroll, L.vh * 0.5, hold));
+    }
     if (!scrollRafId) scrollRafId = requestAnimationFrame(cinematicStep);
   }, { passive: false });
 
   // Keep scrollTarget in sync when scrolled by other means (anchor links, etc.)
   window.addEventListener("scroll", () => {
     if (!scrollRafId) scrollTarget = window.scrollY;
+  }, { passive: true });
+} else if (readStops.length) {
+  // Touch: a fling faster than FLING whose glide would pass the next stop is
+  // halted (a page that can't be scrolled by hand stops gliding) and eased on
+  // to the stop, leaving at the fling's own speed
+  const FLING = 1.4; // px/ms
+  const GLIDE = 450; // ms: roughly how far a fling of a given speed carries
+  const root = document.documentElement;
+  let touching = false, lastY = window.scrollY, lastT = 0, v = 0, easing = 0;
+  const release = () => {
+    if (easing) cancelAnimationFrame(easing);
+    easing = 0;
+    root.style.overflow = "";
+  };
+  window.addEventListener("touchstart", () => { touching = true; release(); }, { passive: true });
+  window.addEventListener("touchend", () => { touching = false; }, { passive: true });
+  window.addEventListener("touchcancel", () => { touching = false; }, { passive: true });
+  window.addEventListener("scroll", () => {
+    const y = window.scrollY, t = performance.now(), dt = t - lastT;
+    v = lastT && dt > 0 && dt < 100 ? 0.6 * ((y - lastY) / dt) + 0.4 * v : 0;
+    lastY = y; lastT = t;
+    if (touching || easing || v < FLING || !body.classList.contains("expansion-active")) return;
+    const L = readingLayout();
+    const stop = L.stops.find((s) => s > y + 1);
+    if (stop === undefined || y + v * GLIDE < stop) return;
+    root.style.overflow = "hidden";
+    window.scrollTo(0, y);
+    const dist = stop - y, dur = Math.min(900, Math.max(220, (3 * dist) / v));
+    const ease = (now) => {
+      const k = Math.min(1, (now - t) / dur);
+      window.scrollTo(0, y + dist * (1 - Math.pow(1 - k, 3)));
+      if (k < 1) easing = requestAnimationFrame(ease); else release();
+    };
+    easing = requestAnimationFrame(ease);
   }, { passive: true });
 }
 

@@ -147,10 +147,13 @@
       return false;
     }
 
-    // Icosahedron corners, turned so the first faces the viewer
+    // The twenty corners of a dodecahedron, turned so the first faces the
+    // viewer: first the twelve off its inscribed cube (the institution's
+    // agents), then the cube's eight (the agency's)
     function corners() {
-      const p = (1 + Math.sqrt(5)) / 2, out = [];
-      for (const a of [-1, 1]) for (const b of [-p, p]) out.push([0, a, b], [a, b, 0], [b, 0, a]);
+      const p = (1 + Math.sqrt(5)) / 2, q = 1 / p, out = [];
+      for (const a of [-q, q]) for (const b of [-p, p]) out.push([0, a, b], [a, b, 0], [b, 0, a]);
+      for (const x of [-1, 1]) for (const y of [-1, 1]) for (const z of [-1, 1]) out.push([x, y, z]);
       const unit = out.map((v) => { const l = Math.hypot(...v); return v.map((x) => x / l); });
       const from = unit[0], to = (() => { const v = [0.18, 0.12, 1], l = Math.hypot(...v); return v.map((x) => x / l); })();
       // Rodrigues rotation taking `from` to `to`
@@ -170,11 +173,15 @@
       const agents = words.filter((w) => w.kind === "agent");
       const focus = words.filter((w) => w.kind === "focus");
       const work = words.filter((w) => w.kind === "work");
-      // The twelve agents sit at the twelve corners, evenly round the sphere
-      const ico = corners();
-      agents.forEach((en, i) => { if (!tryAt(en, STYLES.agent.h, ico[i], false)) place(en, STYLES.agent.h, M, 0); });
+      // The twenty agents sit at the twenty corners, evenly round the sphere
+      const at = corners();
+      agents.forEach((en, i) => { if (!at[i] || !tryAt(en, STYLES.agent.h, at[i], false)) place(en, STYLES.agent.h, M, 0); });
       focus.forEach((en) => place(en, STYLES.focus.h, M, 0.15));
-      for (const en of work) place(en, STYLES.work.h, M, 0.3);
+      // Every piece of work appears at least once: in shuffled order (so both
+      // teams share the squeeze), each a step smaller if it no longer fits
+      const order = work.slice();
+      for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
+      for (const en of order) for (const k of [1, 0.88, 0.76, 0.64]) if (place(en, STYLES.work.h * k, M, 0.3)) break;
       status(`Primary words placed: ${placed.length}. Filling the gaps…`);
       await pause();
       // Fill: wherever a smaller word still fits, put one. Of three picks take

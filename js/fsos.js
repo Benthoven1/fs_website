@@ -1,15 +1,17 @@
 // fsos.js — the FSOS page scene: a mind made of the work.
 // FSOS's green planet arrives as the loading screen opens. Then it dissolves
 // into words: the solid planet falls away and leaves a sphere made only of
-// words fitted into one another like puzzle pieces, the vocabulary of running
-// a nonprofit: the twelve agents, what each looks after, and the everyday work
-// between them. As it does, a porcelain figure grows beneath it and the camera
+// words fitted into one another like puzzle pieces, the vocabulary of building
+// and running an institution and of making it known: the twelve agents of the
+// institution and the eight of its communications agency, what each looks
+// after, and the everyday work between them. As it does, a porcelain figure grows beneath it and the camera
 // draws back: the word sphere is the figure's head. The figure thinks, its head
 // turning a little as words light up. The page's text then scrolls up over
 // the scene, as on the Oak page.
 import * as THREE from "three";
 import { STYLES, vocabulary, slotSize, drawWord } from "./fsos-words.js";
 import CLOUD from "./fsos-cloud.js";
+import { scrollCue } from "./scroll-cue.js";
 
 const canvas = document.getElementById("fsos-canvas");
 if (!canvas) throw new Error("fsos: #fsos-canvas not found");
@@ -95,8 +97,10 @@ function layoutAtlas() {
     Object.assign(en, { x, y, w, h });
     x += w; rowH = Math.max(rowH, h);
   });
+  // Exactly as tall as the words need (WebGL2 mipmaps any size; rounding up
+  // to a power of two would double it now that both teams' words are here)
   atlasCanvas.width = ATLAS_W;
-  atlasCanvas.height = THREE.MathUtils.ceilPowerOfTwo(y + rowH);
+  atlasCanvas.height = y + rowH;
 }
 let atlasHasFonts = false;
 function paintAtlas() {
@@ -389,7 +393,7 @@ window.addEventListener("pointermove", (e) => {
 }, { passive: true });
 
 canvas.setAttribute("role", "img");
-canvas.setAttribute("aria-label", "A porcelain figure, thinking, whose head is a sphere of words: FSOS's twelve agents and the work each one handles");
+canvas.setAttribute("aria-label", "A porcelain figure, thinking, whose head is a sphere of words: FSOS's twenty agents, twelve that run the institution and eight in its communications agency, and the work each one handles");
 
 // ── Prose rises in as it scrolls into view (same .rv classes as the home page)
 {
@@ -419,10 +423,9 @@ window.addEventListener("resize", resize);
 resize();
 
 // The scene stays fixed behind the page; once the text has covered it, stop
-// drawing. The scroll cue fades in once the figure is whole and leaves as
-// soon as the reader scrolls.
+// drawing. The scroll cue shows once the figure is whole (js/scroll-cue.js).
 let onScreen = true;
-const cue = document.getElementById("fsos-cue");
+const cue = scrollCue(document.getElementById("fsos-cue"));
 function readScroll() { onScreen = window.scrollY < window.innerHeight * 1.8; }
 window.addEventListener("scroll", readScroll, { passive: true });
 readScroll();
@@ -546,7 +549,7 @@ function animate() {
       colorsDirty = true;
     });
   }
-  if (cue) cue.style.opacity = String((thinking || !motionOK ? 1 : 0) * (window.scrollY > 24 ? 0 : 1));
+  cue.ready(thinking || !motionOK);
   if (colorsDirty) { wordColors.needsUpdate = true; colorsDirty = false; }
 
   renderer.render(scene, camera);

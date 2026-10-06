@@ -6,6 +6,7 @@
 // orbits of the home page. Paper-coloured fog hides the tree at first and
 // lifts as the camera retreats.
 import * as THREE from "three";
+import { scrollCue } from "./scroll-cue.js";
 
 const canvas = document.getElementById("oak-canvas");
 if (!canvas) throw new Error("oak: #oak-canvas not found");
@@ -609,7 +610,7 @@ function releaseScroll() {
 // ── Scroll → progress ────────────────────────────────────────────────────────
 const track = document.getElementById("oak-track");
 const heroText = document.getElementById("oak-hero");
-const cue = document.getElementById("oak-cue");
+const cue = scrollCue(document.getElementById("oak-cue"));
 const shell = document.querySelector(".oak-shell");
 let pTarget = 0, pSmooth = 0, covered = false;
 function readScroll() {
@@ -697,7 +698,7 @@ function animate() {
 
   // Title fades as the camera retreats; the scroll cue waits for the acorn
   if (heroText) heroText.style.opacity = String(1 - smooth(0.02, 0.14, pSmooth));
-  if (cue) cue.style.opacity = String(smooth(0.85, 1, m) * (1 - smooth(0.01, 0.06, pSmooth)));
+  cue.ready(m >= 0.9);
   if (m >= 0.95) releaseScroll();
 
   if (!covered) renderer.render(scene, camera);

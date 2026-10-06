@@ -6,6 +6,7 @@
 // so nothing inside reads as another planet; the page's four projects
 // below use the same pictures.
 import * as THREE from "three";
+import { scrollCue } from "./scroll-cue.js";
 
 const canvas = document.getElementById("fs-canvas");
 if (!canvas) throw new Error("bowl: #fs-canvas not found");
@@ -222,7 +223,7 @@ const smooth = (a, b, x) => { const t = clamp01((x - a) / (b - a)); return t * t
 const easeInOut = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
 const easeOutBack = (t) => { const c = 1.4; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
 
-const cue = document.getElementById("fs-cue");
+const cue = scrollCue(document.getElementById("fs-cue"));
 let lastT = 0;
 function animate() {
   requestAnimationFrame(animate);
@@ -276,7 +277,7 @@ function animate() {
   if (motionOK) vessel.rotation.y += dt * 0.1;
   projects.forEach((p, i) => { p.mesh.rotation.y = -Math.PI / 2 - vessel.rotation.y + (i - 1.5) * 0.18; });
 
-  if (cue) cue.style.opacity = String(isFinite(openT) ? smooth(HELD_AT - 0.2, HELD_AT + 0.6, since) : 0);
+  cue.ready(isFinite(openT) && since > HELD_AT - 0.2);
 
   // Camera: the fixed view, stepped back on tall screens, with a little parallax
   camera.position.copy(LOOK_AT).addScaledVector(VIEW_DIR, dist);
