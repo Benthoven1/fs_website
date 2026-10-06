@@ -116,9 +116,53 @@ const headGroup = new THREE.Group();
 headGroup.position.copy(HEAD_C);
 scene.add(headGroup);
 
-const planetMat = new THREE.MeshStandardMaterial({ color: PASTEL_FSOS, roughness: 0.34, metalness: 0, transparent: true });
-const planet = new THREE.Mesh(new THREE.SphereGeometry(HEAD_R, 96, 64), planetMat);
+// The planet dissolves rather than fading: a front starts at the point facing
+// the viewer and travels round the sphere, its edge broken by soft noise, and
+// behind it the surface is simply gone. A thin pale rim lights the edge as it
+// goes. The shadow pass erodes in step, so the shadow dissolves with it.
+const erode = { uProg: { value: -0.1 }, uFront: { value: new THREE.Vector3(0, 0.16, 1).normalize() }, uRim: { value: new THREE.Color(0xf7f4ea) } };
+const ERODE_GLSL = `
+  uniform float uProg;
+  uniform vec3 uFront;
+  varying vec3 vObj;
+  float eHash(vec3 p) { p = fract(p * 0.3183099 + 0.1); p *= 17.0; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }
+  float eNoise(vec3 x) {
+    vec3 i = floor(x), f = fract(x);
+    f = f * f * (3.0 - 2.0 * f);
+    return mix(mix(mix(eHash(i), eHash(i + vec3(1, 0, 0)), f.x), mix(eHash(i + vec3(0, 1, 0)), eHash(i + vec3(1, 1, 0)), f.x), f.y),
+               mix(mix(eHash(i + vec3(0, 0, 1)), eHash(i + vec3(1, 0, 1)), f.x), mix(eHash(i + vec3(0, 1, 1)), eHash(i + vec3(1, 1, 1)), f.x), f.y), f.z);
+  }
+  // How far round from the front this point is (0 to 1), roughened by noise
+  float eField() {
+    vec3 d = normalize(vObj);
+    float around = acos(clamp(dot(d, uFront), -1.0, 1.0)) / 3.14159265;
+    float n = 0.6 * eNoise(d * 3.2) + 0.3 * eNoise(d * 7.1) + 0.1 * eNoise(d * 15.0);
+    return 0.74 * around + 0.26 * n;
+  }`;
+const withErosion = (sh, rim) => {
+  Object.assign(sh.uniforms, erode);
+  sh.vertexShader = sh.vertexShader
+    .replace("#include <common>", "#include <common>\nvarying vec3 vObj;")
+    .replace("#include <begin_vertex>", "#include <begin_vertex>\nvObj = position;");
+  sh.fragmentShader = sh.fragmentShader
+    .replace("#include <common>", "#include <common>" + ERODE_GLSL + (rim ? "\nuniform vec3 uRim;" : ""))
+    .replace("#include <clipping_planes_fragment>", `#include <clipping_planes_fragment>
+      float eEdge = eField() - uProg;
+      if (eEdge < 0.0) discard;`);
+  if (rim) {
+    sh.fragmentShader = sh.fragmentShader.replace("#include <emissivemap_fragment>", `#include <emissivemap_fragment>
+      float eRim = 1.0 - smoothstep(0.0, 0.05, eEdge);
+      diffuseColor.rgb = mix(diffuseColor.rgb, uRim, eRim * 0.8);
+      totalEmissiveRadiance += uRim * eRim * 0.35;`);
+  }
+};
+const planetMat = new THREE.MeshStandardMaterial({ color: PASTEL_FSOS, roughness: 0.34, metalness: 0 });
+planetMat.onBeforeCompile = (sh) => withErosion(sh, true);
+const planet = new THREE.Mesh(new THREE.SphereGeometry(HEAD_R, 128, 96), planetMat);
 planet.castShadow = true;
+const planetDepth = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking });
+planetDepth.onBeforeCompile = (sh) => withErosion(sh, false);
+planet.customDepthMaterial = planetDepth;
 headGroup.add(planet);
 
 let wordMesh = null, wordColors = null;
@@ -142,7 +186,7 @@ function buildCloud() {
   const segs = placed.map((p) => Math.max(2, Math.ceil(p.w / 0.06)));
   segs.forEach((s) => { verts += (s + 1) * 2; });
   const pos = new Float32Array(verts * 3), nor = new Float32Array(verts * 3), uv = new Float32Array(verts * 2);
-  const col = new Float32Array(verts * 3), index = [];
+  const col = new Float32Array(verts * 4), index = [];
   const W = atlasCanvas.width, H = atlasCanvas.height;
   let v = 0;
   const d1 = new THREE.Vector3(), d = new THREE.Vector3();
@@ -162,7 +206,7 @@ function buildCloud() {
         pos.set([d.x * rad, d.y * rad, d.z * rad], v * 3);
         nor.set([d.x, d.y, d.z], v * 3);
         uv.set([u0 + ((u1 - u0) * i) / S, j === 0 ? vBot : vTop], v * 2);
-        col.set([planetColor.r, planetColor.g, planetColor.b], v * 3);
+        col.set([planetColor.r, planetColor.g, planetColor.b, 0], v * 4);
         v++;
       }
       if (i < S) { const a = first + i * 2; index.push(a, a + 2, a + 1, a + 1, a + 2, a + 3); }
@@ -173,7 +217,7 @@ function buildCloud() {
   geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
   geo.setAttribute("normal", new THREE.BufferAttribute(nor, 3));
   geo.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
-  geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+  geo.setAttribute("color", new THREE.BufferAttribute(col, 4));
   geo.setIndex(index);
   wordColors = geo.getAttribute("color");
   // Flat type, seen from both sides; words round the back fade toward the
@@ -199,8 +243,11 @@ function buildCloud() {
   wordMesh.visible = false;
   headGroup.add(wordMesh);
 }
-function setWordColor(span, color) {
-  for (let k = 0; k < span.count; k++) wordColors.setXYZ(span.first + k, color.r, color.g, color.b);
+// A word's colour, and how far it has inked in (0 to 1). Its letters are drawn
+// where the atlas's ink times this exceeds the alpha test, so as it rises they
+// thicken from nothing to full strokes.
+function setWordColor(span, color, ink = 1) {
+  for (let k = 0; k < span.count; k++) wordColors.setXYZW(span.first + k, color.r, color.g, color.b, ink);
 }
 
 // Words are drawn with their web fonts, so wait for the font stylesheet and
@@ -393,10 +440,10 @@ if (window["__mulvium_ls-hole"]) onHole(); else document.addEventListener("mulvi
 if (window["__mulvium_ls-done"]) onDone(); else document.addEventListener("mulvium:ls-done", onDone);
 setTimeout(onDone, 10000); // safety if the overlay never reports
 
-const RESOLVE = 2.6;        // planet → words
+const RESOLVE = 3.0;        // planet → words
 const GROW = 2.8;           // the body grows, from the neck down
 const PULL = 3.0;           // the camera draws back
-const THINK = 3.2;          // then the figure thinks
+const THINK = 3.4;          // then the figure thinks
 const GLINT_EVERY = 0.35;
 
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
@@ -423,9 +470,9 @@ function animate() {
     openT = motionOK ? Math.max(t, doneT + 0.4) : -100;
     wordMesh.visible = true;
     headGroup.updateMatrixWorld();
+    // Where each word sits on the dissolving front (the noise averages out)
     wordSpans.forEach((s) => {
-      nWorld.copy(s.n).transformDirection(headGroup.matrixWorld);
-      s.delay = (1 - nWorld.dot(viewHead)) * 0.5 * 0.9;
+      s.front = 0.74 * Math.acos(THREE.MathUtils.clamp(s.n.dot(erode.uFront.value), -1, 1)) / Math.PI + 0.13;
     });
   }
   const since = t - openT;
@@ -434,23 +481,25 @@ function animate() {
   const a = isFinite(holeT) ? (motionOK ? clamp01((t - holeT) / 1.1) : 1) : 0;
   headGroup.scale.setScalar(Math.max(0.0001, easeOutBack(a)));
 
-  // Resolve: the solid planet falls away, leaving only its words, and each
-  // word deepens from the planet's green to its own
+  // Resolve: just ahead of the front, each word inks into the surface, its
+  // strokes thickening from nothing, and deepens to its tone; then the surface
+  // around it dissolves away, leaving only the words
   const r = isFinite(openT) ? clamp01(since / RESOLVE) : 0;
-  const away = smooth(0.15, 0.85, r);
-  planetMat.opacity = 1 - away;
-  planetMat.depthWrite = away < 0.01;
-  planet.visible = away < 1;
-  planet.scale.setScalar(lerp(1, 0.94, away));
+  const prog = lerp(-0.08, 1.06, easeInOut(r));
+  erode.uProg.value = prog;
+  planet.visible = prog < 1.05;
   if (wordMesh && r < 1) {
     settled = false;
     wordSpans.forEach((s) => {
-      const k = smooth(0, 1, (since - s.delay) / (RESOLVE * 0.6));
-      setWordColor(s, tmpColor.copy(planetColor).lerp(s.tone, k));
+      const ink = smooth(s.front - 0.26, s.front - 0.12, prog);
+      const deepen = smooth(s.front - 0.16, s.front + 0.04, prog);
+      setWordColor(s, tmpColor.copy(planetColor).lerp(s.tone, 0.45 + 0.55 * deepen), ink);
     });
+    wordMesh.castShadow = r > 0.55;
     colorsDirty = true;
   } else if (wordMesh && r >= 1 && !settled) {
     wordSpans.forEach((s) => setWordColor(s, s.tone));
+    wordMesh.castShadow = true;
     settled = true;
     colorsDirty = true;
   }
