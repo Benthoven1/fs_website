@@ -6,7 +6,15 @@
   <script>document.documentElement.classList.add('ls-instant-cover');</script>
   <title>Fiscal Sponsorship &mdash; Mulvium</title>
   <link rel="stylesheet" href="../../css/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Cormorant+SC:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,900;1,300;1,400&family=Great+Vibes&family=Inter:wght@300;400;500;600&family=Italiana&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../css/fiscal.css" />
+  <link rel="preload" as="image" type="image/webp" href="../../Musical.webp" />
+  <link rel="preload" as="image" type="image/webp" href="../../Pictorial.webp" />
+  <link rel="preload" as="image" type="image/webp" href="../../image-13.webp" />
+  <link rel="preload" as="image" type="image/webp" href="../../Horticulture.webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Cormorant+SC:wght@400;500&family=Inter:wght@600&family=Italiana&family=Playfair+Display:wght@500&display=swap" rel="stylesheet" />
+  <link rel="modulepreload" href="https://unpkg.com/three@0.161.0/build/three.module.min.js" crossorigin />
 </head>
 <body style="opacity:0" class="fs-page">
   <div id="nav-cap" aria-hidden="true"></div>
@@ -25,17 +33,17 @@
         <button class="nav-trigger" aria-haspopup="true" aria-expanded="false">Offerings</button>
         <ul class="dropdown offer-grid">
           <li style="--i:0"><a class="offer-card" href="fiscal-sponsorship.html">
-            <span class="offer-art"><img src="../../images/offer-fiscal.jpg" alt="" width="960" height="720" decoding="async"></span>
+            <span class="offer-art"><img src="../../images/offer-fiscal.webp" alt="" width="960" height="720" loading="lazy" decoding="async"></span>
             <span class="offer-name">Fiscal Sponsorship</span>
             <span class="offer-line">A legal and financial home for your project</span>
           </a></li>
           <li style="--i:1"><a class="offer-card" href="fsos.html">
-            <span class="offer-art"><img src="../../images/offer-fsos.jpg" alt="" width="960" height="720" decoding="async"></span>
+            <span class="offer-art"><img src="../../images/offer-fsos.webp" alt="" width="960" height="720" loading="lazy" decoding="async"></span>
             <span class="offer-name">FSOS</span>
             <span class="offer-line">The operating system that turns an idea into an institution</span>
           </a></li>
           <li style="--i:2"><a class="offer-card" href="oak.html">
-            <span class="offer-art"><img src="../../images/offer-oak.jpg" alt="" width="960" height="720" decoding="async"></span>
+            <span class="offer-art"><img src="../../images/offer-oak.webp" alt="" width="960" height="720" loading="lazy" decoding="async"></span>
             <span class="offer-name">Oak</span>
             <span class="offer-line">Keep what mattered. Let the rest go.</span>
           </a></li>
@@ -235,7 +243,7 @@
 
       <div class="fs-projects">
         <article class="fs-project fs-art" id="project-art" aria-labelledby="project-art-title">
-          <figure class="fs-plate fs-reveal"><img src="../../Musical.png" alt="The opening page of the score of Beethoven&rsquo;s Third Symphony, the Eroica" loading="lazy" decoding="async" /></figure>
+          <figure class="fs-plate fs-reveal"><img src="../../Musical.webp" alt="The opening page of the score of Beethoven&rsquo;s Third Symphony, the Eroica" loading="lazy" decoding="async" /></figure>
           <div class="fs-project-body fs-reveal">
             <p class="fs-domain"><span class="fs-domain-num">1</span>Artistic</p>
             <p class="fs-panel-meta">2027 &middot; A multi-day festival</p>
@@ -261,7 +269,7 @@
           </div>
         </article>
         <article class="fs-project fs-sci" id="project-sci" aria-labelledby="project-sci-title">
-          <figure class="fs-plate fs-reveal"><img src="../../Horticulture.png" alt="A hillside of wild purple flowers at sunset, below a distant peak" loading="lazy" decoding="async" /></figure>
+          <figure class="fs-plate fs-reveal"><img src="../../Horticulture.webp" alt="A hillside of wild purple flowers at sunset, below a distant peak" loading="lazy" decoding="async" /></figure>
           <div class="fs-project-body fs-reveal">
             <p class="fs-domain"><span class="fs-domain-num">2</span>Scientific</p>
             <p class="fs-panel-meta">One year &middot; A research sprint</p>
@@ -289,7 +297,7 @@
           </div>
         </article>
         <article class="fs-project fs-edu" id="project-edu" aria-labelledby="project-edu-title">
-          <figure class="fs-plate fs-reveal"><img src="../../image%20(13).png" alt="A castle on a wooded hill above a river winding through its valley" loading="lazy" decoding="async" /></figure>
+          <figure class="fs-plate fs-reveal"><img src="../../image-13.webp" alt="A castle on a wooded hill above a river winding through its valley" loading="lazy" decoding="async" /></figure>
           <div class="fs-project-body fs-reveal">
             <p class="fs-domain"><span class="fs-domain-num">3</span>Educational</p>
             <p class="fs-panel-meta">2 August 2027 &middot; A festival of the sun</p>
@@ -318,7 +326,7 @@
           </div>
         </article>
         <article class="fs-project fs-cha" id="project-cha" aria-labelledby="project-cha-title">
-          <figure class="fs-plate fs-reveal"><img src="../../Pictorial.png" alt="Raphael&rsquo;s fresco The School of Athens: teachers and students gathered beneath great arches" loading="lazy" decoding="async" /></figure>
+          <figure class="fs-plate fs-reveal"><img src="../../Pictorial.webp" alt="Raphael&rsquo;s fresco The School of Athens: teachers and students gathered beneath great arches" loading="lazy" decoding="async" /></figure>
           <div class="fs-project-body fs-reveal">
             <p class="fs-domain"><span class="fs-domain-num">4</span>Charitable</p>
             <p class="fs-panel-meta">One day &middot; A school&rsquo;s farewell</p>
@@ -403,7 +411,7 @@
 
   <script src="../../js/ls.js"></script>
   <script type="importmap">
-    { "imports": { "three": "https://unpkg.com/three@0.161.0/build/three.module.js" } }
+    { "imports": { "three": "https://unpkg.com/three@0.161.0/build/three.module.min.js" } }
   </script>
   <script type="module" src="../../js/bowl.js"></script>
   <script src="../../js/cursor.js" defer></script>

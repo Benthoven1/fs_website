@@ -14,7 +14,8 @@ of the for-profit arm), Oak, and a fourth to be announced.
   founder's letter. On the landing, scrolling brings up the footer navigation;
   pinching (or ctrl/⌘ + wheel) zooms, within limits. `index.html#orbit`, the
   nav's Dear Leader link, opens straight onto the orbit view.
-- `css/style.css` — shared stylesheet.
+- `css/style.css` — the stylesheet every page shares; `css/fiscal.css`, `css/oak.css` and
+  `css/about.css` hold rules only one page needs, and only that page loads them.
 - `js/main.js` — Three.js module for the landing page: the cosmos and its framing
   per layout, the hero, the 2D night transition, and interactions.
 - `js/fsos.js` — the FSOS page: the green planet dissolves into a sphere made only of words
@@ -33,10 +34,17 @@ of the for-profit arm), Oak, and a fourth to be announced.
   scrolling pulls back to the whole oak on its esplanade.
 - `pages/offerings/` — Fiscal Sponsorship (what a fiscal sponsor is, how it works, and
   four hypothetical projects), FSOS, and Oak. Each of the four projects is shown with one
-  of the loading screen's pictures (`Musical.png`, `Horticulture.png`, `image (13).png`,
-  `Pictorial.png`), the same files the loading screen uses: replace a file and both follow.
+  of the loading screen's pictures (`Musical.webp`, `Horticulture.webp`, `image-13.webp`,
+  `Pictorial.webp`), the same files the loading screen uses: replace a file and both follow.
 - `pages/about/` — People, Careers, Contact Us.
 - `images/` — stills of each company's animation, shown in the Offerings menu.
+
+## Images and speed
+
+Pictures are WebP, sized no wider than they are ever shown (1920 px for the
+loading screen's). To swap one, export a WebP at that size under the same name;
+pages preload the four loading pictures, lazy-load anything below the fold, load
+only the font weights they draw with, and use the minified Three.js build.
 
 ## Running locally
 
