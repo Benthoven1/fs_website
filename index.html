@@ -235,17 +235,16 @@
     </footer>
   </main>
 
-  <!-- Loading screen overlay — three nested image frames that compress into a canvas
-       window, then the window expands to reveal the destination animation. The canvas
-       shows through a clip-path polygon hole so WebGL content is always visible. -->
+  <!-- Loading screen overlay — four nested image frames that converge into a window
+       onto the canvas, then the window expands to reveal the cosmos (js/ls.js) -->
   <div id="loading-screen" aria-hidden="true">
     <div id="ls-f1" class="ls-frame"><div class="ls-img"></div></div>
     <div id="ls-f2" class="ls-frame"><div class="ls-img"></div></div>
     <div id="ls-f3" class="ls-frame"><div class="ls-img"></div></div>
     <div id="ls-f4" class="ls-frame"><div class="ls-img"></div></div>
-    <div id="ls-border" class="ls-frame"></div>
   </div>
 
+  <script src="js/ls.js" data-manual></script>
   <script type="importmap">
     { "imports": { "three": "https://unpkg.com/three@0.161.0/build/three.module.min.js" } }
   </script>

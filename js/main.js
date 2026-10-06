@@ -676,232 +676,47 @@ window.addEventListener("resize", setFooterHeight);
 }
 
 // ── Loading screen ────────────────────────────────────────────────────────────
-// Plays a nested-rectangle reveal sequence when navigating via top/footer nav.
-// Five concentric frames animate up from the bottom: Musical → Pictorial →
-// image-13 → Horticulture (images from the repo) → transparent knockout that
-// shows the live Three.js canvas. The knockout expands to fill the viewport,
-// seamlessly becoming the destination animation before the overlay fades away.
+// The nested-frame reveal: Musical → Pictorial → image-13 → Horticulture open
+// as slits, a window opens inside them onto the live canvas, and the window
+// expands to fill the viewport. js/ls.js plays it (shared with the sub-pages,
+// loaded here with data-manual); this page adds the cosmos's own reveal.
 const loadingScreen = document.getElementById("loading-screen");
-const lsF1 = document.getElementById("ls-f1");
-const lsF2 = document.getElementById("ls-f2");
-const lsF3 = document.getElementById("ls-f3");
-const lsF4 = document.getElementById("ls-f4");
-const lsBorder = document.getElementById("ls-border");
-const lsF1img = lsF1.querySelector(".ls-img");
-const lsF2img = lsF2.querySelector(".ls-img");
-const lsF3img = lsF3.querySelector(".ls-img");
-const lsF4img = lsF4.querySelector(".ls-img");
-let lsRaf         = null;
+let lsPlay        = null;
 let lsActive      = false;
-let lsHoleVisible = false; // true once the canvas window hole first opens
+let lsHoleVisible = false; // true once the canvas window first opens
 
-// Sets a transparent canvas-window hole in the loading screen via a nonzero-
-// winding clip-path: outer CW rectangle + inner CCW rectangle = hole.
-// Works with hardware-accelerated WebGL canvases (unlike mix-blend-mode).
-function lsSetHole(vw, vh, hW, hH, hCY) {
-  if (hW < 2 || hH < 2) { loadingScreen.style.clipPath = ""; return; }
-  const cx = vw / 2;
-  const x1 = cx - hW / 2, y1 = hCY - hH / 2;
-  const x2 = cx + hW / 2, y2 = hCY + hH / 2;
-  // Outer CW: 0,0 → vw,0 → vw,vh → 0,vh → 0,0
-  // Inner CCW: x1,y1 → x1,y2 → x2,y2 → x2,y1 → x1,y1  (opposite winding = hole)
-  loadingScreen.style.clipPath =
-    `polygon(0px 0px,${vw}px 0px,${vw}px ${vh}px,0px ${vh}px,0px 0px,` +
-    `${x1}px ${y1}px,${x1}px ${y2}px,${x2}px ${y2}px,${x2}px ${y1}px,${x1}px ${y1}px)`;
-}
-
-function showLoadingScreen(onReady, duration, startOpaque) {
+function showLoadingScreen(onReady, duration) {
   if (lsActive) return;
   lsActive = true;
   lsHoleVisible = false;
-  const dur = duration || 4000;
-  if (lsRaf) { cancelAnimationFrame(lsRaf); lsRaf = null; }
+  if (lsPlay) lsPlay.cancel();
 
-  [lsF1, lsF2, lsF3, lsF4].forEach(f => {
-    f.style.width = "0"; f.style.height = "0";
-    f.style.transform = "translate(-50%, -50%)";
-    f.style.visibility = "";
-  });
-  lsBorder.style.width = "0"; lsBorder.style.height = "0";
-  lsBorder.style.transform = "translate(-50%, -50%)";
-  lsBorder.style.visibility = "hidden";
-  [lsF1img, lsF2img, lsF3img, lsF4img].forEach(f => { f.style.transform = "scale(1.2)"; });
-  loadingScreen.style.clipPath  = "";
-  loadingScreen.style.opacity   = startOpaque ? "1" : "0";
-  loadingScreen.style.display   = "block";
-  loadingScreen.style.pointerEvents = "all";
-  loadingScreen.setAttribute("aria-hidden", "false");
-  document.documentElement.classList.remove("ls-instant-cover");
-
-  let readyCalled = false, t0 = null;
-
+  let readyCalled = false;
   function eCubicInOut(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2; }
-  function eRise(t)     { return 1 - Math.pow(1 - t, 3); }
-  function eSlit(t)     { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); } // expo ease-out: height reveal
-  function eConverge(t) { return t * t * t * t; }
-  function eExpand(t)   { return 1 - (1 - t) * (1 - t); } // quadratic ease-out: consistent velocity, no asymptotic tail
-  function ph(t, a, b, efn) {
-    return (efn || eCubicInOut)(Math.max(0, Math.min(1, (t - a) / (b - a))));
-  }
-
-  // cy_off is vertical pixel offset from centered position (positive = down).
-  function setF(el, w, h, cy_off) {
-    el.style.width     = w + "px";
-    el.style.height    = h + "px";
-    el.style.transform = `translate(-50%, calc(-50% + ${cy_off}px))`;
-  }
-
-  function setBorder(w, h, cy_off = 0) {
-    lsBorder.style.visibility = "";
-    lsBorder.style.width  = (w + 6) + "px";
-    lsBorder.style.height = (h + 6) + "px";
-    lsBorder.style.transform = `translate(-50%, calc(-50% + ${cy_off}px))`;
-  }
 
   function lsCleanup() {
+    lsPlay = null;
     state.lsRevealP = 1;
     // First reveal complete — play the hero title entrance over the cosmos
     body.classList.add("cosmos-intro");
     layoutHero();
-    [lsF1, lsF2, lsF3, lsF4, lsBorder].forEach(f => {
-      f.style.width = "0"; f.style.height = "0";
-      f.style.transform = "translate(-50%, -50%)";
-      f.style.visibility = "hidden";
-    });
-    [lsF1img, lsF2img, lsF3img, lsF4img].forEach(f => { f.style.transform = ""; });
-    loadingScreen.style.opacity    = "0";
-    loadingScreen.style.clipPath   = "";
-    loadingScreen.style.display    = "none";
-    loadingScreen.style.pointerEvents = "none";
-    loadingScreen.setAttribute("aria-hidden", "true");
     lsActive = false;
     lsHoleVisible = false;
   }
 
-  function tick(ts) {
-    try {
-      if (!t0) t0 = ts;
-      const t = Math.min(1, (ts - t0) / dur);
-
-      // Use cached viewport dimensions; updated by the resize handler on orientation change.
-      const vw = lsVW;
-      const vh = lsVH;
-      const WIN_W = vw * 0.68, WIN_H = vh * 0.62;
-      const F4_W  = vw * 0.70, F4_H  = vh * 0.635;
-      const F3_W  = vw * 0.72, F3_H  = vh * 0.65;
-      const F2_W  = vw * 0.76, F2_H  = vh * 0.68;
-      const F1_W  = vw * 0.80, F1_H  = vh * 0.71;
-      const EFF   = 0.92;
-      const EWIN_W = WIN_W * EFF, EWIN_H = WIN_H * EFF;
-      const EF4_W  = F4_W  * EFF, EF4_H  = F4_H  * EFF;
-      const EF3_W  = F3_W  * EFF, EF3_H  = F3_H  * EFF;
-      const EF2_W  = F2_W  * EFF, EF2_H  = F2_H  * EFF;
-      const EF1_W  = F1_W  * EFF, EF1_H  = F1_H  * EFF;
-
-      // Fire mode transition immediately when opaque, else after fade-in.
-      if (!readyCalled && (startOpaque || t >= 0.08)) {
+  lsPlay = window.mulviumLS.play({
+    duration: duration || 4000,
+    onFrame(t) {
+      // The overlay starts opaque, so the mode change happens under cover
+      if (!readyCalled) {
         readyCalled = true;
         try { if (onReady) onReady(); } catch (err) { console.error(err); }
       }
-
-      // Fade the overlay out during Phase 3 so the asymptotic tail of the
-      // expansion is invisible — prevents the near-full rectangle from looking frozen.
-      const fadeIn  = startOpaque ? 1 : ph(t, 0, 0.08);
-      const fadeOut = ph(t, 0.78, 1.0); // start fading while expansion is still visibly moving
-      loadingScreen.style.opacity = String(fadeIn * (1 - fadeOut));
-
-      if (startOpaque || t >= 0.08) {
-        state.lsRevealP = ph(t, 0.10, 1.0);
-      }
-
-      // Slow directional drift — each image pans in its own direction across the
-      // full animation, giving a sense of the camera moving through the photograph.
-      // translate() before scale() keeps drift in screen-pixel space.
-      const d1 = ph(t, 0.08, 1.0);
-      const d2 = ph(t, 0.14, 1.0);
-      const d3 = ph(t, 0.20, 1.0);
-      const d4 = ph(t, 0.26, 1.0);
-      lsF1img.style.transform = `translate(${-7 + 14 * d1}px, ${ 4 -  8 * d1}px) scale(${1.3 - 0.3 * ph(t, 0.08, 0.30, eRise)})`;
-      lsF2img.style.transform = `translate(${ 6 - 12 * d2}px, ${-5 + 10 * d2}px) scale(${1.3 - 0.3 * ph(t, 0.14, 0.32, eRise)})`;
-      lsF3img.style.transform = `translate(${ 5 - 10 * d3}px, ${ 6 - 11 * d3}px) scale(${1.3 - 0.3 * ph(t, 0.20, 0.34, eRise)})`;
-      lsF4img.style.transform = `translate(${-5 + 10 * d4}px, ${-7 + 14 * d4}px) scale(${1.3 - 0.3 * ph(t, 0.26, 0.38, eRise)})`;
-
-      // Group rises from below — cubic ease-out locks into position.
-      const holeCY = vh / 2 + vh * 0.5 * (1 - ph(t, 0.06, 0.28, eRise));
-      const cy_off = holeCY - vh / 2;
-
-      if (t < 0.54) {
-        // ── Phase 1: Each frame opens as a slit — width snaps, height reveals ──
-        // Musical (lsF1) first, Pictorial (lsF2) second, image(13) (lsF3) third,
-        // Horticulture (lsF4) fourth. Width: fast cubic snap. Height: expo ease-out.
-        const f1w = ph(t, 0.08, 0.14, eRise);
-        const f2w = ph(t, 0.14, 0.20, eRise);
-        const f3w = ph(t, 0.20, 0.26, eRise);
-        const f4w = ph(t, 0.26, 0.32, eRise);
-
-        const f1h = ph(t, 0.08, 0.32, eSlit);
-        const f2h = ph(t, 0.14, 0.38, eSlit);
-        const f3h = ph(t, 0.20, 0.44, eSlit);
-        const f4h = ph(t, 0.26, 0.46, eSlit);
-
-        if (t >= 0.08) setF(lsF1, EF1_W * f1w, Math.max(3, EF1_H * f1h), cy_off);
-        if (t >= 0.14) setF(lsF2, EF2_W * f2w, Math.max(3, EF2_H * f2h), cy_off);
-        if (t >= 0.20) setF(lsF3, EF3_W * f3w, Math.max(3, EF3_H * f3h), cy_off);
-        if (t >= 0.26) setF(lsF4, EF4_W * f4w, Math.max(3, EF4_H * f4h), cy_off);
-
-        // 5th rectangle — canvas hole — also opens as a slit.
-        if (t >= 0.30) {
-          lsHoleVisible = true;
-          const hw = ph(t, 0.30, 0.36, eRise);
-          const hh = ph(t, 0.30, 0.48, eRise); // cubic ease-out: smooth reveal, no expo hang
-          const holeW = EWIN_W * hw;
-          const holeH = Math.max(3, EWIN_H * hh);
-          lsSetHole(vw, vh, holeW, holeH, holeCY);
-          setBorder(holeW, holeH, cy_off);
-        } else {
-          loadingScreen.style.clipPath = "";
-          lsBorder.style.width = "0"; lsBorder.style.height = "0";
-        }
-        // t 0.48→0.54: all five fully open — still moment before the pull.
-
-      } else if (t < 0.67) {
-        // ── Phase 2: Quartic ease-in converge — barely moves then slams in ────
-        const cp = ph(t, 0.54, 0.67, eConverge);
-        setF(lsF1, EF1_W + (EWIN_W - EF1_W) * cp, EF1_H + (EWIN_H - EF1_H) * cp, 0);
-        setF(lsF2, EF2_W + (EWIN_W - EF2_W) * cp, EF2_H + (EWIN_H - EF2_H) * cp, 0);
-        setF(lsF3, EF3_W + (EWIN_W - EF3_W) * cp, EF3_H + (EWIN_H - EF3_H) * cp, 0);
-        setF(lsF4, EF4_W + (EWIN_W - EF4_W) * cp, EF4_H + (EWIN_H - EF4_H) * cp, 0);
-        lsSetHole(vw, vh, EWIN_W, EWIN_H, vh / 2);
-        setBorder(EWIN_W, EWIN_H);
-
-      } else {
-        // ── Phase 3: Expo ease-out expansion completes at t=0.90; the overlay
-        // fades out from t=0.82 so the asymptotic tail is never visible.
-        const ep = ph(t, 0.67, 0.90, eExpand);
-        const hw = EWIN_W + (vw    - EWIN_W) * ep;
-        const hh = EWIN_H + (vh    - EWIN_H) * ep;
-        const fw = Math.min(hw, WIN_W);
-        const fh = Math.min(hh, WIN_H);
-        setF(lsF1, fw, fh, 0);
-        setF(lsF2, fw, fh, 0);
-        setF(lsF3, fw, fh, 0);
-        setF(lsF4, fw, fh, 0);
-        lsSetHole(vw, vh, hw, hh, vh / 2);
-        setBorder(hw, hh);
-      }
-
-      if (t < 1) {
-        lsRaf = requestAnimationFrame(tick);
-      } else {
-        lsCleanup();
-      }
-    } catch (err) {
-      console.error("Loading screen animation error:", err);
-      lsCleanup();
-    }
-  }
-
-  lsRaf = requestAnimationFrame(tick);
+      state.lsRevealP = eCubicInOut(Math.max(0, Math.min(1, (t - 0.10) / 0.90)));
+    },
+    onHole() { lsHoleVisible = true; },
+    onDone: lsCleanup,
+  });
 }
 
 canvas.setAttribute("tabindex", "0");
@@ -1053,10 +868,7 @@ function goToOrbit() {
 function fadeInLoadingScreen(onReady) {
   if (lsActive) return;
   lsActive = true;
-  [lsF1, lsF2, lsF3, lsF4, lsBorder].forEach(f => {
-    f.style.width = "0"; f.style.height = "0"; f.style.visibility = "hidden";
-  });
-  loadingScreen.style.clipPath      = "";
+  window.mulviumLS.reset();
   loadingScreen.style.transition    = "";
   loadingScreen.style.opacity       = "0";
   loadingScreen.style.display       = "block";
@@ -1069,7 +881,7 @@ function fadeInLoadingScreen(onReady) {
       setTimeout(() => {
         loadingScreen.style.transition = "";
         lsActive = false;
-        showLoadingScreen(onReady, 5000, true);
+        showLoadingScreen(onReady, 5000);
       }, 250);
     });
   });
@@ -1094,14 +906,9 @@ document.querySelectorAll("#home-link, [data-orbit-link]").forEach((el) => {
 // cleanly (avoids GPU-compositing issues with body opacity on canvas elements).
 function coverAndNavigate(href) {
   if (lsActive) { window.location.href = href; return; }
-  // visibility:hidden suppresses rendering entirely — prevents image frames
-  // from showing at residual sizes AND prevents #ls-border's CSS border from
-  // collapsing to a visible 6 px square when width/height are zeroed.
-  [lsF1, lsF2, lsF3, lsF4, lsBorder].forEach(f => {
-    f.style.width = "0"; f.style.height = "0"; f.style.visibility = "hidden";
-  });
+  // Only the plain paper fades in: frames, outline and window all at rest
+  window.mulviumLS.reset();
   loadingScreen.style.transition = ""; // clear any leftover transition
-  loadingScreen.style.clipPath = "";
   loadingScreen.style.opacity = "0";
   loadingScreen.style.display = "block";
   loadingScreen.style.pointerEvents = "all";
@@ -1526,7 +1333,7 @@ animate();
   }
   const _orbit = window.location.hash === "#orbit";
   if (_orbit) history.replaceState(null, "", window.location.pathname);
-  showLoadingScreen(() => { if (_orbit) jumpTo2D(); }, _entering ? 5000 : 4000, true);
+  showLoadingScreen(() => { if (_orbit) jumpTo2D(); }, _entering ? 5000 : 4000);
 }
 
 // When the page is restored from the browser back-forward cache the WebGL
