@@ -1,71 +1,75 @@
-// ls.js — standalone loading screen for sub-pages (currently the Contact
-// page). Plays the same nested-frame reveal as the home page: four image
-// slits open, converge into a window, and the window expands to reveal the
-// live canvas beneath. Dispatches:
-//   'mulvium:ls-hole' — the canvas window first opens (start scene entrance)
+// ls.js — the loading screen. Four photographs open as slits one after
+// another, a window opens inside them onto the page, the photographs converge
+// into the window, and the window expands to the full viewport.
+//
+// Sub-pages play it on load and dispatch:
+//   'mulvium:ls-hole' — the window first opens (start the scene's entrance)
 //   'mulvium:ls-done' — overlay gone (page content may fade in)
-// Adds body.ls-done on completion for CSS-gated reveals.
+// and add body.ls-done on completion for CSS-gated reveals.
+// The home page loads this with data-manual and plays it itself through
+// window.mulviumLS (js/main.js).
+//
+// The motion is compositor work only, so it holds its frame rate:
+//  - the photographs are decoded, then rastered while still invisible, before
+//    any of them shows; each sits in a fixed-size box whose transform alone
+//    changes, so no frame re-rasters a photograph;
+//  - the overlay's paper is four bands around the window, each a copy of the
+//    paper that is painted once and only moved, so the window can change size
+//    without repainting the paper (a clip-path cut through the paper would
+//    repaint it, and its mask, on every frame the window moves);
+//  - the window's outline is four solid edges, moved by transform.
 (function () {
-  var loadingScreen = document.getElementById('loading-screen');
-  if (!loadingScreen) return;
+  var ls = document.getElementById('loading-screen');
+  if (!ls) return;
+  var manual = !!(document.currentScript && document.currentScript.hasAttribute('data-manual'));
 
-  var lsF1 = document.getElementById('ls-f1');
-  var lsF2 = document.getElementById('ls-f2');
-  var lsF3 = document.getElementById('ls-f3');
-  var lsF4 = document.getElementById('ls-f4');
-  var lsBorder = document.getElementById('ls-border');
-  var imgs = [lsF1, lsF2, lsF3, lsF4].map(function (f) { return f.querySelector('.ls-img'); });
-
-  function dispatch(name) {
-    // Flag for late listeners — module scripts (the mesh) may finish loading
-    // after this event has already fired
-    window['__' + name.replace(':', '_')] = true;
-    document.dispatchEvent(new CustomEvent(name));
+  var frames = ['ls-f1', 'ls-f2', 'ls-f3', 'ls-f4'].map(function (id) { return document.getElementById(id); });
+  var imgs = frames.map(function (f) { return f.querySelector('.ls-img'); });
+  function div(cls, parent, before) {
+    var d = document.createElement('div');
+    d.className = cls;
+    parent.insertBefore(d, before || null);
+    return d;
   }
+  // Paper bands (top, bottom, left, right), under the photographs' pane,
+  // under the outline
+  var bands = [0, 1, 2, 3].map(function () {
+    var b = div('ls-band', ls, frames[0]);
+    div('ls-bg', b);
+    return b;
+  });
+  var pane = div('ls-pane', ls, frames[0]);
+  frames.forEach(function (f) { pane.appendChild(f); });
+  var edges = [0, 1, 2, 3].map(function () { return div('ls-edge', ls); });
 
-  function finish() {
-    [lsF1, lsF2, lsF3, lsF4, lsBorder].forEach(function (f) {
-      f.style.width = '0'; f.style.height = '0'; f.style.visibility = 'hidden';
-    });
-    imgs.forEach(function (f) { f.style.transform = ''; });
-    loadingScreen.style.opacity = '0';
-    loadingScreen.style.clipPath = '';
-    loadingScreen.style.display = 'none';
-    loadingScreen.style.pointerEvents = 'none';
-    loadingScreen.setAttribute('aria-hidden', 'true');
-    document.body.classList.add('ls-done');
-    dispatch('mulvium:ls-done');
-  }
+  // ── The photographs ────────────────────────────────────────────────────────
+  // Each picture's natural size, once decoded: its box is the picture at
+  // cover size for the frame's largest size, so the image never resizes.
+  var nat = [null, null, null, null];
+  var keep = []; // decoded images, held so the decodes stay cached
+  var decoded = Promise.all(imgs.map(function (el, i) {
+    var m = /url\(["']?([^"')]+)["']?\)/.exec(getComputedStyle(el).backgroundImage);
+    if (!m) return null;
+    var im = new Image();
+    im.src = m[1];
+    keep.push(im);
+    var done = function () {
+      if (!im.naturalWidth) return;
+      nat[i] = [im.naturalWidth, im.naturalHeight];
+      sized = false;
+    };
+    return (im.decode ? im.decode() : new Promise(function (r) { im.onload = im.onerror = r; })).then(done, done);
+  }));
 
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.documentElement.classList.remove('ls-instant-cover');
-    dispatch('mulvium:ls-hole');
-    finish();
-    return;
-  }
-
-  var DUR = 4000;
-  var holeDispatched = false;
-
-  loadingScreen.style.opacity = '1';
-  loadingScreen.style.display = 'block';
-  loadingScreen.style.pointerEvents = 'all';
-  loadingScreen.setAttribute('aria-hidden', 'false');
-  lsBorder.style.visibility = 'hidden';
-  imgs.forEach(function (f) { f.style.transform = 'scale(1.2)'; });
-  document.documentElement.classList.remove('ls-instant-cover');
-
-  // Transparent canvas-window hole via nonzero-winding clip-path
-  function setHole(vw, vh, hW, hH, hCY) {
-    if (hW < 2 || hH < 2) { loadingScreen.style.clipPath = ''; return; }
-    var cx = vw / 2;
-    var x1 = cx - hW / 2, y1 = hCY - hH / 2;
-    var x2 = cx + hW / 2, y2 = hCY + hH / 2;
-    loadingScreen.style.clipPath =
-      'polygon(0px 0px,' + vw + 'px 0px,' + vw + 'px ' + vh + 'px,0px ' + vh + 'px,0px 0px,' +
-      x1 + 'px ' + y1 + 'px,' + x1 + 'px ' + y2 + 'px,' + x2 + 'px ' + y2 + 'px,' +
-      x2 + 'px ' + y1 + 'px,' + x1 + 'px ' + y1 + 'px)';
-  }
+  // ── Timing ─────────────────────────────────────────────────────────────────
+  // Frame i opens at OPEN[i]: its width snaps over 0.06, its height reveals
+  // until H_END[i], its photograph settles from 1.3x until Z_END[i] and then
+  // drifts on until the end.
+  var OPEN  = [0.08, 0.14, 0.20, 0.26];
+  var H_END = [0.32, 0.38, 0.44, 0.46];
+  var Z_END = [0.30, 0.32, 0.34, 0.38];
+  var DRIFT = [[-7, 4, 14, -8], [6, -5, -12, 10], [5, 6, -10, -11], [-5, -7, 10, 14]];
+  var HIDDEN = '0.001'; // a frame waiting to open: drawn, so rastered, but unseen
 
   function eRise(t)     { return 1 - Math.pow(1 - t, 3); }
   function eSlit(t)     { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
@@ -76,97 +80,287 @@
     return (efn || eCubicInOut)(Math.max(0, Math.min(1, (t - a) / (b - a))));
   }
 
-  function setF(el, w, h, cyOff) {
-    el.style.width = w + 'px';
-    el.style.height = h + 'px';
-    el.style.transform = 'translate(-50%, calc(-50% + ' + cyOff + 'px))';
+  // ── Geometry ───────────────────────────────────────────────────────────────
+  var vw = 0, vh = 0, sized = false;
+  var EF = [], EWIN = [0, 0];
+  var box = [];
+  window.addEventListener('resize', function () { sized = false; });
+
+  function measure() {
+    var r = ls.getBoundingClientRect();
+    vw = r.width; vh = r.height;
+    var EFF = 0.92;
+    EWIN = [vw * 0.68 * EFF, vh * 0.62 * EFF];
+    EF = [[0.80, 0.71], [0.76, 0.68], [0.72, 0.65], [0.70, 0.635]].map(function (f) {
+      return [vw * f[0] * EFF, vh * f[1] * EFF];
+    });
+    bands.forEach(function (b) {
+      b.firstChild.style.width = vw + 'px';
+      b.firstChild.style.height = vh + 'px';
+    });
+    imgs.forEach(function (el, i) {
+      var w = EF[i][0], h = EF[i][1], n = nat[i];
+      if (n) { var s = Math.max(w / n[0], h / n[1]); w = n[0] * s; h = n[1] * s; }
+      box[i] = [w, h];
+      el.style.width = w + 'px';
+      el.style.height = h + 'px';
+    });
+    sized = true;
   }
 
-  function setBorder(w, h, cyOff) {
-    lsBorder.style.visibility = '';
-    lsBorder.style.width = (w + 6) + 'px';
-    lsBorder.style.height = (h + 6) + 'px';
-    lsBorder.style.transform = 'translate(-50%, calc(-50% + ' + (cyOff || 0) + 'px))';
+  // Style writes go through here, so an unchanged value costs nothing
+  var last = new Map();
+  function set(el, prop, v) {
+    var m = last.get(el);
+    if (!m) { m = {}; last.set(el, m); }
+    if (m[prop] === v) return;
+    m[prop] = v;
+    el.style[prop] = v;
   }
 
-  var t0 = null;
-  function tick(ts) {
-    try {
-      if (!t0) t0 = ts;
-      var t = Math.min(1, (ts - t0) / DUR);
+  function setFrame(i, w, h, cy) {
+    set(frames[i], 'width', w + 'px');
+    set(frames[i], 'height', h + 'px');
+    set(frames[i], 'transform', 'translate(-50%, calc(-50% + ' + cy + 'px))');
+  }
 
-      var vw = window.innerWidth, vh = window.innerHeight;
-      var WIN_W = vw * 0.68, WIN_H = vh * 0.62;
-      var EFF = 0.92;
-      var EWIN_W = WIN_W * EFF, EWIN_H = WIN_H * EFF;
-      var EF4_W = vw * 0.70 * EFF, EF4_H = vh * 0.635 * EFF;
-      var EF3_W = vw * 0.72 * EFF, EF3_H = vh * 0.65 * EFF;
-      var EF2_W = vw * 0.76 * EFF, EF2_H = vh * 0.68 * EFF;
-      var EF1_W = vw * 0.80 * EFF, EF1_H = vh * 0.71 * EFF;
+  // The photograph covers its frame (w x h) at every size, as
+  // background-size: cover would, but by scaling a box that never changes
+  // size. It is centred on the frame by its transform, not by layout, so the
+  // frame's changing size never moves it by a fraction of a pixel (which
+  // would re-raster it).
+  function setPicture(i, t, w, h, cover) {
+    var d = ph(t, OPEN[i], 1.0), D = DRIFT[i];
+    if (cover == null) cover = Math.max(w / box[i][0], h / box[i][1]);
+    var s = (1.3 - 0.3 * ph(t, OPEN[i], Z_END[i], eRise)) * cover;
+    var x = (w - box[i][0]) / 2 + D[0] + D[2] * d, y = (h - box[i][1]) / 2 + D[1] + D[3] * d;
+    set(imgs[i], 'transform', 'translate(' + x + 'px,' + y + 'px) scale(' + s + ')');
+  }
 
-      var fadeOut = ph(t, 0.78, 1.0);
-      loadingScreen.style.opacity = String(1 - fadeOut);
+  // A band shows the part of the paper inside its rectangle
+  function setBand(i, x, y, w, h, opacity) {
+    var b = bands[i];
+    set(b, 'visibility', 'visible');
+    set(b, 'opacity', opacity || '1');
+    set(b, 'width', Math.max(0, w) + 'px');
+    set(b, 'height', Math.max(0, h) + 'px');
+    set(b, 'transform', 'translate(' + x + 'px,' + y + 'px)');
+    set(b.firstChild, 'transform', 'translate(' + (-x) + 'px,' + (-y) + 'px)');
+  }
 
-      // Slow directional drift across each photograph
-      var d1 = ph(t, 0.08, 1.0), d2 = ph(t, 0.14, 1.0), d3 = ph(t, 0.20, 1.0), d4 = ph(t, 0.26, 1.0);
-      imgs[0].style.transform = 'translate(' + (-7 + 14 * d1) + 'px,' + (4 - 8 * d1) + 'px) scale(' + (1.3 - 0.3 * ph(t, 0.08, 0.30, eRise)) + ')';
-      imgs[1].style.transform = 'translate(' + (6 - 12 * d2) + 'px,' + (-5 + 10 * d2) + 'px) scale(' + (1.3 - 0.3 * ph(t, 0.14, 0.32, eRise)) + ')';
-      imgs[2].style.transform = 'translate(' + (5 - 10 * d3) + 'px,' + (6 - 11 * d3) + 'px) scale(' + (1.3 - 0.3 * ph(t, 0.20, 0.34, eRise)) + ')';
-      imgs[3].style.transform = 'translate(' + (-5 + 10 * d4) + 'px,' + (-7 + 14 * d4) + 'px) scale(' + (1.3 - 0.3 * ph(t, 0.26, 0.38, eRise)) + ')';
+  // No window yet: the top band is the whole paper. The others wait, near-
+  // invisible, over the largest area each will show, so they are rastered.
+  function closedWindow() {
+    setBand(0, 0, 0, vw, vh);
+    setBand(1, 0, vh / 2 - 8, vw, vh / 2 + 8, HIDDEN);
+    setBand(2, 0, 0, vw / 2 + 8, vh, HIDDEN);
+    setBand(3, vw / 2 - 8, 0, vw / 2 + 8, vh, HIDDEN);
+    set(pane, 'clipPath', '');
+    hideOutline();
+  }
 
-      var holeCY = vh / 2 + vh * 0.5 * (1 - ph(t, 0.06, 0.28, eRise));
-      var cyOff = holeCY - vh / 2;
+  // The window onto the page, w x h centred at (vw/2, cy). While the
+  // photographs still surround it, a clip-path cuts it through their pane: a
+  // nonzero-winding polygon, outer rectangle (just around the largest frame)
+  // clockwise, inner counter-clockwise. Its mask is the one thing repainted
+  // as the window opens, so it is kept no larger than the frames.
+  function setWindow(w, h, cy, cutPictures) {
+    var x1 = vw / 2 - w / 2, y1 = cy - h / 2, x2 = x1 + w, y2 = y1 + h;
+    setBand(0, 0, 0, vw, y1);
+    setBand(1, 0, y2, vw, vh - y2);
+    setBand(2, 0, y1, x1, h);
+    setBand(3, x2, y1, vw - x2, h);
+    var X1 = vw / 2 - EF[0][0] / 2 - 8, X2 = vw - X1, Y1 = cy - EF[0][1] / 2 - 8, Y2 = Y1 + EF[0][1] + 16;
+    set(pane, 'clipPath', !cutPictures ? '' :
+      'polygon(' + X1 + 'px ' + Y1 + 'px,' + X2 + 'px ' + Y1 + 'px,' + X2 + 'px ' + Y2 + 'px,' + X1 + 'px ' + Y2 + 'px,' +
+      X1 + 'px ' + Y1 + 'px,' + x1 + 'px ' + y1 + 'px,' + x1 + 'px ' + y2 + 'px,' + x2 + 'px ' + y2 + 'px,' +
+      x2 + 'px ' + y1 + 'px,' + x1 + 'px ' + y1 + 'px)');
+    // The 3px outline, just outside the window: top and bottom span the
+    // corners, the sides fit between them. Each edge is a 1px square scaled.
+    var rects = [[x1 - 3, y1 - 3, w + 6, 3], [x1 - 3, y2, w + 6, 3], [x1 - 3, y1, 3, h], [x2, y1, 3, h]];
+    edges.forEach(function (e, i) {
+      var r = rects[i];
+      set(e, 'visibility', 'visible');
+      set(e, 'transform', 'translate(' + r[0] + 'px,' + r[1] + 'px) scale(' + r[2] + ',' + r[3] + ')');
+    });
+  }
+  function hideOutline() { edges.forEach(function (e) { set(e, 'visibility', 'hidden'); }); }
 
-      if (t < 0.54) {
-        // Phase 1 — each frame opens as a slit
-        var f1w = ph(t, 0.08, 0.14, eRise), f2w = ph(t, 0.14, 0.20, eRise);
-        var f3w = ph(t, 0.20, 0.26, eRise), f4w = ph(t, 0.26, 0.32, eRise);
-        var f1h = ph(t, 0.08, 0.32, eSlit), f2h = ph(t, 0.14, 0.38, eSlit);
-        var f3h = ph(t, 0.20, 0.44, eSlit), f4h = ph(t, 0.26, 0.46, eSlit);
-        if (t >= 0.08) setF(lsF1, EF1_W * f1w, Math.max(3, EF1_H * f1h), cyOff);
-        if (t >= 0.14) setF(lsF2, EF2_W * f2w, Math.max(3, EF2_H * f2h), cyOff);
-        if (t >= 0.20) setF(lsF3, EF3_W * f3w, Math.max(3, EF3_H * f3h), cyOff);
-        if (t >= 0.26) setF(lsF4, EF4_W * f4w, Math.max(3, EF4_H * f4h), cyOff);
+  // ── States ─────────────────────────────────────────────────────────────────
+  // Everything hidden and at rest: the overlay may be shown as a plain cover
+  function reset() {
+    last = new Map(); // other scripts may have written these styles directly
+    ls.classList.remove('ls-banded');
+    bands.forEach(function (b) { set(b, 'visibility', 'hidden'); });
+    frames.forEach(function (f) {
+      set(f, 'visibility', 'hidden'); set(f, 'opacity', ''); set(f, 'width', '0'); set(f, 'height', '0');
+    });
+    imgs.forEach(function (el) { set(el, 'transform', ''); });
+    set(pane, 'clipPath', '');
+    hideOutline();
+  }
 
-        if (t >= 0.30) {
-          if (!holeDispatched) { holeDispatched = true; dispatch('mulvium:ls-hole'); }
-          var hw = ph(t, 0.30, 0.36, eRise);
-          var hh = ph(t, 0.30, 0.48, eRise);
-          var holeW = EWIN_W * hw;
-          var holeH = Math.max(3, EWIN_H * hh);
-          setHole(vw, vh, holeW, holeH, holeCY);
-          setBorder(holeW, holeH, cyOff);
-        } else {
-          loadingScreen.style.clipPath = '';
-          lsBorder.style.width = '0'; lsBorder.style.height = '0';
+  function hide() {
+    reset();
+    set(ls, 'opacity', '0');
+    ls.style.display = 'none';
+    ls.style.pointerEvents = 'none';
+    ls.setAttribute('aria-hidden', 'true');
+  }
+
+  function frame(t) {
+    if (!sized) measure();
+    set(ls, 'opacity', String(1 - ph(t, 0.78, 1.0)));
+
+    // The group rises from below and locks into the centre
+    var holeCY = vh / 2 + vh * 0.5 * (1 - ph(t, 0.06, 0.28, eRise));
+    var cy = holeCY - vh / 2;
+
+    if (t < 0.54) {
+      // Phase 1: each frame opens as a slit. Until then it waits centred and
+      // near-invisible, wide enough to show its whole picture at 1.3x, so
+      // the picture is rastered before it is ever seen.
+      for (var i = 0; i < 4; i++) {
+        set(frames[i], 'visibility', 'visible');
+        if (t < OPEN[i]) {
+          set(frames[i], 'opacity', HIDDEN);
+          var ww = Math.min(box[i][0] * 1.3, vw), wh = Math.min(box[i][1] * 1.3, vh);
+          setFrame(i, ww, wh, 0);
+          setPicture(i, t, ww, wh, 1);
+          continue;
         }
-      } else if (t < 0.67) {
-        // Phase 2 — converge into the window
-        var cp = ph(t, 0.54, 0.67, eConverge);
-        setF(lsF1, EF1_W + (EWIN_W - EF1_W) * cp, EF1_H + (EWIN_H - EF1_H) * cp, 0);
-        setF(lsF2, EF2_W + (EWIN_W - EF2_W) * cp, EF2_H + (EWIN_H - EF2_H) * cp, 0);
-        setF(lsF3, EF3_W + (EWIN_W - EF3_W) * cp, EF3_H + (EWIN_H - EF3_H) * cp, 0);
-        setF(lsF4, EF4_W + (EWIN_W - EF4_W) * cp, EF4_H + (EWIN_H - EF4_H) * cp, 0);
-        setHole(vw, vh, EWIN_W, EWIN_H, vh / 2);
-        setBorder(EWIN_W, EWIN_H);
-      } else {
-        // Phase 3 — window expands to the full viewport
-        var ep = ph(t, 0.67, 0.90, eExpand);
-        var hw2 = EWIN_W + (vw - EWIN_W) * ep;
-        var hh2 = EWIN_H + (vh - EWIN_H) * ep;
-        var fw = Math.min(hw2, WIN_W), fh = Math.min(hh2, WIN_H);
-        setF(lsF1, fw, fh, 0); setF(lsF2, fw, fh, 0);
-        setF(lsF3, fw, fh, 0); setF(lsF4, fw, fh, 0);
-        setHole(vw, vh, hw2, hh2, vh / 2);
-        setBorder(hw2, hh2);
+        var w = Math.max(1, EF[i][0] * ph(t, OPEN[i], OPEN[i] + 0.06, eRise));
+        var h = Math.max(3, EF[i][1] * ph(t, OPEN[i], H_END[i], eSlit));
+        set(frames[i], 'opacity', '1');
+        setFrame(i, w, h, cy);
+        setPicture(i, t, w, h);
       }
-
-      if (t < 1) requestAnimationFrame(tick);
-      else finish();
-    } catch (err) {
-      console.error('ls.js animation error:', err);
-      finish();
+      // The window opens as a slit too
+      if (t >= 0.30) {
+        var hw = EWIN[0] * ph(t, 0.30, 0.36, eRise);
+        var hh = Math.max(3, EWIN[1] * ph(t, 0.30, 0.48, eRise));
+        setWindow(hw, hh, holeCY, true);
+      } else {
+        closedWindow();
+      }
+    } else if (t < 0.67) {
+      // Phase 2: a quartic pull — barely moves, then slams into the window
+      var cp = ph(t, 0.54, 0.67, eConverge);
+      for (var j = 0; j < 4; j++) {
+        var fw = EF[j][0] + (EWIN[0] - EF[j][0]) * cp;
+        var fh = EF[j][1] + (EWIN[1] - EF[j][1]) * cp;
+        set(frames[j], 'opacity', '1');
+        setFrame(j, fw, fh, 0);
+        setPicture(j, t, fw, fh);
+      }
+      setWindow(EWIN[0], EWIN[1], vh / 2, true);
+    } else {
+      // Phase 3: the window expands to the viewport while the overlay fades.
+      // The frames have all closed into the window's edge, so they rest.
+      frames.forEach(function (f) { set(f, 'visibility', 'hidden'); });
+      var ep = ph(t, 0.67, 0.90, eExpand);
+      setWindow(EWIN[0] + (vw - EWIN[0]) * ep, EWIN[1] + (vh - EWIN[1]) * ep, vh / 2, false);
     }
   }
-  requestAnimationFrame(tick);
+
+  // ── Playback ───────────────────────────────────────────────────────────────
+  // The overlay, opaque, laid out at t=0: the frames wait near-invisible, so
+  // their pictures (and the paper bands) raster before the clock starts
+  function prepare() {
+    reset();
+    ls.classList.add('ls-banded');
+    set(ls, 'opacity', '1');
+    ls.style.display = 'block';
+    ls.style.pointerEvents = 'all';
+    ls.setAttribute('aria-hidden', 'false');
+    frame(0);
+  }
+
+  // opts: duration (ms), onFrame(t), onHole(), onDone()
+  var raf = null, waiting = null;
+  function play(opts) {
+    opts = opts || {};
+    var dur = opts.duration || 4000;
+    if (raf) cancelAnimationFrame(raf);
+    if (waiting) clearTimeout(waiting);
+    raf = waiting = null;
+
+    prepare();
+    document.documentElement.classList.remove('ls-instant-cover');
+
+    var t0 = null, holed = false, token = {};
+    function tick(ts) {
+      try {
+        if (t0 === null) t0 = ts;
+        var t = Math.min(1, (ts - t0) / dur);
+        frame(t);
+        if (!holed && t >= 0.30) { holed = true; if (opts.onHole) opts.onHole(); }
+        if (opts.onFrame) opts.onFrame(t);
+        if (t < 1) { raf = requestAnimationFrame(tick); return; }
+      } catch (err) {
+        console.error('Loading screen animation error:', err);
+        if (!holed && opts.onHole) opts.onHole();
+      }
+      raf = null;
+      hide();
+      if (opts.onDone) opts.onDone();
+    }
+
+    // The pictures were preloaded by the page. Once decoded (or after a
+    // short wait, if the network is slow), lay out t=0 again at their natural
+    // sizes, let three frames go by while the rasters get under way, and
+    // start the clock. Nothing moves until the first frame opens 0.32 s in.
+    var started = false;
+    function start() {
+      if (started || play.token !== token) return;
+      started = true;
+      if (waiting) clearTimeout(waiting);
+      waiting = null;
+      frame(0);
+      var n = 0;
+      raf = requestAnimationFrame(function settle(ts) {
+        raf = ++n < 3 ? requestAnimationFrame(settle) : requestAnimationFrame(tick);
+      });
+    }
+    play.token = token;
+    decoded.then(start);
+    waiting = setTimeout(start, 900);
+    return {
+      cancel: function () {
+        if (play.token === token) play.token = null;
+        if (raf) cancelAnimationFrame(raf);
+        if (waiting) clearTimeout(waiting);
+        raf = waiting = null;
+      },
+    };
+  }
+
+  window.mulviumLS = { play: play, reset: reset };
+  if (manual) {
+    // The page will play it once its scene has loaded; while the overlay
+    // already covers the page, get the rasters done now
+    if (document.documentElement.classList.contains('ls-instant-cover')) prepare();
+    return;
+  }
+
+  // ── Sub-pages: play on load ────────────────────────────────────────────────
+  function dispatch(name) {
+    // Flag for late listeners — module scripts (the scene) may finish loading
+    // after this event has already fired
+    window['__' + name.replace(':', '_')] = true;
+    document.dispatchEvent(new CustomEvent(name));
+  }
+  function done() {
+    document.body.classList.add('ls-done');
+    dispatch('mulvium:ls-done');
+  }
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.remove('ls-instant-cover');
+    hide();
+    dispatch('mulvium:ls-hole');
+    done();
+    return;
+  }
+  play({ duration: 4000, onHole: function () { dispatch('mulvium:ls-hole'); }, onDone: done });
 })();
