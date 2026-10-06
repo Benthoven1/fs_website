@@ -60,19 +60,6 @@
       </li>
     </ul>
   </nav>
-  <!-- Reading progress: a hairline across the top of the page -->
-  <div class="fs-progress" aria-hidden="true"><span></span></div>
-
-  <!-- Section index: follows the reader down the page (wide screens) -->
-  <nav class="fs-rail" aria-label="On this page">
-    <span class="fs-rail-track" aria-hidden="true"><span class="fs-rail-fill"></span></span>
-    <a href="#overview" data-spy="overview"><span class="fs-rail-num">00</span><span class="fs-rail-label">Overview</span></a>
-    <a href="#what" data-spy="what"><span class="fs-rail-num">01</span><span class="fs-rail-label">What it is</span></a>
-    <a href="#how" data-spy="how"><span class="fs-rail-num">02</span><span class="fs-rail-label">How it works</span></a>
-    <a href="#projects" data-spy="projects"><span class="fs-rail-num">03</span><span class="fs-rail-label">Four projects</span></a>
-    <a href="#begin" data-spy="begin"><span class="fs-rail-num">04</span><span class="fs-rail-label">Begin</span></a>
-  </nav>
-
   <!-- The blue planet from the home page opens: it was a bowl all along,
        and four projects settle into it (js/bowl.js) -->
   <section class="fs-stage" aria-label="The Fiscal Sponsorship planet opens into a bowl that holds four projects">
@@ -96,16 +83,11 @@
         is an organization of its own.
       </p>
 
-      <ol class="fs-index fs-reveal" aria-label="On this page">
-        <li><a href="#what"><span class="fs-index-num">01</span><span class="fs-index-text">What is a fiscal sponsor?</span><span class="fs-index-arrow" aria-hidden="true">&rarr;</span></a></li>
-        <li><a href="#how"><span class="fs-index-num">02</span><span class="fs-index-text">How does it work?</span><span class="fs-index-arrow" aria-hidden="true">&rarr;</span></a></li>
-        <li><a href="#projects"><span class="fs-index-num">03</span><span class="fs-index-text">Four projects, four domains</span><span class="fs-index-arrow" aria-hidden="true">&rarr;</span></a></li>
-      </ol>
     </header>
 
     <!-- ── What is a fiscal sponsor? ─────────────────────────────────────── -->
     <section class="fs-section" id="what" aria-labelledby="fs-what">
-      <p class="fs-kicker fs-reveal">01</p>
+      <p class="fs-kicker fs-reveal">1</p>
       <h2 class="fs-h2 fs-words" id="fs-what">What is a fiscal sponsor?</h2>
       <p class="fs-definition fs-reveal">
         An <mark>established nonprofit</mark> that takes a new charitable project
@@ -126,69 +108,81 @@
         </p>
       </div>
 
-      <div class="fs-compare fs-reveal" data-view="with">
-        <div class="fs-switch" role="group" aria-label="Compare">
-          <span class="fs-switch-thumb" aria-hidden="true"></span>
-          <button type="button" data-view="own" aria-pressed="false">On your own</button>
-          <button type="button" data-view="with" aria-pressed="true">With Mulvium</button>
-        </div>
-        <dl class="fs-compare-list">
-          <div class="fs-compare-row" style="--i:0">
-            <dt>Getting started</dt>
-            <dd><span class="fs-own">Incorporate, seat a board, write bylaws, apply to the IRS, and wait months for an answer.</span><span class="fs-with">Begin as soon as the sponsorship agreement is signed.</span></dd>
-          </div>
-          <div class="fs-compare-row" style="--i:1">
-            <dt>Gifts</dt>
-            <dd><span class="fs-own">Not tax-deductible until the IRS recognizes you.</span><span class="fs-with">Tax-deductible from the first dollar, with receipts from Mulvium.</span></dd>
-          </div>
-          <div class="fs-compare-row" style="--i:2">
-            <dt>Grants</dt>
-            <dd><span class="fs-own">Many foundations fund only recognized charities.</span><span class="fs-with">Mulvium applies for and receives grants as the legal grantee.</span></dd>
-          </div>
-          <div class="fs-compare-row" style="--i:3">
-            <dt>Contracts &amp; insurance</dt>
-            <dd><span class="fs-own">Yours to negotiate, sign, and carry.</span><span class="fs-with">You negotiate and recommend; Mulvium signs and insures.</span></dd>
-          </div>
-          <div class="fs-compare-row" style="--i:4">
-            <dt>Books &amp; compliance</dt>
-            <dd><span class="fs-own">Accounting, filings, and audits are yours alone.</span><span class="fs-with">Mulvium keeps the books and keeps the project within the rules for charities.</span></dd>
-          </div>
-          <div class="fs-compare-row" style="--i:5">
-            <dt>Building the institution</dt>
-            <dd><span class="fs-own">Work it out as you go.</span><span class="fs-with">An engagement lead and FSOS help plan the programs, budget, and funding.</span></dd>
-          </div>
-        </dl>
+      <div class="fs-compare fs-reveal">
+        <table class="fs-table">
+          <caption class="hidden-text">Starting a charitable project on your own, and with Mulvium as its fiscal sponsor</caption>
+          <thead>
+            <tr>
+              <td></td>
+              <th scope="col" class="fs-own">On your own</th>
+              <th scope="col" class="fs-with">With Mulvium</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="--i:0">
+              <th scope="row">Getting started</th>
+              <td class="fs-own">Incorporate, seat a board, write bylaws, apply to the IRS, and wait months for an answer.</td>
+              <td class="fs-with">Begin as soon as the sponsorship agreement is signed.</td>
+            </tr>
+            <tr style="--i:1">
+              <th scope="row">Gifts</th>
+              <td class="fs-own">Not tax-deductible until the IRS recognizes you.</td>
+              <td class="fs-with">Tax-deductible from the first dollar, with receipts from Mulvium.</td>
+            </tr>
+            <tr style="--i:2">
+              <th scope="row">Grants</th>
+              <td class="fs-own">Many foundations fund only recognized charities.</td>
+              <td class="fs-with">Mulvium applies for and receives grants as the legal grantee.</td>
+            </tr>
+            <tr style="--i:3">
+              <th scope="row">Contracts &amp; insurance</th>
+              <td class="fs-own">Yours to negotiate, sign, and carry.</td>
+              <td class="fs-with">You negotiate and recommend; Mulvium signs and insures.</td>
+            </tr>
+            <tr style="--i:4">
+              <th scope="row">Books &amp; compliance</th>
+              <td class="fs-own">Accounting, filings, and audits are yours alone.</td>
+              <td class="fs-with">Mulvium keeps the books and keeps the project within the rules for charities.</td>
+            </tr>
+            <tr style="--i:5">
+              <th scope="row">Building the institution</th>
+              <td class="fs-own">Work it out as you go.</td>
+              <td class="fs-with">An engagement lead and FSOS help plan the programs, budget, and funding.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
     <!-- ── How does it work? ─────────────────────────────────────────────── -->
     <section class="fs-section" id="how" aria-labelledby="fs-how">
-      <p class="fs-kicker fs-reveal">02</p>
+      <p class="fs-kicker fs-reveal">2</p>
       <h2 class="fs-h2 fs-words" id="fs-how">How does it work?</h2>
       <p class="fs-intro fs-reveal">Money and responsibility move along one simple path.</p>
 
-      <div class="fs-flow fs-reveal">
-        <div class="fs-node">
+      <ol class="fs-flow fs-reveal" aria-label="How money and paperwork move">
+        <li class="fs-party">
           <strong>Donors</strong>
           <span>Individuals, businesses, foundations, and public grants</span>
-        </div>
-        <div class="fs-link">
-          <span class="fs-link-fwd">Tax-deductible gifts and grants</span>
-          <span class="fs-link-back">Receipts and reports</span>
-        </div>
-        <div class="fs-node fs-node-main">
+        </li>
+        <li class="fs-hop">
+          <span class="fs-lane fs-money"><span class="fs-arrow" aria-hidden="true"></span><span class="fs-lane-label"><span class="hidden-text">From donors to Mulvium: </span>Tax-deductible gifts and grants</span></span>
+          <span class="fs-lane fs-paper"><span class="fs-arrow" aria-hidden="true"></span><span class="fs-lane-label"><span class="hidden-text">From Mulvium to donors: </span>Receipts and reports</span></span>
+        </li>
+        <li class="fs-party fs-party-main">
           <strong>Mulvium</strong>
           <span>Holds the project&rsquo;s own fund, signs its contracts, and keeps it compliant</span>
-        </div>
-        <div class="fs-link">
-          <span class="fs-link-fwd">Funds for approved expenses</span>
-          <span class="fs-link-back">Plans and requests</span>
-        </div>
-        <div class="fs-node">
+        </li>
+        <li class="fs-hop">
+          <span class="fs-lane fs-money"><span class="fs-arrow" aria-hidden="true"></span><span class="fs-lane-label"><span class="hidden-text">From Mulvium to your project: </span>Funds for approved expenses</span></span>
+          <span class="fs-lane fs-paper"><span class="fs-arrow" aria-hidden="true"></span><span class="fs-lane-label"><span class="hidden-text">From your project to Mulvium: </span>Plans and requests</span></span>
+        </li>
+        <li class="fs-party">
           <strong>Your project</strong>
           <span>Its founders lead the work</span>
-        </div>
-      </div>
+        </li>
+      </ol>
+      <p class="fs-key fs-reveal" aria-hidden="true"><span class="fs-key-money">Money</span><span class="fs-key-paper">Paperwork</span></p>
 
       <ol class="fs-steps">
         <li class="fs-reveal">
@@ -232,26 +226,20 @@
 
     <!-- ── Four projects ─────────────────────────────────────────────────── -->
     <section class="fs-section" id="projects" aria-labelledby="fs-projects">
-      <p class="fs-kicker fs-reveal">03</p>
+      <p class="fs-kicker fs-reveal">3</p>
       <h2 class="fs-h2 fs-words" id="fs-projects">Four projects, four domains</h2>
       <p class="fs-intro fs-reveal">
         Hypothetical one-time projects, each one person&rsquo;s idea, and each the
         kind of idea fiscal sponsorship exists for.
       </p>
 
-      <div class="fs-tabs fs-reveal">
-        <div class="fs-tablist" role="tablist" aria-label="Projects">
-          <button role="tab" id="tab-art" aria-controls="project-art" aria-selected="true" class="fs-tab fs-art"><span class="fs-tab-num">01</span><span class="fs-tab-domain">Artistic</span></button>
-          <button role="tab" id="tab-sci" aria-controls="project-sci" aria-selected="false" tabindex="-1" class="fs-tab fs-sci"><span class="fs-tab-num">02</span><span class="fs-tab-domain">Scientific</span></button>
-          <button role="tab" id="tab-edu" aria-controls="project-edu" aria-selected="false" tabindex="-1" class="fs-tab fs-edu"><span class="fs-tab-num">03</span><span class="fs-tab-domain">Educational</span></button>
-          <button role="tab" id="tab-cha" aria-controls="project-cha" aria-selected="false" tabindex="-1" class="fs-tab fs-cha"><span class="fs-tab-num">04</span><span class="fs-tab-domain">Charitable</span></button>
-          <span class="fs-tab-ink" aria-hidden="true"></span>
-        </div>
-
-        <div class="fs-panels">
-          <article class="fs-panel fs-art is-on" role="tabpanel" id="project-art" aria-labelledby="tab-art" tabindex="0">
+      <div class="fs-projects">
+        <article class="fs-project fs-art" id="project-art" aria-labelledby="project-art-title">
+          <figure class="fs-plate fs-reveal"><img src="../../Musical.png" alt="The opening page of the score of Beethoven&rsquo;s Third Symphony, the Eroica" loading="lazy" decoding="async" /></figure>
+          <div class="fs-project-body fs-reveal">
+            <p class="fs-domain"><span class="fs-domain-num">1</span>Artistic</p>
             <p class="fs-panel-meta">2027 &middot; A multi-day festival</p>
-            <h3 class="fs-panel-title">The Beethoven Bicentennial Festival</h3>
+            <h3 class="fs-panel-title" id="project-art-title">The Beethoven Bicentennial Festival</h3>
             <p class="fs-idea">
               2027 is the 200th anniversary of Beethoven&rsquo;s death in 1827.
               This is the perfect opportunity to celebrate his universal,
@@ -270,11 +258,14 @@
               <li>Insure the concerts and keep the festival within the rules for charities.</li>
               <li>Draft the festival&rsquo;s plan with FSOS: programming, budget, funders, and timeline.</li>
             </ol>
-          </article>
-
-          <article class="fs-panel fs-sci" role="tabpanel" id="project-sci" aria-labelledby="tab-sci" tabindex="0">
+          </div>
+        </article>
+        <article class="fs-project fs-sci" id="project-sci" aria-labelledby="project-sci-title">
+          <figure class="fs-plate fs-reveal"><img src="../../Horticulture.png" alt="A hillside of wild purple flowers at sunset, below a distant peak" loading="lazy" decoding="async" /></figure>
+          <div class="fs-project-body fs-reveal">
+            <p class="fs-domain"><span class="fs-domain-num">2</span>Scientific</p>
             <p class="fs-panel-meta">One year &middot; A research sprint</p>
-            <h3 class="fs-panel-title">The Rare Disease Sprint</h3>
+            <h3 class="fs-panel-title" id="project-sci-title">The Rare Disease Sprint</h3>
             <p class="fs-idea">
               A child is diagnosed with a disease so rare that no laboratory in
               the world is studying it. There is no research to join, so the
@@ -295,11 +286,14 @@
               <li>Make sure every patient and family gives informed consent, and that their data stay private.</li>
               <li>Draft the sprint&rsquo;s plan with FSOS: milestones, budget, partner labs, and funders.</li>
             </ol>
-          </article>
-
-          <article class="fs-panel fs-edu" role="tabpanel" id="project-edu" aria-labelledby="tab-edu" tabindex="0">
+          </div>
+        </article>
+        <article class="fs-project fs-edu" id="project-edu" aria-labelledby="project-edu-title">
+          <figure class="fs-plate fs-reveal"><img src="../../image%20(13).png" alt="A castle on a wooded hill above a river winding through its valley" loading="lazy" decoding="async" /></figure>
+          <div class="fs-project-body fs-reveal">
+            <p class="fs-domain"><span class="fs-domain-num">3</span>Educational</p>
             <p class="fs-panel-meta">2 August 2027 &middot; A festival of the sun</p>
-            <h3 class="fs-panel-title">Six Minutes at Luxor</h3>
+            <h3 class="fs-panel-title" id="project-edu-title">Six Minutes at Luxor</h3>
             <p class="fs-idea">
               On 2 August 2027, the Moon will cover the Sun for more than six
               minutes over Luxor&mdash;the longest total eclipse on land this
@@ -321,11 +315,14 @@
               <li>Hold the rights to the films and release them free, with subtitles and lesson guides for teachers.</li>
               <li>Plan the festival with FSOS: programme, budget, partners, and timeline.</li>
             </ol>
-          </article>
-
-          <article class="fs-panel fs-cha" role="tabpanel" id="project-cha" aria-labelledby="tab-cha" tabindex="0">
+          </div>
+        </article>
+        <article class="fs-project fs-cha" id="project-cha" aria-labelledby="project-cha-title">
+          <figure class="fs-plate fs-reveal"><img src="../../Pictorial.png" alt="Raphael&rsquo;s fresco The School of Athens: teachers and students gathered beneath great arches" loading="lazy" decoding="async" /></figure>
+          <div class="fs-project-body fs-reveal">
+            <p class="fs-domain"><span class="fs-domain-num">4</span>Charitable</p>
             <p class="fs-panel-meta">One day &middot; A school&rsquo;s farewell</p>
-            <h3 class="fs-panel-title">The Last Lectures</h3>
+            <h3 class="fs-panel-title" id="project-cha-title">The Last Lectures</h3>
             <p class="fs-idea">
               After a century, a town&rsquo;s old high school will close its
               doors. The vision is a final day of school unlike any other: every
@@ -346,14 +343,8 @@
               <li>Award the scholarships fairly, under a written selection policy.</li>
               <li>Plan the day with FSOS: the schedule, outreach to alumni, and the budget.</li>
             </ol>
-          </article>
-        </div>
-
-        <div class="fs-pager">
-          <button type="button" class="fs-pager-btn" data-step="-1"><span aria-hidden="true">&larr;</span> Previous</button>
-          <span class="fs-pager-count" aria-live="polite"><span class="fs-pager-now">1</span> / 4</span>
-          <button type="button" class="fs-pager-btn" data-step="1">Next <span aria-hidden="true">&rarr;</span></button>
-        </div>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -370,14 +361,13 @@
   <footer id="site-footer" class="site-footer">
     <div class="sf-inner">
       <div class="sf-brand">
-        <a class="sf-wordmark" href="../../index.html">Mulvium</a>
+        <a class="sf-wordmark" aria-label="Mulvium home" href="../../index.html">Mulvium</a>
       </div>
       <nav class="sf-cols" aria-label="Site">
         <div class="sf-col">
           <p class="sf-head">Mulvium</p>
           <ul>
             <li><a href="../../index.html#orbit">Dear Leader</a></li>
-            <li><a href="../../index.html">The Cosmos</a></li>
           </ul>
         </div>
         <div class="sf-col">

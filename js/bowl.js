@@ -1,8 +1,10 @@
 // bowl.js — the Fiscal Sponsorship page's opening scene.
 // The blue planet from the home page arrives on its orbit ring, then its
-// upper half lifts away: the planet was a bowl all along. Four ivory
-// projects drop into it one after another, and it holds them. The contents
-// are ivory so that nothing inside reads as another planet.
+// upper half lifts away: the planet was a bowl all along. Four projects drop
+// into it one after another, and it holds them. Each project sphere wears
+// one of the loading screen's four pictures, glazed like painted porcelain,
+// so nothing inside reads as another planet; the page's four projects
+// below use the same pictures.
 import * as THREE from "three";
 
 const canvas = document.getElementById("fs-canvas");
@@ -14,7 +16,10 @@ const motionOK = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const PAPER       = 0xeceae5;
 const PASTEL_FS   = 0xb8cae0; // Fiscal Sponsorship's planet on the home page
 const CREAM_DEEP  = 0xcdbe96;
-const IVORY       = [0xf4ede0, 0xe9ddc6, 0xf0e5d0, 0xe4d6ba];
+const IVORY       = [0xf4ede0, 0xe9ddc6, 0xf0e5d0, 0xe4d6ba];   // until the pictures load
+// The loading screen's pictures, in its order (css/style.css, #ls-f1 to #ls-f4).
+// The same files, so they are already in the browser's cache.
+const PICTURES    = ["../../Musical.png", "../../Pictorial.png", "../../image (13).png", "../../Horticulture.png"];
 
 // ── Renderer, scene, lights (same sculptural lighting as the home cosmos) ────
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
@@ -112,14 +117,43 @@ lidDepth.onBeforeCompile = (sh) => {
 lid.customDepthMaterial = lidDepth;
 lidPivot.add(lid);
 
-// ── The projects: four ivory spheres that settle against the bowl's floor ────
+// A picture wrapped round a sphere, softened toward porcelain: a little less
+// saturated and contrasty, under a thin ivory glaze
+function glazeOnto(material, src) {
+  const img = new Image();
+  img.decoding = "async";
+  img.src = new URL(src, document.baseURI).href;
+  img.decode().then(() => {
+    const c = document.createElement("canvas");
+    c.width = 1024; c.height = 512;
+    const ctx = c.getContext("2d");
+    ctx.filter = "saturate(0.8) contrast(0.92) brightness(1.04)";
+    ctx.drawImage(img, 0, 0, c.width, c.height);
+    ctx.filter = "none";
+    ctx.fillStyle = "rgba(244, 237, 224, 0.2)";
+    ctx.fillRect(0, 0, c.width, c.height);
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+    material.map = tex;
+    material.color.setHex(0xffffff);
+    material.needsUpdate = true;
+  }).catch(() => {}); // keeps its ivory if the picture can't load
+}
+
+// ── The projects: four painted spheres that settle against the bowl's floor ──
 const SR = 0.5, SD = 0.7, DROP = 5;
 const projects = IVORY.map((color, i) => {
   const ang = i * Math.PI / 2 + 0.5;
   const x = Math.cos(ang) * SD, z = Math.sin(ang) * SD;
   const r = R - T - SR;
   const rest = new THREE.Vector3(x, R - Math.sqrt(Math.max(0, r * r - x * x - z * z)), z);
-  const mesh = new THREE.Mesh(new THREE.SphereGeometry(SR, 64, 64), porcelain(color));
+  const mesh = new THREE.Mesh(new THREE.SphereGeometry(SR, 64, 64), porcelain(color, 0.36));
+  // Each sphere turns the middle of its picture toward the viewer, tipped up
+  // to meet the camera's downward gaze (kept so as the bowl turns; see animate)
+  mesh.rotation.order = "YXZ";
+  mesh.rotation.x = -0.74;
+  glazeOnto(mesh.material, PICTURES[i]);
   mesh.castShadow = true;
   mesh.receiveShadow = true;
   mesh.visible = false;
@@ -240,6 +274,7 @@ function animate() {
 
   // Once it holds them, the bowl turns slowly
   if (motionOK) vessel.rotation.y += dt * 0.1;
+  projects.forEach((p, i) => { p.mesh.rotation.y = -Math.PI / 2 - vessel.rotation.y + (i - 1.5) * 0.18; });
 
   if (cue) cue.style.opacity = String(isFinite(openT) ? smooth(HELD_AT - 0.2, HELD_AT + 0.6, since) : 0);
 

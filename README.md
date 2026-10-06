@@ -25,13 +25,16 @@ of the for-profit arm), Oak, and a fourth to be announced.
   its letters so the words fit together like puzzle pieces. After changing the vocabulary,
   open `tools/pack-fsos-cloud.html` over HTTP and save its output over this file.
 - `js/bowl.js` — the Fiscal Sponsorship page's opening: the blue planet's upper half
-  lifts away, revealing a bowl, and four ivory projects settle into it.
-- `js/fiscal.js` — the Fiscal Sponsorship page's text motion and navigation: section
-  index, reading progress, comparison switch, timeline, and project tabs.
+  lifts away, revealing a bowl, and four project spheres settle into it, each painted
+  with one of the loading screen's four pictures.
+- `js/fiscal.js` — the Fiscal Sponsorship page's text motion: rising headings, a turning
+  word, reveals, the steps' timeline, and the plain-terms rows that open.
 - `js/oak.js` — the Oak page: the planet becomes an acorn among leaves, and
   scrolling pulls back to the whole oak on its esplanade.
 - `pages/offerings/` — Fiscal Sponsorship (what a fiscal sponsor is, how it works, and
-  four hypothetical projects), FSOS, and Oak.
+  four hypothetical projects), FSOS, and Oak. Each of the four projects is shown with one
+  of the loading screen's pictures (`Musical.png`, `Horticulture.png`, `image (13).png`,
+  `Pictorial.png`), the same files the loading screen uses: replace a file and both follow.
 - `pages/about/` — People, Careers, Contact Us.
 - `images/` — stills of each company's animation, shown in the Offerings menu.
 
