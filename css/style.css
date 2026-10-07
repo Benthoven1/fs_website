@@ -1486,8 +1486,11 @@ body.night-mode .dropdown a:hover { color: rgba(255, 255, 255, 0.92); }
   color: rgba(27, 22, 19, 0.62);
 }
 
-/* About Us: the same panel and type, without the stills */
-.dropdown.offer-grid--text { width: min(640px, calc(100vw - 32px)); }
+/* About Us: the same panel and type, without the stills, four across */
+.dropdown.offer-grid--text {
+  width: min(780px, calc(100vw - 32px));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
 .offer-grid--text .offer-card { padding: 16px 16px 18px; }
 .offer-grid--text .offer-name { margin-top: 0; }
 
@@ -1855,6 +1858,9 @@ body.night-mode ::selection { background: rgba(124, 92, 232, 0.45); color: #ffff
 body.ls-done .ar {
   animation: pageRise 0.9s var(--ease) both;
   animation-delay: var(--ard, 0s);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ar { opacity: 1; }
 }
 
 /* The "Scroll" cue on the Oak and FSOS pages: js/scroll-cue.js shows it

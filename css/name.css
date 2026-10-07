@@ -1,0 +1,354 @@
+/* name.css — On the Name (pages/about/name.html): the roads converging on
+   the name, an essay set like a monograph, two drawn plates, and notes.
+   Loaded after css/style.css by that page alone. */
+
+html:has(body.name-page) { scroll-behavior: smooth; }
+
+.name-page {
+  --road: rgba(27, 22, 19, 0.34);
+  --road-bed: rgba(27, 22, 19, 0.045);
+  --trivium: rgba(240, 213, 187, 0.62);    /* the star's peach */
+  --quadrivium: rgba(184, 202, 224, 0.62); /* Fiscal Sponsorship's blue */
+  --stream: #8ea9c4;
+}
+
+/* ---------- Hero: many roads meeting at the name ---------- */
+.nm-hero {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 560px;
+  overflow: hidden;
+}
+
+.nm-roads {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Paper gathers behind the name, so the roads run into it */
+.nm-halo {
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: min(92vw, 860px);
+  height: min(70vh, 520px);
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse 50% 50% at 50% 50%,
+    rgba(236, 234, 229, 1) 0%,
+    rgba(236, 234, 229, 0.9) 42%,
+    rgba(236, 234, 229, 0) 72%);
+  pointer-events: none;
+}
+
+.nm-title-block {
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: min(92vw, 640px);
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.nm-eyebrow {
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  color: var(--clay-deep);
+  margin: 0 0 10px;
+}
+
+.nm-title {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 300;
+  font-size: clamp(64px, 12vw, 150px);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* A dictionary entry under the name */
+.nm-entry {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(17px, 1.9vw, 21px);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 18px auto 0;
+  max-width: 30em;
+}
+.nm-entry .nm-hw { font-weight: 600; color: var(--ink); letter-spacing: 0.02em; }
+.nm-entry .nm-pos { font-style: italic; margin-right: 0.3em; }
+.nm-entry i, .nm-essay i { font-style: italic; }
+
+.nm-cue {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(18px, 4vh, 36px);
+  margin: 0;
+  text-align: center;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s var(--ease);
+}
+.nm-cue.is-shown { opacity: 1; transition-duration: 1.2s; } /* js/scroll-cue.js */
+
+/* ---------- The essay ---------- */
+.nm-essay {
+  position: relative;
+  padding: clamp(40px, 8vh, 90px) clamp(22px, 5vw, 48px) clamp(80px, 12vh, 140px);
+}
+.nm-essay > * {
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.nm-sec { margin-bottom: clamp(56px, 9vh, 96px); }
+
+.nm-essay h2 {
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: 0.22em;
+  text-align: center;
+  color: var(--ink);
+  margin: 0 0 30px;
+}
+.nm-essay h2 .nm-num {
+  display: block;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 300;
+  font-size: 34px;
+  letter-spacing: 0.06em;
+  color: var(--clay-deep);
+  margin-bottom: 4px;
+}
+
+.nm-essay p {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 19px;
+  line-height: 1.85;
+  color: var(--ink-soft);
+  margin: 0 0 18px;
+  text-indent: 1.6em;
+  hyphens: auto;
+}
+.nm-essay h2 + p,
+.nm-essay figure + p { text-indent: 0; }
+.nm-essay em { font-style: italic; color: var(--ink); }
+
+/* The essay opens with a drop capital */
+.nm-sec:first-child h2 + p::first-letter {
+  float: left;
+  font-weight: 300;
+  font-size: 4.6em;
+  line-height: 0.82;
+  padding: 0.06em 0.08em 0 0;
+  color: var(--clay-deep);
+}
+
+/* A quotation set off from the text */
+.nm-essay blockquote {
+  margin: 26px 0 26px 1.6em;
+  padding-left: 18px;
+  border-left: 1px solid var(--clay);
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 20px;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.nm-essay blockquote p { margin: 0; text-indent: 0; font-size: inherit; color: inherit; }
+.nm-essay blockquote cite { display: block; margin-top: 6px; font-style: normal; font-size: 15px; letter-spacing: 0.04em; color: var(--ink-soft); }
+
+/* Note references */
+.nm-ref { font-size: 0.62em; line-height: 0; vertical-align: super; margin-left: 1px; }
+.nm-ref a { color: var(--clay-deep); text-decoration: none; padding: 0 1px; }
+.nm-ref a:hover, .nm-ref a:focus-visible { text-decoration: underline; }
+
+/* ---------- Plates ---------- */
+.nm-fig { margin: 44px auto 46px; text-align: center; }
+.nm-fig svg { display: block; width: 100%; height: auto; overflow: visible; }
+.nm-fig figcaption {
+  max-width: 34em;
+  margin: 16px auto 0;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.nm-fig figcaption .nm-fig-no {
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  margin-right: 0.35em;
+}
+
+/* Fig. 1: three crossroads side by side, wider than the column, stacked on
+   phones */
+.nm-fig--roads {
+  position: relative;
+  left: 50%;
+  width: min(980px, calc(100vw - 40px));
+  transform: translateX(-50%);
+}
+.nm-fig--roads .nm-trio {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(10px, 3vw, 40px);
+}
+.nm-fig--rose { max-width: 600px; }
+
+/* Lines and type inside the plates */
+.nm-plate-road { fill: none; stroke: var(--road); stroke-width: 1.3; stroke-linecap: round; }
+.nm-plate-bed { fill: none; stroke: var(--road-bed); stroke-width: 9; stroke-linecap: round; }
+.nm-label {
+  font-family: "Cinzel", serif;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  fill: var(--ink-soft);
+}
+/* A road's name, with a margin of paper where it crosses a line */
+.nm-label--road {
+  font-size: 12.5px;
+  paint-order: stroke;
+  stroke: var(--paper);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+.nm-plate-name {
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: 0.24em;
+  fill: var(--ink);
+}
+.nm-plate-gloss {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 14px;
+  fill: var(--ink-soft);
+}
+.nm-node { fill: var(--ink); }
+.nm-node--mulvium { fill: #f0d5bb; stroke: var(--clay); stroke-width: 1.2; }
+
+.nm-arch--trivium { fill: var(--trivium); }
+.nm-arch--quadrivium { fill: var(--quadrivium); }
+.nm-arch-edge { fill: none; stroke: rgba(27, 22, 19, 0.28); stroke-width: 1; }
+.nm-icon { fill: none; stroke: var(--ink-soft); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.nm-icon-fill { fill: var(--ink-soft); stroke: none; }
+.nm-stream { fill: none; stroke: var(--stream); stroke-width: 1.6; stroke-linecap: round; }
+.nm-medallion { fill: rgba(240, 237, 231, 0.95); stroke: rgba(27, 22, 19, 0.3); stroke-width: 1; }
+.nm-medallion-inner { fill: none; stroke: rgba(184, 119, 88, 0.55); stroke-width: 0.8; }
+
+/* Drawing in: strokes trace themselves (pathLength="1"), the rest fades */
+.nm-draw { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset var(--dur, 1.4s) var(--ease) var(--d, 0s); }
+.nm-fade { opacity: 0; transition: opacity 0.9s var(--ease) var(--d, 0s); }
+.is-in .nm-draw { stroke-dashoffset: 0; }
+.is-in .nm-fade { opacity: 1; }
+
+/* The plate keys */
+.nm-key {
+  display: flex;
+  justify-content: center;
+  gap: 26px;
+  margin: 14px 0 0;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+.nm-key span::before {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+  vertical-align: -2px;
+  border-radius: 3px;
+  border: 1px solid rgba(27, 22, 19, 0.25);
+}
+.nm-key .nm-key-t::before { background: var(--trivium); }
+.nm-key .nm-key-q::before { background: var(--quadrivium); }
+
+/* ---------- What is built at the crossroads ---------- */
+.nm-offers {
+  list-style: none;
+  margin: 26px 0 30px;
+  padding: 0;
+  border-top: 1px solid var(--hairline);
+}
+.nm-offers li {
+  display: grid;
+  grid-template-columns: 18px 11em 1fr;
+  gap: 0 14px;
+  align-items: baseline;
+  padding: 16px 2px;
+  border-bottom: 1px solid var(--hairline);
+}
+.nm-offers .nm-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1px solid rgba(27, 22, 19, 0.22);
+  align-self: start;
+  margin-top: 9px;
+}
+.nm-offers .nm-offer-name {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 21px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.nm-offers a.nm-offer-name { transition: color 0.3s var(--ease); }
+.nm-offers a.nm-offer-name:hover,
+.nm-offers a.nm-offer-name:focus-visible { color: var(--clay-deep); }
+.nm-offers .nm-offer-line {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 17.5px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+/* ---------- Notes ---------- */
+.nm-notes-list {
+  margin: 0;
+  padding: 0 0 0 1.4em;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+.nm-notes-list li { margin: 0 0 12px; padding-left: 4px; scroll-margin-top: calc(var(--nav-h) + 40px); }
+.nm-notes-list li::marker { color: var(--clay-deep); font-size: 0.9em; }
+.nm-notes-list li:target { background: rgba(240, 213, 187, 0.35); border-radius: 4px; }
+.nm-back { margin-left: 6px; color: var(--clay-deep); text-decoration: none; }
+.nm-back:hover { text-decoration: underline; }
+.nm-ref a { scroll-margin-top: calc(var(--nav-h) + 80px); }
+
+/* ---------- Narrow screens ---------- */
+@media (max-width: 700px) {
+  .nm-essay p { font-size: 17.5px; line-height: 1.8; }
+  .nm-fig--roads { width: min(340px, calc(100vw - 40px)); }
+  .nm-fig--roads .nm-trio { grid-template-columns: 1fr; gap: 22px; }
+  .nm-offers li { grid-template-columns: 16px 1fr; }
+  .nm-offers .nm-offer-line { grid-column: 2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:has(body.name-page) { scroll-behavior: auto; }
+  .nm-draw { stroke-dashoffset: 0; transition: none; }
+  .nm-fade { opacity: 1; transition: none; }
+}
