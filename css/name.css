@@ -1,5 +1,5 @@
-/* name.css — On the Name (pages/about/name.html): the roads converging on
-   the name, an essay set like a monograph, two drawn plates, and notes.
+/* name.css — On the Name (pages/about/name.html): a title page, an essay
+   set like a monograph, a drawn figure and the historical plates, and notes.
    Loaded after css/style.css by that page alone. */
 
 html:has(body.name-page) { scroll-behavior: smooth; }
@@ -7,41 +7,15 @@ html:has(body.name-page) { scroll-behavior: smooth; }
 .name-page {
   --road: rgba(27, 22, 19, 0.34);
   --road-bed: rgba(27, 22, 19, 0.045);
-  --trivium: rgba(240, 213, 187, 0.62);    /* the star's peach */
-  --quadrivium: rgba(184, 202, 224, 0.62); /* Fiscal Sponsorship's blue */
-  --stream: #8ea9c4;
 }
 
-/* ---------- Hero: many roads meeting at the name ---------- */
+/* ---------- Title page: the name and its dictionary entry ---------- */
 .nm-hero {
   position: relative;
   height: 100vh;
   height: 100svh;
   min-height: 560px;
   overflow: hidden;
-}
-
-.nm-roads {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* Paper gathers behind the name, so the roads run into it */
-.nm-halo {
-  position: absolute;
-  left: 50%;
-  top: 47%;
-  width: min(92vw, 860px);
-  height: min(70vh, 520px);
-  transform: translate(-50%, -50%);
-  background: radial-gradient(ellipse 50% 50% at 50% 50%,
-    rgba(236, 234, 229, 1) 0%,
-    rgba(236, 234, 229, 0.9) 42%,
-    rgba(236, 234, 229, 0) 72%);
-  pointer-events: none;
 }
 
 .nm-title-block {
@@ -85,6 +59,13 @@ html:has(body.name-page) { scroll-behavior: smooth; }
 .nm-entry .nm-hw { font-weight: 600; color: var(--ink); letter-spacing: 0.02em; }
 .nm-entry .nm-pos { font-style: italic; margin-right: 0.3em; }
 .nm-entry i, .nm-essay i { font-style: italic; }
+
+/* No scene waits behind the loading screen's window, so the name rises in
+   the window as it opens (js/ls.js adds body.ls-hole) */
+body.name-page.ls-hole .ar {
+  animation: pageRise 0.9s var(--ease) both;
+  animation-delay: var(--ard, 0s);
+}
 
 .nm-cue {
   position: absolute;
@@ -172,6 +153,17 @@ html:has(body.name-page) { scroll-behavior: smooth; }
 .nm-essay blockquote p { margin: 0; text-indent: 0; font-size: inherit; color: inherit; }
 .nm-essay blockquote cite { display: block; margin-top: 6px; font-style: normal; font-size: 15px; letter-spacing: 0.04em; color: var(--ink-soft); }
 
+/* Links in the running text */
+.nm-link {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: rgba(184, 119, 88, 0.55);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: color 0.3s var(--ease), text-decoration-color 0.3s var(--ease);
+}
+.nm-link:hover, .nm-link:focus-visible { color: var(--clay-deep); text-decoration-color: currentColor; }
+
 /* Note references */
 .nm-ref { font-size: 0.62em; line-height: 0; vertical-align: super; margin-left: 1px; }
 .nm-ref a { color: var(--clay-deep); text-decoration: none; padding: 0 1px; }
@@ -209,9 +201,28 @@ html:has(body.name-page) { scroll-behavior: smooth; }
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(10px, 3vw, 40px);
 }
-.nm-fig--rose { max-width: 600px; }
 
-/* Lines and type inside the plates */
+/* Figs. 2 and 3, the historical plates. The Hortus copy is printed on the
+   page (its white paper takes the page's tone); Reisch's woodcut is a leaf
+   of its own book, laid on the page. Each rises in as it comes into view. */
+.nm-fig--plate { max-width: 600px; }
+.nm-fig--leaf { max-width: 480px; }
+.nm-plate-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 1.2s var(--ease), transform 1.2s var(--ease);
+}
+.nm-fig--leaf .nm-plate-img {
+  mix-blend-mode: normal;
+  box-shadow: 0 1px 2px rgba(27, 22, 19, 0.10), 0 16px 36px rgba(27, 22, 19, 0.12);
+}
+.nm-fig.is-in .nm-plate-img { opacity: 1; transform: none; }
+
+/* Lines and type inside the drawn figure */
 .nm-plate-road { fill: none; stroke: var(--road); stroke-width: 1.3; stroke-linecap: round; }
 .nm-plate-bed { fill: none; stroke: var(--road-bed); stroke-width: 9; stroke-linecap: round; }
 .nm-label {
@@ -244,83 +255,11 @@ html:has(body.name-page) { scroll-behavior: smooth; }
 .nm-node { fill: var(--ink); }
 .nm-node--mulvium { fill: #f0d5bb; stroke: var(--clay); stroke-width: 1.2; }
 
-.nm-arch--trivium { fill: var(--trivium); }
-.nm-arch--quadrivium { fill: var(--quadrivium); }
-.nm-arch-edge { fill: none; stroke: rgba(27, 22, 19, 0.28); stroke-width: 1; }
-.nm-icon { fill: none; stroke: var(--ink-soft); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-.nm-icon-fill { fill: var(--ink-soft); stroke: none; }
-.nm-stream { fill: none; stroke: var(--stream); stroke-width: 1.6; stroke-linecap: round; }
-.nm-medallion { fill: rgba(240, 237, 231, 0.95); stroke: rgba(27, 22, 19, 0.3); stroke-width: 1; }
-.nm-medallion-inner { fill: none; stroke: rgba(184, 119, 88, 0.55); stroke-width: 0.8; }
-
 /* Drawing in: strokes trace themselves (pathLength="1"), the rest fades */
 .nm-draw { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset var(--dur, 1.4s) var(--ease) var(--d, 0s); }
 .nm-fade { opacity: 0; transition: opacity 0.9s var(--ease) var(--d, 0s); }
 .is-in .nm-draw { stroke-dashoffset: 0; }
 .is-in .nm-fade { opacity: 1; }
-
-/* The plate keys */
-.nm-key {
-  display: flex;
-  justify-content: center;
-  gap: 26px;
-  margin: 14px 0 0;
-  font-family: "Cormorant Garamond", serif;
-  font-style: italic;
-  font-size: 15px;
-  color: var(--ink-soft);
-}
-.nm-key span::before {
-  content: "";
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  margin-right: 8px;
-  vertical-align: -2px;
-  border-radius: 3px;
-  border: 1px solid rgba(27, 22, 19, 0.25);
-}
-.nm-key .nm-key-t::before { background: var(--trivium); }
-.nm-key .nm-key-q::before { background: var(--quadrivium); }
-
-/* ---------- What is built at the crossroads ---------- */
-.nm-offers {
-  list-style: none;
-  margin: 26px 0 30px;
-  padding: 0;
-  border-top: 1px solid var(--hairline);
-}
-.nm-offers li {
-  display: grid;
-  grid-template-columns: 18px 11em 1fr;
-  gap: 0 14px;
-  align-items: baseline;
-  padding: 16px 2px;
-  border-bottom: 1px solid var(--hairline);
-}
-.nm-offers .nm-dot {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  border: 1px solid rgba(27, 22, 19, 0.22);
-  align-self: start;
-  margin-top: 9px;
-}
-.nm-offers .nm-offer-name {
-  font-family: "Cormorant Garamond", serif;
-  font-size: 21px;
-  color: var(--ink);
-  text-decoration: none;
-}
-.nm-offers a.nm-offer-name { transition: color 0.3s var(--ease); }
-.nm-offers a.nm-offer-name:hover,
-.nm-offers a.nm-offer-name:focus-visible { color: var(--clay-deep); }
-.nm-offers .nm-offer-line {
-  font-family: "Cormorant Garamond", serif;
-  font-size: 17.5px;
-  line-height: 1.6;
-  color: var(--ink-soft);
-}
 
 /* ---------- Notes ---------- */
 .nm-notes-list {
@@ -334,6 +273,14 @@ html:has(body.name-page) { scroll-behavior: smooth; }
 .nm-notes-list li { margin: 0 0 12px; padding-left: 4px; scroll-margin-top: calc(var(--nav-h) + 40px); }
 .nm-notes-list li::marker { color: var(--clay-deep); font-size: 0.9em; }
 .nm-notes-list li:target { background: rgba(240, 213, 187, 0.35); border-radius: 4px; }
+/* Picture credits, under the notes */
+.nm-essay .nm-credits {
+  margin: 22px 0 0;
+  font-size: 15px;
+  line-height: 1.65;
+  text-indent: 0;
+}
+.nm-credits-head { font-family: "Cormorant SC", serif; font-weight: 500; letter-spacing: 0.08em; color: var(--ink); margin-right: 0.3em; }
 .nm-back { margin-left: 6px; color: var(--clay-deep); text-decoration: none; }
 .nm-back:hover { text-decoration: underline; }
 .nm-ref a { scroll-margin-top: calc(var(--nav-h) + 80px); }
@@ -343,12 +290,11 @@ html:has(body.name-page) { scroll-behavior: smooth; }
   .nm-essay p { font-size: 17.5px; line-height: 1.8; }
   .nm-fig--roads { width: min(340px, calc(100vw - 40px)); }
   .nm-fig--roads .nm-trio { grid-template-columns: 1fr; gap: 22px; }
-  .nm-offers li { grid-template-columns: 16px 1fr; }
-  .nm-offers .nm-offer-line { grid-column: 2; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html:has(body.name-page) { scroll-behavior: auto; }
   .nm-draw { stroke-dashoffset: 0; transition: none; }
   .nm-fade { opacity: 1; transition: none; }
+  .nm-plate-img { opacity: 1; transform: none; transition: none; }
 }

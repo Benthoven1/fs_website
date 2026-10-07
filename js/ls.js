@@ -5,7 +5,10 @@
 // Sub-pages play it on load and dispatch:
 //   'mulvium:ls-hole' — the window first opens (start the scene's entrance)
 //   'mulvium:ls-done' — overlay gone (page content may fade in)
-// and add body.ls-done on completion for CSS-gated reveals.
+// and add body.ls-hole and body.ls-done for CSS-gated reveals.
+// A page with no scene to show through the window loads this with
+// data-no-scene: the window doesn't hold open for an entrance, and the
+// photographs close into it and it expands as soon as they have all opened.
 // The home page loads this with data-manual and plays it itself through
 // window.mulviumLS (js/main.js).
 //
@@ -21,7 +24,9 @@
 (function () {
   var ls = document.getElementById('loading-screen');
   if (!ls) return;
-  var manual = !!(document.currentScript && document.currentScript.hasAttribute('data-manual'));
+  var script = document.currentScript;
+  var manual = !!(script && script.hasAttribute('data-manual'));
+  var noScene = !!(script && script.hasAttribute('data-no-scene'));
 
   var frames = ['ls-f1', 'ls-f2', 'ls-f3', 'ls-f4'].map(function (id) { return document.getElementById(id); });
   var imgs = frames.map(function (f) { return f.querySelector('.ls-img'); });
@@ -69,6 +74,15 @@
   var H_END = [0.32, 0.38, 0.44, 0.46];
   var Z_END = [0.30, 0.32, 0.34, 0.38];
   var DRIFT = [[-7, 4, 14, -8], [6, -5, -12, 10], [5, 6, -10, -11], [-5, -7, 10, 14]];
+  // Then the window: it opens (its width by winW, its height by winH), the
+  // photographs converge into it from conv, it expands from exp to expEnd,
+  // and the overlay fades from fade until the end. With a scene, the window
+  // opens while the last photographs are still opening and holds, so the
+  // scene's entrance plays inside it; without one, it opens as the
+  // photographs converge, and everything after comes sooner.
+  var P = noScene
+    ? { win: 0.47, winW: 0.51, winH: 0.56, conv: 0.47, exp: 0.58, expEnd: 0.80, fade: 0.70, end: 0.90 }
+    : { win: 0.30, winW: 0.36, winH: 0.48, conv: 0.54, exp: 0.67, expEnd: 0.90, fade: 0.78, end: 1 };
   var HIDDEN = '0.001'; // a frame waiting to open: drawn, so rastered, but unseen
 
   function eRise(t)     { return 1 - Math.pow(1 - t, 3); }
@@ -210,13 +224,17 @@
 
   function frame(t) {
     if (!sized) measure();
-    set(ls, 'opacity', String(1 - ph(t, 0.78, 1.0)));
+    set(ls, 'opacity', String(1 - ph(t, P.fade, P.end)));
 
     // The group rises from below and locks into the centre
     var holeCY = vh / 2 + vh * 0.5 * (1 - ph(t, 0.06, 0.28, eRise));
     var cy = holeCY - vh / 2;
 
-    if (t < 0.54) {
+    // The window, while it opens
+    var winW = EWIN[0] * ph(t, P.win, P.winW, eRise);
+    var winH = Math.max(3, EWIN[1] * ph(t, P.win, P.winH, eRise));
+
+    if (t < P.conv) {
       // Phase 1: each frame opens as a slit. Until then it waits centred and
       // near-invisible, wide enough to show its whole picture at 1.3x, so
       // the picture is rastered before it is ever seen.
@@ -236,16 +254,12 @@
         setPicture(i, t, w, h);
       }
       // The window opens as a slit too
-      if (t >= 0.30) {
-        var hw = EWIN[0] * ph(t, 0.30, 0.36, eRise);
-        var hh = Math.max(3, EWIN[1] * ph(t, 0.30, 0.48, eRise));
-        setWindow(hw, hh, holeCY, true);
-      } else {
-        closedWindow();
-      }
-    } else if (t < 0.67) {
+      if (t >= P.win) setWindow(winW, winH, holeCY, true);
+      else closedWindow();
+    } else if (t < P.exp) {
       // Phase 2: a quartic pull — barely moves, then slams into the window
-      var cp = ph(t, 0.54, 0.67, eConverge);
+      // (which, without a scene, is still opening as the pull begins)
+      var cp = ph(t, P.conv, P.exp, eConverge);
       for (var j = 0; j < 4; j++) {
         var fw = EF[j][0] + (EWIN[0] - EF[j][0]) * cp;
         var fh = EF[j][1] + (EWIN[1] - EF[j][1]) * cp;
@@ -253,12 +267,13 @@
         setFrame(j, fw, fh, 0);
         setPicture(j, t, fw, fh);
       }
-      setWindow(EWIN[0], EWIN[1], vh / 2, true);
+      if (t >= P.win) setWindow(winW, winH, vh / 2, true);
+      else closedWindow();
     } else {
       // Phase 3: the window expands to the viewport while the overlay fades.
       // The frames have all closed into the window's edge, so they rest.
       frames.forEach(function (f) { set(f, 'visibility', 'hidden'); });
-      var ep = ph(t, 0.67, 0.90, eExpand);
+      var ep = ph(t, P.exp, P.expEnd, eExpand);
       setWindow(EWIN[0] + (vw - EWIN[0]) * ep, EWIN[1] + (vh - EWIN[1]) * ep, vh / 2, false);
     }
   }
@@ -292,11 +307,11 @@
     function tick(ts) {
       try {
         if (t0 === null) t0 = ts;
-        var t = Math.min(1, (ts - t0) / dur);
+        var t = Math.min(P.end, (ts - t0) / dur);
         frame(t);
-        if (!holed && t >= 0.30) { holed = true; if (opts.onHole) opts.onHole(); }
+        if (!holed && t >= P.win) { holed = true; if (opts.onHole) opts.onHole(); }
         if (opts.onFrame) opts.onFrame(t);
-        if (t < 1) { raf = requestAnimationFrame(tick); return; }
+        if (t < P.end) { raf = requestAnimationFrame(tick); return; }
       } catch (err) {
         console.error('Loading screen animation error:', err);
         if (!holed && opts.onHole) opts.onHole();
@@ -350,6 +365,10 @@
     window['__' + name.replace(':', '_')] = true;
     document.dispatchEvent(new CustomEvent(name));
   }
+  function hole() {
+    document.body.classList.add('ls-hole');
+    dispatch('mulvium:ls-hole');
+  }
   function done() {
     document.body.classList.add('ls-done');
     dispatch('mulvium:ls-done');
@@ -358,9 +377,9 @@
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.documentElement.classList.remove('ls-instant-cover');
     hide();
-    dispatch('mulvium:ls-hole');
+    hole();
     done();
     return;
   }
-  play({ duration: 4000, onHole: function () { dispatch('mulvium:ls-hole'); }, onDone: done });
+  play({ duration: 4000, onHole: hole, onDone: done });
 })();
