@@ -1,8 +1,10 @@
 # Mulvium
 
 Landing site for Mulvium, the parent organization of four companies: Fiscal
-Sponsorship (the nonprofit arm), FSOS (the institution-building operating system
-of the for-profit arm), Oak, and a fourth to be announced.
+Sponsorship (the nonprofit arm), MulviumSOS or M.SOS (the Mulvium Sponsorship
+Operating System of the for-profit arm, with two tools: Atelier, which builds an
+institution, and Grove, which handles its public relations), Oak, and a fourth to
+be announced.
 
 ## Structure
 
@@ -18,10 +20,12 @@ of the for-profit arm), Oak, and a fourth to be announced.
   `css/about.css` hold rules only one page needs, and only that page loads them.
 - `js/main.js` — Three.js module for the landing page: the cosmos and its framing
   per layout, the hero, the 2D night transition, and interactions.
-- `js/fsos.js` — the FSOS page: the green planet dissolves into a sphere made only of words
-  (the twelve agents and the work they handle) as a porcelain figure grows beneath it; the
+- `js/fsos.js` — the MulviumSOS page (`pages/offerings/msos.html`; MulviumSOS was called
+  FSOS, and its files and CSS classes keep the `fsos` prefix): the green planet dissolves
+  into a sphere made only of words (the twenty agents of Atelier and Grove and the work they
+  handle) as a porcelain figure grows beneath it; the
   sphere is its head. The page's text then scrolls up over the scene, as on the Oak page.
-- `js/fsos-words.js` — the FSOS vocabulary: each agent, its focus and its eight words.
+- `js/fsos-words.js` — the MulviumSOS vocabulary: each agent, its focus and its eight words.
 - `js/fsos-cloud.js` — generated: where each word sits on the sphere, packed by the shape of
   its letters so the words fit together like puzzle pieces. After changing the vocabulary,
   open `tools/pack-fsos-cloud.html` over HTTP and save its output over this file.
@@ -33,7 +37,9 @@ of the for-profit arm), Oak, and a fourth to be announced.
 - `js/oak.js` — the Oak page: the planet becomes an acorn among leaves, and
   scrolling pulls back to the whole oak on its esplanade.
 - `pages/offerings/` — Fiscal Sponsorship (what a fiscal sponsor is, how it works, and
-  four hypothetical projects), FSOS, and Oak. Each of the four projects is shown with one
+  four hypothetical projects), MulviumSOS (Atelier, Grove, and how the two run on one
+  operating system; `css/msos.css` draws its stack diagram), and Oak.
+  `fsos.html` forwards old links to `msos.html`. Each of the four projects is shown with one
   of the loading screen's pictures (`Musical.webp`, `Horticulture.webp`, `image-13.webp`,
   `Pictorial.webp`), the same files the loading screen uses: replace a file and both follow.
 - `pages/about/` — People, Careers, Contact Us.
@@ -58,6 +64,6 @@ Then visit `http://localhost:8000`.
 
 ## Source material
 
-Fiscal Sponsorship and FSOS content is adapted from the FiscalSponsor design
-documents (`docs/` in the FiscalSponsor repository); Oak content from the Oak
-repository.
+Fiscal Sponsorship and MulviumSOS content is adapted from the FiscalSponsor design
+documents (`docs/` in the FiscalSponsor repository, where MulviumSOS is still called
+FSOS); Oak content from the Oak repository.

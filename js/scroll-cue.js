@@ -1,4 +1,4 @@
-// scroll-cue.js — the "Scroll" cue at the foot of the Oak, FSOS and Fiscal
+// scroll-cue.js — the "Scroll" cue at the foot of the Oak, MulviumSOS and Fiscal
 // Sponsorship scenes. It shows once its scene says it is ready, fades away as
 // soon as the reader scrolls, and comes back a moment after they return to
 // the top. The fades themselves are CSS transitions on .is-shown.

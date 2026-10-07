@@ -1,7 +1,7 @@
-// fsos-words.js — the FSOS word sphere's vocabulary and type.
-// FSOS's two teams under one Chief of Staff: the twelve agents who build and
-// run the institution, and the eight of its public relations and
-// communications agency. For each agent, what it looks after and eight pieces
+// fsos-words.js — the MulviumSOS (M.SOS) word sphere's vocabulary and type.
+// M.SOS's two tools under one Chief of Staff: the twelve agents of Atelier,
+// who build and run the institution, and the eight of Grove, its public
+// relations and communications agency. For each agent, what it looks after and eight pieces
 // of everyday work it handles; plus the Chief of Staff's own words.
 // Shared by js/fsos.js and tools/pack-fsos-cloud.html: after changing a word
 // or a style, re-run the packer to regenerate js/fsos-cloud.js.
@@ -21,7 +21,7 @@ export const WORKFORCE = [
   { agent: "Evaluation", focus: "Impact", work: ["logic model", "survey", "outcomes", "metrics", "impact report", "baseline", "feedback", "lessons learned"] },
 ];
 
-// The agency: brand and storytelling, media relations, content, social, the
+// Grove: brand and storytelling, media relations, content, social, the
 // mailing list, awards, crisis, and reporting, directed by an account lead
 export const AGENCY = [
   { agent: "Brand", focus: "Storytelling", work: ["brand voice", "messaging house", "boilerplate", "founder story", "key messages", "style guide", "tagline", "visual identity"] },

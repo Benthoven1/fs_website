@@ -27,9 +27,9 @@ const STAR_RADIUS = 1.25;
 const ORBITS = [
   {
     id: "ifo",
-    name: "FSOS",
+    name: "MulviumSOS",
     status: "Explore",
-    href: "pages/offerings/fsos.html",
+    href: "pages/offerings/msos.html",
     radius: 3.0,  radius2D: 2.5,  ellipseX: 1,  ringTube: 0.045,
     planetSize: 0.42, planetColor: PASTEL_IFO,
     tilt: [0, 0, 0],
