@@ -1,6 +1,8 @@
 // fsos-words.js — the FSOS word sphere's vocabulary and type.
-// The twelve agents, what each looks after, and eight pieces of everyday work
-// each one handles, plus the Chief of Staff's own words that coordinate them.
+// FSOS's two teams under one Chief of Staff: the twelve agents who build and
+// run the institution, and the eight of its public relations and
+// communications agency. For each agent, what it looks after and eight pieces
+// of everyday work it handles; plus the Chief of Staff's own words.
 // Shared by js/fsos.js and tools/pack-fsos-cloud.html: after changing a word
 // or a style, re-run the packer to regenerate js/fsos-cloud.js.
 
@@ -14,31 +16,46 @@ export const WORKFORCE = [
   { agent: "Compliance", focus: "Filings", work: ["form 990", "audit trail", "insurance", "permits", "risk register", "state filings", "data privacy", "gift agreement"] },
   { agent: "Programs", focus: "Services", work: ["theory of change", "milestones", "partners", "site visits", "accessibility", "curriculum", "participants", "enrollment"] },
   { agent: "Volunteers", focus: "Recruiting", work: ["volunteer roster", "onboarding", "training", "shift schedule", "background checks", "volunteer hours", "recognition", "sign-up forms"] },
-  { agent: "Marketing", focus: "Outreach", work: ["audiences", "social posts", "website", "tickets", "campaign", "sponsors", "email list", "brand"] },
+  { agent: "Marketing", focus: "Outreach", work: ["audiences", "social posts", "website", "tickets", "campaign", "sponsors", "email list", "posters"] },
   { agent: "Operations", focus: "Logistics", work: ["schedule", "venues", "contracts", "timeline", "vendor quotes", "event plan", "run of show", "hiring"] },
   { agent: "Evaluation", focus: "Impact", work: ["logic model", "survey", "outcomes", "metrics", "impact report", "baseline", "feedback", "lessons learned"] },
 ];
 
+// The agency: brand and storytelling, media relations, content, social, the
+// mailing list, awards, crisis, and reporting, directed by an account lead
+export const AGENCY = [
+  { agent: "Brand", focus: "Storytelling", work: ["brand voice", "messaging house", "boilerplate", "founder story", "key messages", "style guide", "tagline", "visual identity"] },
+  { agent: "Media Relations", focus: "Reporters", work: ["pitch", "press kit", "embargo", "exclusive", "interview prep", "media directory", "coverage log", "spokesperson"] },
+  { agent: "Content", focus: "Editorial", work: ["editorial calendar", "feature story", "blog post", "case study", "photo captions", "video script", "copy desk", "fact check"] },
+  { agent: "Social", focus: "Channels", work: ["post calendar", "captions", "community replies", "event coverage", "carousel", "short video", "comment moderation", "platform insights"] },
+  { agent: "Mailing List", focus: "Subscribers", work: ["monthly letter", "welcome series", "segments", "subject lines", "event invitation", "replies", "unsubscribes", "sender reputation"] },
+  { agent: "Awards", focus: "Honors", work: ["awards directory", "nominations", "entry deadlines", "submission packet", "judging criteria", "shortlist", "acceptance remarks", "award history"] },
+  { agent: "Crisis", focus: "Response", work: ["holding statement", "rapid response", "Q&A sheet", "escalation path", "stakeholder update", "media monitoring", "correction request", "after-action review"] },
+  { agent: "Reporting", focus: "Results", work: ["monthly report", "coverage summary", "share of voice", "audience growth", "campaign recap", "goal tracking", "clips book", "client briefing"] },
+];
+
 export const CHIEF_OF_STAFF = {
   agent: "Chief of Staff",
-  focus: "Coordinates the twelve",
+  focus: "Coordinates both teams",
   work: ["blueprint", "mission", "decisions", "memory", "drafts", "approvals", "handoffs", "sign-off"],
 };
 
 // Each style: the font words are drawn in, and a word's height in radians
 // on the sphere at full size
 export const STYLES = {
-  agent: { font: '500 72px "Cormorant SC"', px: 72, h: 0.24 },
-  focus: { font: '500 64px "Cormorant Garamond"', px: 64, h: 0.17 },
-  work:  { font: '400 48px "DM Mono"', px: 48, h: 0.115 },
+  agent: { font: '500 72px "Cormorant SC"', px: 72, h: 0.21 },
+  focus: { font: '500 64px "Cormorant Garamond"', px: 64, h: 0.15 },
+  work:  { font: '400 48px "DM Mono"', px: 48, h: 0.1 },
 };
 
-// Every word, with its kind and the agent it belongs to, in a fixed order
+// Every word, with its kind and the agent it belongs to, in a fixed order:
+// the institution's twelve agents, then the agency's eight, then the rest
 export function vocabulary() {
+  const team = [...WORKFORCE, ...AGENCY];
   return [
-    ...WORKFORCE.map((a) => ({ text: a.agent, kind: "agent", owner: a.agent })),
-    ...WORKFORCE.map((a) => ({ text: a.focus, kind: "focus", owner: a.agent })),
-    ...WORKFORCE.flatMap((a) => a.work.map((text) => ({ text, kind: "work", owner: a.agent }))),
+    ...team.map((a) => ({ text: a.agent, kind: "agent", owner: a.agent })),
+    ...team.map((a) => ({ text: a.focus, kind: "focus", owner: a.agent })),
+    ...team.flatMap((a) => a.work.map((text) => ({ text, kind: "work", owner: a.agent }))),
     ...CHIEF_OF_STAFF.work.map((text) => ({ text, kind: "work", owner: CHIEF_OF_STAFF.agent })),
   ];
 }

@@ -77,7 +77,9 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
   color: var(--ink-soft);
   opacity: 0;
   pointer-events: none;
+  transition: opacity 0.45s var(--ease);
 }
+.fs-cue.is-shown { opacity: 1; transition-duration: 1.2s; } /* js/scroll-cue.js */
 
 /* ---- Overview ---- */
 .fs-hero {
@@ -315,29 +317,40 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
 .fs-money .fs-lane-label { color: var(--ink); }
 .fs-paper { color: var(--ink-soft); }
 
+/* Each line is a thin band: solid for money; for paperwork, a 1px band of
+   dashes laid from the arrowhead's end, so a full dash always meets the head
+   (and the dashes look the same in every browser, unlike a dashed border) */
 .fs-arrow {
+  --dash: 6px;
+  --gap: 4px;
   position: relative;
   display: block;
-  height: 0;
-  border-top: 1.5px solid;
-  transition: transform 0.9s var(--ease) 0.35s;
+  height: 1.5px;
+  background: currentColor;
+  transition: clip-path 0.9s var(--ease) 0.35s;
 }
-.fs-paper .fs-arrow { border-top-style: dashed; transition-delay: 0.75s; }
+.fs-paper .fs-arrow {
+  height: 1px;
+  margin: 0.25px 0;
+  background: repeating-linear-gradient(to right, currentColor 0 var(--dash), transparent var(--dash) calc(var(--dash) + var(--gap))) 2px 0;
+  transition-delay: 0.75s;
+}
 
 .fs-arrow::after {
   content: "";
   position: absolute;
-  top: -5.25px;
+  top: -3.75px;
   border-top: 4.5px solid transparent;
   border-bottom: 4.5px solid transparent;
 }
 .fs-money .fs-arrow::after { right: -2px; border-left: 8px solid currentColor; }
-.fs-paper .fs-arrow::after { left: -2px; border-right: 8px solid currentColor; }
+.fs-paper .fs-arrow::after { top: -4px; left: -2px; border-right: 8px solid currentColor; }
 
-/* Each arrow draws in, in its own direction, as the diagram arrives */
-.fs-money .fs-arrow { transform-origin: left center; }
-.fs-paper .fs-arrow { transform-origin: right center; }
-.fs-flow:not(.is-in) .fs-arrow { transform: scaleX(0); }
+/* Each arrow draws in, in its own direction, as the diagram arrives: a clip
+   uncovers it, so its dashes and head keep their shape while it grows */
+.fs-arrow { clip-path: inset(-8px -12px -8px -12px); }
+.fs-flow:not(.is-in) .fs-money .fs-arrow { clip-path: inset(-8px 100% -8px -12px); }
+.fs-flow:not(.is-in) .fs-paper .fs-arrow { clip-path: inset(-8px -12px -8px 100%); }
 
 .fs-key {
   display: flex;
@@ -356,7 +369,11 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
   vertical-align: middle;
   border-top: 1.5px solid var(--clay-deep);
 }
-.fs-key-paper::before { border-top-style: dashed !important; border-top-color: var(--ink-soft) !important; }
+.fs-key-paper::before {
+  height: 1px;
+  border-top: 0 !important;
+  background: repeating-linear-gradient(to right, var(--ink-soft) 0 6px, transparent 6px 10px);
+}
 
 /* ---- Five steps: the line fills as the reader moves through them ---- */
 .fs-steps {
@@ -680,15 +697,15 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
   .fs-lane { flex: 1 1 0; flex-direction: row; align-items: center; gap: 12px; max-width: 180px; }
   .fs-money { justify-content: flex-end; text-align: right; }
   .fs-paper { justify-content: flex-start; text-align: left; }
-  .fs-arrow { flex: none; width: 0; height: 68px; border-top: 0; border-left: 1.5px solid; }
-  .fs-paper .fs-arrow { border-left-style: dashed; }
+  .fs-arrow { flex: none; width: 1.5px; height: 68px; }
+  .fs-paper .fs-arrow { width: 1px; height: 68px; margin: 0 0.25px; background: repeating-linear-gradient(to bottom, currentColor 0 var(--dash), transparent var(--dash) calc(var(--dash) + var(--gap))) 0 2px; }
   .fs-money .fs-arrow::after,
-  .fs-paper .fs-arrow::after { top: auto; bottom: auto; left: -5.25px; right: auto; border: 0; border-left: 4.5px solid transparent; border-right: 4.5px solid transparent; }
+  .fs-paper .fs-arrow::after { top: auto; bottom: auto; left: -3.75px; right: auto; border: 0; border-left: 4.5px solid transparent; border-right: 4.5px solid transparent; }
   .fs-money .fs-arrow::after { bottom: -2px; border-top: 8px solid currentColor; }
-  .fs-paper .fs-arrow::after { top: -2px; border-bottom: 8px solid currentColor; }
-  .fs-money .fs-arrow { transform-origin: center top; }
-  .fs-paper .fs-arrow { transform-origin: center bottom; }
-  .fs-flow:not(.is-in) .fs-arrow { transform: scaleY(0); }
+  .fs-paper .fs-arrow::after { top: -2px; left: -4px; border-bottom: 8px solid currentColor; }
+  .fs-arrow { clip-path: inset(-12px -8px -12px -8px); }
+  .fs-flow:not(.is-in) .fs-money .fs-arrow { clip-path: inset(-12px -8px 100% -8px); }
+  .fs-flow:not(.is-in) .fs-paper .fs-arrow { clip-path: inset(100% -8px -12px -8px); }
   .fs-key { margin-bottom: 60px; }
 
   .fs-steps { grid-template-columns: 1fr; gap: 24px; }
@@ -721,7 +738,7 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
   html:has(body.fs-page) { scroll-behavior: auto; }
   .fs-reveal, .fs-w > span { transition: none; transform: none; }
   .fs-table tbody tr { opacity: 1; transition: none; }
-  .fs-arrow { transform: none !important; transition: none; }
+  .fs-arrow { clip-path: none !important; transition: none; }
   .fs-plate { clip-path: inset(0 0 0 0 round 22px); transition: none; }
   .fs-plate img { transform: none; transition: none; }
 }
