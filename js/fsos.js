@@ -1,9 +1,10 @@
-// fsos.js — the FSOS page scene: a mind made of the work.
-// FSOS's green planet arrives as the loading screen opens. Then it dissolves
+// fsos.js — the MulviumSOS (M.SOS) page scene (pages/offerings/msos.html):
+// a mind made of the work. M.SOS's green planet arrives as the loading screen opens. Then it dissolves
 // into words: the solid planet falls away and leaves a sphere made only of
 // words fitted into one another like puzzle pieces, the vocabulary of building
-// and running an institution and of making it known: the twelve agents of the
-// institution and the eight of its communications agency, what each looks
+// and running an institution and of making it known: the twelve agents of
+// Atelier, which builds the institution, and the eight of Grove, its
+// communications agency, what each looks
 // after, and the everyday work between them. As it does, a porcelain figure grows beneath it and the camera
 // draws back: the word sphere is the figure's head. The figure thinks, its head
 // turning a little as words light up. The page's text then scrolls up over
@@ -393,7 +394,7 @@ window.addEventListener("pointermove", (e) => {
 }, { passive: true });
 
 canvas.setAttribute("role", "img");
-canvas.setAttribute("aria-label", "A porcelain figure, thinking, whose head is a sphere of words: FSOS's twenty agents, twelve that run the institution and eight in its communications agency, and the work each one handles");
+canvas.setAttribute("aria-label", "A porcelain figure, thinking, whose head is a sphere of words: the twenty agents of MulviumSOS, twelve in Atelier, which builds the institution, and eight in Grove, which makes it known, and the work each one handles");
 
 // ── Prose rises in as it scrolls into view (same .rv classes as the home page)
 {
@@ -405,6 +406,14 @@ canvas.setAttribute("aria-label", "A porcelain figure, thinking, whose head is a
     });
   }, { threshold: 0.06, rootMargin: "0px 0px -6% 0px" });
   els.forEach((el) => io.observe(el));
+  // The operating-system stack builds from the hardware up (css/msos.css)
+  const stack = document.getElementById("os-stack");
+  if (stack) {
+    const so = new IntersectionObserver(([en]) => {
+      if (en.isIntersecting) { stack.classList.add("is-in"); so.disconnect(); }
+    }, { threshold: 0.2 });
+    so.observe(stack);
+  }
 }
 
 // ── Framing: close on the head, then the whole figure ────────────────────────
