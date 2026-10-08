@@ -42,12 +42,18 @@
     revealEls.forEach(function (el) { io.observe(el); });
   }
 
-  // ── Headline: the last word turns over every few seconds ───────────────────
+  // ── Headline: the last word turns over every few seconds, in a box as wide
+  // as the widest word, so no turn moves a word to another line ──────────
   var rotor = document.querySelector(".fs-rotor");
   if (rotor && !still) {
     var words = rotor.querySelectorAll(".fs-rotor-word");
-    function sizeRotor() { rotor.style.width = rotor.querySelector(".is-on").offsetWidth + "px"; }
+    function sizeRotor() {
+      var w = 0;
+      for (var i = 0; i < words.length; i++) w = Math.max(w, words[i].offsetWidth);
+      rotor.style.width = Math.ceil(w) + "px";
+    }
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeRotor); else sizeRotor();
+    window.addEventListener("resize", sizeRotor);
     var at = 0;
     setInterval(function () {
       if (document.hidden) return;
@@ -58,7 +64,6 @@
       out.classList.add("is-out");
       setTimeout(function () { out.classList.remove("is-out"); }, 700);
       next.classList.add("is-on");
-      rotor.style.width = next.offsetWidth + "px";
     }, 2600);
   }
 

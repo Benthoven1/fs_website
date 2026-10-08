@@ -1,4 +1,4 @@
-// waitlist-apps-script.gs — the waitlist's free back end (begin/), on a Google
+// waitlist-apps-script.gs — the waitlist's free back end (index.html#waitlist), on a Google
 // Sheet. For every signup, qualifier answer and application it:
 //  - appends a row on a tab named for its kind (rows from one visit share a sid);
 //  - on a signup, emails the person a welcome (once per address);
@@ -10,7 +10,7 @@
 //  1. Create a Google Sheet; Extensions → Apps Script; paste this file; save.
 //  2. Deploy → New deployment → Web app; execute as yourself; access: Anyone.
 //     Google asks you to allow the script to edit the Sheet and send email.
-//  3. Put the web app's URL in begin/config.js as `endpoint`, and commit.
+//  3. Put the web app's URL in js/waitlist-config.js as `endpoint`, and commit.
 // After changing this file: Deploy → Manage deployments → edit → New version.
 // A browser POSTs urlencoded fields (a "simple" request, so no preflight);
 // Apps Script's answer carries the CORS header the page needs to read it.
@@ -79,7 +79,7 @@ function welcome(to) {
       "Mulvium gives a public-benefit project a legal home and builds the organization beneath it. It isn't open yet. We'll write when it opens, and about nothing else.",
       "",
       "Ready to tell us about your project? The application takes about ten minutes:",
-      SITE + "/begin/apply.html",
+      SITE + "/apply/",
       "",
       "Benjamin T. Rossen",
       "Founder, Mulvium",

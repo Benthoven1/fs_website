@@ -1,7 +1,7 @@
-/* begin.css — the waitlist (begin/), its application, the privacy page and
-   the press kit. The waitlist loads it after css/style.css (it opens on the
-   home page's hero); the other pages load it alone. Its base rules match
-   style.css's, so either way the paper, ink, clay and Cormorant agree. */
+/* waitlist.css — the waitlist below the home page's hero (index.html, with
+   css/style.css), the application (apply/), the privacy page and the press
+   kit (brand/), which load it alone. Its base rules (body, links) apply only
+   to those standalone pages, so the home page's own stay as they are. */
 
 :root {
   --clay: #b87758;
@@ -22,7 +22,7 @@
 
 html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--bar-h) + 16px); }
 
-body {
+body:not([data-landing]) {
   margin: 0;
   background: var(--paper);
   color: var(--ink);
@@ -45,7 +45,10 @@ body:not([data-landing])::before {
   background-size: 200px 200px;
 }
 
-a { color: var(--clay-deep); text-underline-offset: 3px; }
+/* Links: on the standalone pages, and within the waitlist (:where keeps
+   these weaker than any class, such as .wl-button) */
+:where(body:not([data-landing])) a,
+:where(.wl-content, .wl-panel) a { color: var(--clay-deep); text-underline-offset: 3px; }
 a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible,
 textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
   outline: 2px solid var(--clay-deep);
@@ -192,13 +195,20 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
 .wl-call { font-size: 18px; }
 
 /* ── The waitlist's content, below the hero ──────────────────────────── */
+/* The waitlist follows the hero in the 3D view, and the letter follows it
+   in the orbit view: each page shows one of them */
+body[data-landing].mode-2d .wl-content { display: none; }
+body[data-landing]:not(.mode-2d) #letter-section { display: none; }
+
 /* The content rises over the hero's empty foot (js/main.js measures
-   --hero-cut), so the offer follows the mission at once; no scroll hint.
-   It stays transparent, so the paper and its grain run on unbroken. */
+   --hero-cut), so the offer follows the hint at once. It stays transparent,
+   so the paper and its grain run on unbroken. */
 .wl-content { position: relative; margin-top: calc(-1 * var(--hero-cut, 0px)); padding: 0 20px; }
 /* The rotating noun and the full stop after it never part at a line end */
 .wl-nw { white-space: nowrap; }
-body[data-landing] .cosmos-hint { display: none; }
+.wl-h1-2 { display: block; }
+/* "Click a sphere." just under the cosmos and its words (--hint-top) */
+body[data-landing] .cosmos-hint { top: var(--hint-top, auto); bottom: auto; }
 .wl-sec {
   position: relative;
   max-width: 620px;
@@ -209,7 +219,7 @@ body[data-landing] .cosmos-hint { display: none; }
 .wl-h1 {
   margin: 0 0 12px;
   font-weight: 600;
-  font-size: clamp(32px, 7.6vw, 54px);
+  font-size: clamp(28px, 7.4vw, 54px);
   line-height: 1.06;
   text-wrap: balance;
 }
@@ -259,10 +269,14 @@ body[data-landing] .cosmos-hint { display: none; }
 
 .wl-sec--close { padding-bottom: 24px; }
 .wl-h2--leap { font-style: italic; font-weight: 500; }
-.wl-sig { display: block; width: 210px; height: auto; margin: 4px 0 2px; }
+/* The signature's ink starts a fifth of the way into its image: pulled back
+   by that much, it lines up with the words above and below it */
+.wl-sig { display: block; width: 260px; max-width: none; height: auto; margin: 6px 0 4px calc(260px * -0.204); }
 .wl-sig-name { margin: 0 0 26px; font-size: 17px; color: var(--ink-soft); }
 
-/* ── The rotating noun in the headline (as on the fiscal sponsorship page) */
+/* ── The rotating noun in the headline (as on the fiscal sponsorship page).
+   Its box is as wide as its widest word (js/waitlist.js), so turning over
+   never moves a word to another line. */
 .wl-rotor {
   position: relative;
   display: inline-block;
@@ -274,7 +288,6 @@ body[data-landing] .cosmos-hint { display: none; }
   font-style: italic;
   font-weight: 500;
   color: var(--clay-deep);
-  transition: width 0.6s cubic-bezier(0.65, 0.05, 0.25, 1);
 }
 .wl-rotor-word {
   position: absolute;

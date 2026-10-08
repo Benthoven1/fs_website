@@ -73,12 +73,14 @@ const brandLink         = document.getElementById("brand-link");
 const body              = document.body;
 const expansionWrapper  = document.getElementById("expansion-wrapper");
 const canvasWrap        = document.getElementById("canvas-wrap");
-// The waitlist (begin/index.html, <body data-landing>) opens on this same
-// hero, then scrolls on to its own content: no cosmos-only lock, no footer
-// drawer, no orbit view, and no planet leads away from the page.
+// <body data-landing>: the 3D view does not hold the page. Scrolling down
+// from the hero goes on to the waitlist below it (#waitlist), and the site's
+// footer closes the page, instead of the footer drawer. The planets, the
+// sphere, the orbit view and the letter work as ever; zoom is off, so the
+// cosmos keeps clear of the content.
 const LANDING           = "landing" in body.dataset;
 const landingStart      = document.getElementById("wl-start");
-// begin/#waitlist (the home page's and the footers' links) opens on the form,
+// #waitlist (every footer's "Join the waitlist") opens on the form,
 // and stays there through the entrance until the visitor scrolls
 let pinStart            = LANDING && /^#(waitlist|join)$/.test(window.location.hash);
 if (pinStart) ["wheel", "touchstart", "keydown"].forEach((t) =>
@@ -529,20 +531,22 @@ function layoutHero() {
     // Statement under the wordmark; mission under the cosmos, clear of the hint
     const vgap = Math.max(12, Math.min(22, h * 0.02));
     root.style.setProperty("--st-top", `${heroBrand.getBoundingClientRect().bottom + vgap}px`);
-    const hintTop = cosmosHint.firstElementChild.getBoundingClientRect().top || h;
+    const hintTop = LANDING ? h : (cosmosHint.firstElementChild.getBoundingClientRect().top || h);
     const mh = heroMission.offsetHeight;
     root.style.setProperty("--mi-top", `${Math.max(0, Math.min(B + vgap, hintTop - mh - vgap))}px`);
   }
 
-  // The waitlist: its content rises to just below the cosmos and the words
-  // around it (style.css pulls .wl-content up by --hero-cut), so the offer
-  // follows the mission with no empty screen between
+  // The waitlist: "Click a sphere." sits just under the cosmos and the words
+  // around it, and the content rises to just below that (css/waitlist.css
+  // pulls .wl-content up by --hero-cut), with no empty screen between
   if (LANDING) {
     const top = canvasWrap.getBoundingClientRect().top;
     const foot = Math.max(B,
       heroMission.getBoundingClientRect().bottom - top,
-      heroStatement.getBoundingClientRect().bottom - top) + 28;
-    root.style.setProperty("--hero-cut", `${Math.max(0, Math.round(h - foot))}px`);
+      heroStatement.getBoundingClientRect().bottom - top) + 14;
+    root.style.setProperty("--hint-top", `${Math.round(foot)}px`);
+    const hintH = cosmosHint.offsetHeight || 22;
+    root.style.setProperty("--hero-cut", `${Math.max(0, Math.round(h - foot - hintH - 18))}px`);
     if (pinStart) toLandingStart(true);
   }
 }
@@ -627,13 +631,12 @@ canvas.addEventListener("pointerdown", (e) => {
   updateHover();
 });
 
-// The waitlist: the sphere leads down to the page's content
+// Down to the waitlist's offer
 function toLandingStart(instant) {
   if (landingStart) landingStart.scrollIntoView({ behavior: motionOK && !instant ? "smooth" : "auto" });
 }
 
 canvas.addEventListener("click", () => {
-  if (LANDING) { if (state.hoverStar) toLandingStart(); return; }
   if (footerOpen) { closeFooter(); return; }
   if (state.mode === "3d") {
     if (state.hoverPlanet) coverAndNavigate(state.hoverPlanet.def.href);
@@ -749,13 +752,13 @@ function showLoadingScreen(onReady, duration) {
 
 canvas.setAttribute("tabindex", "0");
 canvas.setAttribute("role", "application");
-canvas.setAttribute("aria-label", LANDING ? "Mulvium cosmos." : "Mulvium cosmos. Click or tap a planet to explore. Click or tap the center to enter.");
-if (!LANDING && (('ontouchstart' in window) || navigator.maxTouchPoints > 0)) {
+canvas.setAttribute("aria-label", "Mulvium cosmos. Click or tap a planet to explore. Click or tap the center to enter.");
+if (('ontouchstart' in window) || navigator.maxTouchPoints > 0) {
   const hint = document.querySelector("#cosmos-hint p");
   if (hint) hint.textContent = "Tap a sphere.";
 }
 canvas.addEventListener("keydown", (e) => {
-  if ((e.key === "Enter" || e.key === " ") && state.mode === "3d") { LANDING ? toLandingStart() : goTo2D(); e.preventDefault(); }
+  if ((e.key === "Enter" || e.key === " ") && state.mode === "3d") { goTo2D(); e.preventDefault(); }
 });
 
 // Zoom (3D mode only) answers zoom gestures, never plain scrolling: a trackpad
@@ -803,6 +806,10 @@ canvas.addEventListener("wheel", (e) => {
 function goTo2D() {
   if (state.mode !== "3d") return;
   closeFooter();
+  if (LANDING && window.scrollY > 0) { // the waitlist folds away beneath
+    window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+    resetCinematicScroll();
+  }
   targetFov = FOV_DEFAULT;
   state.mode = "transitioning";
   state.target = 1;
@@ -822,7 +829,7 @@ function goTo3D() {
   resetCinematicScroll();
   state.mode = "transitioning";
   state.target = 0;
-  body.classList.add("cosmos-only");
+  if (!LANDING) body.classList.add("cosmos-only");
   body.classList.remove("mode-2d", "expansion-active", "night-mode");
   document.querySelectorAll(".nav-item.open").forEach((el) => el.classList.remove("open"));
   state.expansionP1 = 0;
@@ -847,7 +854,7 @@ function snapTo3D() {
 
   window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
   resetCinematicScroll();
-  body.classList.add("cosmos-only");
+  if (!LANDING) body.classList.add("cosmos-only");
   body.classList.remove("mode-2d", "expansion-active", "night-mode");
   document.querySelectorAll(".nav-item.open").forEach((el) => el.classList.remove("open"));
   navbar.classList.remove("visible");
@@ -927,6 +934,29 @@ document.querySelectorAll("#home-link, [data-orbit-link]").forEach((el) => {
     navbar.classList.remove("menu-open");
     goToOrbit();
   });
+});
+
+// The founder's letter: the orbit view, scrolled on under cover to the
+// letter's start (index.html#letter, and the thought bubbles' links)
+function toLetter() {
+  jumpTo2D();
+  requestAnimationFrame(() => {
+    const letter = document.getElementById("letter-section");
+    if (letter) window.scrollTo(0, letter.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.1);
+  });
+}
+
+// Links within the page: to the letter (from the waitlist's bubbles) under
+// the loading screen; to the waitlist's form, from the 3D view by scrolling,
+// from the orbit view by returning to the 3D view first
+document.addEventListener("click", (ev) => {
+  const link = ev.target.closest('a[href="#letter"], a[href="#waitlist"]');
+  if (!link) return;
+  ev.preventDefault();
+  navbar.classList.remove("menu-open");
+  if (link.getAttribute("href") === "#letter") fadeInLoadingScreen(() => toLetter());
+  else if (state.mode === "3d") toLandingStart();
+  else fadeInLoadingScreen(() => { snapTo3D(); requestAnimationFrame(() => toLandingStart(true)); });
 });
 
 // Fade to white before navigating to any sub-page from index.html.
@@ -1041,14 +1071,6 @@ function updateHover() {
 
   raycaster.setFromCamera(pointer, camera);
   const hits = raycaster.intersectObjects([star, ...orbits.map((o) => o.planet)], true);
-
-  // The waitlist: only the sphere answers, and it shows no label
-  if (LANDING) {
-    state.hoverStar   = hits.length > 0 && hits[0].object.userData.type === "star";
-    state.hoverPlanet = null;
-    canvas.style.cursor = state.hoverStar ? "pointer" : "default";
-    return;
-  }
 
   if (hits.length > 0) {
     const obj = hits[0].object;
@@ -1252,8 +1274,6 @@ function animate() {
 
     applyGoo(heroBrand, brandVis);
     heroStatements.style.opacity = Math.pow(brandVis, 0.6).toFixed(3);
-    // Its link (the home page's way to the waitlist) answers only while seen
-    heroStatements.style.visibility = brandVis > 0.02 ? "" : "hidden";
     heroHalo.style.opacity       = String((1 - p1e) * introOn);
   }
 
@@ -1380,7 +1400,7 @@ if (finePointer) {
     let step = diff * 0.10;
     // Down through the letter's opening, no faster than a reading pace
     const cap = READ_SPEED * dt;
-    if (step > cap && readStops.length) step -= (step - cap) * readingHold(cur, readingLayout());
+    if (step > cap && readStops.length && body.classList.contains("expansion-active")) step -= (step - cap) * readingHold(cur, readingLayout());
     window.scrollBy(0, step);
     scrollRafId = requestAnimationFrame(cinematicStep);
   }
@@ -1393,7 +1413,7 @@ if (finePointer) {
     scrollTarget    = Math.max(0, Math.min(maxScroll, scrollTarget + e.deltaY * 1.6));
     // In the opening, a burst of wheel events can't bank distance to coast
     // through later: the page runs at most half a screen ahead of itself
-    if (e.deltaY > 0 && readStops.length) {
+    if (e.deltaY > 0 && readStops.length && body.classList.contains("expansion-active")) {
       const L = readingLayout(), hold = readingHold(window.scrollY, L);
       if (hold > 0) scrollTarget = Math.min(scrollTarget, window.scrollY + lerp(maxScroll, L.vh * 0.5, hold));
     }
@@ -1452,18 +1472,9 @@ animate();
   if (_entering) {
     sessionStorage.removeItem("ls-entering");
   }
-  const _orbit  = !LANDING && window.location.hash === "#orbit";
-  const _letter = !LANDING && window.location.hash === "#letter";
+  const _orbit  = window.location.hash === "#orbit";
+  const _letter = window.location.hash === "#letter";
   if (_orbit || _letter) history.replaceState(null, "", window.location.pathname);
-  // index.html#letter (the waitlist's thought bubbles) opens on the founder's
-  // letter: the orbit view, scrolled on under cover to the letter's start
-  const toLetter = () => {
-    jumpTo2D();
-    requestAnimationFrame(() => {
-      const letter = document.getElementById("letter-section");
-      if (letter) window.scrollTo(0, letter.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.1);
-    });
-  };
   showLoadingScreen(() => {
     if (_orbit) jumpTo2D();
     if (_letter) toLetter();
