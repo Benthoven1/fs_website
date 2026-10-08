@@ -1,6 +1,7 @@
 // begin.js — the waitlist (begin/index.html) and its application
 // (begin/apply.html): the signup forms, the four-question qualifier, the
-// application, and what each sends where (see config.js).
+// application, what each sends where (see config.js), and the reveal of the
+// waitlist's thought bubbles. The waitlist's hero is js/main.js's.
 //
 // What a visitor gives is kept in sessionStorage for the visit, so the
 // application can carry the email, the answers and how they found us
@@ -151,6 +152,21 @@
 
     // Returning within the visit: already on the list
     if (rec.email) done(blocks[0], true);
+
+    // The letter's thought bubbles rise in as they come into view
+    var bubbles = document.querySelectorAll(".wl-bubble");
+    if ("IntersectionObserver" in window) {
+      var seenBubble = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          en.target.classList.add("is-in");
+          seenBubble.unobserve(en.target);
+        });
+      }, { rootMargin: "0px 0px -12% 0px" });
+      bubbles.forEach(function (el) { seenBubble.observe(el); });
+    } else {
+      bubbles.forEach(function (el) { el.classList.add("is-in"); });
+    }
 
     // The header's Join appears once the hero form has scrolled away, and
     // hides again while the closing form is in view.
