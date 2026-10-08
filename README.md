@@ -57,6 +57,9 @@ be announced.
   free endpoint on a Google Sheet. Every answer sent carries the visit's
   `sid` and how the visitor arrived (`for`, `ref`, UTM tags).
 - `privacy/` — the privacy policy the waitlist links to.
+- `brand/` — the central sphere and the hero as images for profile icons,
+  posts and banners, rendered from the site itself; `brand/README.md` lists
+  each size and how to make them again.
 - `images/` — stills of each company's animation, shown in the Offerings menu.
 
 ## Images and speed
