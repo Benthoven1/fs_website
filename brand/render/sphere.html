@@ -1,0 +1,36 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<style>html,body{margin:0;background:transparent}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.161.0/build/three.module.min.js"}}</script>
+</head><body><canvas id="c"></canvas>
+<script type="module">
+// The landing page's central star (js/main.js:303-338), alone: same material,
+// lights, tone mapping and camera direction. ?bg=paper|none &fill=<share of frame>
+import * as THREE from "three";
+const p = new URLSearchParams(location.search);
+const size = +(p.get("size") || 1024), fill = +(p.get("fill") || 0.62), paper = p.get("bg") !== "none";
+const canvas = document.getElementById("c");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: !paper, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1);
+renderer.setSize(size, size, false);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.02;
+const scene = new THREE.Scene();
+if (paper) scene.background = new THREE.Color(0xeceae5); else renderer.setClearColor(0x000000, 0);
+scene.add(new THREE.AmbientLight(0xfff7e8, 0.35));
+scene.add(new THREE.HemisphereLight(0xffffff, 0xd9cfb0, 0.75));
+const key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(6, 10, 8); scene.add(key);
+const fillL = new THREE.DirectionalLight(0xfff1d8, 0.5); fillL.position.set(-8, 3, -4); scene.add(fillL);
+const rim = new THREE.DirectionalLight(0xf1e4bf, 0.55); rim.position.set(-2, -6, -8); scene.add(rim);
+const R = 1.25;
+scene.add(new THREE.Mesh(new THREE.SphereGeometry(R, 192, 192),
+  new THREE.MeshStandardMaterial({ color: 0xF0D5BB, roughness: 0.38, metalness: 0 })));
+// Camera on the landing's line of sight (0, 2.6, 14.5), at the distance that
+// makes the sphere fill `fill` of the frame
+const fov = 30, dir = new THREE.Vector3(0, 2.6, 14.5).normalize();
+const dist = R / Math.sin(Math.atan(fill * Math.tan(THREE.MathUtils.degToRad(fov / 2))));
+const cam = new THREE.PerspectiveCamera(fov, 1, 0.1, 100);
+cam.position.copy(dir.multiplyScalar(dist)); cam.lookAt(0, 0, 0);
+renderer.render(scene, cam);
+document.title = "ready";
+</script></body></html>
