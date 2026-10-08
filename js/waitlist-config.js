@@ -1,4 +1,4 @@
-// config.js — the waitlist's outside services, in one place. Every value is a
+// waitlist-config.js — the waitlist's outside services, in one place. Every value is a
 // stand-in until a service is chosen; the pages work without any of them.
 //
 //  endpoint  Where signups, the qualifier's answers and applications are sent:

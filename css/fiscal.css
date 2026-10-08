@@ -137,6 +137,7 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
 
 .fs-rotor-word.is-on { position: relative; opacity: 1; transform: none; }
 .fs-rotor-word.is-out { opacity: 0; transform: translateY(-105%); }
+.fs-nw { white-space: nowrap; }
 
 .fs-lede {
   font-weight: 500;

@@ -1,7 +1,7 @@
-// begin.js — the waitlist (begin/index.html) and its application
-// (begin/apply.html): the signup forms, the four-question qualifier, the
-// application, what each sends where (see config.js), and the reveal of the
-// waitlist's thought bubbles. The waitlist's hero is js/main.js's.
+// waitlist.js — the waitlist below the home page's hero (index.html) and its
+// application (apply/): the signup forms, the four-question qualifier, the
+// application, what each sends where (see waitlist-config.js), the headline's
+// turning noun, and the arrival of the thought bubbles. The hero is main.js's.
 //
 // What a visitor gives is kept in sessionStorage for the visit, so the
 // application can carry the email, the answers and how they found us
@@ -51,7 +51,7 @@
     return c;
   }
 
-  // ── Counting (Umami, cookieless; off until config.js names a site) ───────
+  // ── Counting (Umami, cookieless; off until waitlist-config.js names a site) ───────
   if (cfg.umami) {
     var s = document.createElement("script");
     s.defer = true;
@@ -95,7 +95,7 @@
 
   var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-  if (document.body.dataset.page === "begin") landing();
+  if (document.body.dataset.page === "waitlist") landing();
   if (document.body.dataset.page === "apply") application();
 
   // ── The landing page ─────────────────────────────────────────────────────
@@ -158,8 +158,14 @@
     var rotor = document.querySelector(".wl-rotor");
     if (rotor && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
       var words = rotor.querySelectorAll(".wl-rotor-word"), at = 0;
-      var size = function () { rotor.style.width = rotor.querySelector(".is-on").offsetWidth + "px"; };
+      // As wide as the widest word, so no turn moves a word to another line
+      var size = function () {
+        var w = 0;
+        words.forEach(function (el) { w = Math.max(w, el.offsetWidth); });
+        rotor.style.width = Math.ceil(w) + "px";
+      };
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(size); else size();
+      window.addEventListener("resize", size);
       setInterval(function () {
         if (document.hidden) return;
         var out = words[at];
@@ -169,7 +175,6 @@
         out.classList.add("is-out");
         setTimeout(function () { out.classList.remove("is-out"); }, 700);
         next.classList.add("is-on");
-        rotor.style.width = next.offsetWidth + "px";
       }, 2600);
     }
 
