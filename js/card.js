@@ -53,11 +53,14 @@ cardForm.addEventListener('submit', async e => {
       `Name: ${payload.name}\nEmail: ${payload.email}\nSubject: ${payload.interest || '—'}\n\n${payload.message || ''}`
     );
     window.location.href = `mailto:hello@mulvium.org?subject=${subject}&body=${body}`;
-    showSuccess();
+    // Nothing has been sent yet: the visitor's email app sends it
+    showSuccess('Your email is ready', 'Your email app has opened with your message. Send it from there, and we will respond shortly.');
   }
 });
 
-function showSuccess() {
+function showSuccess(title, msg) {
+  if (title) ciSuccess.querySelector('.ci-success-title').textContent = title;
+  if (msg) ciSuccess.querySelector('.ci-success-msg').textContent = msg;
   ciSuccess.style.display = 'flex';
   document.dispatchEvent(new CustomEvent('mulvium:card-sent'));
 }

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fiscal sponsorship, and the organization beneath it &middot; Mulvium</title>
+  <meta name="description" content="A legal home for your public-benefit project, and the organization built beneath it. Mulvium is opening: join the waitlist." />
+  <meta name="theme-color" content="#eceae5" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="A legal home for your idea, and the organization beneath it" />
+  <meta property="og:description" content="Start your public-benefit project without forming a nonprofit of your own. Mulvium is opening: join the waitlist." />
+  <meta property="og:image" content="og.jpg" />
+  <meta property="og:image:width" content="960" />
+  <meta property="og:image:height" content="504" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+SC:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="begin.css" />
+</head>
+<body data-page="begin">
+  <!-- The waitlist landing page: a separate page for posts, referrals and
+       later ads. No site navigation, no loading screen, no WebGL; the only
+       way on is the form. Copy and claims are explained in README.md. -->
+  <header class="wl-bar">
+    <span class="wl-mark">Mulvium</span>
+    <a class="wl-bar-join" href="#join" hidden>Join</a>
+  </header>
+
+  <main>
+    <section class="wl-hero">
+      <div class="wl-hero-text">
+        <p class="wl-eyebrow"><span class="wl-wide">Fiscal sponsorship &middot; </span>Waitlist open</p>
+        <h1 class="wl-h1" id="wl-h1">A legal home for your <span class="wl-for">idea</span>, and the organization beneath it.</h1>
+        <script>
+          // Before first paint: ?for= swaps the headline's noun, and ?v=b shows
+          // the letter's line instead (a headline test). Unknown values keep
+          // the default.
+          (function () {
+            var p = new URLSearchParams(location.search);
+            var nouns = { festival: "festival", research: "research program", community: "community project",
+                          arts: "arts project", education: "educational program", film: "film" };
+            var f = p.get("for"), h = document.getElementById("wl-h1");
+            if (p.get("v") === "b") h.textContent = "An institution can be one person with a vision.";
+            else if (f && nouns.hasOwnProperty(f)) h.querySelector(".wl-for").textContent = nouns[f];
+          })();
+        </script>
+        <p class="wl-sub">Start your public-benefit project without forming a nonprofit of your own. Mulvium becomes its legal home, and builds the organization beneath you.</p>
+
+        <div class="wl-signup" data-position="hero">
+          <form class="wl-form" novalidate action="mailto:hello@mulvium.org?subject=Waitlist" method="post" enctype="text/plain">
+            <label class="wl-label" for="wl-email-hero">Email</label>
+            <div class="wl-row">
+              <input class="wl-input" id="wl-email-hero" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.org" required />
+              <button class="wl-button" type="submit">Join the waitlist</button>
+            </div>
+            <input class="wl-hp" name="company" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <p class="wl-error" role="alert"></p>
+            <p class="wl-micro">Free, no commitment. We&rsquo;ll write when Mulvium opens, and about nothing else. For US-based projects. <a href="../privacy/">Privacy</a></p>
+          </form>
+        </div>
+      </div>
+
+      <figure class="wl-fig" aria-labelledby="wl-fig-title">
+        <p class="wl-fig-title" id="wl-fig-title">What sits beneath you</p>
+        <ol class="wl-layers">
+          <li class="wl-layer wl-you" style="--i:0"><span class="wl-layer-name">You</span><span class="wl-layer-gloss">Lead the work and decide its direction.</span></li>
+          <li class="wl-layer" style="--i:1"><span class="wl-layer-name">Your engagement lead</span><span class="wl-layer-gloss">The person at Mulvium you work with. Reviews every draft before it reaches you.</span></li>
+          <li class="wl-layer" style="--i:2"><span class="wl-layer-name">Your plan and your team</span><span class="wl-layer-gloss">A complete plan. AI agents under a Chief of Staff research and draft the work.</span></li>
+          <li class="wl-layer wl-home" style="--i:3"><span class="wl-layer-name">The legal home</span><span class="wl-layer-gloss">Mulvium holds the project&rsquo;s fund, accepts gifts, and signs its contracts.</span></li>
+        </ol>
+        <figcaption>A traditional fiscal sponsor provides the bottom layer. Mulvium provides everything beneath you.</figcaption>
+      </figure>
+    </section>
+
+    <section class="wl-section" aria-labelledby="wl-receive">
+      <h2 class="wl-h2" id="wl-receive">What you receive first</h2>
+      <ul class="wl-list">
+        <li><strong>A blueprint.</strong> Your institution&rsquo;s complete plan: mission, programs, audiences, funding model, timeline, and the decisions still open. Each entry says where it came from.</li>
+        <li><strong>First drafts, with sources.</strong> Such as a 90-day founding plan, budget scenarios, and a map of likely funders.</li>
+        <li><strong>Help reaching patrons.</strong> Your team drafts appeals and sponsorship tiers for your approval.</li>
+      </ul>
+    </section>
+
+    <section class="wl-section" aria-labelledby="wl-decide">
+      <h2 class="wl-h2" id="wl-decide">You approve first. Mulvium signs.</h2>
+      <ul class="wl-list">
+        <li>Signing a contract, accepting a gift, submitting a grant, making a payment: each waits for your approval of the exact text, then Mulvium&rsquo;s. If the text changes, you approve again.</li>
+        <li>You never log in to software. You meet your lead and receive finished work.</li>
+        <li>Gifts are held by Mulvium in a separate fund for your project and spent only on its purpose. The software never moves money.</li>
+      </ul>
+    </section>
+
+    <section class="wl-section" aria-labelledby="wl-answers">
+      <h2 class="wl-h2" id="wl-answers">Plain answers</h2>
+      <details class="wl-qa">
+        <summary>Is my project a fit?</summary>
+        <p>Yes, if its purpose is charitable, educational, artistic, scientific or otherwise public-benefit, it is based in the US, and you are glad for Mulvium to hold the money and sign. No track record needed. Not for private profit or political campaigns.</p>
+      </details>
+      <details class="wl-qa">
+        <summary>What does it cost?</summary>
+        <p>One fee: 10% of gifts received, set out in the sponsorship agreement. You are never billed for the work of building your organization.</p>
+      </details>
+      <details class="wl-qa">
+        <summary>Who will I talk to?</summary>
+        <p>Only Mulvium. First a conversation about you and your idea; if it fits, one agreement with Mulvium, and then your engagement lead.</p>
+      </details>
+      <details class="wl-qa">
+        <summary>Where do things stand?</summary>
+        <p>Mulvium is not open yet. Before we form The Mulvium Foundation and apply for recognition as a 501(c)(3) public charity, we want to hear from the founders it would serve. The software behind the service is built and tested. Until Mulvium opens, it cannot accept gifts for a project.</p>
+      </details>
+    </section>
+
+    <section class="wl-letter" aria-labelledby="wl-letter-title">
+      <h2 class="wl-h2" id="wl-letter-title">From the founder&rsquo;s letter</h2>
+      <blockquote>
+        <p>Institutions can simply be one person with a vision to do something beautiful and something authentic.</p>
+        <p class="wl-dots" aria-hidden="true">&middot; &middot; &middot;</p>
+        <p>Particularly if you are doing this solo, we want to be the organization that makes your idea an institution.</p>
+        <p class="wl-dots" aria-hidden="true">&middot; &middot; &middot;</p>
+        <p>Please take this leap of faith with us! Mulvium started as a leap of faith just the same.</p>
+      </blockquote>
+      <img class="wl-sig" src="../signature.webp" alt="Benjamin T. Rossen&rsquo;s signature" width="1200" height="214" loading="lazy" decoding="async" />
+      <p class="wl-sig-name">Benjamin T. Rossen, Founder</p>
+
+      <div class="wl-signup" id="join" data-position="close">
+        <form class="wl-form" novalidate action="mailto:hello@mulvium.org?subject=Waitlist" method="post" enctype="text/plain">
+          <label class="wl-label" for="wl-email-close">Email</label>
+          <div class="wl-row">
+            <input class="wl-input" id="wl-email-close" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.org" required />
+            <button class="wl-button" type="submit">Join the waitlist</button>
+          </div>
+          <input class="wl-hp" name="company" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <p class="wl-error" role="alert"></p>
+          <p class="wl-micro">Free, no commitment. <a href="../privacy/">Privacy</a></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- After a signup, this panel takes the form's place: four one-tap
+       questions, each saved as it is tapped, then what happens next. -->
+  <template id="wl-panel">
+    <div class="wl-panel" role="status">
+      <h2 class="wl-panel-title" tabindex="-1">You&rsquo;re on the list.</h2>
+      <div class="wl-steps">
+        <fieldset class="wl-step" data-q="need">
+          <legend><span class="wl-count">1 of 4</span>What do you need most?</legend>
+          <div class="wl-choices">
+            <button type="button" data-a="legal-home">A legal home for gifts and grants</button>
+            <button type="button" data-a="organization">Help building the organization</button>
+            <button type="button" data-a="both">Both</button>
+          </div>
+          <button type="button" class="wl-skip">Skip</button>
+        </fieldset>
+        <fieldset class="wl-step" data-q="lead" hidden>
+          <legend><span class="wl-count">2 of 4</span>Is this your project to lead?</legend>
+          <div class="wl-choices">
+            <button type="button" data-a="mine">Yes, mine</button>
+            <button type="button" data-a="helping">I&rsquo;m helping someone</button>
+            <button type="button" data-a="curious">Just curious</button>
+          </div>
+          <button type="button" class="wl-skip">Skip</button>
+        </fieldset>
+        <fieldset class="wl-step" data-q="when" hidden>
+          <legend><span class="wl-count">3 of 4</span>When do you want to begin?</legend>
+          <div class="wl-choices">
+            <button type="button" data-a="3-months">Within 3 months</button>
+            <button type="button" data-a="1-year">Within a year</button>
+            <button type="button" data-a="exploring">Just exploring</button>
+          </div>
+          <button type="button" class="wl-skip">Skip</button>
+        </fieldset>
+        <fieldset class="wl-step" data-q="source" hidden>
+          <legend><span class="wl-count">4 of 4</span>How did you hear about Mulvium?</legend>
+          <div class="wl-choices">
+            <button type="button" data-a="friend">A friend or colleague</button>
+            <button type="button" data-a="community">An online community</button>
+            <button type="button" data-a="social">Social media</button>
+            <button type="button" data-a="referral">A funder, sponsor or adviser</button>
+            <button type="button" data-a="search">Search</button>
+            <button type="button" data-a="other">Other</button>
+          </div>
+          <button type="button" class="wl-skip">Skip</button>
+        </fieldset>
+      </div>
+      <div class="wl-next" hidden>
+        <h3 class="wl-next-title">What happens next</h3>
+        <ol class="wl-next-steps">
+          <li>Apply in about ten minutes, or talk first for twenty.</li>
+          <li>A conversation with Mulvium about you and your idea.</li>
+          <li>If it fits, every term in writing before you sign anything.</li>
+        </ol>
+        <p class="wl-explore" hidden>Thank you. We&rsquo;ll write when Mulvium opens. If you&rsquo;re ready sooner, the application takes about ten minutes.</p>
+        <p class="wl-next-actions">
+          <a class="wl-button" href="apply.html">Start my application</a>
+          <a class="wl-call" data-call href="#">Rather talk first? Book a 20-minute call.</a>
+        </p>
+      </div>
+    </div>
+  </template>
+
+  <footer class="wl-foot">
+    <p class="wl-brandline">Beautify the world around you through a new kind of institution.</p>
+    <p><a href="../privacy/">Privacy</a> &middot; <a href="mailto:hello@mulvium.org">hello@mulvium.org</a> &middot; &copy; 2026 Mulvium</p>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="begin.js"></script>
+</body>
+</html>

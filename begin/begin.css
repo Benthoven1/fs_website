@@ -1,0 +1,390 @@
+/* begin.css — the waitlist (begin/), its application, and the privacy page.
+   A page of its own: the site's paper, ink and clay, and its Cormorant
+   type, without style.css, the loading screen or WebGL, so it opens at once
+   on a phone. The layers figure follows the MulviumSOS page's (css/msos.css). */
+
+:root {
+  --clay: #b87758;
+  --clay-deep: #8f5a42;
+  --ink: #1b1613;
+  --ink-soft: #3b332f;
+  --paper: #eceae5;
+  --paper-warm: #f0ede7;
+  --hairline: rgba(27, 22, 19, 0.14);
+  --tint: rgba(196, 221, 184, 0.42);       /* M.SOS's green */
+  --tint-edge: rgba(104, 146, 90, 0.34);
+  --home: rgba(184, 202, 224, 0.52);       /* Fiscal Sponsorship's blue */
+  --home-edge: rgba(84, 116, 158, 0.32);
+  --bar-h: 52px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--bar-h) + 16px); }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 19px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The site's paper grain */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+a { color: var(--clay-deep); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible,
+textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--clay-deep);
+  outline-offset: 3px;
+}
+[hidden] { display: none !important; }
+
+/* ── Header ───────────────────────────────────────────────────────────── */
+.wl-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: var(--bar-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: rgba(236, 234, 229, 0.92);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--hairline);
+}
+.wl-mark {
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: 0.24em;
+  text-transform: lowercase;
+  color: var(--ink);
+  text-decoration: none;
+}
+.wl-bar-join {
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  text-decoration: none;
+  color: var(--paper);
+  background: var(--clay-deep);
+  border-radius: 999px;
+  padding: 7px 16px 8px;
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────────── */
+main { padding: 0 20px; }
+
+.wl-hero {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 18px 0 8px;
+}
+.wl-eyebrow {
+  margin: 0 0 10px;
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0.16em;
+  text-transform: lowercase;
+  color: var(--clay-deep);
+}
+.wl-wide { display: none; }
+.wl-h1 {
+  margin: 0 0 12px;
+  font-weight: 500;
+  font-size: clamp(30px, 7.4vw, 54px);
+  line-height: 1.08;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+.wl-for { font-style: italic; color: var(--clay-deep); }
+.wl-sub {
+  margin: 0 0 18px;
+  font-size: 19px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  max-width: 34em;
+}
+
+/* ── Signup ───────────────────────────────────────────────────────────── */
+.wl-signup { max-width: 34em; }
+.wl-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 16px;
+  color: var(--ink-soft);
+}
+.wl-row { display: flex; flex-direction: column; gap: 8px; }
+.wl-input {
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 18px;               /* at least 16px, so iOS does not zoom */
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(27, 22, 19, 0.28);
+  border-radius: 10px;
+}
+.wl-input[aria-invalid="true"] { border-color: #a3402a; box-shadow: 0 0 0 1px #a3402a; }
+.wl-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 22px;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  font-size: 19px;
+  color: var(--paper);
+  background: var(--clay-deep);   /* 4.7:1 against the paper text */
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.wl-button:hover { background: #7b4c37; }
+.wl-button[disabled] { opacity: 0.7; cursor: progress; }
+.wl-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.wl-error { margin: 6px 0 0; font-size: 17px; color: #a3402a; min-height: 0; }
+.wl-error:empty { display: none; }
+.wl-micro { margin: 8px 0 0; font-size: 15.5px; line-height: 1.45; color: var(--ink-soft); }
+.wl-onlist { margin: 0; font-size: 19px; color: var(--ink-soft); }
+
+/* ── The qualifier, in the form's place ───────────────────────────────── */
+.wl-panel {
+  padding: 18px 18px 20px;
+  background: var(--paper-warm);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+}
+.wl-panel-title, .wl-next-title {
+  margin: 0 0 12px;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.2;
+}
+.wl-panel-title:focus { outline: none; }
+.wl-step { border: 0; margin: 0; padding: 0; }
+.wl-step legend { padding: 0; margin-bottom: 10px; font-size: 20px; line-height: 1.3; }
+.wl-count {
+  display: block;
+  font-family: "Cormorant SC", serif;
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  color: var(--clay-deep);
+}
+.wl-choices { display: flex; flex-direction: column; gap: 8px; }
+.wl-choices button {
+  min-height: 48px;
+  padding: 10px 14px;
+  font: inherit;
+  font-size: 18px;
+  text-align: left;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(27, 22, 19, 0.2);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.wl-choices button:hover { border-color: var(--clay-deep); background: #fff; }
+.wl-skip {
+  margin-top: 10px;
+  padding: 6px 0;
+  font: inherit;
+  font-size: 16px;
+  color: var(--ink-soft);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.wl-next-steps { margin: 0 0 14px; padding-left: 1.3em; }
+.wl-next-steps li { margin-bottom: 4px; }
+.wl-explore { margin: 0 0 14px; }
+.wl-next-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin: 0; }
+.wl-call { font-size: 18px; }
+
+/* ── The layers figure ────────────────────────────────────────────────── */
+.wl-fig { margin: 30px 0 0; }
+.wl-fig-title {
+  margin: 0 0 10px;
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0.18em;
+  text-transform: lowercase;
+  color: var(--ink-soft);
+}
+.wl-layers { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; }
+.wl-layer {
+  position: relative;
+  padding: 11px 14px 12px;
+  background: var(--tint);
+  border: 1px solid var(--tint-edge);
+  border-radius: 12px;
+  animation: wl-rise 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i) * 80ms + 120ms);
+}
+.wl-you { background: transparent; border-style: dashed; border-color: rgba(27, 22, 19, 0.3); }
+.wl-home { background: var(--home); border-color: var(--home-edge); }
+/* A short clay line joins each layer to the next */
+.wl-layer + .wl-layer::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  height: 22px;
+  border-left: 1px solid rgba(143, 90, 66, 0.55);
+}
+.wl-layer-name { display: block; font-weight: 600; font-size: 19px; line-height: 1.25; }
+.wl-layer-gloss { display: block; margin-top: 2px; font-size: 16.5px; line-height: 1.4; color: var(--ink-soft); }
+.wl-fig figcaption { margin-top: 12px; font-size: 16.5px; font-style: italic; color: var(--ink-soft); }
+
+@keyframes wl-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wl-layer { animation: none; }
+}
+
+/* ── Sections ─────────────────────────────────────────────────────────── */
+.wl-section, .wl-letter {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 34px 0 6px;
+}
+.wl-h2 {
+  margin: 0 0 12px;
+  font-weight: 500;
+  font-size: 27px;
+  line-height: 1.2;
+}
+.wl-list { margin: 0; padding: 0; list-style: none; }
+.wl-list li {
+  position: relative;
+  padding-left: 22px;
+  margin-bottom: 12px;
+}
+.wl-list li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.62em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--clay);
+}
+.wl-list strong { font-weight: 600; }
+
+.wl-qa { border-top: 1px solid var(--hairline); }
+.wl-qa:last-of-type { border-bottom: 1px solid var(--hairline); }
+.wl-qa summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 52px;
+  padding: 10px 0;
+  font-size: 20px;
+  cursor: pointer;
+  list-style: none;
+}
+.wl-qa summary::-webkit-details-marker { display: none; }
+.wl-qa summary::after { content: "+"; font-size: 24px; color: var(--clay-deep); margin-left: 12px; }
+.wl-qa[open] summary::after { content: "\2212"; }
+.wl-qa p { margin: 0 0 14px; color: var(--ink-soft); }
+
+/* ── The letter ───────────────────────────────────────────────────────── */
+.wl-letter { padding-bottom: 20px; }
+.wl-letter blockquote { margin: 0; font-size: 22px; line-height: 1.45; font-style: italic; }
+.wl-letter blockquote p { margin: 0; }
+.wl-dots { text-align: center; color: var(--clay); font-style: normal; margin: 8px 0 !important; }
+.wl-sig { display: block; width: 210px; height: auto; margin: 18px 0 2px; }
+.wl-sig-name { margin: 0 0 24px; font-size: 17px; color: var(--ink-soft); }
+
+/* ── Footer ───────────────────────────────────────────────────────────── */
+.wl-foot {
+  margin-top: 40px;
+  padding: 26px 20px 34px;
+  border-top: 1px solid var(--hairline);
+  text-align: center;
+  font-size: 16px;
+  color: var(--ink-soft);
+}
+.wl-foot p { margin: 0 0 6px; }
+.wl-brandline { font-style: italic; font-size: 18px; }
+
+/* ── The application ──────────────────────────────────────────────────── */
+.wl-apply { max-width: 640px; margin: 0 auto; padding: 22px 20px 0; }
+.wl-h1--apply { font-size: clamp(30px, 6vw, 44px); }
+.wl-as { margin: 0 0 10px; color: var(--ink-soft); }
+.wl-as span { color: var(--ink); }
+.wl-apply .wl-h2 { margin-top: 30px; font-size: 23px; }
+.wl-field { border: 0; margin: 0 0 18px; padding: 0; }
+.wl-field > label, .wl-field > legend { display: block; margin-bottom: 6px; padding: 0; font-size: 19px; font-weight: 500; }
+.wl-n {
+  display: inline-block;
+  min-width: 1.4em;
+  font-family: "Cormorant SC", serif;
+  color: var(--clay-deep);
+}
+.wl-opt { font-size: 15px; font-weight: 400; color: var(--ink-soft); margin-left: 6px; }
+.wl-hint { margin: -2px 0 6px; font-size: 16px; color: var(--ink-soft); }
+.wl-text { min-height: 0; resize: vertical; line-height: 1.45; }
+select.wl-input { appearance: auto; }
+.wl-radios { display: grid; gap: 4px; }
+.wl-radios label, .wl-consent { display: flex; gap: 10px; align-items: flex-start; min-height: 40px; padding: 6px 0; font-size: 18px; }
+.wl-radios input, .wl-consent input { width: 20px; height: 20px; margin: 3px 0 0; accent-color: var(--clay-deep); flex: none; }
+.wl-actions { margin: 18px 0 0; }
+.wl-applied { padding: 20px 0 10px; }
+.wl-applied h2:focus { outline: none; }
+
+/* ── The privacy page ─────────────────────────────────────────────────── */
+.wl-doc { max-width: 680px; margin: 0 auto; padding: 22px 20px 0; }
+.wl-doc h2 { font-weight: 500; font-size: 24px; margin: 30px 0 8px; }
+.wl-doc p, .wl-doc li { color: var(--ink-soft); }
+.wl-doc ul { padding-left: 1.2em; }
+
+/* ── Wider screens ────────────────────────────────────────────────────── */
+@media (min-width: 560px) {
+  .wl-row { flex-direction: row; }
+  .wl-row .wl-input { flex: 1; }
+  .wl-wide { display: inline; }
+  .wl-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .wl-next-actions { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 18px; }
+}
+@media (min-width: 960px) {
+  main { padding: 0 40px; }
+  .wl-bar { padding: 0 40px; }
+  .wl-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 64px;
+    align-items: center;
+    padding: 56px 0 24px;
+  }
+  .wl-fig { margin: 0; }
+  .wl-section, .wl-letter { padding-top: 48px; }
+}
