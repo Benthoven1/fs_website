@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apply &middot; Mulvium</title>
+  <meta name="description" content="Tell Mulvium about your public-benefit project: seven questions, about ten minutes." />
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#eceae5" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+SC:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="begin.css" />
+</head>
+<body data-page="apply">
+  <!-- The application: the founder's own version of Form FS-1's required
+       lines (MulviumSOS docs/2-the-product/9-form-fs-1.md), short enough to
+       finish in ten minutes. Its answers can start the real intake form. -->
+  <header class="wl-bar">
+    <a class="wl-mark" href="./">Mulvium</a>
+  </header>
+
+  <main class="wl-apply">
+    <form id="wl-apply" novalidate action="mailto:hello@mulvium.org?subject=Application" method="post" enctype="text/plain">
+      <h1 class="wl-h1 wl-h1--apply">Tell us about your project</h1>
+      <p class="wl-sub">Seven questions, about ten minutes. Short answers are fine, and &ldquo;not sure yet&rdquo; is a real answer.</p>
+      <p class="wl-as" id="wl-app-as" hidden>Applying as <span></span></p>
+
+      <h2 class="wl-h2">About you</h2>
+      <div class="wl-field">
+        <label for="a-name">Your name</label>
+        <input class="wl-input" id="a-name" name="name" type="text" autocomplete="name" required />
+      </div>
+      <div class="wl-field" id="wl-app-email-row">
+        <label for="a-email">Email</label>
+        <input class="wl-input" id="a-email" name="email" type="email" inputmode="email" autocomplete="email" />
+      </div>
+      <div class="wl-field">
+        <label for="a-cofounders">Anyone leading it with you? <span class="wl-opt">Optional</span></label>
+        <input class="wl-input" id="a-cofounders" name="cofounders" type="text" />
+      </div>
+      <fieldset class="wl-field">
+        <legend>Is the project based in the United States?</legend>
+        <div class="wl-radios">
+          <label><input type="radio" name="us" value="yes" required /> Yes</label>
+          <label><input type="radio" name="us" value="partly" /> Partly</label>
+          <label><input type="radio" name="us" value="no" /> No</label>
+        </div>
+      </fieldset>
+
+      <h2 class="wl-h2">Your project</h2>
+      <div class="wl-field">
+        <label for="a-project"><span class="wl-n">1</span>Your project, in your own words</label>
+        <p class="wl-hint" id="a-project-hint">A few sentences: what it is and who it is for.</p>
+        <textarea class="wl-input wl-text" id="a-project" name="project" rows="4" aria-describedby="a-project-hint" required></textarea>
+      </div>
+      <div class="wl-field">
+        <label for="a-mission"><span class="wl-n">2</span>Its mission, in one sentence</label>
+        <textarea class="wl-input wl-text" id="a-mission" name="mission" rows="2" required></textarea>
+      </div>
+      <div class="wl-field">
+        <label for="a-activities"><span class="wl-n">3</span>What will it do?</label>
+        <p class="wl-hint" id="a-activities-hint">The programs or activities you plan.</p>
+        <textarea class="wl-input wl-text" id="a-activities" name="activities" rows="3" aria-describedby="a-activities-hint" required></textarea>
+      </div>
+      <div class="wl-field">
+        <label for="a-first"><span class="wl-n">4</span>What should be done first?</label>
+        <p class="wl-hint" id="a-first-hint">The first two or three things you would want done.</p>
+        <textarea class="wl-input wl-text" id="a-first" name="first" rows="3" aria-describedby="a-first-hint" required></textarea>
+      </div>
+      <fieldset class="wl-field">
+        <legend><span class="wl-n">5</span>Its field</legend>
+        <div class="wl-radios">
+          <label><input type="radio" name="field" value="arts" /> Arts and culture</label>
+          <label><input type="radio" name="field" value="education" /> Education</label>
+          <label><input type="radio" name="field" value="environment" /> Environment</label>
+          <label><input type="radio" name="field" value="science" /> Science and research</label>
+          <label><input type="radio" name="field" value="community" /> Community</label>
+          <label><input type="radio" name="field" value="human-services" /> Human services</label>
+          <label><input type="radio" name="field" value="other" /> Something else</label>
+        </div>
+      </fieldset>
+      <fieldset class="wl-field">
+        <legend>And its form <span class="wl-opt">Choose any</span></legend>
+        <div class="wl-radios">
+          <label><input type="checkbox" name="form_type" value="festival" /> Festival</label>
+          <label><input type="checkbox" name="form_type" value="event" /> Event or event series</label>
+          <label><input type="checkbox" name="form_type" value="program" /> Program or service</label>
+          <label><input type="checkbox" name="form_type" value="research" /> Research</label>
+          <label><input type="checkbox" name="form_type" value="school" /> School or educational program</label>
+          <label><input type="checkbox" name="form_type" value="publication" /> Publication or media</label>
+          <label><input type="checkbox" name="form_type" value="venue" /> Venue or facility</label>
+          <label><input type="checkbox" name="form_type" value="campaign" /> Campaign or advocacy</label>
+          <label><input type="checkbox" name="form_type" value="other" /> Something else</label>
+        </div>
+      </fieldset>
+      <fieldset class="wl-field">
+        <legend><span class="wl-n">6</span>Roughly how much will it need to raise in its first year?</legend>
+        <div class="wl-radios">
+          <label><input type="radio" name="raise" value="under-25k" /> Under $25,000</label>
+          <label><input type="radio" name="raise" value="25k-100k" /> $25,000 to $100,000</label>
+          <label><input type="radio" name="raise" value="100k-500k" /> $100,000 to $500,000</label>
+          <label><input type="radio" name="raise" value="over-500k" /> Over $500,000</label>
+          <label><input type="radio" name="raise" value="unsure" /> Not sure yet</label>
+        </div>
+      </fieldset>
+      <div class="wl-field">
+        <label for="a-when"><span class="wl-n">7</span>When would it first happen?</label>
+        <p class="wl-hint" id="a-when-hint">A month and year, or a season.</p>
+        <input class="wl-input" id="a-when" name="when" type="text" aria-describedby="a-when-hint" />
+      </div>
+
+      <h2 class="wl-h2">Last</h2>
+      <div class="wl-field">
+        <label for="a-source">How did you hear about Mulvium?</label>
+        <select class="wl-input" id="a-source" name="source">
+          <option value=""></option>
+          <option value="friend">A friend or colleague</option>
+          <option value="community">An online community</option>
+          <option value="social">Social media</option>
+          <option value="referral">A funder, sponsor or adviser</option>
+          <option value="search">Search</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <label class="wl-consent"><input type="checkbox" name="consent" value="yes" /> Mulvium may keep these answers and use them to begin my project&rsquo;s intake form, credited to me, so I am not asked twice.</label>
+
+      <input class="wl-hp" name="company" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <p class="wl-error" role="alert"></p>
+      <p class="wl-actions"><button class="wl-button" type="submit">Send my application</button></p>
+      <p class="wl-micro">Mulvium is not open yet; applying commits you to nothing. <a href="../privacy/">Privacy</a></p>
+    </form>
+
+    <div class="wl-applied" id="wl-applied" hidden>
+      <h2 class="wl-h1 wl-h1--apply" tabindex="-1">Thank you. Your application is in.</h2>
+      <p class="wl-applied-us">We read every application and will write to you about it. Want to talk sooner? <a data-call href="#">Book a 20-minute call.</a></p>
+      <p class="wl-applied-abroad">For now Mulvium can take only US-based projects. We&rsquo;ll keep your application and write if that changes.</p>
+    </div>
+  </main>
+
+  <footer class="wl-foot">
+    <p><a href="../privacy/">Privacy</a> &middot; <a href="mailto:hello@mulvium.org">hello@mulvium.org</a> &middot; &copy; 2026 Mulvium</p>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="begin.js"></script>
+</body>
+</html>

@@ -43,6 +43,20 @@ be announced.
   of the loading screen's pictures (`Musical.webp`, `Horticulture.webp`, `image-13.webp`,
   `Pictorial.webp`), the same files the loading screen uses: replace a file and both follow.
 - `pages/about/` — People, Careers, Contact Us.
+- `begin/` — the waitlist, a page of its own for posts, referrals and, later,
+  ads (`mulvium.org/begin/`). It is for public-benefit founders who need
+  fiscal sponsorship and the organization built beneath them, and it loads
+  none of the site's heavy parts: no loading screen, no Three.js, about
+  150 KB. `?for=festival|research|community|arts|education|film` swaps the
+  headline's noun; `?v=b` shows the letter's line instead. After a signup,
+  four one-tap questions take the form's place, then the application
+  (`begin/apply.html`), drawn from Form FS-1's required lines.
+  `begin/config.js` holds every outside service (the form endpoint, the call
+  booking link, Umami analytics); each is a stand-in, and empty values fall
+  back to email to hello@mulvium.org. `tools/waitlist-apps-script.gs` is a
+  free endpoint on a Google Sheet. Every answer sent carries the visit's
+  `sid` and how the visitor arrived (`for`, `ref`, UTM tags).
+- `privacy/` — the privacy policy the waitlist links to.
 - `images/` — stills of each company's animation, shown in the Offerings menu.
 
 ## Images and speed
