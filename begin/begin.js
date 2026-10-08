@@ -153,7 +153,27 @@
     // Returning within the visit: already on the list
     if (rec.email) done(blocks[0], true);
 
-    // The letter's thought bubbles rise in as they come into view
+    // The headline's noun turns over every few seconds, as on the fiscal
+    // sponsorship page (unless ?for= fixed it, or motion is reduced)
+    var rotor = document.querySelector(".wl-rotor");
+    if (rotor && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      var words = rotor.querySelectorAll(".wl-rotor-word"), at = 0;
+      var size = function () { rotor.style.width = rotor.querySelector(".is-on").offsetWidth + "px"; };
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(size); else size();
+      setInterval(function () {
+        if (document.hidden) return;
+        var out = words[at];
+        at = (at + 1) % words.length;
+        var next = words[at];
+        out.classList.remove("is-on");
+        out.classList.add("is-out");
+        setTimeout(function () { out.classList.remove("is-out"); }, 700);
+        next.classList.add("is-on");
+        rotor.style.width = next.offsetWidth + "px";
+      }, 2600);
+    }
+
+    // The letter's thought bubbles arrive as they come into view
     var bubbles = document.querySelectorAll(".wl-bubble");
     if ("IntersectionObserver" in window) {
       var seenBubble = new IntersectionObserver(function (entries) {

@@ -70,18 +70,24 @@
     <div class="wl-content">
       <!-- The offer, and the first form -->
       <section class="wl-sec wl-sec--lead" id="wl-start">
-        <p class="wl-eyebrow">Fiscal sponsorship &middot; Waitlist open</p>
-        <h1 class="wl-h1" id="wl-h1">A legal home for your <span class="wl-for">idea</span>. The organization beneath it.</h1>
+        <h1 class="wl-h1" id="wl-h1"><span class="hidden-text">A legal home for your idea. The organization beneath it.</span><span aria-hidden="true">A legal home for your <span class="wl-nw"><span class="wl-rotor"><span class="wl-rotor-word is-on">idea</span><span class="wl-rotor-word">festival</span><span class="wl-rotor-word">research</span><span class="wl-rotor-word">charity</span><span class="wl-rotor-word">initiative</span><span class="wl-rotor-word">passion</span></span>.</span> The organization beneath&nbsp;it.</span></h1>
         <script>
-          // Before first paint: ?for= swaps the headline's noun, and ?v=b shows
-          // the letter's line instead (the playbook's headline test).
+          // Before first paint: the noun turns over (begin.js) unless ?for=
+          // fixes it to match the post that sent the visitor; ?v=b shows the
+          // letter's line instead (the playbook's headline test).
           (function () {
             var p = new URLSearchParams(location.search);
             var nouns = { festival: "festival", research: "research program", community: "community project",
                           arts: "arts project", education: "educational program", film: "film" };
             var f = p.get("for"), h = document.getElementById("wl-h1");
             if (p.get("v") === "b") h.textContent = "An institution can be one person with a vision.";
-            else if (f && nouns.hasOwnProperty(f)) h.querySelector(".wl-for").textContent = nouns[f];
+            else if (f && nouns.hasOwnProperty(f)) {
+              var r = h.querySelector(".wl-rotor"), one = document.createElement("span");
+              one.className = "wl-for";
+              one.textContent = nouns[f];
+              r.parentNode.replaceChild(one, r);
+              h.querySelector(".hidden-text").textContent = "A legal home for your " + nouns[f] + ". The organization beneath it.";
+            }
           })();
         </script>
         <p class="wl-sub">One person. One vision. No nonprofit of your own.</p>
@@ -100,12 +106,20 @@
         </div>
 
         <aside class="wl-bubble wl-bubble--l" style="--y: 0px">
-          <p>Institutions can simply be one person with a vision to do something beautiful and something authentic.</p>
-          <cite>The founder&rsquo;s letter</cite>
+          <span class="wl-dot wl-dot--far" aria-hidden="true"></span>
+          <span class="wl-dot wl-dot--near" aria-hidden="true"></span>
+          <div class="wl-cloud">
+            <p>Institutions can simply be one person with a vision to do something beautiful and something authentic.</p>
+            <a class="wl-letter-link" href="../#letter">Read the founder&rsquo;s letter</a>
+          </div>
         </aside>
         <aside class="wl-bubble wl-bubble--r wl-wide" style="--y: 150px">
-          <p>You don&rsquo;t need an army of employees under you.</p>
-          <cite>The founder&rsquo;s letter</cite>
+          <span class="wl-dot wl-dot--far" aria-hidden="true"></span>
+          <span class="wl-dot wl-dot--near" aria-hidden="true"></span>
+          <div class="wl-cloud">
+            <p>You don&rsquo;t need an army of employees under you.</p>
+            <a class="wl-letter-link" href="../#letter">Read the founder&rsquo;s letter</a>
+          </div>
         </aside>
       </section>
 
@@ -124,20 +138,36 @@
         </ul>
 
         <aside class="wl-bubble wl-bubble--r" style="--y: 40px">
-          <p>All you need is an appetite for good, a vision, and the willingness to bring it to life.</p>
-          <cite>The founder&rsquo;s letter</cite>
+          <span class="wl-dot wl-dot--far" aria-hidden="true"></span>
+          <span class="wl-dot wl-dot--near" aria-hidden="true"></span>
+          <div class="wl-cloud">
+            <p>All you need is an appetite for good, a vision, and the willingness to bring it to life.</p>
+            <a class="wl-letter-link" href="../#letter">Read the founder&rsquo;s letter</a>
+          </div>
         </aside>
         <aside class="wl-bubble wl-bubble--l wl-wide" style="--y: 120px">
-          <p>No billion-dollar endowments and spheres of influence required.</p>
-          <cite>The founder&rsquo;s letter</cite>
+          <span class="wl-dot wl-dot--far" aria-hidden="true"></span>
+          <span class="wl-dot wl-dot--near" aria-hidden="true"></span>
+          <div class="wl-cloud">
+            <p>No billion-dollar endowments and spheres of influence required.</p>
+            <a class="wl-letter-link" href="../#letter">Read the founder&rsquo;s letter</a>
+          </div>
         </aside>
         <aside class="wl-bubble wl-bubble--r wl-wide" style="--y: 330px">
-          <p>At Mulvium, we change the norm and we build the organization beneath you.</p>
-          <cite>The founder&rsquo;s letter</cite>
+          <span class="wl-dot wl-dot--far" aria-hidden="true"></span>
+          <span class="wl-dot wl-dot--near" aria-hidden="true"></span>
+          <div class="wl-cloud">
+            <p>At Mulvium, we change the norm and we build the organization beneath you.</p>
+            <a class="wl-letter-link" href="../#letter">Read the founder&rsquo;s letter</a>
+          </div>
         </aside>
         <aside class="wl-bubble wl-bubble--l wl-wide" style="--y: 430px">
-          <p>Why don&rsquo;t we celebrate the beautiful and the authentic over the grotesque and the artificial?</p>
-          <cite>The founder&rsquo;s letter</cite>
+          <span class="wl-dot wl-dot--far" aria-hidden="true"></span>
+          <span class="wl-dot wl-dot--near" aria-hidden="true"></span>
+          <div class="wl-cloud">
+            <p>Why don&rsquo;t we celebrate the beautiful and the authentic over the grotesque and the artificial?</p>
+            <a class="wl-letter-link" href="../#letter">Read the founder&rsquo;s letter</a>
+          </div>
         </aside>
       </section>
 
@@ -153,12 +183,20 @@
         </dl>
 
         <aside class="wl-bubble wl-bubble--l" style="--y: 30px">
-          <p>Changing the world starts with helping your neighbor.</p>
-          <cite>The founder&rsquo;s letter</cite>
+          <span class="wl-dot wl-dot--far" aria-hidden="true"></span>
+          <span class="wl-dot wl-dot--near" aria-hidden="true"></span>
+          <div class="wl-cloud">
+            <p>Changing the world starts with helping your neighbor.</p>
+            <a class="wl-letter-link" href="../#letter">Read the founder&rsquo;s letter</a>
+          </div>
         </aside>
         <aside class="wl-bubble wl-bubble--r wl-wide" style="--y: 140px">
-          <p>One neighbor at a time, we make the world a place worth living.</p>
-          <cite>The founder&rsquo;s letter</cite>
+          <span class="wl-dot wl-dot--far" aria-hidden="true"></span>
+          <span class="wl-dot wl-dot--near" aria-hidden="true"></span>
+          <div class="wl-cloud">
+            <p>One neighbor at a time, we make the world a place worth living.</p>
+            <a class="wl-letter-link" href="../#letter">Read the founder&rsquo;s letter</a>
+          </div>
         </aside>
       </section>
 
@@ -183,12 +221,20 @@
         </div>
 
         <aside class="wl-bubble wl-bubble--l" style="--y: 10px">
-          <p>Particularly if you are doing this solo, we want to be the organization that makes your idea an institution.</p>
-          <cite>The founder&rsquo;s letter</cite>
+          <span class="wl-dot wl-dot--far" aria-hidden="true"></span>
+          <span class="wl-dot wl-dot--near" aria-hidden="true"></span>
+          <div class="wl-cloud">
+            <p>Particularly if you are doing this solo, we want to be the organization that makes your idea an institution.</p>
+            <a class="wl-letter-link" href="../#letter">Read the founder&rsquo;s letter</a>
+          </div>
         </aside>
         <aside class="wl-bubble wl-bubble--r wl-wide" style="--y: 170px">
-          <p>We have the power to make a difference if we set our minds to it.</p>
-          <cite>The founder&rsquo;s letter</cite>
+          <span class="wl-dot wl-dot--far" aria-hidden="true"></span>
+          <span class="wl-dot wl-dot--near" aria-hidden="true"></span>
+          <div class="wl-cloud">
+            <p>We have the power to make a difference if we set our minds to it.</p>
+            <a class="wl-letter-link" href="../#letter">Read the founder&rsquo;s letter</a>
+          </div>
         </aside>
       </section>
     </div>
