@@ -13,20 +13,22 @@ be announced.
   sit beside the cosmos on wide screens and above and below it on narrow ones.
   Hover a planet for its name; click one to open its company's page. Click the
   star to enter the overhead orbit view and night sky, then scroll to the
-  founder's letter. From the hero, scrolling goes on to the waitlist and ends
-  with the site's footer (`<body data-landing>`; zoom is off, so the cosmos
-  keeps clear of it). `index.html#orbit`, the nav's Dear Leader link, opens
-  straight onto the orbit view; `#letter` onto the founder's letter; and
-  `#waitlist`, every footer's "Join the waitlist", onto the waitlist's form.
-- The waitlist (`#waitlist` in `index.html`; `css/waitlist.css`,
-  `js/waitlist.js`): the offer begins just under the hero's words and
-  "Click a sphere." (main.js measures the hero's empty foot as `--hero-cut`).
-  Its noun turns over (idea, festival, research, charity, initiative,
-  passion, as on the fiscal sponsorship page) in a box as wide as the widest
-  word, so no line ever reflows. Then short statements, plain answers, and
-  lines from the founder's letter as thought bubbles in the margins (between
-  the statements on phones), each linking to the letter. The orbit view hides
-  the waitlist and shows the letter; the 3D view the reverse.
+  founder's letter. On the landing the page doesn't scroll: swiping down (or
+  "Join the waitlist" beside "Click a sphere" at its foot) slides the
+  waitlist drawer up over the cosmos, which lifts away with it; the drawer
+  scrolls on its own, ends with the site's footer, and slides away when swiped
+  up at its top (or on Escape). Pinching (or ctrl/⌘ + wheel) zooms, within
+  limits. `index.html#orbit`, the nav's Dear Leader link, opens straight onto
+  the orbit view; `#letter` onto the founder's letter; `#waitlist`, every
+  footer's "Join the waitlist", onto the drawer.
+- The waitlist drawer (`#waitlist` in `index.html`; `css/waitlist.css`,
+  `js/waitlist.js`; opened and closed by `js/main.js`, which also moves the
+  site's footer into it for the 3D view and back under the letter for the
+  orbit view). Its headline's noun turns over (idea, festival, research,
+  charity, initiative, passion, as on the fiscal sponsorship page) in a box
+  as wide as the widest word, so no line ever reflows. Then short statements,
+  plain answers, and lines from the founder's letter as thought bubbles in
+  the margins (between the statements on phones), each linking to the letter.
   `?for=festival|research|community|arts|education|film` fixes the headline's
   noun; `?v=b` shows the letter's line instead. After a signup, four one-tap
   questions take the form's place, then the application (`apply/`), drawn

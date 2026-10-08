@@ -73,20 +73,8 @@ const brandLink         = document.getElementById("brand-link");
 const body              = document.body;
 const expansionWrapper  = document.getElementById("expansion-wrapper");
 const canvasWrap        = document.getElementById("canvas-wrap");
-// <body data-landing>: the 3D view does not hold the page. Scrolling down
-// from the hero goes on to the waitlist below it (#waitlist), and the site's
-// footer closes the page, instead of the footer drawer. The planets, the
-// sphere, the orbit view and the letter work as ever; zoom is off, so the
-// cosmos keeps clear of the content.
-const LANDING           = "landing" in body.dataset;
-const landingStart      = document.getElementById("wl-start");
-// #waitlist (every footer's "Join the waitlist") opens on the form,
-// and stays there through the entrance until the visitor scrolls
-let pinStart            = LANDING && /^#(waitlist|join)$/.test(window.location.hash);
-if (pinStart) ["wheel", "touchstart", "keydown"].forEach((t) =>
-  window.addEventListener(t, () => { pinStart = false; }, { once: true, passive: true }));
 window.scrollTo(0, 0);
-if (!LANDING) body.classList.add("cosmos-only");
+body.classList.add("cosmos-only");
 
 const scene = new THREE.Scene();
 
@@ -531,23 +519,9 @@ function layoutHero() {
     // Statement under the wordmark; mission under the cosmos, clear of the hint
     const vgap = Math.max(12, Math.min(22, h * 0.02));
     root.style.setProperty("--st-top", `${heroBrand.getBoundingClientRect().bottom + vgap}px`);
-    const hintTop = LANDING ? h : (cosmosHint.firstElementChild.getBoundingClientRect().top || h);
+    const hintTop = cosmosHint.firstElementChild.getBoundingClientRect().top || h;
     const mh = heroMission.offsetHeight;
     root.style.setProperty("--mi-top", `${Math.max(0, Math.min(B + vgap, hintTop - mh - vgap))}px`);
-  }
-
-  // The waitlist: "Click a sphere." sits just under the cosmos and the words
-  // around it, and the content rises to just below that (css/waitlist.css
-  // pulls .wl-content up by --hero-cut), with no empty screen between
-  if (LANDING) {
-    const top = canvasWrap.getBoundingClientRect().top;
-    const foot = Math.max(B,
-      heroMission.getBoundingClientRect().bottom - top,
-      heroStatement.getBoundingClientRect().bottom - top) + 14;
-    root.style.setProperty("--hint-top", `${Math.round(foot)}px`);
-    const hintH = cosmosHint.offsetHeight || 22;
-    root.style.setProperty("--hero-cut", `${Math.max(0, Math.round(h - foot - hintH - 18))}px`);
-    if (pinStart) toLandingStart(true);
   }
 }
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutHero);
@@ -631,11 +605,6 @@ canvas.addEventListener("pointerdown", (e) => {
   updateHover();
 });
 
-// Down to the waitlist's offer
-function toLandingStart(instant) {
-  if (landingStart) landingStart.scrollIntoView({ behavior: motionOK && !instant ? "smooth" : "auto" });
-}
-
 canvas.addEventListener("click", () => {
   if (footerOpen) { closeFooter(); return; }
   if (state.mode === "3d") {
@@ -647,63 +616,107 @@ canvas.addEventListener("click", () => {
   }
 });
 
-// ── Footer drawer — on the 3D landing, scrolling down brings up the site's
-// footer navigation, the way scrolling reaches the bottom of any page; the
-// cosmos rises with it. Scrolling back up (or tapping the cosmos) returns.
+// ── The waitlist drawer — on the 3D landing the page doesn't scroll: swiping
+// down, or "Join the waitlist" in the hint, slides the waitlist (#waitlist) up
+// over the cosmos, which lifts away with it. The drawer scrolls on its own and
+// ends with the site's footer: the footer lives in it in the 3D view, and
+// returns under the letter in the orbit view. Swiping up at the drawer's top,
+// or Escape, slides it away again.
+const drawer     = document.getElementById("waitlist");
 const siteFooter = document.getElementById("site-footer");
+const footerHome = siteFooter ? siteFooter.parentNode : null;
+function footerTo(inDrawer) {
+  if (!drawer || !siteFooter) return;
+  const place = inDrawer ? drawer : footerHome;
+  if (siteFooter.parentNode !== place) place.appendChild(siteFooter);
+}
+footerTo(true);
 let footerOpen = false;
 function setFooterHeight() {
-  if (siteFooter) document.documentElement.style.setProperty("--sf-h", siteFooter.offsetHeight + "px");
+  if (drawer) document.documentElement.style.setProperty("--sf-h", drawer.offsetHeight + "px");
 }
-function openFooter() {
-  if (footerOpen || state.mode !== "3d" || lsActive || !body.classList.contains("cosmos-only")) return;
+// force: open under cover of the loading screen (index.html#waitlist)
+function openFooter(force) {
+  if (!drawer || state.mode !== "3d" || (lsActive && !force) || !body.classList.contains("cosmos-only")) return;
+  if (footerOpen) { drawer.scrollTo({ top: 0, behavior: motionOK ? "smooth" : "auto" }); return; }
   setFooterHeight();
   footerOpen = true;
   body.classList.add("footer-open");
+  drawer.setAttribute("aria-hidden", "false");
+  drawer.focus({ preventScroll: true }); // the keys scroll it from here
   labelVisTarget = 0;
 }
 function closeFooter() {
   if (!footerOpen) return;
   footerOpen = false;
   body.classList.remove("footer-open");
+  drawer.setAttribute("aria-hidden", "true");
+  canvas.focus({ preventScroll: true });
 }
 window.addEventListener("resize", setFooterHeight);
 {
-  // One gesture, one move: a burst of wheel events counts once
-  let wheelLock = 0;
+  // Closed: one gesture, one move (a burst of wheel events counts once).
+  // Open: the wheel scrolls the drawer; only a fresh upward gesture at its
+  // very top slides it away, never the momentum of a scroll that reached it.
+  let wheelLock = 0, lastWheel = 0, drawerMoved = 0;
+  if (drawer) drawer.addEventListener("scroll", () => { drawerMoved = performance.now(); }, { passive: true });
   window.addEventListener("wheel", (e) => {
     if (!body.classList.contains("cosmos-only") || e.ctrlKey) return;
-    e.preventDefault();
     const now = performance.now();
+    const fresh = now - lastWheel > 220;
+    lastWheel = now;
+    if (footerOpen) {
+      if (e.deltaY >= 0 || drawer.scrollTop > 0) return;
+      e.preventDefault();
+      if (!fresh || now < wheelLock || now - drawerMoved < 300) return;
+      closeFooter(); wheelLock = now + 650;
+      return;
+    }
+    e.preventDefault();
     if (now < wheelLock || Math.abs(e.deltaY) < 4) return;
-    if (e.deltaY > 0 && !footerOpen) { openFooter(); wheelLock = now + 650; }
-    else if (e.deltaY < 0 && footerOpen) { closeFooter(); wheelLock = now + 650; }
+    if (e.deltaY > 0) { openFooter(); wheelLock = now + 650; }
   }, { passive: false });
 
-  let touchY = null, touchX = null;
+  // Touch: swipe up on the cosmos opens it; swipe down closes it when the
+  // drawer was already at its top as the finger went down
+  let touchY = null, touchX = null, touchTop = false;
   const onStart = (e) => {
     if (e.touches.length !== 1) { touchY = null; return; }
     touchY = e.touches[0].clientY; touchX = e.touches[0].clientX;
+    touchTop = !drawer || drawer.scrollTop <= 0;
   };
   const onEnd = (e) => {
     if (touchY === null || !body.classList.contains("cosmos-only")) return;
     const dy = e.changedTouches[0].clientY - touchY, dx = e.changedTouches[0].clientX - touchX;
     touchY = null;
     if (Math.abs(dy) < 50 || Math.abs(dx) > Math.abs(dy)) return;
-    if (dy < 0) openFooter(); else closeFooter();
+    if (dy < 0 && !footerOpen) openFooter();
+    else if (dy > 0 && footerOpen && touchTop && drawer.scrollTop <= 0) closeFooter();
   };
   canvas.addEventListener("touchstart", onStart, { passive: true });
   canvas.addEventListener("touchend", onEnd, { passive: true });
-  if (siteFooter) {
-    siteFooter.addEventListener("touchstart", onStart, { passive: true });
-    siteFooter.addEventListener("touchend", onEnd, { passive: true });
+  if (drawer) {
+    drawer.addEventListener("touchstart", onStart, { passive: true });
+    drawer.addEventListener("touchend", onEnd, { passive: true });
   }
 
+  // Keys: down opens it; once open they scroll it, and up at its top (or
+  // Escape) closes it. Keys typed into a field stay the field's.
   window.addEventListener("keydown", (e) => {
     if (!body.classList.contains("cosmos-only")) return;
+    if (footerOpen) {
+      const typing = e.target.closest && e.target.closest("input, textarea, select");
+      if (e.key === "Escape" || (!typing && ["ArrowUp", "PageUp", "Home"].includes(e.key) && drawer.scrollTop <= 0)) {
+        e.preventDefault(); closeFooter();
+      }
+      return;
+    }
     if (["ArrowDown", "PageDown", "End"].includes(e.key)) { e.preventDefault(); openFooter(); }
-    else if (["ArrowUp", "PageUp", "Home", "Escape"].includes(e.key)) { e.preventDefault(); closeFooter(); }
   });
+
+  // "Join the waitlist", beside "Click a sphere."
+  const join = document.querySelector(".hint-join");
+  if (join) join.addEventListener("click", (e) => { e.stopPropagation(); openFooter(); });
 }
 
 // ── Loading screen ────────────────────────────────────────────────────────────
@@ -754,8 +767,8 @@ canvas.setAttribute("tabindex", "0");
 canvas.setAttribute("role", "application");
 canvas.setAttribute("aria-label", "Mulvium cosmos. Click or tap a planet to explore. Click or tap the center to enter.");
 if (('ontouchstart' in window) || navigator.maxTouchPoints > 0) {
-  const hint = document.querySelector("#cosmos-hint p");
-  if (hint) hint.textContent = "Tap a sphere.";
+  const hint = document.querySelector("#cosmos-hint .hint-tap");
+  if (hint) hint.textContent = "Tap a sphere";
 }
 canvas.addEventListener("keydown", (e) => {
   if ((e.key === "Enter" || e.key === " ") && state.mode === "3d") { goTo2D(); e.preventDefault(); }
@@ -766,13 +779,13 @@ canvas.addEventListener("keydown", (e) => {
 // sends gesture events instead. Plain scrolling reveals the footer below.
 const zoomBy = (deg) => { targetFov = Math.max(FOV_MIN, Math.min(FOV_MAX, targetFov + deg)); };
 canvas.addEventListener("wheel", (e) => {
-  if (LANDING || state.mode !== "3d" || !e.ctrlKey) return;
+  if (state.mode !== "3d" || !e.ctrlKey) return;
   e.preventDefault();
   zoomBy(Math.sign(e.deltaY) * Math.min(Math.abs(e.deltaY), 10) * 0.35);
 }, { passive: false });
 {
   let gestureFov = null;
-  canvas.addEventListener("gesturestart", (e) => { if (!LANDING && state.mode === "3d") { e.preventDefault(); gestureFov = targetFov; } });
+  canvas.addEventListener("gesturestart", (e) => { if (state.mode === "3d") { e.preventDefault(); gestureFov = targetFov; } });
   canvas.addEventListener("gesturechange", (e) => {
     if (gestureFov === null) return;
     e.preventDefault();
@@ -792,7 +805,7 @@ canvas.addEventListener("wheel", (e) => {
     }
   }, { passive: true });
   canvas.addEventListener("touchmove", (e) => {
-    if (LANDING || state.mode !== "3d" || e.touches.length !== 2 || pinchDist === null) return;
+    if (state.mode !== "3d" || e.touches.length !== 2 || pinchDist === null) return;
     const dx = e.touches[0].clientX - e.touches[1].clientX;
     const dy = e.touches[0].clientY - e.touches[1].clientY;
     const newDist = Math.hypot(dx, dy);
@@ -806,10 +819,6 @@ canvas.addEventListener("wheel", (e) => {
 function goTo2D() {
   if (state.mode !== "3d") return;
   closeFooter();
-  if (LANDING && window.scrollY > 0) { // the waitlist folds away beneath
-    window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
-    resetCinematicScroll();
-  }
   targetFov = FOV_DEFAULT;
   state.mode = "transitioning";
   state.target = 1;
@@ -829,7 +838,8 @@ function goTo3D() {
   resetCinematicScroll();
   state.mode = "transitioning";
   state.target = 0;
-  if (!LANDING) body.classList.add("cosmos-only");
+  footerTo(true);
+  body.classList.add("cosmos-only");
   body.classList.remove("mode-2d", "expansion-active", "night-mode");
   document.querySelectorAll(".nav-item.open").forEach((el) => el.classList.remove("open"));
   state.expansionP1 = 0;
@@ -854,7 +864,8 @@ function snapTo3D() {
 
   window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
   resetCinematicScroll();
-  if (!LANDING) body.classList.add("cosmos-only");
+  footerTo(true);
+  body.classList.add("cosmos-only");
   body.classList.remove("mode-2d", "expansion-active", "night-mode");
   document.querySelectorAll(".nav-item.open").forEach((el) => el.classList.remove("open"));
   navbar.classList.remove("visible");
@@ -877,6 +888,7 @@ function jumpTo2D() {
   state.t      = 1;
   state.target = 1;
   state.mode   = "2d";
+  footerTo(false);
   navbar.classList.add("visible");
   navbar.setAttribute("aria-hidden", "false");
   body.classList.remove("cosmos-only");
@@ -922,7 +934,7 @@ function fadeInLoadingScreen(onReady) {
   });
 }
 
-if (brandLink) brandLink.addEventListener("click", (e) => {
+brandLink.addEventListener("click", (e) => {
   e.preventDefault();
   window.location.reload();
 });
@@ -937,7 +949,7 @@ document.querySelectorAll("#home-link, [data-orbit-link]").forEach((el) => {
 });
 
 // The founder's letter: the orbit view, scrolled on under cover to the
-// letter's start (index.html#letter, and the thought bubbles' links)
+// letter's start (index.html#letter, and the waitlist's thought bubbles)
 function toLetter() {
   jumpTo2D();
   requestAnimationFrame(() => {
@@ -946,17 +958,17 @@ function toLetter() {
   });
 }
 
-// Links within the page: to the letter (from the waitlist's bubbles) under
-// the loading screen; to the waitlist's form, from the 3D view by scrolling,
-// from the orbit view by returning to the 3D view first
+// Links within the page: to the letter (from the waitlist's bubbles), under
+// the loading screen; to the waitlist (the footer's "Join the waitlist"), by
+// its drawer, from the orbit view by way of the 3D view
 document.addEventListener("click", (ev) => {
   const link = ev.target.closest('a[href="#letter"], a[href="#waitlist"]');
   if (!link) return;
   ev.preventDefault();
   navbar.classList.remove("menu-open");
   if (link.getAttribute("href") === "#letter") fadeInLoadingScreen(() => toLetter());
-  else if (state.mode === "3d") toLandingStart();
-  else fadeInLoadingScreen(() => { snapTo3D(); requestAnimationFrame(() => toLandingStart(true)); });
+  else if (state.mode === "3d") openFooter();
+  else fadeInLoadingScreen(() => { snapTo3D(); openFooter(true); });
 });
 
 // Fade to white before navigating to any sub-page from index.html.
@@ -1206,6 +1218,7 @@ function animate() {
       state.mode = state.target === 1 ? "2d" : "3d";
       if (state.mode === "2d") {
         body.classList.add("expansion-active");
+        footerTo(false);
       } else {
         navbar.classList.remove("visible");
         navbar.setAttribute("aria-hidden", "true");
@@ -1400,7 +1413,7 @@ if (finePointer) {
     let step = diff * 0.10;
     // Down through the letter's opening, no faster than a reading pace
     const cap = READ_SPEED * dt;
-    if (step > cap && readStops.length && body.classList.contains("expansion-active")) step -= (step - cap) * readingHold(cur, readingLayout());
+    if (step > cap && readStops.length) step -= (step - cap) * readingHold(cur, readingLayout());
     window.scrollBy(0, step);
     scrollRafId = requestAnimationFrame(cinematicStep);
   }
@@ -1413,7 +1426,7 @@ if (finePointer) {
     scrollTarget    = Math.max(0, Math.min(maxScroll, scrollTarget + e.deltaY * 1.6));
     // In the opening, a burst of wheel events can't bank distance to coast
     // through later: the page runs at most half a screen ahead of itself
-    if (e.deltaY > 0 && readStops.length && body.classList.contains("expansion-active")) {
+    if (e.deltaY > 0 && readStops.length) {
       const L = readingLayout(), hold = readingHold(window.scrollY, L);
       if (hold > 0) scrollTarget = Math.min(scrollTarget, window.scrollY + lerp(maxScroll, L.vh * 0.5, hold));
     }
@@ -1472,14 +1485,16 @@ animate();
   if (_entering) {
     sessionStorage.removeItem("ls-entering");
   }
-  const _orbit  = window.location.hash === "#orbit";
-  const _letter = window.location.hash === "#letter";
-  if (_orbit || _letter) history.replaceState(null, "", window.location.pathname);
+  const _hash     = window.location.hash;
+  const _orbit    = _hash === "#orbit";
+  const _letter   = _hash === "#letter";
+  const _waitlist = _hash === "#waitlist" || _hash === "#join";
+  if (_orbit || _letter || _waitlist) history.replaceState(null, "", window.location.pathname + window.location.search);
   showLoadingScreen(() => {
     if (_orbit) jumpTo2D();
     if (_letter) toLetter();
-    if (pinStart) toLandingStart(true);
-  }, pinStart ? 2600 : _entering ? 5000 : 4000);
+    if (_waitlist) openFooter(true);
+  }, _waitlist ? 2600 : _entering ? 5000 : 4000);
 }
 
 // When the page is restored from the browser back-forward cache the WebGL
