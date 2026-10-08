@@ -78,6 +78,11 @@ const canvasWrap        = document.getElementById("canvas-wrap");
 // drawer, no orbit view, and no planet leads away from the page.
 const LANDING           = "landing" in body.dataset;
 const landingStart      = document.getElementById("wl-start");
+// begin/#waitlist (the home page's and the footers' links) opens on the form,
+// and stays there through the entrance until the visitor scrolls
+let pinStart            = LANDING && /^#(waitlist|join)$/.test(window.location.hash);
+if (pinStart) ["wheel", "touchstart", "keydown"].forEach((t) =>
+  window.addEventListener(t, () => { pinStart = false; }, { once: true, passive: true }));
 window.scrollTo(0, 0);
 if (!LANDING) body.classList.add("cosmos-only");
 
@@ -528,6 +533,18 @@ function layoutHero() {
     const mh = heroMission.offsetHeight;
     root.style.setProperty("--mi-top", `${Math.max(0, Math.min(B + vgap, hintTop - mh - vgap))}px`);
   }
+
+  // The waitlist: its content rises to just below the cosmos and the words
+  // around it (style.css pulls .wl-content up by --hero-cut), so the offer
+  // follows the mission with no empty screen between
+  if (LANDING) {
+    const top = canvasWrap.getBoundingClientRect().top;
+    const foot = Math.max(B,
+      heroMission.getBoundingClientRect().bottom - top,
+      heroStatement.getBoundingClientRect().bottom - top) + 28;
+    root.style.setProperty("--hero-cut", `${Math.max(0, Math.round(h - foot))}px`);
+    if (pinStart) toLandingStart(true);
+  }
 }
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutHero);
 
@@ -611,8 +628,8 @@ canvas.addEventListener("pointerdown", (e) => {
 });
 
 // The waitlist: the sphere leads down to the page's content
-function toLandingStart() {
-  if (landingStart) landingStart.scrollIntoView({ behavior: motionOK ? "smooth" : "auto" });
+function toLandingStart(instant) {
+  if (landingStart) landingStart.scrollIntoView({ behavior: motionOK && !instant ? "smooth" : "auto" });
 }
 
 canvas.addEventListener("click", () => {
@@ -746,13 +763,13 @@ canvas.addEventListener("keydown", (e) => {
 // sends gesture events instead. Plain scrolling reveals the footer below.
 const zoomBy = (deg) => { targetFov = Math.max(FOV_MIN, Math.min(FOV_MAX, targetFov + deg)); };
 canvas.addEventListener("wheel", (e) => {
-  if (state.mode !== "3d" || !e.ctrlKey) return;
+  if (LANDING || state.mode !== "3d" || !e.ctrlKey) return;
   e.preventDefault();
   zoomBy(Math.sign(e.deltaY) * Math.min(Math.abs(e.deltaY), 10) * 0.35);
 }, { passive: false });
 {
   let gestureFov = null;
-  canvas.addEventListener("gesturestart", (e) => { if (state.mode === "3d") { e.preventDefault(); gestureFov = targetFov; } });
+  canvas.addEventListener("gesturestart", (e) => { if (!LANDING && state.mode === "3d") { e.preventDefault(); gestureFov = targetFov; } });
   canvas.addEventListener("gesturechange", (e) => {
     if (gestureFov === null) return;
     e.preventDefault();
@@ -772,7 +789,7 @@ canvas.addEventListener("wheel", (e) => {
     }
   }, { passive: true });
   canvas.addEventListener("touchmove", (e) => {
-    if (state.mode !== "3d" || e.touches.length !== 2 || pinchDist === null) return;
+    if (LANDING || state.mode !== "3d" || e.touches.length !== 2 || pinchDist === null) return;
     const dx = e.touches[0].clientX - e.touches[1].clientX;
     const dy = e.touches[0].clientY - e.touches[1].clientY;
     const newDist = Math.hypot(dx, dy);
@@ -1235,6 +1252,8 @@ function animate() {
 
     applyGoo(heroBrand, brandVis);
     heroStatements.style.opacity = Math.pow(brandVis, 0.6).toFixed(3);
+    // Its link (the home page's way to the waitlist) answers only while seen
+    heroStatements.style.visibility = brandVis > 0.02 ? "" : "hidden";
     heroHalo.style.opacity       = String((1 - p1e) * introOn);
   }
 
@@ -1433,9 +1452,23 @@ animate();
   if (_entering) {
     sessionStorage.removeItem("ls-entering");
   }
-  const _orbit = !LANDING && window.location.hash === "#orbit";
-  if (_orbit) history.replaceState(null, "", window.location.pathname);
-  showLoadingScreen(() => { if (_orbit) jumpTo2D(); }, _entering ? 5000 : 4000);
+  const _orbit  = !LANDING && window.location.hash === "#orbit";
+  const _letter = !LANDING && window.location.hash === "#letter";
+  if (_orbit || _letter) history.replaceState(null, "", window.location.pathname);
+  // index.html#letter (the waitlist's thought bubbles) opens on the founder's
+  // letter: the orbit view, scrolled on under cover to the letter's start
+  const toLetter = () => {
+    jumpTo2D();
+    requestAnimationFrame(() => {
+      const letter = document.getElementById("letter-section");
+      if (letter) window.scrollTo(0, letter.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.1);
+    });
+  };
+  showLoadingScreen(() => {
+    if (_orbit) jumpTo2D();
+    if (_letter) toLetter();
+    if (pinStart) toLandingStart(true);
+  }, pinStart ? 2600 : _entering ? 5000 : 4000);
 }
 
 // When the page is restored from the browser back-forward cache the WebGL

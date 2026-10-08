@@ -192,23 +192,20 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
 .wl-call { font-size: 18px; }
 
 /* ── The waitlist's content, below the hero ──────────────────────────── */
-.wl-content { position: relative; padding: 0 20px; background: var(--paper); }
+/* The content rises over the hero's empty foot (js/main.js measures
+   --hero-cut), so the offer follows the mission at once; no scroll hint.
+   It stays transparent, so the paper and its grain run on unbroken. */
+.wl-content { position: relative; margin-top: calc(-1 * var(--hero-cut, 0px)); padding: 0 20px; }
+/* The rotating noun and the full stop after it never part at a line end */
+.wl-nw { white-space: nowrap; }
+body[data-landing] .cosmos-hint { display: none; }
 .wl-sec {
   position: relative;
   max-width: 620px;
   margin: 0 auto;
   padding: 64px 0 8px;
 }
-.wl-sec--lead { padding-top: 72px; }
-.wl-eyebrow {
-  margin: 0 0 12px;
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 15px;
-  letter-spacing: 0.16em;
-  text-transform: lowercase;
-  color: var(--clay-deep);
-}
+.wl-sec--lead { padding-top: 8px; }
 .wl-h1 {
   margin: 0 0 12px;
   font-weight: 600;
@@ -265,79 +262,141 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
 .wl-sig { display: block; width: 210px; height: auto; margin: 4px 0 2px; }
 .wl-sig-name { margin: 0 0 26px; font-size: 17px; color: var(--ink-soft); }
 
+/* ── The rotating noun in the headline (as on the fiscal sponsorship page) */
+.wl-rotor {
+  position: relative;
+  display: inline-block;
+  height: 1.2em;
+  line-height: 1.2em;
+  vertical-align: -0.23em;
+  overflow: hidden;
+  white-space: nowrap;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--clay-deep);
+  transition: width 0.6s cubic-bezier(0.65, 0.05, 0.25, 1);
+}
+.wl-rotor-word {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-right: 0.06em; /* the italic's overhang */
+  opacity: 0;
+  transform: translateY(105%);
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+}
+.wl-rotor-word.is-on { position: relative; opacity: 1; transform: none; }
+.wl-rotor-word.is-out { opacity: 0; transform: translateY(-105%); }
+
 /* ── Thought bubbles: lines from the founder's letter ─────────────────────
-   On phones they sit between the statements (only those without .wl-wide);
-   on wide screens they float in the margins beside them, at --y. */
+   Each is a cloud with a trail of two rounds. On phones the clouds sit
+   between the statements (only those without .wl-wide), trailing down; on
+   wide screens they float in the margins at --y, trailing in toward the
+   text. They arrive as a thought does: the far round, the near one, then
+   the cloud swelling out of the trail, its words last (begin.js adds .is-in);
+   then cloud and trail drift, each at its own pace. */
 .wl-bubble {
   position: relative;
   width: fit-content;
   max-width: 86%;
-  margin: 26px 0 30px;
-  padding: 14px 20px 12px;
-  background: rgba(255, 255, 255, 0.58);
-  border: 1px solid rgba(27, 22, 19, 0.1);
-  border-radius: 26px;
-  box-shadow: 0 10px 30px rgba(27, 22, 19, 0.05);
+  margin: 26px 0 40px;
 }
 .wl-bubble--r { margin-left: auto; }
-.wl-bubble p { margin: 0; font-style: italic; font-size: 19px; line-height: 1.38; color: var(--ink); }
-.wl-bubble cite {
-  display: block;
-  margin-top: 6px;
+.wl-cloud {
+  position: relative;
+  padding: 15px 21px 13px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(27, 22, 19, 0.09);
+  border-radius: 28px;
+  box-shadow: 0 12px 34px rgba(27, 22, 19, 0.06), 0 1px 0 rgba(255, 255, 255, 0.7) inset;
+  transition: box-shadow 0.5s ease, translate 0.5s ease;
+}
+.wl-bubble:hover .wl-cloud { box-shadow: 0 18px 44px rgba(27, 22, 19, 0.1), 0 1px 0 rgba(255, 255, 255, 0.7) inset; }
+.wl-cloud p { margin: 0; font-style: italic; font-size: 19px; line-height: 1.38; color: var(--ink); }
+.wl-letter-link {
+  display: inline-block;
+  margin-top: 7px;
   font-family: "Cormorant SC", serif;
-  font-style: normal;
-  font-size: 13px;
-  letter-spacing: 0.12em;
+  font-size: 13.5px;
+  letter-spacing: 0.1em;
   text-transform: lowercase;
   color: var(--clay-deep);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(143, 90, 66, 0.35);
+  transition: border-color 0.3s ease, color 0.3s ease;
 }
-/* The trail of a thought: two small rounds below the bubble */
-.wl-bubble::before,
-.wl-bubble::after {
-  content: "";
+.wl-letter-link:hover { color: var(--ink); border-color: var(--ink); }
+
+/* The trail */
+.wl-dot {
   position: absolute;
-  background: inherit;
-  border: inherit;
   border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(27, 22, 19, 0.09);
+  box-shadow: 0 4px 12px rgba(27, 22, 19, 0.05);
 }
-.wl-bubble::before { width: 13px; height: 13px; bottom: -17px; }
-.wl-bubble::after  { width: 7px;  height: 7px;  bottom: -28px; }
-.wl-bubble--l::before { right: 26px; }
-.wl-bubble--l::after  { right: 16px; }
-.wl-bubble--r::before { left: 26px; }
-.wl-bubble--r::after  { left: 16px; }
+.wl-dot--near { width: 15px; height: 15px; bottom: -19px; }
+.wl-dot--far  { width: 8px;  height: 8px;  bottom: -33px; }
+.wl-bubble--l .wl-dot--near { right: 30px; }
+.wl-bubble--l .wl-dot--far  { right: 19px; }
+.wl-bubble--r .wl-dot--near { left: 30px; }
+.wl-bubble--r .wl-dot--far  { left: 19px; }
+.wl-bubble--l .wl-cloud { transform-origin: 85% 110%; }
+.wl-bubble--r .wl-cloud { transform-origin: 15% 110%; }
 .wl-wide { display: none; }
 
-/* Rise in as they come into view (begin.js adds .is-in; no JS, no hiding) */
-html.wl-js .wl-bubble { opacity: 0; transform: translateY(16px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
-html.wl-js .wl-bubble.is-in { opacity: 1; transform: none; }
+/* Arrival, only when begin.js is there to bring them in */
+html.wl-js .wl-dot { opacity: 0; transform: scale(0); transition: opacity 0.3s ease, transform 0.55s cubic-bezier(0.34, 1.7, 0.6, 1); }
+html.wl-js .wl-dot--near { transition-delay: 0.14s; }
+html.wl-js .wl-cloud { opacity: 0; transform: scale(0.55); filter: blur(8px); transition: opacity 0.5s ease 0.28s, transform 0.85s cubic-bezier(0.34, 1.32, 0.6, 1) 0.28s, filter 0.7s ease 0.28s, box-shadow 0.5s ease; }
+html.wl-js .wl-cloud > * { opacity: 0; translate: 0 6px; transition: opacity 0.6s ease 0.62s, translate 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.62s; }
+html.wl-js .wl-cloud > a { transition-delay: 0.78s, 0.78s; }
+html.wl-js .wl-bubble.is-in .wl-dot,
+html.wl-js .wl-bubble.is-in .wl-cloud { opacity: 1; transform: none; filter: none; }
+html.wl-js .wl-bubble.is-in .wl-cloud > * { opacity: 1; translate: none; }
+
+/* Afterwards, a slow drift: the cloud sways, the trail follows a little behind */
+.wl-bubble.is-in .wl-cloud { animation: wl-drift 8s ease-in-out 1.4s infinite alternate; }
+.wl-bubble.is-in .wl-dot--near { animation: wl-drift-dot 8s ease-in-out 1.7s infinite alternate; }
+.wl-bubble.is-in .wl-dot--far { animation: wl-drift-dot 8s ease-in-out 2s infinite alternate; }
+.wl-bubble:nth-of-type(2n).is-in .wl-cloud { animation-duration: 10s; animation-delay: 1.1s; }
+@keyframes wl-drift {
+  from { translate: 0 0; rotate: 0deg; }
+  50% { translate: 2px -6px; rotate: -0.5deg; }
+  to { translate: -2px 4px; rotate: 0.4deg; }
+}
+@keyframes wl-drift-dot {
+  from { translate: 0 0; }
+  to { translate: 0 -4px; }
+}
 
 @media (min-width: 1240px) {
   .wl-bubble {
     position: absolute;
     top: var(--y, 0px);
-    width: 240px;
+    width: 244px;
     max-width: none;
     margin: 0;
-    animation: wl-drift 7s ease-in-out infinite alternate;
   }
-  .wl-bubble--l { right: calc(100% + 64px); }
-  .wl-bubble--r { left: calc(100% + 64px); margin-left: 0; }
-  .wl-bubble:nth-of-type(2n) { animation-duration: 9s; animation-delay: -3s; }
+  .wl-bubble--l { right: calc(100% + 66px); }
+  .wl-bubble--r { left: calc(100% + 66px); margin-left: 0; }
   /* In the margins, the trail points in toward the text */
-  .wl-bubble--l::before { right: -16px; bottom: 22px; }
-  .wl-bubble--l::after  { right: -27px; bottom: 12px; }
-  .wl-bubble--r::before { left: -16px; bottom: 22px; }
-  .wl-bubble--r::after  { left: -27px; bottom: 12px; }
+  .wl-dot--near { bottom: 22px; }
+  .wl-dot--far  { bottom: 12px; }
+  .wl-bubble--l .wl-dot--near { right: -21px; }
+  .wl-bubble--l .wl-dot--far  { right: -36px; }
+  .wl-bubble--r .wl-dot--near { left: -21px; }
+  .wl-bubble--r .wl-dot--far  { left: -36px; }
+  .wl-bubble--l .wl-cloud { transform-origin: 108% 80%; }
+  .wl-bubble--r .wl-cloud { transform-origin: -8% 80%; }
   .wl-wide { display: block; }
 }
-@keyframes wl-drift {
-  from { translate: 0 -5px; }
-  to { translate: 0 5px; }
-}
+
 @media (prefers-reduced-motion: reduce) {
-  .wl-bubble { animation: none !important; }
-  html.wl-js .wl-bubble { transition: none; }
+  html.wl-js .wl-dot, html.wl-js .wl-cloud, html.wl-js .wl-cloud > * {
+    opacity: 1; transform: none; filter: none; translate: none; transition: none;
+  }
+  .wl-bubble.is-in .wl-cloud, .wl-bubble.is-in .wl-dot { animation: none !important; }
 }
 
 /* ── Footer ───────────────────────────────────────────────────────────── */
@@ -394,6 +453,7 @@ select.wl-input { appearance: auto; }
   .wl-bar { padding: 0 40px; }
   .wl-content { padding: 0 40px; }
   .wl-sec { padding-top: 88px; }
+  .wl-sec--lead { padding-top: 8px; }
 }
 
 /* ── The press kit (brand/index.html) ─────────────────────────────────── */

@@ -1692,6 +1692,22 @@ html[data-hero-layout="side"] .hero-mission {
 
 body.cosmos-intro .hero-mission { opacity: 1; }
 
+/* The home page's way to the waitlist, under the mission (the statements
+   ignore the pointer; this link alone answers it) */
+.hero-cta {
+  display: inline-block;
+  margin-top: 0.9em;
+  pointer-events: auto;
+  font-size: 1.12em;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--clay-deep);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+}
+.hero-cta:hover { color: var(--ink); }
+
 /* Statement: each word rises out of its own mask at its own pace */
 .hero-statement .hw {
   display: inline-block;

@@ -47,11 +47,17 @@ be announced.
   later, ads. It opens exactly as the home page does (`js/main.js` runs in its
   landing mode when the body carries `data-landing`: the loading screen, the
   cosmos, the wordmark, statement and mission, but the page scrolls on, no
-  planet leads away, and the sphere scrolls to the offer). Below the hero:
-  the offer in short statements, plain answers, and lines from the founder's
-  letter as thought bubbles in the margins (between the statements on
-  phones). `?for=festival|research|community|arts|education|film` swaps the
-  headline's noun; `?v=b` shows the letter's line instead. After a signup,
+  planet leads away, the sphere scrolls to the offer, and the offer begins
+  right under the mission: main.js measures the hero's empty foot as
+  `--hero-cut`). Below the hero: the offer, its noun turning over (idea,
+  festival, research, charity, initiative, passion, as on the fiscal
+  sponsorship page), short statements, plain answers, and lines from the
+  founder's letter as thought bubbles in the margins (between the statements
+  on phones), each linking to the letter. `begin/#waitlist` opens on the form;
+  the home page's hero links there under the mission, as every footer does.
+  `index.html#letter` opens on the founder's letter.
+  `?for=festival|research|community|arts|education|film` fixes the headline's
+  noun; `?v=b` shows the letter's line instead. After a signup,
   four one-tap questions take the form's place, then the application
   (`begin/apply.html`), drawn from Form FS-1's required lines.
   `begin/config.js` holds every outside service (the form endpoint, the call
