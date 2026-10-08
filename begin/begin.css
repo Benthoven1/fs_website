@@ -1,7 +1,7 @@
-/* begin.css — the waitlist (begin/), its application, and the privacy page.
-   A page of its own: the site's paper, ink and clay, and its Cormorant
-   type, without style.css, the loading screen or WebGL, so it opens at once
-   on a phone. The layers figure follows the MulviumSOS page's (css/msos.css). */
+/* begin.css — the waitlist (begin/), its application, the privacy page and
+   the press kit. The waitlist loads it after css/style.css (it opens on the
+   home page's hero); the other pages load it alone. Its base rules match
+   style.css's, so either way the paper, ink, clay and Cormorant agree. */
 
 :root {
   --clay: #b87758;
@@ -32,8 +32,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* The site's paper grain */
-body::before {
+/* The site's paper grain (the waitlist keeps style.css's own, above its
+   canvas) */
+body:not([data-landing])::before {
   content: "";
   position: fixed;
   inset: 0;
@@ -87,41 +88,6 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
   background: var(--clay-deep);
   border-radius: 999px;
   padding: 7px 16px 8px;
-}
-
-/* ── Hero ─────────────────────────────────────────────────────────────── */
-main { padding: 0 20px; }
-
-.wl-hero {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 18px 0 8px;
-}
-.wl-eyebrow {
-  margin: 0 0 10px;
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 15px;
-  letter-spacing: 0.16em;
-  text-transform: lowercase;
-  color: var(--clay-deep);
-}
-.wl-wide { display: none; }
-.wl-h1 {
-  margin: 0 0 12px;
-  font-weight: 500;
-  font-size: clamp(30px, 7.4vw, 54px);
-  line-height: 1.08;
-  letter-spacing: -0.005em;
-  text-wrap: balance;
-}
-.wl-for { font-style: italic; color: var(--clay-deep); }
-.wl-sub {
-  margin: 0 0 18px;
-  font-size: 19px;
-  line-height: 1.45;
-  color: var(--ink-soft);
-  max-width: 34em;
 }
 
 /* ── Signup ───────────────────────────────────────────────────────────── */
@@ -225,104 +191,154 @@ main { padding: 0 20px; }
 .wl-next-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin: 0; }
 .wl-call { font-size: 18px; }
 
-/* ── The layers figure ────────────────────────────────────────────────── */
-.wl-fig { margin: 30px 0 0; }
-.wl-fig-title {
-  margin: 0 0 10px;
+/* ── The waitlist's content, below the hero ──────────────────────────── */
+.wl-content { position: relative; padding: 0 20px; background: var(--paper); }
+.wl-sec {
+  position: relative;
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 64px 0 8px;
+}
+.wl-sec--lead { padding-top: 72px; }
+.wl-eyebrow {
+  margin: 0 0 12px;
   font-family: "Cormorant SC", serif;
   font-weight: 500;
   font-size: 15px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: lowercase;
+  color: var(--clay-deep);
+}
+.wl-h1 {
+  margin: 0 0 12px;
+  font-weight: 600;
+  font-size: clamp(32px, 7.6vw, 54px);
+  line-height: 1.06;
+  text-wrap: balance;
+}
+.wl-for { font-style: italic; font-weight: 500; color: var(--clay-deep); }
+.wl-sub {
+  margin: 0 0 22px;
+  font-size: 21px;
+  line-height: 1.4;
+  font-style: italic;
   color: var(--ink-soft);
 }
-.wl-layers { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; }
-.wl-layer {
-  position: relative;
-  padding: 11px 14px 12px;
-  background: var(--tint);
-  border: 1px solid var(--tint-edge);
-  border-radius: 12px;
-  animation: wl-rise 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  animation-delay: calc(var(--i) * 80ms + 120ms);
+.wl-signup { max-width: 34em; }
+.wl-h2 {
+  margin: 0 0 18px;
+  font-weight: 600;
+  font-size: clamp(26px, 5.6vw, 36px);
+  line-height: 1.12;
+  text-wrap: balance;
 }
-.wl-you { background: transparent; border-style: dashed; border-color: rgba(27, 22, 19, 0.3); }
-.wl-home { background: var(--home); border-color: var(--home-edge); }
-/* A short clay line joins each layer to the next */
-.wl-layer + .wl-layer::before {
+
+/* Short statements: a bold claim, then a few plain words */
+.wl-says { list-style: none; margin: 0; padding: 0; }
+.wl-says li {
+  padding: 14px 0 13px;
+  border-top: 1px solid var(--hairline);
+  line-height: 1.35;
+}
+.wl-says li:last-child { border-bottom: 1px solid var(--hairline); }
+.wl-says strong { display: block; font-weight: 700; font-size: 24px; }
+.wl-says span { display: block; margin-top: 2px; font-size: 18px; color: var(--ink-soft); }
+
+/* Plain answers: a one-word question, then the answer */
+.wl-qa { margin: 0; }
+.wl-qa > div {
+  display: grid;
+  grid-template-columns: 7.2em 1fr;
+  gap: 12px;
+  padding: 13px 0;
+  border-top: 1px solid var(--hairline);
+}
+.wl-qa > div:last-child { border-bottom: 1px solid var(--hairline); }
+.wl-qa dt { font-weight: 700; font-size: 21px; line-height: 1.3; }
+.wl-qa dd { margin: 0; font-size: 18px; line-height: 1.45; color: var(--ink-soft); }
+@media (max-width: 559px) {
+  .wl-qa > div { grid-template-columns: 1fr; gap: 2px; }
+}
+
+.wl-sec--close { padding-bottom: 24px; }
+.wl-h2--leap { font-style: italic; font-weight: 500; }
+.wl-sig { display: block; width: 210px; height: auto; margin: 4px 0 2px; }
+.wl-sig-name { margin: 0 0 26px; font-size: 17px; color: var(--ink-soft); }
+
+/* ── Thought bubbles: lines from the founder's letter ─────────────────────
+   On phones they sit between the statements (only those without .wl-wide);
+   on wide screens they float in the margins beside them, at --y. */
+.wl-bubble {
+  position: relative;
+  width: fit-content;
+  max-width: 86%;
+  margin: 26px 0 30px;
+  padding: 14px 20px 12px;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(27, 22, 19, 0.1);
+  border-radius: 26px;
+  box-shadow: 0 10px 30px rgba(27, 22, 19, 0.05);
+}
+.wl-bubble--r { margin-left: auto; }
+.wl-bubble p { margin: 0; font-style: italic; font-size: 19px; line-height: 1.38; color: var(--ink); }
+.wl-bubble cite {
+  display: block;
+  margin-top: 6px;
+  font-family: "Cormorant SC", serif;
+  font-style: normal;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  color: var(--clay-deep);
+}
+/* The trail of a thought: two small rounds below the bubble */
+.wl-bubble::before,
+.wl-bubble::after {
   content: "";
   position: absolute;
-  left: 50%;
-  bottom: 100%;
-  height: 22px;
-  border-left: 1px solid rgba(143, 90, 66, 0.55);
+  background: inherit;
+  border: inherit;
+  border-radius: 50%;
 }
-.wl-layer-name { display: block; font-weight: 600; font-size: 19px; line-height: 1.25; }
-.wl-layer-gloss { display: block; margin-top: 2px; font-size: 16.5px; line-height: 1.4; color: var(--ink-soft); }
-.wl-fig figcaption { margin-top: 12px; font-size: 16.5px; font-style: italic; color: var(--ink-soft); }
+.wl-bubble::before { width: 13px; height: 13px; bottom: -17px; }
+.wl-bubble::after  { width: 7px;  height: 7px;  bottom: -28px; }
+.wl-bubble--l::before { right: 26px; }
+.wl-bubble--l::after  { right: 16px; }
+.wl-bubble--r::before { left: 26px; }
+.wl-bubble--r::after  { left: 16px; }
+.wl-wide { display: none; }
 
-@keyframes wl-rise {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: none; }
+/* Rise in as they come into view (begin.js adds .is-in; no JS, no hiding) */
+html.wl-js .wl-bubble { opacity: 0; transform: translateY(16px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+html.wl-js .wl-bubble.is-in { opacity: 1; transform: none; }
+
+@media (min-width: 1240px) {
+  .wl-bubble {
+    position: absolute;
+    top: var(--y, 0px);
+    width: 240px;
+    max-width: none;
+    margin: 0;
+    animation: wl-drift 7s ease-in-out infinite alternate;
+  }
+  .wl-bubble--l { right: calc(100% + 64px); }
+  .wl-bubble--r { left: calc(100% + 64px); margin-left: 0; }
+  .wl-bubble:nth-of-type(2n) { animation-duration: 9s; animation-delay: -3s; }
+  /* In the margins, the trail points in toward the text */
+  .wl-bubble--l::before { right: -16px; bottom: 22px; }
+  .wl-bubble--l::after  { right: -27px; bottom: 12px; }
+  .wl-bubble--r::before { left: -16px; bottom: 22px; }
+  .wl-bubble--r::after  { left: -27px; bottom: 12px; }
+  .wl-wide { display: block; }
+}
+@keyframes wl-drift {
+  from { translate: 0 -5px; }
+  to { translate: 0 5px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .wl-layer { animation: none; }
+  .wl-bubble { animation: none !important; }
+  html.wl-js .wl-bubble { transition: none; }
 }
-
-/* ── Sections ─────────────────────────────────────────────────────────── */
-.wl-section, .wl-letter {
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 34px 0 6px;
-}
-.wl-h2 {
-  margin: 0 0 12px;
-  font-weight: 500;
-  font-size: 27px;
-  line-height: 1.2;
-}
-.wl-list { margin: 0; padding: 0; list-style: none; }
-.wl-list li {
-  position: relative;
-  padding-left: 22px;
-  margin-bottom: 12px;
-}
-.wl-list li::before {
-  content: "";
-  position: absolute;
-  left: 2px;
-  top: 0.62em;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--clay);
-}
-.wl-list strong { font-weight: 600; }
-
-.wl-qa { border-top: 1px solid var(--hairline); }
-.wl-qa:last-of-type { border-bottom: 1px solid var(--hairline); }
-.wl-qa summary {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 52px;
-  padding: 10px 0;
-  font-size: 20px;
-  cursor: pointer;
-  list-style: none;
-}
-.wl-qa summary::-webkit-details-marker { display: none; }
-.wl-qa summary::after { content: "+"; font-size: 24px; color: var(--clay-deep); margin-left: 12px; }
-.wl-qa[open] summary::after { content: "\2212"; }
-.wl-qa p { margin: 0 0 14px; color: var(--ink-soft); }
-
-/* ── The letter ───────────────────────────────────────────────────────── */
-.wl-letter { padding-bottom: 20px; }
-.wl-letter blockquote { margin: 0; font-size: 22px; line-height: 1.45; font-style: italic; }
-.wl-letter blockquote p { margin: 0; }
-.wl-dots { text-align: center; color: var(--clay); font-style: normal; margin: 8px 0 !important; }
-.wl-sig { display: block; width: 210px; height: auto; margin: 18px 0 2px; }
-.wl-sig-name { margin: 0 0 24px; font-size: 17px; color: var(--ink-soft); }
 
 /* ── Footer ───────────────────────────────────────────────────────────── */
 .wl-foot {
@@ -371,20 +387,25 @@ select.wl-input { appearance: auto; }
 @media (min-width: 560px) {
   .wl-row { flex-direction: row; }
   .wl-row .wl-input { flex: 1; }
-  .wl-wide { display: inline; }
   .wl-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
   .wl-next-actions { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 18px; }
 }
 @media (min-width: 960px) {
-  main { padding: 0 40px; }
   .wl-bar { padding: 0 40px; }
-  .wl-hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-    gap: 64px;
-    align-items: center;
-    padding: 56px 0 24px;
-  }
-  .wl-fig { margin: 0; }
-  .wl-section, .wl-letter { padding-top: 48px; }
+  .wl-content { padding: 0 40px; }
+  .wl-sec { padding-top: 88px; }
 }
+
+/* ── The press kit (brand/index.html) ─────────────────────────────────── */
+.wl-doc.pk { max-width: 1080px; }
+.pk-group { margin-top: 40px; }
+.pk-group h2 { margin-bottom: 2px; }
+.pk-group > p { margin: 0 0 16px; }
+.pk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 22px; }
+.pk-card { margin: 0; }
+.pk-card--sq { max-width: 260px; }
+.pk-img { display: block; border: 1px solid var(--hairline); border-radius: 10px; overflow: hidden; background: #eceae5; }
+.pk-img img { display: block; width: 100%; height: auto; }
+.pk-card figcaption { margin-top: 8px; font-size: 16px; line-height: 1.4; color: var(--ink-soft); }
+.pk-card strong { color: var(--ink); font-weight: 600; margin-right: 6px; }
+.pk-dl { display: block; font-size: 15px; }

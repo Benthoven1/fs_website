@@ -43,23 +43,29 @@ be announced.
   of the loading screen's pictures (`Musical.webp`, `Horticulture.webp`, `image-13.webp`,
   `Pictorial.webp`), the same files the loading screen uses: replace a file and both follow.
 - `pages/about/` — People, Careers, Contact Us.
-- `begin/` — the waitlist, a page of its own for posts, referrals and, later,
-  ads (`mulvium.org/begin/`). It is for public-benefit founders who need
-  fiscal sponsorship and the organization built beneath them, and it loads
-  none of the site's heavy parts: no loading screen, no Three.js, about
-  150 KB. `?for=festival|research|community|arts|education|film` swaps the
+- `begin/` — the waitlist (`mulvium.org/begin/`), for posts, referrals and,
+  later, ads. It opens exactly as the home page does (`js/main.js` runs in its
+  landing mode when the body carries `data-landing`: the loading screen, the
+  cosmos, the wordmark, statement and mission, but the page scrolls on, no
+  planet leads away, and the sphere scrolls to the offer). Below the hero:
+  the offer in short statements, plain answers, and lines from the founder's
+  letter as thought bubbles in the margins (between the statements on
+  phones). `?for=festival|research|community|arts|education|film` swaps the
   headline's noun; `?v=b` shows the letter's line instead. After a signup,
   four one-tap questions take the form's place, then the application
   (`begin/apply.html`), drawn from Form FS-1's required lines.
   `begin/config.js` holds every outside service (the form endpoint, the call
-  booking link, Umami analytics); each is a stand-in, and empty values fall
-  back to email to hello@mulvium.org. `tools/waitlist-apps-script.gs` is a
-  free endpoint on a Google Sheet. Every answer sent carries the visit's
-  `sid` and how the visitor arrived (`for`, `ref`, UTM tags).
+  booking link, Umami analytics); with no endpoint, a signup opens an email
+  draft to hello@mulvium.org. `tools/waitlist-apps-script.gs` is the free
+  endpoint: a Google Sheet that records every answer, emails each new signup
+  a welcome, and tells hello@mulvium.org of signups and applications.
 - `privacy/` — the privacy policy the waitlist links to.
-- `brand/` — the central sphere and the hero as images for profile icons,
-  posts and banners, rendered from the site itself; `brand/README.md` lists
-  each size and how to make them again.
+- `brand/` — the press kit (`mulvium.org/brand/`): the central sphere and the
+  hero as images for profile icons, posts and banners, rendered from the site
+  itself, previewed from `brand/thumbs/`; `brand/README.md` lists each size
+  and how to make them again.
+- Every page's footer links to the waitlist (Offerings), the press kit
+  (About Us) and the privacy policy (beside the copyright).
 - `images/` — stills of each company's animation, shown in the Offerings menu.
 
 ## Images and speed

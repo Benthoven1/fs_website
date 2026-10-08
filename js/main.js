@@ -73,8 +73,13 @@ const brandLink         = document.getElementById("brand-link");
 const body              = document.body;
 const expansionWrapper  = document.getElementById("expansion-wrapper");
 const canvasWrap        = document.getElementById("canvas-wrap");
+// The waitlist (begin/index.html, <body data-landing>) opens on this same
+// hero, then scrolls on to its own content: no cosmos-only lock, no footer
+// drawer, no orbit view, and no planet leads away from the page.
+const LANDING           = "landing" in body.dataset;
+const landingStart      = document.getElementById("wl-start");
 window.scrollTo(0, 0);
-body.classList.add("cosmos-only");
+if (!LANDING) body.classList.add("cosmos-only");
 
 const scene = new THREE.Scene();
 
@@ -605,7 +610,13 @@ canvas.addEventListener("pointerdown", (e) => {
   updateHover();
 });
 
+// The waitlist: the sphere leads down to the page's content
+function toLandingStart() {
+  if (landingStart) landingStart.scrollIntoView({ behavior: motionOK ? "smooth" : "auto" });
+}
+
 canvas.addEventListener("click", () => {
+  if (LANDING) { if (state.hoverStar) toLandingStart(); return; }
   if (footerOpen) { closeFooter(); return; }
   if (state.mode === "3d") {
     if (state.hoverPlanet) coverAndNavigate(state.hoverPlanet.def.href);
@@ -721,13 +732,13 @@ function showLoadingScreen(onReady, duration) {
 
 canvas.setAttribute("tabindex", "0");
 canvas.setAttribute("role", "application");
-canvas.setAttribute("aria-label", "Mulvium cosmos. Click or tap a planet to explore. Click or tap the center to enter.");
-if (('ontouchstart' in window) || navigator.maxTouchPoints > 0) {
+canvas.setAttribute("aria-label", LANDING ? "Mulvium cosmos." : "Mulvium cosmos. Click or tap a planet to explore. Click or tap the center to enter.");
+if (!LANDING && (('ontouchstart' in window) || navigator.maxTouchPoints > 0)) {
   const hint = document.querySelector("#cosmos-hint p");
   if (hint) hint.textContent = "Tap a sphere.";
 }
 canvas.addEventListener("keydown", (e) => {
-  if ((e.key === "Enter" || e.key === " ") && state.mode === "3d") { goTo2D(); e.preventDefault(); }
+  if ((e.key === "Enter" || e.key === " ") && state.mode === "3d") { LANDING ? toLandingStart() : goTo2D(); e.preventDefault(); }
 });
 
 // Zoom (3D mode only) answers zoom gestures, never plain scrolling: a trackpad
@@ -887,7 +898,7 @@ function fadeInLoadingScreen(onReady) {
   });
 }
 
-brandLink.addEventListener("click", (e) => {
+if (brandLink) brandLink.addEventListener("click", (e) => {
   e.preventDefault();
   window.location.reload();
 });
@@ -1013,6 +1024,14 @@ function updateHover() {
 
   raycaster.setFromCamera(pointer, camera);
   const hits = raycaster.intersectObjects([star, ...orbits.map((o) => o.planet)], true);
+
+  // The waitlist: only the sphere answers, and it shows no label
+  if (LANDING) {
+    state.hoverStar   = hits.length > 0 && hits[0].object.userData.type === "star";
+    state.hoverPlanet = null;
+    canvas.style.cursor = state.hoverStar ? "pointer" : "default";
+    return;
+  }
 
   if (hits.length > 0) {
     const obj = hits[0].object;
@@ -1414,7 +1433,7 @@ animate();
   if (_entering) {
     sessionStorage.removeItem("ls-entering");
   }
-  const _orbit = window.location.hash === "#orbit";
+  const _orbit = !LANDING && window.location.hash === "#orbit";
   if (_orbit) history.replaceState(null, "", window.location.pathname);
   showLoadingScreen(() => { if (_orbit) jumpTo2D(); }, _entering ? 5000 : 4000);
 }
