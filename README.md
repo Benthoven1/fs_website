@@ -20,21 +20,24 @@ be announced.
   up at its top (or on Escape). Pinching (or ctrl/⌘ + wheel) zooms, within
   limits. `index.html#orbit`, the nav's Dear Leader link, opens straight onto
   the orbit view; `#letter` onto the founder's letter; `#waitlist`, every
-  footer's "Join the waitlist", onto the drawer.
+  footer's "Join the waitlist", onto the drawer. A quiet arrow under the hint
+  opens the drawer; one at the drawer's top closes it.
 - The waitlist drawer (`#waitlist` in `index.html`; `css/waitlist.css`,
   `css/pitch.css`, `js/waitlist.js`, `js/pitch.js`; opened and closed by
   `js/main.js`, which also moves the site's footer into it for the 3D view and
-  back under the letter for the orbit view) is the pitch. It opens on the
-  offer and its form: the headline's noun turns over (idea, festival,
+  back under the letter for the orbit view) is the pitch. Phones get one
+  column; from 960px the desktop has its own wider composition. It opens on
+  the offer and its form: the headline's noun turns over (idea, festival,
   research, charity, initiative, passion, as on the fiscal sponsorship page)
   in a box as wide as the widest word, so no line ever reflows. Then short
-  slides, each arriving as it scrolls into view: the problem (the ideas, and
-  the wall of organization-building between an idea and reality), the answer
-  (you, donors and Mulvium), how it works, what a founder receives, $0
-  upfront, and the vision under a night sky; then plain answers, and the
-  close with the second form. Three lines from the founder's letter float
-  beside it as thought bubbles (between the slides on phones), each linking
-  to the letter in its own words.
+  slides, each arriving as it scrolls into view: the problem (rows of
+  institutions drifting past), everything between an idea and reality (a
+  slice of the M.SOS word globe, drawn from `js/fsos-cloud.js` and turning
+  slowly), the answer (you, patrons and Mulvium), how it works, what a
+  founder receives, $0 upfront, and the vision under a night sky; then plain
+  answers, and the close with the second form. "Why build an institution?"
+  and three lines from the founder's letter float beside it as thought
+  bubbles, each linking to the letter in its own words.
   `?for=festival|research|community|arts|education|film` fixes the headline's
   noun; `?v=b` shows the letter's line instead. After a signup, four one-tap
   questions take the form's place, then the application (`apply/`), drawn
