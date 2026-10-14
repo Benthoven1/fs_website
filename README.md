@@ -44,10 +44,11 @@ be announced.
   back end refuses domains that take no mail and throwaway inboxes. The back
   end can also confirm each email with a six-digit code, entered in the
   form's place (`CODE` in the Apps Script, off for now; the page follows it).
-  Then a card of five optional questions follows (what excites them, when
-  they want to begin, the project's field and form, how they heard of
-  Mulvium, their name), with Previous and Continue to change an answer before
-  Submit, and then a thank you. Meanwhile the other signup box offers a way
+  Then a card of five questions follows (what excites them, when they want
+  to begin, the project's field and form, how they heard of Mulvium, and
+  their name, which is optional), with Previous and Continue to change an
+  answer before Submit; Continue waits for an answer. Then a thank you.
+  Meanwhile the other signup box offers a way
   back to the code or the questions, and says "You're on the list." once
   they are done.
   `js/waitlist-config.js` holds every outside service (the form endpoint,
