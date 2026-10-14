@@ -48,9 +48,8 @@ be announced.
   to begin, the project's field and form, how they heard of Mulvium, and
   their name, which is optional), with Previous and Continue to change an
   answer before Submit; Continue waits for an answer. Then a thank you.
-  Meanwhile the other signup box offers a way
-  back to the code or the questions, and says "You're on the list." once
-  they are done.
+  Meanwhile the other signup box offers a way back to the code or the
+  questions, and says "You're on the list." once they are done.
   `js/waitlist-config.js` holds every outside service (the form endpoint,
   Umami analytics) and the typo check's switch; with no endpoint, a signup
   still opens the questions, but nothing is kept and no email is sent.
