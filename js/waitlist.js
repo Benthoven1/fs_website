@@ -1,11 +1,10 @@
-// waitlist.js — the waitlist below the home page's hero (index.html) and its
-// application (apply/): the signup forms, the four-question qualifier, the
-// application, what each sends where (see waitlist-config.js), the headline's
-// turning noun, and the arrival of the thought bubbles. The hero is main.js's.
+// waitlist.js — the waitlist in the home page's drawer (index.html): the
+// signup forms, the five questions that follow a signup, what each sends where
+// (see waitlist-config.js), the headline's turning noun, and the arrival of
+// the thought bubbles. The hero is main.js's; the pitch's motion is pitch.js's.
 //
-// What a visitor gives is kept in sessionStorage for the visit, so the
-// application can carry the email, the answers and how they found us
-// without any of it appearing in a URL. Everything sent carries `sid`, a
+// What a visitor gives is kept in sessionStorage for the visit, so a return
+// within it picks up where they left off. Everything sent carries `sid`, a
 // random id for the visit, so one person's rows can be joined.
 (function () {
   "use strict";
@@ -14,7 +13,7 @@
   var KEY = "mulvium-waitlist";
   var started = Date.now();
 
-  // ── The visit's record ─────────────────────────────────────────────────
+  // -- The visit's record
   function load() {
     try { return JSON.parse(sessionStorage.getItem(KEY)) || {}; } catch (e) { return {}; }
   }
@@ -51,7 +50,7 @@
     return c;
   }
 
-  // ── Counting (Umami, cookieless; off until waitlist-config.js names a site) ───────
+  // -- Counting (Umami, cookieless; off until waitlist-config.js names a site)
   if (cfg.umami) {
     var s = document.createElement("script");
     s.defer = true;
@@ -63,7 +62,7 @@
     try { if (window.umami) window.umami.track(name, data); } catch (e) { /* not loaded */ }
   }
 
-  // ── Sending ──────────────────────────────────────────────────────────────
+  // -- Sending
   // Resolves true on a 2xx, false on any failure, and null when no endpoint
   // is configured (the caller then falls back to email).
   function send(kind, fields) {
@@ -83,26 +82,14 @@
     return out;
   }
 
-  // The 20-minute call, wherever a link to it appears (the qualifier's
-  // panel is added later, so it is wired when it is)
-  function wireCalls(root) {
-    root.querySelectorAll("[data-call]").forEach(function (a) {
-      a.href = cfg.callUrl || "mailto:hello@mulvium.org?subject=" + encodeURIComponent("A 20-minute call");
-      a.addEventListener("click", function () { track("call_click"); });
-    });
-  }
-  wireCalls(document);
-
   var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
   if (document.body.dataset.page === "waitlist") landing();
-  if (document.body.dataset.page === "apply") application();
 
-  // ── The landing page ─────────────────────────────────────────────────────
+  // -- The landing page
   function landing() {
     var blocks = Array.prototype.slice.call(document.querySelectorAll(".wl-signup"));
     var tpl = document.getElementById("wl-panel");
-    var joinBtn = document.querySelector(".wl-bar-join");
 
     blocks.forEach(function (block) {
       var form = block.querySelector("form");
@@ -193,28 +180,9 @@
       bubbles.forEach(function (el) { el.classList.add("is-in"); });
     }
 
-    // The header's Join appears once the hero form has scrolled away, and
-    // hides again while the closing form is in view.
-    if (joinBtn && "IntersectionObserver" in window) {
-      var seen = {};
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) { seen[en.target.dataset.position] = en.isIntersecting; });
-        joinBtn.hidden = !!rec.email || seen.hero !== false || !!seen.close;
-      });
-      blocks.forEach(function (b) { io.observe(b); });
-      joinBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        var close = blocks[blocks.length - 1];
-        close.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
-        var inp = close.querySelector("input[type=email]");
-        if (inp) setTimeout(function () { inp.focus({ preventScroll: true }); }, 400);
-      });
-    }
-
-    // After a signup: the panel takes the submitted form's place, and the
+    // After a signup: the questions take the submitted form's place, and the
     // other form says so.
     function done(block, quiet) {
-      if (joinBtn) joinBtn.hidden = true;
       blocks.forEach(function (b) {
         var form = b.querySelector("form");
         if (form) form.hidden = true;
@@ -226,132 +194,141 @@
         }
       });
       var panel = tpl.content.firstElementChild.cloneNode(true);
-      wireCalls(panel);
       block.appendChild(panel);
-      qualifier(panel, quiet);
-    }
-
-    function qualifier(panel, quiet) {
-      var steps = Array.prototype.slice.call(panel.querySelectorAll(".wl-step"));
-      var title = panel.querySelector(".wl-panel-title");
-      var i = 0;
-      // Skip what was already answered in this visit
-      while (i < steps.length && rec.answers[steps[i].dataset.q] !== undefined) i++;
-      show(i);
-      if (!quiet) title.focus();
-
-      steps.forEach(function (step, n) {
-        step.addEventListener("click", function (e) {
-          var b = e.target.closest("button");
-          if (!b) return;
-          var q = step.dataset.q;
-          var a = b.classList.contains("wl-skip") ? "" : b.dataset.a;
-          rec.answers[q] = a;
-          save(rec);
-          if (a) {
-            track("q_" + q, { a: a });
-            send("qualifier", { q: q, a: a });
-          }
-          show(n + 1);
-          var next = n + 1 < steps.length ? steps[n + 1].querySelector("button") : panel.querySelector(".wl-next a");
-          if (next) next.focus();
-        });
-      });
-
-      function show(n) {
-        steps.forEach(function (s, k) { s.hidden = k !== n; });
-        if (n < steps.length) return;
-        var next = panel.querySelector(".wl-next");
-        next.hidden = false;
-        // Founders still exploring are thanked, and not offered the call
-        if (rec.answers.when === "exploring") {
-          next.querySelector(".wl-next-steps").hidden = true;
-          next.querySelector(".wl-explore").hidden = false;
-          next.querySelector("[data-call]").hidden = true;
-        }
-        next.querySelector(".wl-button").addEventListener("click", function () { track("app_click"); });
-      }
+      questions(panel, quiet);
     }
   }
 
-  // ── The application ──────────────────────────────────────────────────────
-  function application() {
-    var form = document.getElementById("wl-apply");
-    var done = document.getElementById("wl-applied");
-    var emailRow = document.getElementById("wl-app-email-row");
-    var asLine = document.getElementById("wl-app-as");
-    var error = form.querySelector(".wl-error");
-    var button = form.querySelector('button[type="submit"]');
+  // -- The five questions
+  // Each step is saved as it is answered (kind "qualifier"); the last sends
+  // them all at once (kind "finish"), with the name, so the welcome email can
+  // greet the person by it. Choices: data-mode "any" toggles several, "one"
+  // picks one, "tap" answers and moves on.
+  function questions(panel, quiet) {
+    var steps = Array.prototype.slice.call(panel.querySelectorAll(".wl-step"));
+    var marks = panel.querySelectorAll(".wl-progress li");
+    var title = panel.querySelector(".wl-panel-title");
+    var thanks = panel.querySelector(".wl-thanks");
 
-    if (rec.email) {
-      asLine.hidden = false;
-      asLine.querySelector("span").textContent = rec.email;
-      emailRow.hidden = true;
-    }
-    if (rec.answers.source && form.source) form.source.value = rec.answers.source;
+    // 1 to 11 months, then 1 to 11 years
+    var when = function (i) {
+      i = Number(i);
+      return i < 11 ? (i + 1) + (i ? " months" : " month") : (i - 10) + (i > 11 ? " years" : " year");
+    };
 
-    var begun = false;
-    form.addEventListener("input", function () {
-      if (!begun) { begun = true; track("app_start"); }
-      error.textContent = "";
-    });
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var email = rec.email || form.email.value.trim();
-      var missing = [];
-      if (!EMAIL.test(email)) missing.push(form.email);
-      ["name", "project", "mission", "activities", "first"].forEach(function (n) {
-        if (!form[n].value.trim()) missing.push(form[n]);
+    steps.forEach(function (step, n) {
+      step.querySelectorAll(".wl-choices").forEach(function (group) {
+        group.addEventListener("click", function (e) {
+          var b = e.target.closest("button");
+          if (!b) return;
+          if (group.dataset.mode === "tap") return answer(n, { a: b.dataset.a });
+          var on = b.getAttribute("aria-pressed") !== "true";
+          if (group.dataset.mode === "one") {
+            group.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", "false"); });
+          }
+          b.setAttribute("aria-pressed", String(on));
+          if (b.hasAttribute("data-other")) {
+            var other = step.querySelector(".wl-other");
+            other.hidden = !on;
+            if (on) other.focus();
+          }
+        });
       });
-      if (!form.querySelector('input[name="us"]:checked')) missing.push(form.querySelector('input[name="us"]'));
-      form.querySelectorAll("[aria-invalid]").forEach(function (el) { el.removeAttribute("aria-invalid"); });
-      if (missing.length) {
-        missing.forEach(function (el) { el.setAttribute("aria-invalid", "true"); });
-        error.textContent = "A few answers are still needed; they are marked.";
-        missing[0].focus();
-        return;
+
+      var range = step.querySelector(".wl-range");
+      if (range) {
+        var out = step.querySelector(".wl-when");
+        var paint = function () {
+          var label = "In " + when(range.value);
+          out.textContent = label;
+          range.setAttribute("aria-valuetext", label);
+          range.style.setProperty("--p", (range.value / range.max * 100) + "%");
+        };
+        range.addEventListener("input", paint);
+        paint();
       }
-      if (form.company.value || Date.now() - started < 4000) return finish(false);
 
-      var fields = { email: email };
-      new FormData(form).forEach(function (v, k) {
-        if (k === "company" || k === "email") return;
-        fields[k] = fields[k] ? fields[k] + ", " + v : String(v);
-      });
-      Object.keys(rec.answers).forEach(function (q) { if (rec.answers[q]) fields["q_" + q] = rec.answers[q]; });
-
-      button.disabled = true;
-      button.setAttribute("aria-busy", "true");
-      button.textContent = "Sending…";
-
-      send("application", fields).then(function (ok) {
-        if (ok === false) {
-          button.disabled = false;
-          button.removeAttribute("aria-busy");
-          button.textContent = "Send my application";
-          error.textContent = "That didn’t go through. Please try again, or write to hello@mulvium.org.";
-          return;
-        }
-        if (ok === null) {
-          var lines = ["My application to Mulvium:", ""];
-          Object.keys(fields).forEach(function (k) { lines.push(k + ": " + fields[k], ""); });
-          mail("Application: " + (fields.name || email), lines.concat(contextLines()));
-        }
-        rec.applied = true;
-        save(rec);
-        track("app_submit");
-        finish(fields.us === "no");
+      var go = step.querySelector(".wl-go");
+      if (go) go.addEventListener("click", function () { answer(n, collect(step)); });
+      var skip = step.querySelector(".wl-skip");
+      if (skip) skip.addEventListener("click", function () { answer(n, null); });
+      step.querySelectorAll("input[type=text]").forEach(function (field) {
+        field.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") { e.preventDefault(); answer(n, collect(step)); }
+        });
       });
     });
 
-    function finish(abroad) {
-      form.hidden = true;
-      done.hidden = false;
-      done.querySelector(abroad ? ".wl-applied-us" : ".wl-applied-abroad").hidden = true;
-      var h = done.querySelector("h2");
-      h.focus();
-      window.scrollTo(0, 0);
+    // What a step's controls hold, as fields to send
+    function collect(step) {
+      var fields = {};
+      step.querySelectorAll(".wl-choices").forEach(function (group) {
+        var picked = Array.prototype.slice.call(group.querySelectorAll('[aria-pressed="true"]'))
+          .map(function (b) { return b.dataset.a; });
+        if (picked.length) fields[group.dataset.name] = picked.join(", ");
+      });
+      var range = step.querySelector(".wl-range");
+      if (range) fields.a = when(range.value);
+      step.querySelectorAll("input[type=text]").forEach(function (field) {
+        var v = field.value.trim().slice(0, 200);
+        if (v && !field.hidden) fields[field.name] = v;
+      });
+      return fields;
     }
+
+    function answer(n, fields) {
+      var q = steps[n].dataset.q;
+      rec.answers[q] = fields || {};
+      save(rec);
+      if (fields && Object.keys(fields).length) {
+        track("q_" + q);
+        send("qualifier", Object.assign({ q: q }, fields));
+      }
+      if (n + 1 < steps.length) return show(n + 1, true);
+      finish();
+    }
+
+    function finish() {
+      var all = { email: rec.email || "" };
+      Object.keys(rec.answers).forEach(function (q) {
+        var a = rec.answers[q];
+        Object.keys(a).forEach(function (k) {
+          all[k === "a" ? q : k] = a[k];
+        });
+      });
+      if (!rec.finished) {
+        rec.finished = true;
+        save(rec);
+        track("finish");
+        send("finish", all);
+      }
+      thank(all.name, true);
+    }
+
+    function thank(name, focus) {
+      steps.forEach(function (s) { s.hidden = true; });
+      marks.forEach(function (m) { m.classList.add("is-done"); });
+      panel.classList.add("is-thanked");
+      if (name) thanks.querySelector(".wl-thanks-name").textContent = ", " + name;
+      thanks.hidden = false;
+      if (focus) thanks.querySelector(".wl-thanks-title").focus();
+    }
+
+    function show(n, focus) {
+      steps.forEach(function (s, k) { s.hidden = k !== n; });
+      marks.forEach(function (m, k) { m.classList.toggle("is-done", k < n); m.classList.toggle("is-here", k === n); });
+      if (focus) {
+        var first = steps[n].querySelector("button, input");
+        if (first) first.focus({ preventScroll: true });
+      }
+    }
+
+    // Pick up where this visit left off
+    if (rec.finished) return thank(rec.answers.name && rec.answers.name.name, false);
+    var i = 0;
+    while (i < steps.length && rec.answers[steps[i].dataset.q] !== undefined) i++;
+    if (i >= steps.length) return finish();
+    show(i, false);
+    if (!quiet) title.focus();
   }
 })();
