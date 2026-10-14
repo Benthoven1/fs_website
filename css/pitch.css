@@ -368,105 +368,99 @@ html.pt-js .pt-vision .pt-w {
 html.pt-js .pt-vision.is-in .pt-w { opacity: 1; translate: none; filter: none; }
 html.pt-js .pt-vision[data-pt] { opacity: 1; translate: none; }
 
-/* -- Desktop: its own composition on a wider measure ----------------- */
+/* -- Desktop: one centred axis on a wider measure -------------------- */
 @media (min-width: 960px) {
   #waitlist { --pt-gutter: 56px; }
   #waitlist .wl-content { padding: 0 var(--pt-gutter); }
-  #waitlist .wl-sec, .pt-sec { max-width: 1120px; }
+  #waitlist .wl-sec, .pt-sec { max-width: 1120px; text-align: center; }
   .pt-sec { padding-top: 136px; }
   #waitlist .wl-sec { padding-top: 136px; }
-  .pt-h2 { max-width: 15em; margin-bottom: 40px; font-size: clamp(44px, 4.4vw, 60px); line-height: 1.03; }
-  .pt-note { font-size: 21px; margin-top: 30px; }
+  /* every slide stacks on the centre line */
+  #waitlist .wl-sec, .pt-sec { display: flex; flex-direction: column; align-items: center; }
+  .pt-h2, #waitlist .wl-h2 {
+    max-width: 16em;
+    margin: 0 auto 44px;
+    font-size: clamp(44px, 4.4vw, 60px);
+    line-height: 1.03;
+  }
+  .pt-note { max-width: 36em; margin: 34px auto 0; font-size: 21px; }
 
-  /* Thought bubbles sit in the layout, trailing toward the text beside them */
+  /* Thought bubbles sit on the centre line beneath what they answer, their
+     trail rising toward it */
   #waitlist .wl-bubble {
     position: relative;
     top: auto;
     left: auto;
     right: auto;
     width: auto;
-    max-width: 330px;
-    margin: 0;
+    max-width: 420px;
+    margin: 64px auto 0;
+    text-align: center;
   }
-  #waitlist .wl-dot--near { bottom: 26px; }
-  #waitlist .wl-dot--far { bottom: 16px; }
-  #waitlist .wl-bubble--r .wl-dot--near { left: -21px; right: auto; }
-  #waitlist .wl-bubble--r .wl-dot--far { left: -36px; right: auto; }
-  #waitlist .wl-bubble--l .wl-dot--near { right: -21px; left: auto; }
-  #waitlist .wl-bubble--l .wl-dot--far { right: -36px; left: auto; }
-  #waitlist .wl-bubble--r .wl-cloud { transform-origin: -8% 80%; }
-  #waitlist .wl-bubble--l .wl-cloud { transform-origin: 108% 80%; }
+  #waitlist .wl-dot--near { top: -21px; bottom: auto; left: calc(50% - 8px); right: auto; }
+  #waitlist .wl-dot--far { top: -37px; bottom: auto; left: calc(50% + 6px); right: auto; }
+  #waitlist .wl-cloud { transform-origin: 50% -20%; padding: 17px 28px 15px; }
   #waitlist .wl-cloud p { font-size: 21px; }
 
-  /* The offer: the headline across the page, its first line whole; the form
-     beneath it, and the question beside the form */
-  #waitlist .wl-sec--lead {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 330px;
-    column-gap: 80px;
-    align-items: center;
-    padding-top: 150px;
-  }
+  /* The offer: the headline across the page, its first line whole */
+  #waitlist .wl-sec--lead { padding-top: 150px; }
   #waitlist .wl-h1 {
-    grid-column: 1 / -1;
-    margin-bottom: 26px;
+    margin: 0 auto 26px;
     font-size: clamp(54px, 5.6vw, 78px);
     line-height: 1.02;
     letter-spacing: -0.01em;
   }
   #waitlist .wl-h1 > [aria-hidden] { white-space: nowrap; }
-  #waitlist .wl-sec--lead .wl-sub { font-size: 25px; margin-bottom: 26px; }
-  #waitlist .wl-sec--lead .wl-signup { max-width: 600px; }
-  .pt-ask { justify-self: end; }
+  .pt-lead-body { width: 100%; max-width: 600px; }
+  #waitlist .wl-sec--lead .wl-sub { font-size: 25px; margin-bottom: 30px; }
+  #waitlist .wl-signup { max-width: 600px; margin: 0 auto; text-align: left; }
+  #waitlist .wl-micro { text-align: center; }
   .pt-ask .wl-cloud p { font-style: normal; font-weight: 600; font-size: 24px; }
 
   /* The ideas run the full width of the drawer */
-  .pt-ideas { gap: 16px; }
+  .pt-ideas { width: calc(100% + 2 * var(--pt-gutter)); gap: 16px; }
   .pt-track li { margin-right: 14px; padding: 10px 22px 11px; font-size: 23px; }
-  .pt-turn { margin-top: 48px; font-size: 44px; }
+  .pt-turn { margin: 48px auto 0; font-size: 44px; }
 
-  /* The globe between its two words, on one horizon */
+  /* The globe between its two words, on one horizon, centred */
   .pt-globe {
-    grid-template-columns: auto 1fr auto;
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 3.4fr) minmax(0, 1fr);
     grid-template-areas: "idea globe far";
     align-items: end;
-    column-gap: 28px;
+    column-gap: 24px;
     margin: 0;
     padding: 0;
   }
   .pt-globe::after { display: none; }
-  .pt-globe-canvas { height: 430px; }
+  .pt-globe-canvas { height: 400px; }
   .pt-end { padding-bottom: 34px; font-size: 30px; }
+  .pt-end:first-child { justify-self: end; }
+  .pt-end--far { justify-self: start; }
 
-  /* The answer: the claim beside a line from the letter, the sum beneath */
-  .pt-answer {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 330px;
-    column-gap: 80px;
-    align-items: center;
-  }
+  /* The answer: the claim, the sum, then a line from the letter */
   .pt-answer .pt-h2 { margin-bottom: 0; }
-  .pt-answer .wl-bubble { justify-self: end; }
+  .pt-answer .wl-bubble { order: 3; }
   .pt-sum {
-    grid-column: 1 / -1;
+    order: 2;
+    width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: baseline;
-    gap: 16px;
+    gap: 28px;
     margin-top: 64px;
   }
-  .pt-sum li { flex: 1 1 0; }
+  .pt-sum li { flex: 0 1 auto; }
   .pt-sum strong { font-size: 38px; }
   .pt-sum span { font-size: 20px; }
   .pt-sum .pt-op, .pt-sum .pt-op:nth-child(6) { flex: 0 0 auto; padding-top: 0; font-size: 54px; }
-  .pt-sum .pt-real { flex: 1.3 1 0; }
   .pt-sum .pt-real strong { font-size: 60px; }
 
-  /* How it works: four steps along one line */
-  .pt-path { grid-template-columns: repeat(4, 1fr); gap: 40px; padding: 34px 0 0; }
+  /* How it works: four steps along one line, each centred on its stop */
+  .pt-path { width: 100%; grid-template-columns: repeat(4, 1fr); gap: 40px; padding: 34px 0 0; text-align: center; }
   .pt-path::before {
-    left: 0;
-    right: 0;
+    left: 12.5%;
+    right: 12.5%;
     top: 0;
     bottom: auto;
     width: auto;
@@ -478,18 +472,12 @@ html.pt-js .pt-vision[data-pt] { opacity: 1; translate: none; }
   .pt-path strong { font-size: 28px; }
   .pt-path span { font-size: 19px; }
 
-  /* What a founder receives: the heading beside a line from the letter,
-     eight cards in two rows of four beneath */
-  .pt-gets-sec {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 330px;
-    column-gap: 80px;
-    align-items: center;
-  }
-  .pt-gets-sec .wl-h2 { margin: 0; font-size: clamp(44px, 4.4vw, 60px); line-height: 1.03; }
-  .pt-gets-sec .wl-bubble { justify-self: end; }
-  .pt-gets { grid-column: 1 / -1; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 52px; }
-  .pt-gets li { padding: 20px 22px 22px; }
+  /* What a founder receives: eight cards in two rows of four, then a line
+     from the letter */
+  .pt-gets-sec .wl-h2 { margin-bottom: 0; }
+  .pt-gets-sec .wl-bubble { order: 3; }
+  .pt-gets { order: 2; width: 100%; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 56px; }
+  .pt-gets li { padding: 22px 22px 24px; text-align: center; }
   .pt-gets strong { font-size: 23px; }
 
   .pt-zero-sec .pt-h2 { max-width: none; font-size: 68px; }
@@ -498,24 +486,21 @@ html.pt-js .pt-vision[data-pt] { opacity: 1; translate: none; }
   .pt-vision-lead { font-size: 23px; margin-bottom: 34px; }
   .pt-vision { font-size: clamp(44px, 4.4vw, 60px); }
 
-  /* Plain answers: the heading in its own column */
-  .pt-qa-sec { display: grid; grid-template-columns: 1fr 2fr; column-gap: 80px; align-items: start; }
-  .pt-qa-sec .wl-h2 { font-size: 44px; }
+  /* Plain answers: a centred column of their own */
+  .pt-qa-sec .wl-h2 { margin-bottom: 30px; font-size: 44px; }
+  .pt-qa-sec .wl-qa { width: 100%; max-width: 760px; text-align: left; }
   .pt-qa-sec .wl-qa dt { font-size: 23px; }
   .pt-qa-sec .wl-qa dd { font-size: 19px; }
 
-  /* The close: the founder's word on the left, the form on the right */
-  #waitlist .wl-sec--close {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 80px;
-    align-items: center;
-    padding-bottom: 72px;
-  }
-  .pt-close-l .wl-h2--leap { font-size: 52px; }
+  /* The close: the founder's word, the signature, the form, one line */
+  #waitlist .wl-sec--close { padding-bottom: 80px; }
+  .pt-close-l, .pt-close-r { width: 100%; display: flex; flex-direction: column; align-items: center; }
+  .pt-close-l .wl-h2--leap { margin-bottom: 14px; font-size: 56px; }
   .pt-close-l .wl-sub { font-size: 24px; }
-  .pt-close-r { display: grid; gap: 40px; }
-  .pt-close-r .wl-bubble { justify-self: start; margin-left: 40px; }
+  /* the signature's ink starts a fifth of the way into its image: shifted
+     back by half that, it sits centred */
+  #waitlist .pt-close-l .wl-sig { margin: 6px auto 4px; translate: calc(260px * -0.102) 0; }
+  .pt-close-r .wl-signup { width: 100%; }
 }
 
 /* -- Motion ---------------------------------------------------------- */
