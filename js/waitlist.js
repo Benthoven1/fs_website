@@ -70,8 +70,7 @@
 
   // -- Sending
   // Resolves to the back end's answer ({ ok, error }), { ok: false, error:
-  // "network" } on any failure, and null when no endpoint is configured (the
-  // caller then falls back to email).
+  // "network" } on any failure, and null when no endpoint is configured.
   function send(kind, fields) {
     if (!cfg.endpoint) return Promise.resolve(null);
     var body = new URLSearchParams(Object.assign({ kind: kind, page: location.pathname }, context(), fields));
@@ -79,15 +78,6 @@
       .then(function (r) { return r.ok ? r.json() : { ok: false, error: "network" }; })
       .then(function (a) { return a && typeof a.ok === "boolean" ? a : { ok: false, error: "network" }; })
       .catch(function () { return { ok: false, error: "network" }; });
-  }
-  function mail(subject, lines) {
-    location.href = "mailto:hello@mulvium.org?subject=" + encodeURIComponent(subject) +
-      "&body=" + encodeURIComponent(lines.join("\n"));
-  }
-  function contextLines() {
-    var c = context(), out = [];
-    Object.keys(c).forEach(function (k) { out.push(k + ": " + c[k]); });
-    return out;
   }
 
   var EMAIL = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[a-z]{2,}$/i;
@@ -177,15 +167,9 @@
         send("signup", { email: email, position: block.dataset.position, ms: String(Date.now() - started) })
           .then(function (ans) {
             busy(false);
-            // No back end: the visitor's own email app sends the request,
-            // which proves the address; there are no questions to answer
-            if (ans === null) {
-              mail("Waitlist", ["Please add me to the Mulvium waitlist.", "", "Email: " + email].concat(contextLines()));
-              hint.textContent = "Your email app opened with a message to us. Send it, and you’re on the list.";
-              return;
-            }
-            if (!ans.ok) return fail(say(ans.error));
-            if (ans.code) return pending(at, email, false);
+            // No back end (ans is null): the questions open all the same
+            if (ans && !ans.ok) return fail(say(ans.error));
+            if (ans && ans.code) return pending(at, email, false);
             confirmed(at, email);
           });
 
