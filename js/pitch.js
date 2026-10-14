@@ -121,7 +121,7 @@
 
   function draw() {
     if (!cloud || !cw) return;
-    var R = Math.max(cw * 0.56, ch * 0.95), cx = cw / 2, cy = 24 + R;
+    var R = Math.min(cw * 0.47, ch * 0.88), cx = cw / 2, cy = 24 + R;
     var cs = Math.cos(angle), sn = Math.sin(angle);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
