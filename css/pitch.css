@@ -409,6 +409,8 @@ html.pt-js .pt-vision[data-pt] { opacity: 1; translate: none; }
     letter-spacing: -0.01em;
   }
   #waitlist .wl-h1 > [aria-hidden] { white-space: nowrap; }
+  /* the turning noun's box glides to each word's width (js/pitch.js) */
+  #waitlist .wl-rotor { transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
   .pt-lead-body { width: 100%; max-width: 600px; }
   #waitlist .wl-sec--lead .wl-sub { font-size: 25px; margin-bottom: 30px; }
   #waitlist .wl-signup { max-width: 600px; margin: 0 auto; text-align: left; }
