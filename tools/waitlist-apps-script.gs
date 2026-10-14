@@ -1,22 +1,29 @@
 // waitlist-apps-script.gs - the waitlist's free back end (index.html#waitlist), on a Google
-// Sheet. The page sends three kinds of row, each kept on a tab of its name:
-//  - "signup": an email joins the list;
-//  - "qualifier": one of the five questions that follow is answered;
-//  - "finish": the questions are done; one row with every answer and the name.
-// Rows from one visit share a `sid`.
+// Sheet.
+//
+// An email joins only once it is confirmed. "signup" checks the address (its
+// form; that its domain receives mail, asked of Google's public DNS; that it
+// is not a throwaway inbox) and emails it a six-digit code, held for fifteen
+// minutes; "verify" checks the code, and only then is the person written to
+// the "signup" tab. A wrong code five times, or more than three codes an hour
+// to one address, and it stops. Rows of the five questions ("qualifier") and
+// their end ("finish") are kept only from confirmed visits. Rows from one
+// visit share a `sid`.
 //
 // Each person gets one welcome email, and you get one email about them:
 //  - when they finish the questions, greeted by name if they gave one;
-//  - or, if they leave before finishing, about WAIT_MINUTES after signing up,
+//  - or, if they leave before finishing, about WAIT_MINUTES after confirming,
 //    greeted "Hello" (a timer, `sweep`, that this script sets up itself).
 // Emails go from the Google account that deploys the script, with replies to
-// REPLY_TO. Gmail allows about 100 a day from a personal account.
+// REPLY_TO. Gmail allows about 100 a day from a personal account, and each
+// person takes three (code, welcome, and the note to you); a Workspace
+// account allows 1,500.
 //
 // To use it:
 //  1. Create a Google Sheet; Extensions -> Apps Script; paste this file; save.
 //  2. Deploy -> New deployment -> Web app; execute as yourself; access: Anyone.
-//     Google asks you to allow the script to edit the Sheet, send email and
-//     run on a timer.
+//     Google asks you to allow the script to edit the Sheet, send email, reach
+//     outside services (the DNS check) and run on a timer.
 //  3. Put the web app's URL in js/waitlist-config.js as `endpoint`, and commit.
 // After changing this file: Deploy -> Manage deployments -> edit -> New version.
 // A browser POSTs urlencoded fields (a "simple" request, so no preflight);
@@ -29,28 +36,163 @@ var SITE = "https://mulvium.org";
 // Outlook, put a PNG of it on the site and point this at that.
 var SIGNATURE = SITE + "/signature.webp";
 var WAIT_MINUTES = 20;
+var CODE_MINUTES = 15;
+var EMAIL = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[a-z]{2,}$/i;
+// Throwaway inboxes, refused at signup
+var THROWAWAY = ["mailinator.com", "guerrillamail.com", "guerrillamail.net", "sharklasers.com", "grr.la",
+  "10minutemail.com", "temp-mail.org", "tempmail.com", "tempmail.net", "yopmail.com", "yopmail.net",
+  "trashmail.com", "getnada.com", "nada.email", "dispostable.com", "maildrop.cc", "throwawaymail.com",
+  "fakeinbox.com", "mintemail.com", "mohmal.com", "emailondeck.com", "tempr.email", "discard.email",
+  "mailnesia.com", "spamgourmet.com", "burnermail.io", "mailcatch.com", "temp-mail.io", "tmpmail.org",
+  "moakt.com", "inboxkitten.com", "emailfake.com", "fakemail.net", "mytemp.email", "tempail.com"];
 
 function doPost(e) {
   var p = e.parameter || {};
   var kind = String(p.kind || "unknown").replace(/[^a-z]/g, "") || "unknown";
-  var lock = LockService.getScriptLock();
-  lock.waitLock(10000);
+  var out = { ok: true };
   try {
-    append(kind, p);
-  } finally {
-    lock.releaseLock();
-  }
-
-  // Email after the row is safe; a failed email never loses the row
-  try {
-    if (kind === "signup") ensureSweep();
-    if (kind === "finish") greet(p.sid, p.email, p.name, p);
+    if (kind === "signup") out = signup(p);
+    else if (kind === "verify") out = verify(p);
+    else if (!confirmed(p.sid)) out = { ok: false, error: "unconfirmed" };
+    else {
+      locked(function () { append(kind, p); });
+      if (kind === "finish") greet(p.sid, p.email, p.name, p);
+    }
   } catch (err) {
     console.error(err);
+    out = { ok: false, error: "network" };
   }
-  return ContentService.createTextOutput(JSON.stringify({ ok: true }))
+  return ContentService.createTextOutput(JSON.stringify(out))
     .setMimeType(ContentService.MimeType.JSON);
 }
+
+function locked(fn) {
+  var lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try { return fn(); } finally { lock.releaseLock(); }
+}
+
+// -- Confirming the email
+
+// Checks the address and emails it a code. The fields that came with it wait
+// beside the code, to become the "signup" row once it is confirmed.
+function signup(p) {
+  var email = String(p.email || "").trim();
+  var sid = String(p.sid || "");
+  if (!sid || email.length > 254 || !EMAIL.test(email)) return { ok: false, error: "format" };
+  var domain = email.split("@").pop().toLowerCase();
+  if (THROWAWAY.indexOf(domain) >= 0) return { ok: false, error: "disposable" };
+  if (!takesMail(domain)) return { ok: false, error: "domain" };
+
+  var cache = CacheService.getScriptCache();
+  var held = JSON.parse(cache.get("c:" + sid) || "null");
+  var fields = p.resend && held && held.email === email ? held.fields : p;
+  if (!count(cache, "r:" + email.toLowerCase(), 3, 3600) || !count(cache, "s:" + sid, 6, 21600)) {
+    return { ok: false, error: "rate" };
+  }
+  if (MailApp.getRemainingDailyQuota() < 5) return { ok: false, error: "busy" };
+
+  var code = String(Math.floor(100000 + Math.random() * 900000));
+  cache.put("c:" + sid, JSON.stringify({ email: email, hash: hash(sid, code), tries: 0, fields: clean(fields) }), CODE_MINUTES * 60);
+  sendCode(email, code);
+  return { ok: true };
+}
+
+function verify(p) {
+  var sid = String(p.sid || "");
+  var cache = CacheService.getScriptCache();
+  var held = JSON.parse(cache.get("c:" + sid) || "null");
+  if (!held || held.email !== String(p.email || "").trim()) return { ok: false, error: "expired" };
+  if (held.tries >= 5) return { ok: false, error: "tries" };
+  if (held.hash !== hash(sid, String(p.code || "").replace(/\D/g, ""))) {
+    held.tries++;
+    cache.put("c:" + sid, JSON.stringify(held), CODE_MINUTES * 60);
+    return { ok: false, error: held.tries >= 5 ? "tries" : "code" };
+  }
+  cache.remove("c:" + sid);
+  cache.put("v:" + sid, held.email, 21600);
+  locked(function () { append("signup", held.fields); });
+  ensureSweep();
+  return { ok: true };
+}
+
+// Whether this visit confirmed an email: remembered for six hours, then
+// looked up on the "signup" tab
+function confirmed(sid) {
+  if (!sid) return false;
+  if (CacheService.getScriptCache().get("v:" + sid)) return true;
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("signup");
+  if (!sheet || sheet.getLastRow() < 2) return false;
+  var head = header(sheet), c = head.indexOf("sid");
+  if (c < 0) return false;
+  return sheet.getRange(2, c + 1, sheet.getLastRow() - 1, 1).getValues().some(function (r) { return r[0] === sid; });
+}
+
+// Whether a domain receives mail: it has an MX record (and not the "null MX"
+// that says it takes none). If the lookup itself fails, the code decides.
+function takesMail(domain) {
+  try {
+    var r = UrlFetchApp.fetch("https://dns.google/resolve?type=MX&name=" + encodeURIComponent(domain), { muteHttpExceptions: true });
+    if (r.getResponseCode() !== 200) return true;
+    var a = JSON.parse(r.getContentText());
+    return a.Status === 0 && (a.Answer || []).some(function (x) {
+      return x.type === 15 && String(x.data).trim().split(/\s+/).pop() !== ".";
+    });
+  } catch (err) {
+    return true;
+  }
+}
+
+// Counts one more use of `key`; false once it passes `max` within `seconds`
+function count(cache, key, max, seconds) {
+  return locked(function () {
+    var n = Number(cache.get(key) || 0) + 1;
+    cache.put(key, String(n), seconds);
+    return n <= max;
+  });
+}
+
+function hash(sid, code) {
+  return Utilities.base64Encode(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, sid + ":" + code));
+}
+
+// The fields worth keeping from a signup, each cut short
+function clean(p) {
+  var out = {};
+  Object.keys(p).forEach(function (k) {
+    if (["kind", "resend", "code"].indexOf(k) < 0) out[k] = String(p[k]).slice(0, 300);
+  });
+  out.kind = "signup";
+  return out;
+}
+
+function sendCode(to, code) {
+  var serif = "'Cormorant Garamond', Georgia, 'Times New Roman', serif";
+  var html =
+    '<!DOCTYPE html><html><head><meta charset="utf-8">' +
+    '<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Cormorant+SC:wght@500&display=swap" rel="stylesheet"></head>' +
+    '<body style="margin:0;padding:0;background:#eceae5;">' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eceae5;"><tr><td align="center" style="padding:36px 16px;">' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#f7f5f1;border:1px solid #ddd8d0;border-radius:18px;overflow:hidden;">' +
+    '<tr><td style="height:5px;line-height:5px;font-size:0;background:#f0d5bb;background-image:linear-gradient(90deg,#f0d5bb,#c4ddb8,#b8ddd8,#b8cae0,#e0b8c8);">&nbsp;</td></tr>' +
+    '<tr><td style="padding:32px 36px 30px;font-family:' + serif + ';color:#3b332f;">' +
+    '<p style="margin:0 0 22px;font-family:\'Cormorant SC\',' + serif + ';font-size:15px;letter-spacing:0.28em;color:#8f5a42;">MULVIUM</p>' +
+    '<p style="margin:0 0 14px;font-size:19px;line-height:1.5;">Your code to join the Mulvium waitlist:</p>' +
+    '<p style="margin:0 0 18px;font-family:Georgia,serif;font-size:36px;letter-spacing:0.3em;color:#1b1613;">' + code + '</p>' +
+    '<p style="margin:0;font-size:16px;line-height:1.5;color:#7a706a;">It works for ' + CODE_MINUTES + ' minutes. If you didn&rsquo;t ask for it, ignore this email and nothing happens.</p>' +
+    '</td></tr></table></td></tr></table></body></html>';
+  MailApp.sendEmail({
+    to: to,
+    name: "Mulvium",
+    replyTo: REPLY_TO,
+    subject: "Your Mulvium code: " + code,
+    htmlBody: html,
+    body: "Your code to join the Mulvium waitlist: " + code + "\n\nIt works for " + CODE_MINUTES +
+      " minutes. If you didn't ask for it, ignore this email and nothing happens.",
+  });
+}
+
+// -- The Sheet
 
 // Appends a row on the kind's tab, adding a column for any new field
 function append(kind, p) {
@@ -111,7 +253,7 @@ function greet(sid, email, name, answers) {
   notify(email, name, answers);
 }
 
-// Every ten minutes: welcome anyone who signed up WAIT_MINUTES ago or more
+// Every ten minutes: welcome anyone who confirmed WAIT_MINUTES ago or more
 // and has not finished the questions
 function sweep() {
   var book = SpreadsheetApp.getActiveSpreadsheet();
@@ -209,7 +351,7 @@ function welcome(to, name) {
 
 // Tells you about one new person, with whatever they answered
 var LABELS = {
-  name: "Name", excited: "Most excited by", other: "More", when: "Wants to begin in",
+  name: "Name", excited: "Most excited by", other: "Other", when: "Wants to begin in",
   field: "Field", form: "Form", source: "Heard about Mulvium from",
   ref_host: "Came from", utm_source: "utm_source", utm_medium: "utm_medium", utm_campaign: "utm_campaign",
 };
@@ -219,5 +361,6 @@ function notify(email, name, answers) {
     if (answers && answers[k]) lines.push(LABELS[k] + ": " + answers[k]);
   });
   if (!answers || !answers.when && !answers.excited && !answers.field) lines.push("", "(Left before answering the questions.)");
+  lines.push("", "Email confirmed with a code.");
   MailApp.sendEmail({ to: NOTIFY, subject: "New on the waitlist: " + (name ? name + " (" + email + ")" : email), body: lines.join("\n") });
 }
