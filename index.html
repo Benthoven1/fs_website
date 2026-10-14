@@ -307,7 +307,7 @@
                 </div>
                 <input class="wl-hp" name="company" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
                 <p class="wl-error" role="alert"></p>
-                <p class="wl-micro">Free. No commitment. Not open yet. For US-based projects. <a href="privacy/">Privacy</a></p>
+                <p class="wl-micro">Free. No commitment. Not open yet. US-based projects, for now. <a href="privacy/">Privacy</a></p>
               </form>
             </div>
           </div>
@@ -506,64 +506,102 @@
       </div>
   </section>
 
-  <!-- After a signup, this panel takes the form's place: four one-tap
-       questions, each saved as it is tapped, then what happens next. -->
+  <!-- After a signup, this card takes the form's place: five questions, all
+       optional, each saved as it is answered (js/waitlist.js), then a thank
+       you. The last asks a name, so the welcome email can use it. -->
   <template id="wl-panel">
     <div class="wl-panel" role="status">
-      <h2 class="wl-panel-title" tabindex="-1">You&rsquo;re on the list.</h2>
+      <div class="wl-panel-head">
+        <h2 class="wl-panel-title" tabindex="-1">You&rsquo;re on the list.</h2>
+        <p class="wl-panel-sub">Five quick questions, all optional, so we know how to help.</p>
+        <ol class="wl-progress" aria-hidden="true"><li></li><li></li><li></li><li></li><li></li></ol>
+      </div>
       <div class="wl-steps">
-        <fieldset class="wl-step" data-q="need">
-          <legend><span class="wl-count">1 of 4</span>What do you need most?</legend>
-          <div class="wl-choices">
-            <button type="button" data-a="legal-home">A legal home for gifts and grants</button>
-            <button type="button" data-a="organization">Help building the organization</button>
-            <button type="button" data-a="both">Both</button>
+        <fieldset class="wl-step" data-q="excited">
+          <legend><span class="wl-count">1 of 5</span>What are you most excited by?</legend>
+          <p class="wl-step-hint">Choose any.</p>
+          <div class="wl-choices" data-name="a" data-mode="any">
+            <button type="button" data-a="legal-home" aria-pressed="false" style="--c:var(--q-blue)">A legal home for gifts and grants</button>
+            <button type="button" data-a="organization" aria-pressed="false" style="--c:var(--q-green)">Help building the organization</button>
+            <button type="button" data-a="patrons" aria-pressed="false" style="--c:var(--q-star)">Finding patrons to fund it</button>
+            <button type="button" data-a="press" aria-pressed="false" style="--c:var(--q-rose)">Getting the word out: press and PR</button>
+            <button type="button" data-a="more" aria-pressed="false" data-other style="--c:var(--q-teal)">More</button>
           </div>
-          <button type="button" class="wl-skip">Skip</button>
-        </fieldset>
-        <fieldset class="wl-step" data-q="lead" hidden>
-          <legend><span class="wl-count">2 of 4</span>Is this your project to lead?</legend>
-          <div class="wl-choices">
-            <button type="button" data-a="mine">Yes, mine</button>
-            <button type="button" data-a="helping">I&rsquo;m helping someone</button>
-            <button type="button" data-a="curious">Just curious</button>
+          <input class="wl-input wl-other" name="other" type="text" placeholder="What else excites you?" aria-label="What else excites you?" hidden />
+          <div class="wl-step-nav">
+            <button type="button" class="wl-go">Next</button>
+            <button type="button" class="wl-skip">Skip</button>
           </div>
-          <button type="button" class="wl-skip">Skip</button>
         </fieldset>
         <fieldset class="wl-step" data-q="when" hidden>
-          <legend><span class="wl-count">3 of 4</span>When do you want to begin?</legend>
-          <div class="wl-choices">
-            <button type="button" data-a="3-months">Within 3 months</button>
-            <button type="button" data-a="1-year">Within a year</button>
-            <button type="button" data-a="exploring">Just exploring</button>
+          <legend><span class="wl-count">2 of 5</span>When do you want to begin?</legend>
+          <output class="wl-when" for="wl-range">In 6 months</output>
+          <input class="wl-range" id="wl-range" type="range" min="0" max="21" step="1" value="5" aria-label="When you want to begin" aria-valuetext="In 6 months" />
+          <div class="wl-range-ends" aria-hidden="true"><span>1 month</span><span>1 year</span><span>11 years</span></div>
+          <div class="wl-step-nav">
+            <button type="button" class="wl-go">Next</button>
+            <button type="button" class="wl-skip">Skip</button>
           </div>
-          <button type="button" class="wl-skip">Skip</button>
+        </fieldset>
+        <fieldset class="wl-step" data-q="field" hidden>
+          <legend><span class="wl-count">3 of 5</span>Its field, and its form</legend>
+          <p class="wl-step-hint">Pick a field.</p>
+          <div class="wl-choices" data-name="field" data-mode="one">
+            <button type="button" data-a="arts" aria-pressed="false" style="--c:var(--q-blue)">Arts and culture</button>
+            <button type="button" data-a="education" aria-pressed="false" style="--c:var(--q-green)">Education</button>
+            <button type="button" data-a="environment" aria-pressed="false" style="--c:var(--q-star)">Environment</button>
+            <button type="button" data-a="science" aria-pressed="false" style="--c:var(--q-rose)">Science and research</button>
+            <button type="button" data-a="community" aria-pressed="false" style="--c:var(--q-teal)">Community</button>
+            <button type="button" data-a="human-services" aria-pressed="false" style="--c:var(--q-blue)">Human services</button>
+            <button type="button" data-a="other" aria-pressed="false" style="--c:var(--q-green)">Something else</button>
+          </div>
+          <p class="wl-step-hint">And its form. Choose any.</p>
+          <div class="wl-choices" data-name="form" data-mode="any">
+            <button type="button" data-a="festival" aria-pressed="false" style="--c:var(--q-blue)">Festival</button>
+            <button type="button" data-a="event" aria-pressed="false" style="--c:var(--q-green)">Event or series</button>
+            <button type="button" data-a="program" aria-pressed="false" style="--c:var(--q-star)">Program or service</button>
+            <button type="button" data-a="research" aria-pressed="false" style="--c:var(--q-rose)">Research</button>
+            <button type="button" data-a="school" aria-pressed="false" style="--c:var(--q-teal)">School or education</button>
+            <button type="button" data-a="publication" aria-pressed="false" style="--c:var(--q-blue)">Publication or media</button>
+            <button type="button" data-a="venue" aria-pressed="false" style="--c:var(--q-green)">Venue or facility</button>
+            <button type="button" data-a="campaign" aria-pressed="false" style="--c:var(--q-star)">Campaign or advocacy</button>
+            <button type="button" data-a="other" aria-pressed="false" style="--c:var(--q-rose)">Something else</button>
+          </div>
+          <div class="wl-step-nav">
+            <button type="button" class="wl-go">Next</button>
+            <button type="button" class="wl-skip">Skip</button>
+          </div>
         </fieldset>
         <fieldset class="wl-step" data-q="source" hidden>
-          <legend><span class="wl-count">4 of 4</span>How did you hear about Mulvium?</legend>
-          <div class="wl-choices">
-            <button type="button" data-a="friend">A friend or colleague</button>
-            <button type="button" data-a="community">An online community</button>
-            <button type="button" data-a="social">Social media</button>
-            <button type="button" data-a="referral">A funder, sponsor or adviser</button>
-            <button type="button" data-a="search">Search</button>
-            <button type="button" data-a="other">Other</button>
+          <legend><span class="wl-count">4 of 5</span>How did you hear about Mulvium?</legend>
+          <div class="wl-choices" data-name="a" data-mode="tap">
+            <button type="button" data-a="friend" style="--c:var(--q-blue)">A friend or colleague</button>
+            <button type="button" data-a="community" style="--c:var(--q-green)">An online community</button>
+            <button type="button" data-a="social" style="--c:var(--q-star)">Social media</button>
+            <button type="button" data-a="referral" style="--c:var(--q-rose)">A funder, sponsor or adviser</button>
+            <button type="button" data-a="search" style="--c:var(--q-teal)">Search</button>
+            <button type="button" data-a="other" style="--c:var(--q-blue)">Other</button>
           </div>
-          <button type="button" class="wl-skip">Skip</button>
+          <div class="wl-step-nav">
+            <button type="button" class="wl-skip">Skip</button>
+          </div>
+        </fieldset>
+        <fieldset class="wl-step" data-q="name" hidden>
+          <legend><span class="wl-count">5 of 5</span>And your name?</legend>
+          <p class="wl-step-hint">Optional, so we know how to greet you.</p>
+          <input class="wl-input wl-name" name="name" type="text" autocomplete="name" placeholder="Your name" aria-label="Your name" />
+          <div class="wl-step-nav">
+            <button type="button" class="wl-go">Finish</button>
+            <button type="button" class="wl-skip">Skip</button>
+          </div>
         </fieldset>
       </div>
-      <div class="wl-next" hidden>
-        <h3 class="wl-next-title">What happens next</h3>
-        <ol class="wl-next-steps">
-          <li>Apply in ten minutes, or talk first for twenty.</li>
-          <li>A conversation with Mulvium about you and your idea.</li>
-          <li>If it fits, every term in writing before you sign.</li>
-        </ol>
-        <p class="wl-explore" hidden>Thank you. We&rsquo;ll write when Mulvium opens. Ready sooner? The application takes ten minutes.</p>
-        <p class="wl-next-actions">
-          <a class="wl-button" href="apply/">Start my application</a>
-          <a class="wl-call" data-call href="#">Rather talk first? Book a 20-minute call.</a>
-        </p>
+      <div class="wl-thanks" hidden>
+        <svg class="wl-flourish" viewBox="0 0 160 22" aria-hidden="true"><path d="M2 14c18-12 30-12 42 0s26 12 38 0 26-12 38 0 24 10 38-2" /></svg>
+        <h3 class="wl-thanks-title" tabindex="-1">Thank you<span class="wl-thanks-name"></span>.</h3>
+        <p>We&rsquo;ll let you know when submissions open.</p>
+        <p>If you&rsquo;re passionate about building, write to us at <a href="mailto:hello@mulvium.org">hello@mulvium.org</a>. We would love to connect and bring your vision to life.</p>
+        <img class="wl-thanks-sig" src="signature.webp" alt="Benjamin T. Rossen&rsquo;s signature" width="1200" height="214" loading="lazy" decoding="async" />
       </div>
     </div>
   </template>
