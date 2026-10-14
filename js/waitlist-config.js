@@ -9,7 +9,12 @@
 //            kept.
 //  umami     A Umami Cloud website ID, for cookieless page and event counts.
 //            Left empty, nothing is counted.
+//  suggest   Offer a fix for a mistyped email domain ("Did you mean
+//            name@gmail.com?") before sending. false turns it off.
+// Whether a signup must also be confirmed with an emailed code is set in the
+// back end (CODE in tools/waitlist-apps-script.gs); the page follows it.
 window.MULVIUM_WAITLIST = {
   endpoint: "",
   umami: "",
+  suggest: true,
 };
