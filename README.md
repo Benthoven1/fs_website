@@ -39,23 +39,25 @@ be announced.
   and three lines from the founder's letter float beside it as thought
   bubbles, each linking to the letter in its own words.
   `?for=festival|research|community|arts|education|film` fixes the headline's
-  noun; `?v=b` shows the letter's line instead. An email joins only once
-  it is confirmed: the page offers a fix for a mistyped domain, the back end
-  refuses domains that take no mail and throwaway inboxes, and emails a
-  six-digit code that the visitor enters in the form's place. Then a card of
-  five optional questions follows (what excites them, when they want to
-  begin, the project's field and form, how they heard of Mulvium, their
-  name), with Previous and Continue to change an answer before Submit, and
-  then a thank you. Meanwhile the other signup box offers a way back to the
-  code or the questions, and says "You're on the list." once they are done.
+  noun; `?v=b` shows the letter's line instead. Each email is checked: the
+  page offers a fix for a mistyped domain (`suggest` in the config), and the
+  back end refuses domains that take no mail and throwaway inboxes. The back
+  end can also confirm each email with a six-digit code, entered in the
+  form's place (`CODE` in the Apps Script, off for now; the page follows it).
+  Then a card of five optional questions follows (what excites them, when
+  they want to begin, the project's field and form, how they heard of
+  Mulvium, their name), with Previous and Continue to change an answer before
+  Submit, and then a thank you. Meanwhile the other signup box offers a way
+  back to the code or the questions, and says "You're on the list." once
+  they are done.
   `js/waitlist-config.js` holds every outside service (the form endpoint,
-  Umami analytics); with no endpoint, a signup opens an email draft to
-  hello@mulvium.org, which the visitor sends from their own address.
-  `tools/waitlist-apps-script.gs` is the free endpoint: a Google Sheet that
-  checks and confirms each email, records every answer, sends each new
-  person one welcome email, by name if they gave it (or after twenty minutes
-  if they leave the questions early), and tells hello@mulvium.org about
-  them.
+  Umami analytics) and the typo check's switch; with no endpoint, a signup
+  opens an email draft to hello@mulvium.org, which the visitor sends from
+  their own address. `tools/waitlist-apps-script.gs` is the free endpoint: a
+  Google Sheet that checks each email (and confirms it, with `CODE` on),
+  records every answer, sends each new person one welcome email, by name if
+  they gave it (or after twenty minutes if they leave the questions early),
+  and tells hello@mulvium.org about them.
 - `css/style.css` — the stylesheet every page shares; `css/fiscal.css`, `css/oak.css` and
   `css/about.css` hold rules only one page needs, and only that page loads them.
 - `js/main.js` — Three.js module for the landing page: the cosmos and its framing
