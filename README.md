@@ -39,14 +39,16 @@ be announced.
   and three lines from the founder's letter float beside it as thought
   bubbles, each linking to the letter in its own words.
   `?for=festival|research|community|arts|education|film` fixes the headline's
-  noun; `?v=b` shows the letter's line instead. After a signup, four one-tap
-  questions take the form's place, then the application (`apply/`), drawn
-  from Form FS-1's required lines. `js/waitlist-config.js` holds every outside
-  service (the form endpoint, the call booking link, Umami analytics); with
-  no endpoint, a signup opens an email draft to hello@mulvium.org.
+  noun; `?v=b` shows the letter's line instead. After a signup, a card of
+  five optional questions takes the form's place (what excites them, when
+  they want to begin, the project's field and form, how they heard of
+  Mulvium, their name), then a thank you. `js/waitlist-config.js` holds
+  every outside service (the form endpoint, Umami analytics); with no
+  endpoint, a signup opens an email draft to hello@mulvium.org.
   `tools/waitlist-apps-script.gs` is the free endpoint: a Google Sheet that
-  records every answer, emails each new signup a welcome, and tells
-  hello@mulvium.org of signups and applications.
+  records every answer and sends each new person one welcome email, by name
+  if they gave it (or after twenty minutes if they leave the questions
+  early), and tells hello@mulvium.org about them.
 - `css/style.css` — the stylesheet every page shares; `css/fiscal.css`, `css/oak.css` and
   `css/about.css` hold rules only one page needs, and only that page loads them.
 - `js/main.js` — Three.js module for the landing page: the cosmos and its framing

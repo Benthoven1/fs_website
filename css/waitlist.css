@@ -1,8 +1,7 @@
-/* waitlist.css — the waitlist drawer on the home page (index.html, with
-   css/style.css and css/pitch.css), the application (apply/), the privacy
-   page and the press kit (brand/), which load it alone. Its base rules (body,
-   links) apply only to those standalone pages, so the home page's own stay
-   as they are. */
+/* waitlist.css - the waitlist drawer on the home page (index.html, with
+   css/style.css and css/pitch.css), the privacy page and the press kit
+   (brand/), which load it alone. Its base rules (body, links) apply only to
+   those standalone pages, so the home page's own stay as they are. */
 
 :root {
   --clay: #b87758;
@@ -17,6 +16,12 @@
   --home: rgba(184, 202, 224, 0.52);       /* Fiscal Sponsorship's blue */
   --home-edge: rgba(84, 116, 158, 0.32);
   --bar-h: 52px;
+  /* the cosmos's pastels, for the questions' choices */
+  --q-star: #f0d5bb;
+  --q-green: #c4ddb8;
+  --q-blue: #b8cae0;
+  --q-rose: #e0b8c8;
+  --q-teal: #b8ddd8;
 }
 
 * { box-sizing: border-box; }
@@ -57,7 +62,7 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
 }
 [hidden] { display: none !important; }
 
-/* ── Header ───────────────────────────────────────────────────────────────────── */
+/* -- Header */
 .wl-bar {
   position: sticky;
   top: 0;
@@ -81,20 +86,8 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
   color: var(--ink);
   text-decoration: none;
 }
-.wl-bar-join {
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 16px;
-  letter-spacing: 0.12em;
-  text-transform: lowercase;
-  text-decoration: none;
-  color: var(--paper);
-  background: var(--clay-deep);
-  border-radius: 999px;
-  padding: 7px 16px 8px;
-}
 
-/* ── Signup ───────────────────────────────────────────────────────────────────── */
+/* -- Signup */
 .wl-signup { max-width: 34em; }
 .wl-label {
   display: block;
@@ -140,48 +133,210 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
 .wl-micro { margin: 8px 0 0; font-size: 15.5px; line-height: 1.45; color: var(--ink-soft); }
 .wl-onlist { margin: 0; font-size: 19px; color: var(--ink-soft); }
 
-/* ── The qualifier, in the form's place ─────────────────────────────────────────────── */
+/* -- The questions, in the form's place */
+/* A paper card with the cosmos's colors: a five-part progress line, choices
+   as pastel chips that check when picked, a slider for when, and a thank
+   you that signs itself (js/waitlist.js runs it). */
 .wl-panel {
-  padding: 18px 18px 20px;
-  background: var(--paper-warm);
+  position: relative;
+  padding: 24px 20px 22px;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.5);
   border: 1px solid var(--hairline);
-  border-radius: 14px;
+  border-radius: 22px;
+  box-shadow: 0 24px 60px rgba(27, 22, 19, 0.08), 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+  overflow: hidden;
+  animation: wl-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
-.wl-panel-title, .wl-next-title {
-  margin: 0 0 12px;
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 1.2;
+.wl-panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--q-star), var(--q-green), var(--q-teal), var(--q-blue), var(--q-rose));
+}
+.wl-panel-title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.1;
 }
 .wl-panel-title:focus { outline: none; }
-.wl-step { border: 0; margin: 0; padding: 0; }
-.wl-step legend { padding: 0; margin-bottom: 10px; font-size: 20px; line-height: 1.3; }
+.wl-panel-sub { margin: 4px 0 0; font-style: italic; font-size: 18px; color: var(--ink-soft); }
+.wl-panel.is-thanked .wl-panel-sub { display: none; }
+.wl-progress {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin: 18px 0 0;
+  padding: 0;
+}
+.wl-progress li {
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(27, 22, 19, 0.1);
+  overflow: hidden;
+}
+.wl-progress li::after {
+  content: "";
+  display: block;
+  height: 100%;
+  background: var(--clay);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.wl-progress li.is-here::after { transform: scaleX(0.35); background: var(--q-star); }
+.wl-progress li.is-done::after { transform: none; }
+.wl-panel.is-thanked .wl-progress li::after { background: linear-gradient(90deg, var(--clay), var(--q-rose)); }
+
+.wl-steps { margin-top: 22px; }
+.wl-step {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  animation: wl-step-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.wl-step legend { padding: 0; margin-bottom: 12px; font-weight: 600; font-size: 24px; line-height: 1.2; }
 .wl-count {
   display: block;
+  margin-bottom: 2px;
   font-family: "Cormorant SC", serif;
+  font-weight: 500;
   font-size: 14px;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   color: var(--clay-deep);
 }
-.wl-choices { display: flex; flex-direction: column; gap: 8px; }
+.wl-step-hint { margin: -6px 0 10px; font-style: italic; font-size: 17px; color: var(--ink-soft); }
+.wl-choices + .wl-step-hint { margin-top: 18px; }
+
+/* Choices: pastel chips; picked, they fill and show a check */
+.wl-choices { display: flex; flex-wrap: wrap; gap: 8px; }
 .wl-choices button {
-  min-height: 48px;
-  padding: 10px 14px;
+  --c: var(--q-star);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 13px 9px;
   font: inherit;
-  font-size: 18px;
+  font-size: 16.5px;
+  line-height: 1.2;
   text-align: left;
   color: var(--ink);
+  background: color-mix(in srgb, var(--c), #fff 62%);
+  border: 1px solid color-mix(in srgb, var(--c), #1b1613 16%);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.4, 0.6, 1), box-shadow 0.25s ease;
+}
+.wl-choices button:hover { background: color-mix(in srgb, var(--c), #fff 35%); transform: translateY(-1px); box-shadow: 0 8px 18px rgba(27, 22, 19, 0.08); }
+.wl-choices button:active { transform: scale(0.97); }
+.wl-choices button[aria-pressed]::before {
+  content: "";
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--c), #1b1613 40%);
   background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(27, 22, 19, 0.2);
-  border-radius: 10px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.wl-choices button[aria-pressed="true"] {
+  background: var(--c);
+  border-color: color-mix(in srgb, var(--c), #1b1613 35%);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--c), transparent 40%);
+}
+.wl-choices button[aria-pressed="true"]::before {
+  border-color: var(--ink);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.6 2.5L12 5.5' fill='none' stroke='%23f0ede7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px no-repeat,
+    var(--ink);
+  animation: wl-pop 0.35s cubic-bezier(0.34, 1.6, 0.6, 1);
+}
+.wl-other, .wl-name { margin-top: 12px; }
+
+/* When: a slider from a month to eleven years */
+.wl-when {
+  display: block;
+  margin: 2px 0 14px;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 34px;
+  line-height: 1;
+  color: var(--clay-deep);
+}
+.wl-range {
+  --p: 0%;
+  width: 100%;
+  height: 28px;
+  margin: 0;
+  background: none;
+  -webkit-appearance: none;
+  appearance: none;
   cursor: pointer;
 }
-.wl-choices button:hover { border-color: var(--clay-deep); background: #fff; }
+.wl-range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--clay), var(--q-rose) 50%, var(--q-blue)) 0 0 / var(--p) 100% no-repeat, rgba(27, 22, 19, 0.12);
+}
+.wl-range::-moz-range-track { height: 6px; border-radius: 6px; background: rgba(27, 22, 19, 0.12); }
+.wl-range::-moz-range-progress { height: 6px; border-radius: 6px; background: linear-gradient(90deg, var(--clay), var(--q-rose)); }
+.wl-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  margin-top: -10px;
+  border-radius: 50%;
+  background: var(--paper-warm);
+  border: 2px solid var(--clay-deep);
+  box-shadow: 0 4px 12px rgba(27, 22, 19, 0.18);
+  transition: transform 0.2s ease;
+}
+.wl-range::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--paper-warm);
+  border: 2px solid var(--clay-deep);
+  box-shadow: 0 4px 12px rgba(27, 22, 19, 0.18);
+}
+.wl-range:active::-webkit-slider-thumb { transform: scale(1.12); }
+.wl-range-ends {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-family: "Cormorant SC", serif;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+}
+
+.wl-step-nav { display: flex; align-items: center; gap: 18px; margin-top: 20px; }
+.wl-go {
+  min-height: 46px;
+  padding: 0 26px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 19px;
+  color: var(--paper);
+  background: var(--clay-deep);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.wl-go:hover { background: #7b4c37; transform: translateY(-1px); }
 .wl-skip {
-  margin-top: 10px;
   padding: 6px 0;
   font: inherit;
-  font-size: 16px;
+  font-size: 17px;
   color: var(--ink-soft);
   background: none;
   border: 0;
@@ -189,13 +344,44 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
   text-underline-offset: 3px;
   cursor: pointer;
 }
-.wl-next-steps { margin: 0 0 14px; padding-left: 1.3em; }
-.wl-next-steps li { margin-bottom: 4px; }
-.wl-explore { margin: 0 0 14px; }
-.wl-next-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin: 0; }
-.wl-call { font-size: 18px; }
 
-/* ── The waitlist's content, below the hero ────────────────────────────────────────── */
+/* The thank you: a flourish draws, the words rise, the signature follows */
+.wl-thanks { margin-top: 18px; animation: wl-step-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.wl-flourish { display: block; width: 120px; height: 18px; margin-bottom: 8px; }
+.wl-flourish path {
+  fill: none;
+  stroke: var(--clay);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: wl-draw 1.4s ease 0.2s forwards;
+}
+.wl-thanks-title { margin: 0 0 8px; font-weight: 600; font-size: 30px; line-height: 1.15; }
+.wl-thanks-title:focus { outline: none; }
+.wl-thanks p { margin: 0 0 10px; font-size: 19px; line-height: 1.45; color: var(--ink-soft); }
+.wl-thanks-sig {
+  display: block;
+  width: 200px;
+  height: auto;
+  margin: 8px 0 0 calc(200px * -0.204);
+  opacity: 0;
+  animation: wl-fade 1s ease 0.9s forwards;
+}
+
+@keyframes wl-rise { from { opacity: 0; transform: translateY(16px) scale(0.98); } }
+@keyframes wl-step-in { from { opacity: 0; transform: translateX(18px); } }
+@keyframes wl-pop { from { transform: scale(0.4); } }
+@keyframes wl-draw { to { stroke-dashoffset: 0; } }
+@keyframes wl-fade { to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .wl-panel, .wl-step, .wl-thanks, .wl-choices button[aria-pressed="true"]::before { animation: none; }
+  .wl-flourish path { animation: none; stroke-dashoffset: 0; }
+  .wl-thanks-sig { animation: none; opacity: 1; }
+}
+
+/* -- The waitlist's content, below the hero */
 /* The drawer: on the home page's 3D view it rises over the cosmos when
    swiped (body.footer-open, js/main.js), scrolls on its own, and ends with
    the site's footer. Its paper carries the site's grain itself, since the
@@ -248,7 +434,6 @@ body.footer-open .wl-drawer {
   font-style: italic;
   color: var(--ink-soft);
 }
-.wl-signup { max-width: 34em; }
 .wl-h2 {
   margin: 0 0 18px;
   font-weight: 600;
@@ -280,7 +465,7 @@ body.footer-open .wl-drawer {
 .wl-sig { display: block; width: 260px; max-width: none; height: auto; margin: 6px 0 4px calc(260px * -0.204); }
 .wl-sig-name { margin: 0 0 26px; font-size: 17px; color: var(--ink-soft); }
 
-/* ── The rotating noun in the headline (as on the fiscal sponsorship page).
+/* -- The rotating noun in the headline (as on the fiscal sponsorship page).
    Its box is as wide as its widest word (js/waitlist.js), so turning over
    never moves a word to another line. */
 .wl-rotor {
@@ -307,7 +492,7 @@ body.footer-open .wl-drawer {
 .wl-rotor-word.is-on { position: relative; opacity: 1; transform: none; }
 .wl-rotor-word.is-out { opacity: 0; transform: translateY(-105%); }
 
-/* ── Thought bubbles: three lines from the founder's letter ───────────────
+/* -- Thought bubbles: a question and three lines from the founder's letter
    Each is a cloud with a trail of two rounds. On phones the clouds sit
    between the slides, trailing down; on wide screens they float in the
    margins at --y, trailing in toward the text. They arrive as a thought
@@ -416,7 +601,7 @@ html.wl-js .wl-bubble.is-in .wl-cloud > * { opacity: 1; translate: none; }
   .wl-bubble.is-in .wl-cloud, .wl-bubble.is-in .wl-dot { animation: none !important; }
 }
 
-/* ── Footer ───────────────────────────────────────────────────────────────────── */
+/* -- Footer */
 .wl-foot {
   margin-top: 40px;
   padding: 26px 20px 34px;
@@ -428,43 +613,19 @@ html.wl-js .wl-bubble.is-in .wl-cloud > * { opacity: 1; translate: none; }
 .wl-foot p { margin: 0 0 6px; }
 .wl-brandline { font-style: italic; font-size: 18px; }
 
-/* ── The application ──────────────────────────────────────────────────────────────── */
-.wl-apply { max-width: 640px; margin: 0 auto; padding: 22px 20px 0; }
+/* -- The privacy page */
 .wl-h1--apply { font-size: clamp(30px, 6vw, 44px); }
-.wl-as { margin: 0 0 10px; color: var(--ink-soft); }
-.wl-as span { color: var(--ink); }
-.wl-apply .wl-h2 { margin-top: 30px; font-size: 23px; }
-.wl-field { border: 0; margin: 0 0 18px; padding: 0; }
-.wl-field > label, .wl-field > legend { display: block; margin-bottom: 6px; padding: 0; font-size: 19px; font-weight: 500; }
-.wl-n {
-  display: inline-block;
-  min-width: 1.4em;
-  font-family: "Cormorant SC", serif;
-  color: var(--clay-deep);
-}
-.wl-opt { font-size: 15px; font-weight: 400; color: var(--ink-soft); margin-left: 6px; }
-.wl-hint { margin: -2px 0 6px; font-size: 16px; color: var(--ink-soft); }
-.wl-text { min-height: 0; resize: vertical; line-height: 1.45; }
-select.wl-input { appearance: auto; }
-.wl-radios { display: grid; gap: 4px; }
-.wl-radios label, .wl-consent { display: flex; gap: 10px; align-items: flex-start; min-height: 40px; padding: 6px 0; font-size: 18px; }
-.wl-radios input, .wl-consent input { width: 20px; height: 20px; margin: 3px 0 0; accent-color: var(--clay-deep); flex: none; }
-.wl-actions { margin: 18px 0 0; }
-.wl-applied { padding: 20px 0 10px; }
-.wl-applied h2:focus { outline: none; }
-
-/* ── The privacy page ───────────────────────────────────────────────────────────────── */
 .wl-doc { max-width: 680px; margin: 0 auto; padding: 22px 20px 0; }
 .wl-doc h2 { font-weight: 500; font-size: 24px; margin: 30px 0 8px; }
 .wl-doc p, .wl-doc li { color: var(--ink-soft); }
 .wl-doc ul { padding-left: 1.2em; }
 
-/* ── Wider screens ────────────────────────────────────────────────────────────────── */
+/* -- Wider screens */
 @media (min-width: 560px) {
   .wl-row { flex-direction: row; }
   .wl-row .wl-input { flex: 1; }
-  .wl-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-  .wl-next-actions { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 18px; }
+  .wl-panel { padding: 30px 32px 28px; }
+  .wl-choices button { padding: 9px 16px 10px; font-size: 18px; }
 }
 @media (min-width: 960px) {
   .wl-bar { padding: 0 40px; }
@@ -473,7 +634,7 @@ select.wl-input { appearance: auto; }
   .wl-sec--lead { padding-top: 104px; }
 }
 
-/* ── The press kit (brand/index.html) ─────────────────────────────────────────────── */
+/* -- The press kit (brand/index.html) */
 .wl-doc.pk { max-width: 1080px; }
 .pk-group { margin-top: 40px; }
 .pk-group h2 { margin-bottom: 2px; }
