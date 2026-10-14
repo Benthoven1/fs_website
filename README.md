@@ -22,13 +22,22 @@ be announced.
   the orbit view; `#letter` onto the founder's letter; `#waitlist`, every
   footer's "Join the waitlist", onto the drawer.
 - The waitlist drawer (`#waitlist` in `index.html`; `css/waitlist.css`,
-  `js/waitlist.js`; opened and closed by `js/main.js`, which also moves the
-  site's footer into it for the 3D view and back under the letter for the
-  orbit view). Its headline's noun turns over (idea, festival, research,
-  charity, initiative, passion, as on the fiscal sponsorship page) in a box
-  as wide as the widest word, so no line ever reflows. Then short statements,
-  plain answers, and lines from the founder's letter as thought bubbles in
-  the margins (between the statements on phones), each linking to the letter.
+  `css/pitch.css`, `js/waitlist.js`, `js/pitch.js`; opened and closed by
+  `js/main.js`, which also moves the site's footer into it for the 3D view and
+  back under the letter for the orbit view) is the pitch. It opens on the
+  offer and its form: the headline's noun turns over (idea, festival,
+  research, charity, initiative, passion, as on the fiscal sponsorship page)
+  in a box as wide as the widest word, so no line ever reflows. Then short
+  slides, each arriving as it scrolls into view: the problem (the ideas, and
+  the wall of organization-building between an idea and reality), the answer
+  (you, donors and Mulvium), how it works (idea, institution, capital,
+  execution), the workforce (the roles M.SOS brings to an orchestra, a museum,
+  a research institute, a botanical garden or a scholarship, circling it as
+  the planets circle the star), what a founder receives, the model (the
+  Mulvium Foundation, Mulvium, Inc., and $0 upfront), and the flywheel under
+  a night sky; then plain answers, and the close with the second form. Three
+  lines from the founder's letter float beside it as thought bubbles (between
+  the slides on phones), each linking to the letter in its own words.
   `?for=festival|research|community|arts|education|film` fixes the headline's
   noun; `?v=b` shows the letter's line instead. After a signup, four one-tap
   questions take the form's place, then the application (`apply/`), drawn
@@ -37,8 +46,7 @@ be announced.
   no endpoint, a signup opens an email draft to hello@mulvium.org.
   `tools/waitlist-apps-script.gs` is the free endpoint: a Google Sheet that
   records every answer, emails each new signup a welcome, and tells
-  hello@mulvium.org of signups and applications. `begin/` only forwards old
-  links to `#waitlist` and `apply/`.
+  hello@mulvium.org of signups and applications.
 - `css/style.css` — the stylesheet every page shares; `css/fiscal.css`, `css/oak.css` and
   `css/about.css` hold rules only one page needs, and only that page loads them.
 - `js/main.js` — Three.js module for the landing page: the cosmos and its framing
