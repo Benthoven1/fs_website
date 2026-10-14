@@ -4,9 +4,8 @@
 //  endpoint  Where signups and the answers to the questions after them are sent:
 //            any URL that accepts a urlencoded POST and answers 2xx with CORS
 //            (tools/waitlist-apps-script.gs is a free one, on a Google Sheet,
-//            which also sends the welcome email). Left empty, a signup opens
-//            an email to hello@mulvium.org instead, and the answers are not
-//            kept.
+//            which also sends the welcome email). Left empty, a signup still
+//            opens the questions, but nothing is kept and no email is sent.
 //  umami     A Umami Cloud website ID, for cookieless page and event counts.
 //            Left empty, nothing is counted.
 //  suggest   Offer a fix for a mistyped email domain ("Did you mean

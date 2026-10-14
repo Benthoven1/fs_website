@@ -52,12 +52,12 @@ be announced.
   they are done.
   `js/waitlist-config.js` holds every outside service (the form endpoint,
   Umami analytics) and the typo check's switch; with no endpoint, a signup
-  opens an email draft to hello@mulvium.org, which the visitor sends from
-  their own address. `tools/waitlist-apps-script.gs` is the free endpoint: a
-  Google Sheet that checks each email (and confirms it, with `CODE` on),
-  records every answer, sends each new person one welcome email, by name if
-  they gave it (or after twenty minutes if they leave the questions early),
-  and tells hello@mulvium.org about them.
+  still opens the questions, but nothing is kept and no email is sent.
+  `tools/waitlist-apps-script.gs` is the free endpoint: a Google Sheet that
+  checks each email (and confirms it, with `CODE` on), records every answer,
+  sends each new person one welcome email, by name if they gave it (or after
+  twenty minutes if they leave the questions early), and tells
+  hello@mulvium.org about them.
 - `css/style.css` — the stylesheet every page shares; `css/fiscal.css`, `css/oak.css` and
   `css/about.css` hold rules only one page needs, and only that page loads them.
 - `js/main.js` — Three.js module for the landing page: the cosmos and its framing
