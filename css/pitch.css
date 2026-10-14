@@ -1,7 +1,9 @@
 /* pitch.css - the pitch inside the waitlist drawer (index.html #waitlist,
-   with css/waitlist.css): short slides that arrive as they scroll into view
-   (js/pitch.js adds .is-in), in the cosmos's own colors. Without pitch.js
-   (html.pt-js absent) everything simply shows. */
+   with css/waitlist.css), and the arrows between it and the cosmos. Short
+   slides that arrive as they scroll into view (js/pitch.js adds .is-in), in
+   the cosmos's own colors. Phones get one column; from 960px the desktop has
+   its own composition on a wider measure. Without pitch.js (html.pt-js
+   absent) everything simply shows. */
 
 #waitlist {
   --pt-star: #f0d5bb;
@@ -12,45 +14,84 @@
   --pt-night: #070517;
   --pt-spring: cubic-bezier(0.34, 1.4, 0.6, 1);
   --pt-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --pt-gutter: 20px;
 }
 
 /* The 14px paper cap over the top edge (style.css) would show as a strip
    across the night band; the open drawer covers everything it guards */
 body.footer-open #nav-cap { visibility: hidden; }
 
-/* -- Slides ---------------------------------------------------------- */
+/* -- Between the cosmos and the drawer: a quiet arrow each way ------- */
+.hint-down, .pt-up {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 32px;
+  padding: 0;
+  color: var(--ink-soft);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+.hint-down:hover, .pt-up:hover, .hint-down:focus-visible, .pt-up:focus-visible { opacity: 1; }
+.hint-down svg, .pt-up svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* under "Click a sphere | Join the waitlist", outside its box, so the
+   hero's framing (js/main.js: layoutHero) is unchanged */
+.hint-down {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  translate: -50% 0;
+  pointer-events: auto;
+}
+.hint-down svg { animation: pt-nudge-down 2.6s ease-in-out infinite; }
+body.mode-2d .hint-down, body.footer-open .hint-down { pointer-events: none; }
+.pt-up {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  translate: -50% 0;
+  z-index: 2;
+}
+.pt-up svg { animation: pt-nudge-up 2.6s ease-in-out infinite; }
+
+/* -- Slides (phones first) ------------------------------------------- */
 .pt-sec {
   position: relative;
-  max-width: 980px;
+  max-width: 620px;
   margin: 0 auto;
-  padding: 88px 0 8px;
-}
-.pt-kicker, .pt-eyebrow {
-  margin: 0 0 14px;
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 17px;
-  letter-spacing: 0.16em;
-  text-transform: lowercase;
-  color: var(--clay-deep);
+  padding: 80px 0 8px;
 }
 .pt-h2 {
   max-width: 17em;
-  margin: 0 0 30px;
+  margin: 0 0 26px;
   font-weight: 600;
-  font-size: clamp(30px, 6.6vw, 58px);
-  line-height: 1.04;
+  font-size: clamp(30px, 7.4vw, 44px);
+  line-height: 1.06;
   letter-spacing: -0.01em;
   text-wrap: balance;
 }
 .pt-note {
   max-width: 34em;
-  margin: 26px 0 0;
+  margin: 24px 0 0;
   font-style: italic;
-  font-size: 20px;
+  font-size: 19px;
   line-height: 1.4;
   color: var(--ink-soft);
 }
+
+/* a phrase that never parts at a line end */
+.pt-nb { white-space: nowrap; }
 
 /* -- Arrival: each marked element rises in once (js/pitch.js) -------- */
 html.pt-js [data-pt] {
@@ -61,41 +102,48 @@ html.pt-js [data-pt] {
 html.pt-js [data-pt].is-in { opacity: 1; translate: none; }
 html.pt-js .pt-gets [data-pt] { transition-delay: calc(var(--i, 0) * 70ms); }
 
-/* -- The ideas, floating --------------------------------------------- */
+/* -- The ideas: rows of institutions drifting past ------------------- */
 .pt-ideas {
+  display: grid;
+  gap: 12px;
+  margin: 0 calc(var(--pt-gutter) * -1);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.pt-row { overflow: hidden; }
+.pt-track {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 6px 0;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px 10px;
+  row-gap: 10px;
 }
-.pt-ideas li {
-  padding: 9px 18px 10px;
+/* each pill carries its own space after it, so the doubled row (js/pitch.js)
+   loops at exactly half its width */
+html.pt-js .pt-track { flex-wrap: nowrap; width: max-content; animation: pt-drift 70s linear infinite; }
+html.pt-js .pt-row--rev .pt-track { animation-direction: reverse; animation-duration: 80s; }
+html.pt-js .pt-row:nth-child(3) .pt-track { animation-duration: 64s; }
+.pt-ideas:hover .pt-track { animation-play-state: paused; }
+.pt-track li {
+  flex: none;
+  margin-right: 10px;
+  padding: 8px 17px 9px;
   border-radius: 999px;
   font-style: italic;
-  font-size: 20px;
+  font-size: 18px;
   white-space: nowrap;
-  background: color-mix(in srgb, var(--c), #fff 30%);
-  border: 1px solid color-mix(in srgb, var(--c), #1b1613 12%);
-  box-shadow: 0 10px 24px rgba(27, 22, 19, 0.07);
-  animation: pt-bob 6s ease-in-out calc(var(--i) * -0.9s) infinite alternate;
+  background: color-mix(in srgb, var(--c), #fff 28%);
+  border: 1px solid color-mix(in srgb, var(--c), #1b1613 14%);
+  box-shadow: 0 8px 20px rgba(27, 22, 19, 0.06);
 }
-html.pt-js .pt-ideas li {
-  opacity: 0;
-  scale: 0.6;
-  transition: opacity 0.5s ease, scale 0.8s var(--pt-spring);
-  transition-delay: calc(0.2s + var(--i) * 0.12s);
-}
-html.pt-js .pt-ideas.is-in li { opacity: 1; scale: 1; }
 .pt-turn {
   position: relative;
   width: fit-content;
-  margin: 40px 0 0;
+  margin: 36px 0 0;
   font-style: italic;
   font-weight: 500;
-  font-size: clamp(26px, 5vw, 40px);
+  font-size: clamp(26px, 6vw, 34px);
   line-height: 1.15;
   color: var(--clay-deep);
 }
@@ -113,63 +161,42 @@ html.pt-js .pt-ideas.is-in li { opacity: 1; scale: 1; }
 }
 html.pt-js .pt-turn:not(.is-in)::after { transform: scaleX(0); }
 
-@media (min-width: 760px) {
-  .pt-ideas { display: block; position: relative; height: 340px; }
-  .pt-ideas li { position: absolute; left: var(--x); top: var(--y); font-size: 23px; }
-}
-
-/* -- The wall between an idea and reality ---------------------------- */
-.pt-wall {
+/* -- A slice of the M.SOS globe, between an idea and reality ---------- */
+.pt-globe {
   display: grid;
-  justify-items: center;
-  gap: 16px;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: "globe globe globe" "idea line far";
+  align-items: center;
+  column-gap: 12px;
+  margin: 0 calc(var(--pt-gutter) * -1);
+  padding: 0 var(--pt-gutter);
+}
+.pt-globe-canvas {
+  grid-area: globe;
+  display: block;
+  width: 100%;
+  height: 270px;
+  -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent);
+  mask-image: linear-gradient(180deg, #000 70%, transparent);
+}
+.pt-globe::after {
+  content: "";
+  grid-area: line;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--clay), var(--pt-green), var(--pt-blue));
+  opacity: 0.6;
 }
 .pt-end {
   margin: 0;
   font-style: italic;
   font-weight: 500;
-  font-size: 24px;
+  font-size: 22px;
   color: var(--clay-deep);
+  white-space: nowrap;
 }
-.pt-end--far { color: rgba(27, 22, 19, 0.4); }
-.pt-bricks {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  max-width: 420px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 6px;
-}
-.pt-bricks li {
-  padding: 13px 8px 14px;
-  border-radius: 6px;
-  text-align: center;
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 18px;
-  letter-spacing: 0.06em;
-  text-transform: lowercase;
-  color: #fbf4ee;
-  background: linear-gradient(180deg, #c48a6c, #9d6248);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 6px 14px rgba(95, 52, 33, 0.22);
-}
-.pt-bricks li:nth-child(4n + 2), .pt-bricks li:nth-child(4n + 3) { background: linear-gradient(180deg, #b77c5f, #8f5a42); }
-html.pt-js .pt-bricks li {
-  opacity: 0;
-  translate: 0 -90px;
-  rotate: -6deg;
-  transition: opacity 0.3s ease, translate 0.7s cubic-bezier(0.3, 1.5, 0.5, 1), rotate 0.7s cubic-bezier(0.3, 1.5, 0.5, 1);
-  transition-delay: calc(0.3s + (7 - var(--i)) * 0.11s);
-}
-html.pt-js .pt-bricks li:nth-child(odd) { rotate: 5deg; }
-html.pt-js .pt-wall.is-in .pt-bricks li { opacity: 1; translate: none; rotate: none; }
-
-@media (min-width: 760px) {
-  .pt-wall { grid-template-columns: auto 1fr auto; align-items: center; gap: 32px; }
-  .pt-bricks { max-width: none; grid-template-columns: repeat(4, 1fr); }
-}
+.pt-end:first-child { grid-area: idea; }
+.pt-end--far { grid-area: far; color: rgba(27, 22, 19, 0.42); }
 
 /* -- The answer, as a sum -------------------------------------------- */
 .pt-sum {
@@ -183,16 +210,15 @@ html.pt-js .pt-wall.is-in .pt-bricks li { opacity: 1; translate: none; rotate: n
   text-align: center;
 }
 .pt-sum li { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.pt-sum strong { font-weight: 700; font-size: 25px; line-height: 1.1; }
+.pt-sum strong { font-weight: 700; font-size: 23px; line-height: 1.1; }
 .pt-sum span { max-width: 9em; font-size: 16px; line-height: 1.28; color: var(--ink-soft); }
 .pt-sum .pt-op { font-family: "Italiana", serif; font-size: 30px; line-height: 1; color: var(--clay); }
-/* on phones the sum's "= It exists." takes the line below */
 .pt-sum .pt-op:nth-child(6) { grid-column: 1 / -1; padding-top: 14px; }
 .pt-sum .pt-real { grid-column: 1 / -1; }
 .pt-sum .pt-real strong {
   font-style: italic;
   font-weight: 600;
-  font-size: clamp(36px, 7vw, 52px);
+  font-size: clamp(36px, 9vw, 52px);
   background: linear-gradient(90deg, var(--clay-deep), #b0607a, #5d7da6, #5f8a50, var(--clay-deep));
   background-size: 300% 100%;
   -webkit-background-clip: text;
@@ -209,23 +235,14 @@ html.pt-js .pt-sum li {
 }
 html.pt-js .pt-sum.is-in li { opacity: 1; scale: 1; }
 
-@media (min-width: 760px) {
-  .pt-sum { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
-  .pt-sum li { flex: 1 1 0; }
-  .pt-sum strong { font-size: 32px; }
-  .pt-sum span { font-size: 19px; }
-  .pt-sum .pt-op, .pt-sum .pt-op:nth-child(6) { flex: 0 0 auto; padding-top: 0; font-size: 44px; }
-  .pt-sum .pt-real { flex: 1.3 1 0; }
-}
-
 /* -- How it works: a line that draws itself -------------------------- */
 .pt-path {
   position: relative;
   list-style: none;
   margin: 0;
-  padding: 0 0 0 28px;
+  padding: 0 0 0 26px;
   display: grid;
-  gap: 26px;
+  gap: 24px;
 }
 .pt-path::before {
   content: "";
@@ -239,8 +256,8 @@ html.pt-js .pt-sum.is-in li { opacity: 1; scale: 1; }
   transition: transform 1.6s var(--pt-out) 0.2s;
 }
 html.pt-js .pt-path:not(.is-in)::before { transform: scaleY(0); }
-.pt-path li { position: relative; display: grid; align-content: start; gap: 2px; }
-.pt-path strong { font-weight: 700; font-size: 25px; line-height: 1.15; }
+.pt-path li { display: grid; align-content: start; gap: 2px; }
+.pt-path strong { font-weight: 700; font-size: 24px; line-height: 1.15; }
 .pt-path span { font-size: 18px; line-height: 1.38; color: var(--ink-soft); }
 html.pt-js .pt-path li {
   opacity: 0;
@@ -249,21 +266,6 @@ html.pt-js .pt-path li {
   transition-delay: calc(0.4s + var(--i) * 0.3s);
 }
 html.pt-js .pt-path.is-in li { opacity: 1; translate: none; }
-
-@media (min-width: 760px) {
-  .pt-path { grid-template-columns: repeat(4, 1fr); gap: 28px; padding: 30px 0 0; }
-  .pt-path::before {
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: auto;
-    width: auto;
-    height: 2px;
-    background: linear-gradient(90deg, var(--clay), var(--pt-green), var(--pt-blue));
-    transform-origin: left;
-  }
-  html.pt-js .pt-path:not(.is-in)::before { transform: scaleX(0); }
-}
 
 /* -- What a founder receives ----------------------------------------- */
 .pt-gets {
@@ -275,7 +277,7 @@ html.pt-js .pt-path.is-in li { opacity: 1; translate: none; }
 }
 .pt-gets li {
   --c: var(--pt-star);
-  padding: 15px 18px 15px;
+  padding: 14px 18px 15px;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.55);
   border: 1px solid var(--hairline);
@@ -287,9 +289,9 @@ html.pt-js .pt-path.is-in li { opacity: 1; translate: none; }
 .pt-gets li:nth-child(4n + 2) { --c: var(--pt-green); }
 .pt-gets li:nth-child(4n + 3) { --c: var(--pt-blue); }
 .pt-gets li:nth-child(4n + 4) { --c: var(--pt-rose); }
-.pt-gets strong { display: block; font-weight: 700; font-size: 22px; }
+.pt-gets strong { display: block; font-weight: 700; font-size: 21px; }
 .pt-gets span { display: block; margin-top: 2px; font-size: 17px; color: var(--ink-soft); }
-@media (min-width: 560px) {
+@media (min-width: 560px) and (max-width: 959px) {
   .pt-gets { grid-template-columns: repeat(2, 1fr); }
 }
 
@@ -312,8 +314,8 @@ html.pt-js .pt-h2:not(.is-in) .pt-zero { scale: 2.4; rotate: -12deg; }
 /* -- The vision, under the night sky --------------------------------- */
 .pt-band {
   position: relative;
-  margin: 96px -20px 0;
-  padding: 96px 20px 104px;
+  margin: 88px calc(var(--pt-gutter) * -1) 0;
+  padding: 88px var(--pt-gutter) 96px;
   color: #f4efe8;
   background:
     radial-gradient(1.2px 1.2px at 12% 18%, rgba(255, 255, 255, 0.8), transparent),
@@ -326,13 +328,13 @@ html.pt-js .pt-h2:not(.is-in) .pt-zero { scale: 2.4; rotate: -12deg; }
     var(--pt-night);
   overflow: hidden;
 }
-.pt-band-in { max-width: 980px; margin: 0 auto; }
+.pt-band-in { max-width: 1040px; margin: 0 auto; }
 .pt-vision-lead {
   max-width: 30em;
-  margin: 0 auto 28px;
+  margin: 0 auto 26px;
   text-align: center;
   font-style: italic;
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1.4;
   color: rgba(244, 239, 232, 0.78);
 }
@@ -341,8 +343,8 @@ html.pt-js .pt-h2:not(.is-in) .pt-zero { scale: 2.4; rotate: -12deg; }
   margin: 0 auto;
   text-align: center;
   font-weight: 500;
-  font-size: clamp(30px, 5.6vw, 52px);
-  line-height: 1.12;
+  font-size: clamp(28px, 7vw, 40px);
+  line-height: 1.14;
   text-wrap: balance;
 }
 .pt-vision em {
@@ -355,7 +357,6 @@ html.pt-js .pt-h2:not(.is-in) .pt-zero { scale: 2.4; rotate: -12deg; }
   animation: pt-sheen 7s linear infinite;
   padding-right: 0.08em;
 }
-/* the vision arrives a word at a time (js/pitch.js wraps them) */
 html.pt-js .pt-vision .pt-w {
   display: inline-block;
   opacity: 0;
@@ -367,23 +368,169 @@ html.pt-js .pt-vision .pt-w {
 html.pt-js .pt-vision.is-in .pt-w { opacity: 1; translate: none; filter: none; }
 html.pt-js .pt-vision[data-pt] { opacity: 1; translate: none; }
 
+/* -- Desktop: its own composition on a wider measure ----------------- */
 @media (min-width: 960px) {
-  .pt-sec { padding-top: 120px; }
-  .pt-band { margin: 120px -40px 0; padding: 130px 40px 140px; }
+  #waitlist { --pt-gutter: 56px; }
+  #waitlist .wl-content { padding: 0 var(--pt-gutter); }
+  #waitlist .wl-sec, .pt-sec { max-width: 1120px; }
+  .pt-sec { padding-top: 136px; }
+  #waitlist .wl-sec { padding-top: 136px; }
+  .pt-h2 { max-width: 15em; margin-bottom: 40px; font-size: clamp(44px, 4.4vw, 60px); line-height: 1.03; }
+  .pt-note { font-size: 21px; margin-top: 30px; }
+
+  /* Thought bubbles sit in the layout, trailing toward the text beside them */
+  #waitlist .wl-bubble {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    width: auto;
+    max-width: 330px;
+    margin: 0;
+  }
+  #waitlist .wl-dot--near { bottom: 26px; }
+  #waitlist .wl-dot--far { bottom: 16px; }
+  #waitlist .wl-bubble--r .wl-dot--near { left: -21px; right: auto; }
+  #waitlist .wl-bubble--r .wl-dot--far { left: -36px; right: auto; }
+  #waitlist .wl-bubble--l .wl-dot--near { right: -21px; left: auto; }
+  #waitlist .wl-bubble--l .wl-dot--far { right: -36px; left: auto; }
+  #waitlist .wl-bubble--r .wl-cloud { transform-origin: -8% 80%; }
+  #waitlist .wl-bubble--l .wl-cloud { transform-origin: 108% 80%; }
+  #waitlist .wl-cloud p { font-size: 21px; }
+
+  /* The offer: the headline across the page, its first line whole; the form
+     beneath it, and the question beside the form */
+  #waitlist .wl-sec--lead {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 330px;
+    column-gap: 80px;
+    align-items: center;
+    padding-top: 150px;
+  }
+  #waitlist .wl-h1 {
+    grid-column: 1 / -1;
+    margin-bottom: 26px;
+    font-size: clamp(54px, 5.6vw, 78px);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+  }
+  #waitlist .wl-h1 > [aria-hidden] { white-space: nowrap; }
+  #waitlist .wl-sec--lead .wl-sub { font-size: 25px; margin-bottom: 26px; }
+  #waitlist .wl-sec--lead .wl-signup { max-width: 600px; }
+  .pt-ask { justify-self: end; }
+  .pt-ask .wl-cloud p { font-style: normal; font-weight: 600; font-size: 24px; }
+
+  /* The ideas run the full width of the drawer */
+  .pt-ideas { gap: 16px; }
+  .pt-track li { margin-right: 14px; padding: 10px 22px 11px; font-size: 23px; }
+  .pt-turn { margin-top: 48px; font-size: 44px; }
+
+  /* The globe between its two words, on one horizon */
+  .pt-globe {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "idea globe far";
+    align-items: end;
+    column-gap: 28px;
+    margin: 0;
+    padding: 0;
+  }
+  .pt-globe::after { display: none; }
+  .pt-globe-canvas { height: 430px; }
+  .pt-end { padding-bottom: 34px; font-size: 30px; }
+
+  /* The answer: the claim beside a line from the letter, the sum beneath */
+  .pt-answer {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 330px;
+    column-gap: 80px;
+    align-items: center;
+  }
+  .pt-answer .pt-h2 { margin-bottom: 0; }
+  .pt-answer .wl-bubble { justify-self: end; }
+  .pt-sum {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    margin-top: 64px;
+  }
+  .pt-sum li { flex: 1 1 0; }
+  .pt-sum strong { font-size: 38px; }
+  .pt-sum span { font-size: 20px; }
+  .pt-sum .pt-op, .pt-sum .pt-op:nth-child(6) { flex: 0 0 auto; padding-top: 0; font-size: 54px; }
+  .pt-sum .pt-real { flex: 1.3 1 0; }
+  .pt-sum .pt-real strong { font-size: 60px; }
+
+  /* How it works: four steps along one line */
+  .pt-path { grid-template-columns: repeat(4, 1fr); gap: 40px; padding: 34px 0 0; }
+  .pt-path::before {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: auto;
+    width: auto;
+    height: 2px;
+    background: linear-gradient(90deg, var(--clay), var(--pt-green), var(--pt-blue));
+    transform-origin: left;
+  }
+  html.pt-js .pt-path:not(.is-in)::before { transform: scaleX(0); }
+  .pt-path strong { font-size: 28px; }
+  .pt-path span { font-size: 19px; }
+
+  /* What a founder receives: the heading beside a line from the letter,
+     eight cards in two rows of four beneath */
+  .pt-gets-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 330px;
+    column-gap: 80px;
+    align-items: center;
+  }
+  .pt-gets-sec .wl-h2 { margin: 0; font-size: clamp(44px, 4.4vw, 60px); line-height: 1.03; }
+  .pt-gets-sec .wl-bubble { justify-self: end; }
+  .pt-gets { grid-column: 1 / -1; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 52px; }
+  .pt-gets li { padding: 20px 22px 22px; }
+  .pt-gets strong { font-size: 23px; }
+
+  .pt-zero-sec .pt-h2 { max-width: none; font-size: 68px; }
+
+  .pt-band { margin-top: 136px; padding: 150px var(--pt-gutter) 160px; }
+  .pt-vision-lead { font-size: 23px; margin-bottom: 34px; }
+  .pt-vision { font-size: clamp(44px, 4.4vw, 60px); }
+
+  /* Plain answers: the heading in its own column */
+  .pt-qa-sec { display: grid; grid-template-columns: 1fr 2fr; column-gap: 80px; align-items: start; }
+  .pt-qa-sec .wl-h2 { font-size: 44px; }
+  .pt-qa-sec .wl-qa dt { font-size: 23px; }
+  .pt-qa-sec .wl-qa dd { font-size: 19px; }
+
+  /* The close: the founder's word on the left, the form on the right */
+  #waitlist .wl-sec--close {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 80px;
+    align-items: center;
+    padding-bottom: 72px;
+  }
+  .pt-close-l .wl-h2--leap { font-size: 52px; }
+  .pt-close-l .wl-sub { font-size: 24px; }
+  .pt-close-r { display: grid; gap: 40px; }
+  .pt-close-r .wl-bubble { justify-self: start; margin-left: 40px; }
 }
 
 /* -- Motion ---------------------------------------------------------- */
-@keyframes pt-bob { from { translate: 0 0; } to { translate: 0 -10px; } }
+@keyframes pt-drift { to { translate: -50% 0; } }
 @keyframes pt-sheen { to { background-position: 300% 0; } }
+@keyframes pt-nudge-down { 0%, 100% { translate: 0 -2px; } 50% { translate: 0 3px; } }
+@keyframes pt-nudge-up { 0%, 100% { translate: 0 2px; } 50% { translate: 0 -3px; } }
 
 @media (prefers-reduced-motion: reduce) {
-  #waitlist *, #waitlist *::before, #waitlist *::after {
+  #waitlist *, #waitlist *::before, #waitlist *::after, .hint-down svg {
     animation: none !important;
     transition: none !important;
   }
+  html.pt-js .pt-track { flex-wrap: wrap; width: auto; }
   html.pt-js #waitlist [data-pt],
-  html.pt-js .pt-ideas li,
-  html.pt-js .pt-bricks li,
   html.pt-js .pt-path li,
   html.pt-js .pt-sum li,
   html.pt-js .pt-vision .pt-w { opacity: 1 !important; translate: none !important; scale: none !important; rotate: none !important; filter: none !important; }
