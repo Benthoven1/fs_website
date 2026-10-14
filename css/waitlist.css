@@ -450,6 +450,8 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
   transition: background 0.2s ease, transform 0.2s ease;
 }
 .wl-go:hover { background: #7b4c37; transform: translateY(-1px); }
+/* Until its step is answered */
+.wl-go:disabled { opacity: 0.38; cursor: not-allowed; background: var(--clay-deep); transform: none; }
 .wl-go::after { content: " \2192"; }
 .wl-back {
   min-height: 46px;
