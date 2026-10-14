@@ -1,23 +1,28 @@
 // waitlist-apps-script.gs - the waitlist's free back end (index.html#waitlist), on a Google
 // Sheet.
 //
-// An email joins only once it is confirmed. "signup" checks the address (its
-// form; that its domain receives mail, asked of Google's public DNS; that it
-// is not a throwaway inbox) and emails it a six-digit code, held for fifteen
-// minutes; "verify" checks the code, and only then is the person written to
-// the "signup" tab. A wrong code five times, or more than three codes an hour
-// to one address, and it stops. Rows of the five questions ("qualifier") and
-// their end ("finish") are kept only from confirmed visits. Rows from one
-// visit share a `sid`.
+// "signup" checks the address: its form, that its domain receives mail (asked
+// of Google's public DNS; CHECK_DOMAIN), and that it is not a throwaway inbox.
+// One address may sign up at most three times an hour. Then:
+//  - with CODE false (for now), the person is written to the "signup" tab at
+//    once, and the page opens the questions;
+//  - with CODE true, the address is emailed a six-digit code, held for
+//    fifteen minutes, and the page asks for it; "verify" checks it, and only
+//    then is the person written to the "signup" tab. Five wrong codes and it
+//    stops. To turn it on: set CODE to true, save, and deploy a new version;
+//    the page follows by itself.
+// Rows of the five questions ("qualifier") and their end ("finish") are kept
+// only from visits whose email was accepted. Rows from one visit share a
+// `sid`.
 //
 // Each person gets one welcome email, and you get one email about them:
 //  - when they finish the questions, greeted by name if they gave one;
-//  - or, if they leave before finishing, about WAIT_MINUTES after confirming,
+//  - or, if they leave before finishing, about WAIT_MINUTES after signing up,
 //    greeted "Hello" (a timer, `sweep`, that this script sets up itself).
 // Emails go from the Google account that deploys the script, with replies to
 // REPLY_TO. Gmail allows about 100 a day from a personal account, and each
-// person takes three (code, welcome, and the note to you); a Workspace
-// account allows 1,500.
+// person takes two (the welcome and the note to you; three with CODE on); a
+// Workspace account allows 1,500.
 //
 // To use it:
 //  1. Create a Google Sheet; Extensions -> Apps Script; paste this file; save.
@@ -36,7 +41,11 @@ var SITE = "https://mulvium.org";
 // Outlook, put a PNG of it on the site and point this at that.
 var SIGNATURE = SITE + "/signature.webp";
 var WAIT_MINUTES = 20;
+// Confirm each email with an emailed code before it joins (see above)
+var CODE = false;
 var CODE_MINUTES = 15;
+// Refuse addresses whose domain receives no mail
+var CHECK_DOMAIN = true;
 var EMAIL = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[a-z]{2,}$/i;
 // Throwaway inboxes, refused at signup
 var THROWAWAY = ["mailinator.com", "guerrillamail.com", "guerrillamail.net", "sharklasers.com", "grr.la",
@@ -72,17 +81,18 @@ function locked(fn) {
   try { return fn(); } finally { lock.releaseLock(); }
 }
 
-// -- Confirming the email
+// -- Checking the email
 
-// Checks the address and emails it a code. The fields that came with it wait
-// beside the code, to become the "signup" row once it is confirmed.
+// Checks the address, then either writes the signup row (CODE off) or emails
+// a code, with the fields that came with it waiting beside the code to become
+// the row once it is confirmed (CODE on)
 function signup(p) {
   var email = String(p.email || "").trim();
   var sid = String(p.sid || "");
   if (!sid || email.length > 254 || !EMAIL.test(email)) return { ok: false, error: "format" };
   var domain = email.split("@").pop().toLowerCase();
   if (THROWAWAY.indexOf(domain) >= 0) return { ok: false, error: "disposable" };
-  if (!takesMail(domain)) return { ok: false, error: "domain" };
+  if (CHECK_DOMAIN && !takesMail(domain)) return { ok: false, error: "domain" };
 
   var cache = CacheService.getScriptCache();
   var held = JSON.parse(cache.get("c:" + sid) || "null");
@@ -90,12 +100,18 @@ function signup(p) {
   if (!count(cache, "r:" + email.toLowerCase(), 3, 3600) || !count(cache, "s:" + sid, 6, 21600)) {
     return { ok: false, error: "rate" };
   }
+  if (!CODE) {
+    cache.put("v:" + sid, email, 21600);
+    locked(function () { append("signup", clean(p)); });
+    ensureSweep();
+    return { ok: true };
+  }
   if (MailApp.getRemainingDailyQuota() < 5) return { ok: false, error: "busy" };
 
   var code = String(Math.floor(100000 + Math.random() * 900000));
   cache.put("c:" + sid, JSON.stringify({ email: email, hash: hash(sid, code), tries: 0, fields: clean(fields) }), CODE_MINUTES * 60);
   sendCode(email, code);
-  return { ok: true };
+  return { ok: true, code: true };
 }
 
 function verify(p) {
@@ -116,7 +132,7 @@ function verify(p) {
   return { ok: true };
 }
 
-// Whether this visit confirmed an email: remembered for six hours, then
+// Whether this visit's email was accepted: remembered for six hours, then
 // looked up on the "signup" tab
 function confirmed(sid) {
   if (!sid) return false;
@@ -361,6 +377,6 @@ function notify(email, name, answers) {
     if (answers && answers[k]) lines.push(LABELS[k] + ": " + answers[k]);
   });
   if (!answers || !answers.when && !answers.excited && !answers.field) lines.push("", "(Left before answering the questions.)");
-  lines.push("", "Email confirmed with a code.");
+  if (CODE) lines.push("", "Email confirmed with a code.");
   MailApp.sendEmail({ to: NOTIFY, subject: "New on the waitlist: " + (name ? name + " (" + email + ")" : email), body: lines.join("\n") });
 }
