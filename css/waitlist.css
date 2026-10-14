@@ -1,7 +1,8 @@
 /* waitlist.css — the waitlist drawer on the home page (index.html, with
-   css/style.css), the application (apply/), the privacy page and the press
-   kit (brand/), which load it alone. Its base rules (body, links) apply only
-   to those standalone pages, so the home page's own stay as they are. */
+   css/style.css and css/pitch.css), the application (apply/), the privacy
+   page and the press kit (brand/), which load it alone. Its base rules (body,
+   links) apply only to those standalone pages, so the home page's own stay
+   as they are. */
 
 :root {
   --clay: #b87758;
@@ -56,7 +57,7 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
 }
 [hidden] { display: none !important; }
 
-/* ── Header ───────────────────────────────────────────────────────────── */
+/* ── Header ───────────────────────────────────────────────────────────────────── */
 .wl-bar {
   position: sticky;
   top: 0;
@@ -93,7 +94,7 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
   padding: 7px 16px 8px;
 }
 
-/* ── Signup ───────────────────────────────────────────────────────────── */
+/* ── Signup ───────────────────────────────────────────────────────────────────── */
 .wl-signup { max-width: 34em; }
 .wl-label {
   display: block;
@@ -139,7 +140,7 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
 .wl-micro { margin: 8px 0 0; font-size: 15.5px; line-height: 1.45; color: var(--ink-soft); }
 .wl-onlist { margin: 0; font-size: 19px; color: var(--ink-soft); }
 
-/* ── The qualifier, in the form's place ───────────────────────────────── */
+/* ── The qualifier, in the form's place ─────────────────────────────────────────────── */
 .wl-panel {
   padding: 18px 18px 20px;
   background: var(--paper-warm);
@@ -194,7 +195,7 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
 .wl-next-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin: 0; }
 .wl-call { font-size: 18px; }
 
-/* ── The waitlist's content, below the hero ──────────────────────────── */
+/* ── The waitlist's content, below the hero ────────────────────────────────────────── */
 /* The drawer: on the home page's 3D view it rises over the cosmos when
    swiped (body.footer-open, js/main.js), scrolls on its own, and ends with
    the site's footer. Its paper carries the site's grain itself, since the
@@ -203,6 +204,7 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
   position: fixed;
   inset: 0;
   z-index: 25;
+  overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
@@ -255,17 +257,6 @@ body.footer-open .wl-drawer {
   text-wrap: balance;
 }
 
-/* Short statements: a bold claim, then a few plain words */
-.wl-says { list-style: none; margin: 0; padding: 0; }
-.wl-says li {
-  padding: 14px 0 13px;
-  border-top: 1px solid var(--hairline);
-  line-height: 1.35;
-}
-.wl-says li:last-child { border-bottom: 1px solid var(--hairline); }
-.wl-says strong { display: block; font-weight: 700; font-size: 24px; }
-.wl-says span { display: block; margin-top: 2px; font-size: 18px; color: var(--ink-soft); }
-
 /* Plain answers: a one-word question, then the answer */
 .wl-qa { margin: 0; }
 .wl-qa > div {
@@ -316,13 +307,13 @@ body.footer-open .wl-drawer {
 .wl-rotor-word.is-on { position: relative; opacity: 1; transform: none; }
 .wl-rotor-word.is-out { opacity: 0; transform: translateY(-105%); }
 
-/* ── Thought bubbles: lines from the founder's letter ─────────────────────
+/* ── Thought bubbles: three lines from the founder's letter ───────────────
    Each is a cloud with a trail of two rounds. On phones the clouds sit
-   between the statements (only those without .wl-wide), trailing down; on
-   wide screens they float in the margins at --y, trailing in toward the
-   text. They arrive as a thought does: the far round, the near one, then
-   the cloud swelling out of the trail, its words last (begin.js adds .is-in);
-   then cloud and trail drift, each at its own pace. */
+   between the slides, trailing down; on wide screens they float in the
+   margins at --y, trailing in toward the text. They arrive as a thought
+   does: the far round, the near one, then the cloud swelling out of the
+   trail, its words last (waitlist.js adds .is-in); then cloud and trail
+   drift, each at its own pace. */
 .wl-bubble {
   position: relative;
   width: fit-content;
@@ -371,9 +362,8 @@ body.footer-open .wl-drawer {
 .wl-bubble--r .wl-dot--far  { left: 19px; }
 .wl-bubble--l .wl-cloud { transform-origin: 85% 110%; }
 .wl-bubble--r .wl-cloud { transform-origin: 15% 110%; }
-.wl-wide { display: none; }
 
-/* Arrival, only when begin.js is there to bring them in */
+/* Arrival, only when waitlist.js is there to bring them in */
 html.wl-js .wl-dot { opacity: 0; transform: scale(0); transition: opacity 0.3s ease, transform 0.55s cubic-bezier(0.34, 1.7, 0.6, 1); }
 html.wl-js .wl-dot--near { transition-delay: 0.14s; }
 html.wl-js .wl-cloud { opacity: 0; transform: scale(0.55); filter: blur(8px); transition: opacity 0.5s ease 0.28s, transform 0.85s cubic-bezier(0.34, 1.32, 0.6, 1) 0.28s, filter 0.7s ease 0.28s, box-shadow 0.5s ease; }
@@ -387,7 +377,7 @@ html.wl-js .wl-bubble.is-in .wl-cloud > * { opacity: 1; translate: none; }
 .wl-bubble.is-in .wl-cloud { animation: wl-drift 8s ease-in-out 1.4s infinite alternate; }
 .wl-bubble.is-in .wl-dot--near { animation: wl-drift-dot 8s ease-in-out 1.7s infinite alternate; }
 .wl-bubble.is-in .wl-dot--far { animation: wl-drift-dot 8s ease-in-out 2s infinite alternate; }
-.wl-bubble:nth-of-type(2n).is-in .wl-cloud { animation-duration: 10s; animation-delay: 1.1s; }
+.wl-bubble--r.is-in .wl-cloud { animation-duration: 10s; animation-delay: 1.1s; }
 @keyframes wl-drift {
   from { translate: 0 0; rotate: 0deg; }
   50% { translate: 2px -6px; rotate: -0.5deg; }
@@ -417,7 +407,6 @@ html.wl-js .wl-bubble.is-in .wl-cloud > * { opacity: 1; translate: none; }
   .wl-bubble--r .wl-dot--far  { left: -36px; }
   .wl-bubble--l .wl-cloud { transform-origin: 108% 80%; }
   .wl-bubble--r .wl-cloud { transform-origin: -8% 80%; }
-  .wl-wide { display: block; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -427,7 +416,7 @@ html.wl-js .wl-bubble.is-in .wl-cloud > * { opacity: 1; translate: none; }
   .wl-bubble.is-in .wl-cloud, .wl-bubble.is-in .wl-dot { animation: none !important; }
 }
 
-/* ── Footer ───────────────────────────────────────────────────────────── */
+/* ── Footer ───────────────────────────────────────────────────────────────────── */
 .wl-foot {
   margin-top: 40px;
   padding: 26px 20px 34px;
@@ -439,7 +428,7 @@ html.wl-js .wl-bubble.is-in .wl-cloud > * { opacity: 1; translate: none; }
 .wl-foot p { margin: 0 0 6px; }
 .wl-brandline { font-style: italic; font-size: 18px; }
 
-/* ── The application ──────────────────────────────────────────────────── */
+/* ── The application ──────────────────────────────────────────────────────────────── */
 .wl-apply { max-width: 640px; margin: 0 auto; padding: 22px 20px 0; }
 .wl-h1--apply { font-size: clamp(30px, 6vw, 44px); }
 .wl-as { margin: 0 0 10px; color: var(--ink-soft); }
@@ -464,13 +453,13 @@ select.wl-input { appearance: auto; }
 .wl-applied { padding: 20px 0 10px; }
 .wl-applied h2:focus { outline: none; }
 
-/* ── The privacy page ─────────────────────────────────────────────────── */
+/* ── The privacy page ───────────────────────────────────────────────────────────────── */
 .wl-doc { max-width: 680px; margin: 0 auto; padding: 22px 20px 0; }
 .wl-doc h2 { font-weight: 500; font-size: 24px; margin: 30px 0 8px; }
 .wl-doc p, .wl-doc li { color: var(--ink-soft); }
 .wl-doc ul { padding-left: 1.2em; }
 
-/* ── Wider screens ────────────────────────────────────────────────────── */
+/* ── Wider screens ────────────────────────────────────────────────────────────────── */
 @media (min-width: 560px) {
   .wl-row { flex-direction: row; }
   .wl-row .wl-input { flex: 1; }
@@ -484,7 +473,7 @@ select.wl-input { appearance: auto; }
   .wl-sec--lead { padding-top: 104px; }
 }
 
-/* ── The press kit (brand/index.html) ─────────────────────────────────── */
+/* ── The press kit (brand/index.html) ─────────────────────────────────────────────── */
 .wl-doc.pk { max-width: 1080px; }
 .pk-group { margin-top: 40px; }
 .pk-group h2 { margin-bottom: 2px; }
