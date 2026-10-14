@@ -30,14 +30,11 @@ be announced.
   in a box as wide as the widest word, so no line ever reflows. Then short
   slides, each arriving as it scrolls into view: the problem (the ideas, and
   the wall of organization-building between an idea and reality), the answer
-  (you, donors and Mulvium), how it works (idea, institution, capital,
-  execution), the workforce (the roles M.SOS brings to an orchestra, a museum,
-  a research institute, a botanical garden or a scholarship, circling it as
-  the planets circle the star), what a founder receives, the model (the
-  Mulvium Foundation, Mulvium, Inc., and $0 upfront), and the flywheel under
-  a night sky; then plain answers, and the close with the second form. Three
-  lines from the founder's letter float beside it as thought bubbles (between
-  the slides on phones), each linking to the letter in its own words.
+  (you, donors and Mulvium), how it works, what a founder receives, $0
+  upfront, and the vision under a night sky; then plain answers, and the
+  close with the second form. Three lines from the founder's letter float
+  beside it as thought bubbles (between the slides on phones), each linking
+  to the letter in its own words.
   `?for=festival|research|community|arts|education|film` fixes the headline's
   noun; `?v=b` shows the letter's line instead. After a signup, four one-tap
   questions take the form's place, then the application (`apply/`), drawn
