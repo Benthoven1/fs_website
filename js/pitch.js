@@ -18,6 +18,23 @@
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
   });
 
+  // The headline's turning noun (waitlist.js turns it, in a box as wide as
+  // its widest word so a phone's lines never reflow). On the desktop, where
+  // the line is centred and never wraps, the box takes the width of the word
+  // showing and glides between words, so the line stays centred.
+  var rotor = drawer.querySelector(".wl-rotor");
+  var desk = matchMedia("(min-width: 960px)");
+  if (rotor) {
+    var fit = function () {
+      var on = rotor.querySelector(".wl-rotor-word.is-on");
+      if (desk.matches && on) rotor.style.width = Math.ceil(on.offsetWidth) + "px";
+    };
+    var refit = function () { setTimeout(fit, 0); }; // after waitlist.js sizes it
+    new MutationObserver(fit).observe(rotor, { subtree: true, attributes: true, attributeFilter: ["class"] });
+    window.addEventListener("resize", refit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(refit); else refit();
+  }
+
   // Each row of institutions, doubled so its drift loops without a seam
   if (!still) {
     drawer.querySelectorAll(".pt-track").forEach(function (track) {
