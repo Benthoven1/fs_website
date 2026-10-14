@@ -367,7 +367,10 @@
 
   // -- The five questions
   // Previous and Continue move between them, so an answer can be changed
-  // before the last is sent. Each step is saved as Continue leaves it (kind
+  // before the last is sent. Continue waits until its step is answered: a
+  // pick in every group of choices, where writing in "Other" counts as one
+  // (the slider always holds a value; the name is optional). Each step is
+  // saved as Continue leaves it (kind
   // "qualifier"); Submit sends them all at once (kind "finish"), with the
   // name, so the welcome email can greet the person by it. Choices: data-mode
   // "any" toggles several, "one" picks one.
@@ -393,6 +396,7 @@
             group.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", "false"); });
           }
           b.setAttribute("aria-pressed", String(on));
+          check(step);
         });
       });
 
@@ -400,7 +404,7 @@
       var other = step.querySelector(".wl-other");
       if (other) {
         var box = other.closest(".wl-other-box");
-        var mark = function () { box.classList.toggle("is-on", !!other.value.trim()); };
+        var mark = function () { box.classList.toggle("is-on", !!other.value.trim()); check(step); };
         other.addEventListener("input", mark);
         step._mark = mark;
       }
@@ -422,7 +426,7 @@
       }
 
       var go = step.querySelector(".wl-go");
-      if (go) go.addEventListener("click", function () { answer(n, collect(step)); });
+      if (go) go.addEventListener("click", function () { if (answered(step)) answer(n, collect(step)); });
       var back = step.querySelector(".wl-back");
       if (back) back.addEventListener("click", function () {
         rec.answers[step.dataset.q] = collect(step);
@@ -435,6 +439,19 @@
         });
       });
     });
+
+    // Whether a step is answered, and its Continue open accordingly
+    function answered(step) {
+      var other = step.querySelector(".wl-other");
+      var wrote = !!(other && other.value.trim());
+      return Array.prototype.every.call(step.querySelectorAll(".wl-choices"), function (group) {
+        return group.querySelector('[aria-pressed="true"]') || (wrote && group.dataset.name === "a");
+      });
+    }
+    function check(step) {
+      var go = step.querySelector(".wl-go");
+      if (go) go.disabled = !answered(step);
+    }
 
     // What a step's controls hold, as fields to send
     function collect(step) {
@@ -527,7 +544,7 @@
     }
 
     // Pick up where this visit left off
-    steps.forEach(function (step) { fill(step, rec.answers[step.dataset.q]); });
+    steps.forEach(function (step) { fill(step, rec.answers[step.dataset.q]); check(step); });
     if (rec.finished) return thank(rec.answers.name && rec.answers.name.name, false);
     show(Math.min(rec.at || 0, steps.length - 1), false);
     if (!quiet) title.focus();
