@@ -4,9 +4,11 @@
 // turning noun, and the arrival of the thought bubbles. The hero is main.js's;
 // the pitch's motion is pitch.js's.
 //
-// An email joins only once it is confirmed: the back end checks that its
-// domain takes mail and is not a throwaway one, then emails a six-digit code,
-// and only the right code opens the questions. What a visitor gives is kept
+// The back end checks each email (a domain that takes mail, not a throwaway
+// inbox). It can also be set to confirm each with an emailed six-digit code
+// (CODE in tools/waitlist-apps-script.gs, off for now): when it answers that
+// a code was sent, a card asks for it, and only the right code opens the
+// questions; otherwise they open at once. What a visitor gives is kept
 // in sessionStorage for the visit, so a return within it picks up where they
 // left off. Everything sent carries `sid`, a random id for the visit, so one
 // person's rows can be joined.
@@ -152,7 +154,7 @@
         if (!EMAIL.test(email)) return fail(SAY.format);
 
         // A likely slip is offered once; sent again as it is, it stands
-        var better = slip(email);
+        var better = cfg.suggest === false ? null : slip(email);
         if (better && offered !== email) {
           offered = email;
           hint.textContent = "Did you mean ";
@@ -167,10 +169,10 @@
         }
 
         // Bots fill the hidden field or submit within two seconds of load:
-        // they are shown the code card, and nothing is sent.
-        if (form.company.value || Date.now() - started < 2000) return pending(at, email, false, true);
+        // they are shown the questions, and nothing they do is kept.
+        if (form.company.value || Date.now() - started < 2000) return done(at, false);
 
-        busy(true, "Sending a code…");
+        busy(true, "Joining…");
         track("email_submit", { position: block.dataset.position });
         send("signup", { email: email, position: block.dataset.position, ms: String(Date.now() - started) })
           .then(function (ans) {
@@ -183,7 +185,8 @@
               return;
             }
             if (!ans.ok) return fail(say(ans.error));
-            pending(at, email, false);
+            if (ans.code) return pending(at, email, false);
+            confirmed(at, email);
           });
 
         function busy(on, label) {
@@ -223,8 +226,17 @@
       notes = [];
     }
 
-    // The code card: the code the back end emailed opens the questions
-    function pending(at, email, quiet, fake) {
+    function confirmed(at, email) {
+      rec.email = email;
+      rec.at_block = at;
+      delete rec.pending;
+      save(rec);
+      done(at, false);
+    }
+
+    // The code card, when the back end sent one: the right code opens the
+    // questions
+    function pending(at, email, quiet) {
       rec.pending = { block: at, email: email };
       save(rec);
       var card = vtpl.content.firstElementChild.cloneNode(true);
@@ -248,7 +260,6 @@
       function confirm() {
         if (sending) return;
         if (code.value.length !== 6) return fail("Please enter the six digits from the email.");
-        if (fake) return fail(SAY.code);
         sending = true;
         button.disabled = true;
         button.textContent = "Checking…";
@@ -258,11 +269,7 @@
           button.textContent = "Confirm";
           if (!ans || !ans.ok) return fail(say(ans && ans.error));
           track("email_confirmed");
-          rec.email = email;
-          rec.at_block = at;
-          delete rec.pending;
-          save(rec);
-          done(at, false);
+          confirmed(at, email);
         });
       }
       function fail(msg) {
@@ -273,7 +280,6 @@
 
       card.querySelector(".wl-resend").addEventListener("click", function () {
         note.textContent = "Sending a new code…";
-        if (fake) return;
         send("signup", { email: email, resend: "1" }).then(function (ans) {
           note.textContent = ans && ans.ok ? "A new code is on its way. The last one no longer works." : say(ans && ans.error);
           code.value = "";
