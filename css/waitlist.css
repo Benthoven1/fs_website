@@ -22,6 +22,11 @@
   --q-blue: #b8cae0;
   --q-rose: #e0b8c8;
   --q-teal: #b8ddd8;
+  /* the slider's two halves: months in clay, years in blue */
+  --m-ink: #8f5a42;
+  --m-tint: #ecd3c2;
+  --y-ink: #4d6d96;
+  --y-tint: #c5d4e8;
 }
 
 * { box-sizing: border-box; }
@@ -131,13 +136,27 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
 .wl-error { margin: 6px 0 0; font-size: 17px; color: #a3402a; min-height: 0; }
 .wl-error:empty { display: none; }
 .wl-micro { margin: 8px 0 0; font-size: 15.5px; line-height: 1.45; color: var(--ink-soft); }
-.wl-onlist { margin: 0; font-size: 19px; color: var(--ink-soft); }
+
+/* A suggestion for a mistyped domain, under the email field */
+.wl-suggest { margin: 6px 0 0; font-size: 17px; color: var(--ink-soft); }
+.wl-suggest:empty { display: none; }
+.wl-linkish {
+  padding: 0;
+  font: inherit;
+  color: var(--clay-deep);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.wl-linkish:hover { color: var(--ink); }
 
 /* -- The questions, in the form's place */
 /* A paper card with the cosmos's colors: a five-part progress line, choices
    as pastel chips that check when picked, a slider for when, and a thank
    you that signs itself (js/waitlist.js runs it). */
-.wl-panel {
+.wl-panel, .wl-verify {
   position: relative;
   padding: 24px 20px 22px;
   text-align: left;
@@ -148,7 +167,7 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
   overflow: hidden;
   animation: wl-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
-.wl-panel::before {
+.wl-panel::before, .wl-verify::before {
   content: "";
   position: absolute;
   left: 0;
@@ -157,13 +176,14 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
   height: 4px;
   background: linear-gradient(90deg, var(--q-star), var(--q-green), var(--q-teal), var(--q-blue), var(--q-rose));
 }
-.wl-panel-title {
+.wl-panel { scroll-margin-top: 24px; }
+.wl-panel-title, .wl-verify-title {
   margin: 0;
   font-weight: 600;
   font-size: 30px;
   line-height: 1.1;
 }
-.wl-panel-title:focus { outline: none; }
+.wl-panel-title:focus, .wl-verify-title:focus { outline: none; }
 .wl-panel-sub { margin: 4px 0 0; font-style: italic; font-size: 18px; color: var(--ink-soft); }
 .wl-panel.is-thanked .wl-panel-sub { display: none; }
 .wl-progress {
@@ -259,9 +279,80 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
     var(--ink);
   animation: wl-pop 0.35s cubic-bezier(0.34, 1.6, 0.6, 1);
 }
-.wl-other, .wl-name { margin-top: 12px; }
+.wl-name { margin-top: 2px; }
 
-/* When: a slider from a month to eleven years */
+/* Plain chips (the field, the form, how they heard): one paper tone; picked,
+   they fill with clay */
+.wl-choices--plain button {
+  --c: #e7e1d8;
+  background: rgba(255, 255, 255, 0.6);
+  border-color: rgba(27, 22, 19, 0.2);
+}
+.wl-choices--plain button:hover { background: #fff; }
+.wl-choices--plain button[aria-pressed]::before { border-color: rgba(27, 22, 19, 0.35); }
+.wl-choices--plain button[aria-pressed="true"] {
+  color: var(--paper);
+  background: var(--clay-deep);
+  border-color: var(--clay-deep);
+  box-shadow: 0 6px 16px rgba(143, 90, 66, 0.25);
+}
+.wl-choices--plain button[aria-pressed="true"]::before {
+  border-color: var(--paper);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.6 2.5L12 5.5' fill='none' stroke='%238f5a42' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px no-repeat,
+    var(--paper);
+}
+
+/* Other: under the choices, a box to write in, checked once it holds words */
+.wl-other-box {
+  display: block;
+  margin-top: 10px;
+  padding: 11px 15px 4px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px dashed rgba(27, 22, 19, 0.32);
+  border-radius: 16px;
+  cursor: text;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+.wl-other-box:focus-within { border-style: solid; border-color: var(--clay-deep); background: rgba(255, 255, 255, 0.85); }
+.wl-other-box.is-on {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--q-teal), #1b1613 35%);
+  background: color-mix(in srgb, var(--q-teal), #fff 55%);
+}
+.wl-other-head { display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 600; }
+.wl-other-head::before {
+  content: "";
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(27, 22, 19, 0.35);
+  background: rgba(255, 255, 255, 0.7);
+}
+.wl-other-box.is-on .wl-other-head::before {
+  border-color: var(--ink);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.6 2.5L12 5.5' fill='none' stroke='%23f0ede7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px no-repeat,
+    var(--ink);
+  animation: wl-pop 0.35s cubic-bezier(0.34, 1.6, 0.6, 1);
+}
+.wl-other-box .wl-other {
+  display: block;
+  min-height: 66px;
+  margin: 2px 0 0;
+  padding: 4px 0 8px 24px;
+  font-size: 18px;
+  line-height: 1.4;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  resize: vertical;
+}
+.wl-other-box .wl-other:focus-visible { outline: none; }
+
+/* When: one slider in two halves, months (1 to 11) in clay, then a break,
+   then years (1 to 10) in blue, each half labeled beneath */
 .wl-when {
   display: block;
   margin: 2px 0 14px;
@@ -269,12 +360,13 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
   font-weight: 500;
   font-size: 34px;
   line-height: 1;
-  color: var(--clay-deep);
+  color: var(--m-ink);
+  transition: color 0.3s ease;
 }
+.wl-when.is-years { color: var(--y-ink); }
 .wl-range {
-  --p: 0%;
   width: 100%;
-  height: 28px;
+  height: 30px;
   margin: 0;
   background: none;
   -webkit-appearance: none;
@@ -282,44 +374,69 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
   cursor: pointer;
 }
 .wl-range::-webkit-slider-runnable-track {
-  height: 6px;
-  border-radius: 6px;
-  background: linear-gradient(90deg, var(--clay), var(--q-rose) 50%, var(--q-blue)) 0 0 / var(--p) 100% no-repeat, rgba(27, 22, 19, 0.12);
+  height: 8px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--m-tint) 0 50.5%, transparent 50.5% 54.5%, var(--y-tint) 54.5% 100%);
 }
-.wl-range::-moz-range-track { height: 6px; border-radius: 6px; background: rgba(27, 22, 19, 0.12); }
-.wl-range::-moz-range-progress { height: 6px; border-radius: 6px; background: linear-gradient(90deg, var(--clay), var(--q-rose)); }
+.wl-range::-moz-range-track {
+  height: 8px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--m-tint) 0 50.5%, transparent 50.5% 54.5%, var(--y-tint) 54.5% 100%);
+}
 .wl-range::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 26px;
   height: 26px;
-  margin-top: -10px;
+  margin-top: -9px;
   border-radius: 50%;
   background: var(--paper-warm);
-  border: 2px solid var(--clay-deep);
+  border: 2.5px solid var(--m-ink);
   box-shadow: 0 4px 12px rgba(27, 22, 19, 0.18);
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.3s ease;
 }
 .wl-range::-moz-range-thumb {
   width: 22px;
   height: 22px;
   border-radius: 50%;
   background: var(--paper-warm);
-  border: 2px solid var(--clay-deep);
+  border: 2.5px solid var(--m-ink);
   box-shadow: 0 4px 12px rgba(27, 22, 19, 0.18);
 }
+.wl-range.is-years::-webkit-slider-thumb { border-color: var(--y-ink); }
+.wl-range.is-years::-moz-range-thumb { border-color: var(--y-ink); }
 .wl-range:active::-webkit-slider-thumb { transform: scale(1.12); }
-.wl-range-ends {
+/* The labels sit under the thumb's travel, which stops half a thumb short of
+   each end */
+.wl-scale { position: relative; height: 34px; margin: 6px 13px 0; }
+.wl-zone {
+  position: absolute;
+  top: 0;
   display: flex;
   justify-content: space-between;
-  margin-top: 6px;
-  font-family: "Cormorant SC", serif;
-  font-size: 14px;
-  letter-spacing: 0.1em;
-  color: var(--ink-soft);
+  align-items: baseline;
+  padding-top: 11px;
+  font-size: 15px;
 }
+.wl-zone::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 7px;
+  border: 1.5px solid currentColor;
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  opacity: 0.45;
+}
+.wl-zone--m { left: 0; width: 50%; color: var(--m-ink); }
+.wl-zone--y { left: 55%; width: 45%; color: var(--y-ink); }
+.wl-zone b { font-family: "Cormorant SC", serif; font-weight: 500; font-size: 14px; letter-spacing: 0.14em; }
+.wl-zone i { font-style: normal; }
 
-.wl-step-nav { display: flex; align-items: center; gap: 18px; margin-top: 20px; }
+.wl-step-nav { display: flex; align-items: center; gap: 12px; margin-top: 22px; }
 .wl-go {
+  margin-left: auto;
   min-height: 46px;
   padding: 0 26px;
   font: inherit;
@@ -333,16 +450,90 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
   transition: background 0.2s ease, transform 0.2s ease;
 }
 .wl-go:hover { background: #7b4c37; transform: translateY(-1px); }
-.wl-skip {
-  padding: 6px 0;
+.wl-go::after { content: " \2192"; }
+.wl-back {
+  min-height: 46px;
+  padding: 0 18px;
   font: inherit;
-  font-size: 17px;
+  font-size: 18px;
   color: var(--ink-soft);
   background: none;
-  border: 0;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  border: 1px solid rgba(27, 22, 19, 0.2);
+  border-radius: 999px;
   cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.wl-back::before { content: "\2190  "; }
+.wl-back:hover { color: var(--ink); background: rgba(255, 255, 255, 0.7); }
+
+/* The confirmation code: the card that comes between the email and the
+   questions */
+.wl-verify-env { display: block; width: 46px; height: 34px; margin-bottom: 10px; }
+.wl-verify-env path {
+  fill: none;
+  stroke: var(--clay);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: wl-draw 1.2s ease 0.15s forwards;
+}
+.wl-verify-sub { margin: 6px 0 16px; font-size: 18px; line-height: 1.45; color: var(--ink-soft); }
+.wl-verify-sub strong { font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
+.wl-code { font-size: 24px; letter-spacing: 0.32em; font-variant-numeric: tabular-nums; }
+.wl-code::placeholder { letter-spacing: 0.32em; color: rgba(27, 22, 19, 0.25); }
+.wl-verify-alt { margin: 12px 0 0; font-size: 16.5px; color: var(--ink-soft); }
+.wl-verify-alt .wl-sep { margin: 0 8px; opacity: 0.5; }
+.wl-verify-note { margin: 8px 0 0; font-style: italic; font-size: 16.5px; color: var(--ink-soft); }
+.wl-verify-note:empty { display: none; }
+
+/* In the other signup box: the way back to the questions while they are
+   open, then a seal once they are done */
+.wl-elsewhere { animation: wl-rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.wl-resume {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 24px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 19px;
+  color: var(--paper);
+  background: var(--clay-deep);
+  border: 0;
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(143, 90, 66, 0.22);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.wl-resume:hover { background: #7b4c37; transform: translateY(-1px); }
+.wl-resume svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.wl-onlist {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 9px 20px 10px 11px;
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: 0.14em;
+  color: var(--clay-deep);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(143, 90, 66, 0.28);
+  border-radius: 999px;
+}
+.wl-onlist::before {
+  content: "";
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.6 2.5L12 5.5' fill='none' stroke='%23f0ede7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 15px no-repeat,
+    var(--clay-deep);
 }
 
 /* The thank you: a flourish draws, the words rise, the signature follows */
@@ -376,8 +567,9 @@ textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
 @keyframes wl-fade { to { opacity: 1; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .wl-panel, .wl-step, .wl-thanks, .wl-choices button[aria-pressed="true"]::before { animation: none; }
-  .wl-flourish path { animation: none; stroke-dashoffset: 0; }
+  .wl-panel, .wl-verify, .wl-elsewhere, .wl-step, .wl-thanks,
+  .wl-choices button[aria-pressed="true"]::before, .wl-other-box.is-on .wl-other-head::before { animation: none; }
+  .wl-flourish path, .wl-verify-env path { animation: none; stroke-dashoffset: 0; }
   .wl-thanks-sig { animation: none; opacity: 1; }
 }
 
@@ -624,7 +816,7 @@ html.wl-js .wl-bubble.is-in .wl-cloud > * { opacity: 1; translate: none; }
 @media (min-width: 560px) {
   .wl-row { flex-direction: row; }
   .wl-row .wl-input { flex: 1; }
-  .wl-panel { padding: 30px 32px 28px; }
+  .wl-panel, .wl-verify { padding: 30px 32px 28px; }
   .wl-choices button { padding: 9px 16px 10px; font-size: 18px; }
 }
 @media (min-width: 960px) {
@@ -632,6 +824,7 @@ html.wl-js .wl-bubble.is-in .wl-cloud > * { opacity: 1; translate: none; }
   .wl-content { padding: 0 40px; }
   .wl-sec { padding-top: 88px; }
   .wl-sec--lead { padding-top: 104px; }
+  #waitlist .wl-elsewhere { text-align: center; }
 }
 
 /* -- The press kit (brand/index.html) */
