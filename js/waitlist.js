@@ -119,7 +119,7 @@
     format: "Please enter a full email address, like name@example.org.",
     domain: "That address’s domain doesn’t seem to receive email. Please check it.",
     disposable: "Please use a permanent email address, not a temporary one.",
-    rate: "Too many codes asked for. Please wait a few minutes, then try again.",
+    rate: "Too many tries with this address. Please wait a few minutes, then try again.",
     busy: "We can’t send codes right now. Please write to hello@mulvium.org and we’ll add you.",
     code: "That code doesn’t match. Please check it and try again.",
     expired: "That code has expired. Send a new one below.",
