@@ -307,6 +307,7 @@
                 </div>
                 <input class="wl-hp" name="company" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
                 <p class="wl-error" role="alert"></p>
+                <p class="wl-suggest" aria-live="polite"></p>
                 <p class="wl-micro">Free. No commitment. Not open yet. US-based projects, for now. <a href="privacy/">Privacy</a></p>
               </form>
             </div>
@@ -489,6 +490,7 @@
                 </div>
                 <input class="wl-hp" name="company" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
                 <p class="wl-error" role="alert"></p>
+                <p class="wl-suggest" aria-live="polite"></p>
                 <p class="wl-micro">Free. No commitment. <a href="privacy/">Privacy</a></p>
               </form>
             </div>
@@ -506,9 +508,30 @@
       </div>
   </section>
 
+  <!-- Between the email and the questions: a code the back end emails, so
+       only a real address that belongs to the visitor joins (js/waitlist.js,
+       tools/waitlist-apps-script.gs) -->
+  <template id="wl-verify">
+    <div class="wl-verify">
+      <svg class="wl-verify-env" viewBox="0 0 46 34" aria-hidden="true"><path d="M3 5h40v24H3z M3 5l20 15L43 5" /></svg>
+      <h2 class="wl-verify-title" tabindex="-1">Check your inbox.</h2>
+      <p class="wl-verify-sub">We sent a six-digit code to <strong class="wl-verify-email"></strong>. Enter it here to join. It expires in 15 minutes.</p>
+      <form class="wl-verify-form" novalidate>
+        <div class="wl-row">
+          <input class="wl-input wl-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" aria-label="Six-digit code" required />
+          <button class="wl-button" type="submit">Confirm</button>
+        </div>
+        <p class="wl-error" role="alert"></p>
+      </form>
+      <p class="wl-verify-note" aria-live="polite"></p>
+      <p class="wl-verify-alt">No email? Check spam, or <button type="button" class="wl-linkish wl-resend">send a new code</button><span class="wl-sep" aria-hidden="true">&middot;</span><button type="button" class="wl-linkish wl-change">use a different email</button></p>
+    </div>
+  </template>
+
   <!-- After a signup, this card takes the form's place: five questions, all
-       optional, each saved as it is answered (js/waitlist.js), then a thank
-       you. The last asks a name, so the welcome email can use it. -->
+       optional, with Previous and Continue to move between them and change an
+       answer (js/waitlist.js), then a thank you. The last asks a name, so the
+       welcome email can use it. -->
   <template id="wl-panel">
     <div class="wl-panel" role="status">
       <div class="wl-panel-head">
@@ -525,65 +548,72 @@
             <button type="button" data-a="organization" aria-pressed="false" style="--c:var(--q-green)">Help building the organization</button>
             <button type="button" data-a="patrons" aria-pressed="false" style="--c:var(--q-star)">Finding patrons to fund it</button>
             <button type="button" data-a="press" aria-pressed="false" style="--c:var(--q-rose)">Getting the word out: press and PR</button>
-            <button type="button" data-a="more" aria-pressed="false" data-other style="--c:var(--q-teal)">More</button>
           </div>
-          <input class="wl-input wl-other" name="other" type="text" placeholder="What else excites you?" aria-label="What else excites you?" hidden />
+          <label class="wl-other-box">
+            <span class="wl-other-head">Other</span>
+            <textarea class="wl-input wl-other" name="other" rows="2" maxlength="300" placeholder="Something else? Tell us in your own words."></textarea>
+          </label>
           <div class="wl-step-nav">
-            <button type="button" class="wl-go">Next</button>
-            <button type="button" class="wl-skip">Skip</button>
+            <button type="button" class="wl-go">Continue</button>
           </div>
         </fieldset>
         <fieldset class="wl-step" data-q="when" hidden>
           <legend><span class="wl-count">2 of 5</span>When do you want to begin?</legend>
           <output class="wl-when" for="wl-range">In 6 months</output>
-          <input class="wl-range" id="wl-range" type="range" min="0" max="21" step="1" value="5" aria-label="When you want to begin" aria-valuetext="In 6 months" />
-          <div class="wl-range-ends" aria-hidden="true"><span>1 month</span><span>1 year</span><span>11 years</span></div>
+          <div class="wl-scale-wrap">
+            <input class="wl-range" id="wl-range" type="range" min="0" max="20" step="1" value="5" aria-label="When you want to begin" aria-valuetext="In 6 months" />
+            <div class="wl-scale" aria-hidden="true">
+              <span class="wl-zone wl-zone--m"><i>1</i><b>Months</b><i>11</i></span>
+              <span class="wl-zone wl-zone--y"><i>1</i><b>Years</b><i>10</i></span>
+            </div>
+          </div>
           <div class="wl-step-nav">
-            <button type="button" class="wl-go">Next</button>
-            <button type="button" class="wl-skip">Skip</button>
+            <button type="button" class="wl-back">Previous</button>
+            <button type="button" class="wl-go">Continue</button>
           </div>
         </fieldset>
         <fieldset class="wl-step" data-q="field" hidden>
           <legend><span class="wl-count">3 of 5</span>Its field, and its form</legend>
           <p class="wl-step-hint">Pick a field.</p>
-          <div class="wl-choices" data-name="field" data-mode="one">
-            <button type="button" data-a="arts" aria-pressed="false" style="--c:var(--q-blue)">Arts and culture</button>
-            <button type="button" data-a="education" aria-pressed="false" style="--c:var(--q-green)">Education</button>
-            <button type="button" data-a="environment" aria-pressed="false" style="--c:var(--q-star)">Environment</button>
-            <button type="button" data-a="science" aria-pressed="false" style="--c:var(--q-rose)">Science and research</button>
-            <button type="button" data-a="community" aria-pressed="false" style="--c:var(--q-teal)">Community</button>
-            <button type="button" data-a="human-services" aria-pressed="false" style="--c:var(--q-blue)">Human services</button>
-            <button type="button" data-a="other" aria-pressed="false" style="--c:var(--q-green)">Something else</button>
+          <div class="wl-choices wl-choices--plain" data-name="field" data-mode="one">
+            <button type="button" data-a="arts" aria-pressed="false">Arts and culture</button>
+            <button type="button" data-a="education" aria-pressed="false">Education</button>
+            <button type="button" data-a="environment" aria-pressed="false">Environment</button>
+            <button type="button" data-a="science" aria-pressed="false">Science and research</button>
+            <button type="button" data-a="community" aria-pressed="false">Community</button>
+            <button type="button" data-a="human-services" aria-pressed="false">Human services</button>
+            <button type="button" data-a="other" aria-pressed="false">Something else</button>
           </div>
           <p class="wl-step-hint">And its form. Choose any.</p>
-          <div class="wl-choices" data-name="form" data-mode="any">
-            <button type="button" data-a="festival" aria-pressed="false" style="--c:var(--q-blue)">Festival</button>
-            <button type="button" data-a="event" aria-pressed="false" style="--c:var(--q-green)">Event or series</button>
-            <button type="button" data-a="program" aria-pressed="false" style="--c:var(--q-star)">Program or service</button>
-            <button type="button" data-a="research" aria-pressed="false" style="--c:var(--q-rose)">Research</button>
-            <button type="button" data-a="school" aria-pressed="false" style="--c:var(--q-teal)">School or education</button>
-            <button type="button" data-a="publication" aria-pressed="false" style="--c:var(--q-blue)">Publication or media</button>
-            <button type="button" data-a="venue" aria-pressed="false" style="--c:var(--q-green)">Venue or facility</button>
-            <button type="button" data-a="campaign" aria-pressed="false" style="--c:var(--q-star)">Campaign or advocacy</button>
-            <button type="button" data-a="other" aria-pressed="false" style="--c:var(--q-rose)">Something else</button>
+          <div class="wl-choices wl-choices--plain" data-name="form" data-mode="any">
+            <button type="button" data-a="festival" aria-pressed="false">Festival</button>
+            <button type="button" data-a="event" aria-pressed="false">Event or series</button>
+            <button type="button" data-a="program" aria-pressed="false">Program or service</button>
+            <button type="button" data-a="research" aria-pressed="false">Research</button>
+            <button type="button" data-a="school" aria-pressed="false">School or education</button>
+            <button type="button" data-a="publication" aria-pressed="false">Publication or media</button>
+            <button type="button" data-a="venue" aria-pressed="false">Venue or facility</button>
+            <button type="button" data-a="campaign" aria-pressed="false">Campaign or advocacy</button>
+            <button type="button" data-a="other" aria-pressed="false">Something else</button>
           </div>
           <div class="wl-step-nav">
-            <button type="button" class="wl-go">Next</button>
-            <button type="button" class="wl-skip">Skip</button>
+            <button type="button" class="wl-back">Previous</button>
+            <button type="button" class="wl-go">Continue</button>
           </div>
         </fieldset>
         <fieldset class="wl-step" data-q="source" hidden>
           <legend><span class="wl-count">4 of 5</span>How did you hear about Mulvium?</legend>
-          <div class="wl-choices" data-name="a" data-mode="tap">
-            <button type="button" data-a="friend" style="--c:var(--q-blue)">A friend or colleague</button>
-            <button type="button" data-a="community" style="--c:var(--q-green)">An online community</button>
-            <button type="button" data-a="social" style="--c:var(--q-star)">Social media</button>
-            <button type="button" data-a="referral" style="--c:var(--q-rose)">A funder, sponsor or adviser</button>
-            <button type="button" data-a="search" style="--c:var(--q-teal)">Search</button>
-            <button type="button" data-a="other" style="--c:var(--q-blue)">Other</button>
+          <div class="wl-choices wl-choices--plain" data-name="a" data-mode="one">
+            <button type="button" data-a="friend" aria-pressed="false">A friend or colleague</button>
+            <button type="button" data-a="community" aria-pressed="false">An online community</button>
+            <button type="button" data-a="social" aria-pressed="false">Social media</button>
+            <button type="button" data-a="referral" aria-pressed="false">A funder, sponsor or adviser</button>
+            <button type="button" data-a="search" aria-pressed="false">Search</button>
+            <button type="button" data-a="other" aria-pressed="false">Other</button>
           </div>
           <div class="wl-step-nav">
-            <button type="button" class="wl-skip">Skip</button>
+            <button type="button" class="wl-back">Previous</button>
+            <button type="button" class="wl-go">Continue</button>
           </div>
         </fieldset>
         <fieldset class="wl-step" data-q="name" hidden>
@@ -591,8 +621,8 @@
           <p class="wl-step-hint">Optional, so we know how to greet you.</p>
           <input class="wl-input wl-name" name="name" type="text" autocomplete="name" placeholder="Your name" aria-label="Your name" />
           <div class="wl-step-nav">
-            <button type="button" class="wl-go">Finish</button>
-            <button type="button" class="wl-skip">Skip</button>
+            <button type="button" class="wl-back">Previous</button>
+            <button type="button" class="wl-go">Submit</button>
           </div>
         </fieldset>
       </div>
