@@ -396,18 +396,6 @@ window.addEventListener("pointermove", (e) => {
 canvas.setAttribute("role", "img");
 canvas.setAttribute("aria-label", "A porcelain figure, thinking, whose head is a sphere of words: the twenty agents of MulviumSOS, twelve in Atelier, which builds the institution, and eight in Grove, which makes it known, and the work each one handles");
 
-// ── The operating-system stack builds from the hardware up as it comes into
-// view (css/msos.css); js/fiscal.js reveals the rest of the text
-{
-  const stack = document.getElementById("os-stack");
-  if (stack) {
-    const so = new IntersectionObserver(([en]) => {
-      if (en.isIntersecting) { stack.classList.add("is-in"); so.disconnect(); }
-    }, { threshold: 0.2 });
-    so.observe(stack);
-  }
-}
-
 // ── Framing: close on the head, then the whole figure ────────────────────────
 // Both views fit their subject to the screen; tall screens step back.
 let distHead = 5, distQ = 10;
