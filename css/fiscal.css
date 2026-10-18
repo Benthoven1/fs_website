@@ -13,7 +13,7 @@
 .fs-art { --dom-ink: #8a6a2e; --dom-soft: #ecdcb4; }   /* the score's parchment and ink */
 .fs-sci { --dom-ink: #4f6b3a; --dom-soft: #d0dec2; }   /* the Nile fields' green */
 .fs-edu { --dom-ink: #9b5636; --dom-soft: #f0d2c0; }   /* the fresco's terracotta */
-.fs-cha { --dom-ink: #6b5a94; --dom-soft: #dcd3ec; }   /* the flower field's violet */
+.fs-cha { --dom-ink: #3c6b66; --dom-soft: #cde2dd; }   /* the terraces' jade */
 
 html:has(body.fs-page) { scroll-behavior: smooth; }
 
@@ -498,7 +498,7 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
 .fs-art .fs-plate img { object-position: 28% 50%; }
 .fs-sci .fs-plate img { object-position: 42% 50%; }
 .fs-edu .fs-plate img { object-position: 50% 50%; }
-.fs-cha .fs-plate img { object-position: 56% 50%; }
+.fs-cha .fs-plate img { object-position: 38% 50%; }
 
 .fs-domain {
   display: flex;

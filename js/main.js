@@ -720,7 +720,7 @@ window.addEventListener("resize", setFooterHeight);
 }
 
 // ── Loading screen ────────────────────────────────────────────────────────────
-// The nested-frame reveal: Musical → Pictorial → Luxor → Horticulture open
+// The nested-frame reveal: Musical → Pictorial → Luxor → Batad open
 // as slits, a window opens inside them onto the live canvas, and the window
 // expands to fill the viewport. js/ls.js plays it (shared with the sub-pages,
 // loaded here with data-manual); this page adds the cosmos's own reveal.

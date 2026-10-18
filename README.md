@@ -90,7 +90,7 @@ be announced.
   parasocial icons, myth & epic > conspiracy), MulviumSOS (Atelier, Grove, and how the two run on one
   operating system; `css/msos.css` draws its stack diagram), and Oak.
   `fsos.html` forwards old links to `msos.html`. Each of the four projects is shown with one
-  of the loading screen's pictures (`Musical.webp`, `Horticulture.webp`, `Luxor.webp`,
+  of the loading screen's pictures (`Musical.webp`, `Batad.webp`, `Luxor.webp`,
   `Pictorial.webp`), the same files the loading screen uses: replace a file and both follow.
 - `pages/about/` — People, Careers, Contact Us.
 - `privacy/` — the privacy policy the waitlist links to.
