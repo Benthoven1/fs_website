@@ -528,21 +528,21 @@
     </div>
   </template>
 
-  <!-- After a signup, this card takes the form's place: five questions, all
-       optional, with Previous and Continue to move between them and change an
-       answer (js/waitlist.js), then a thank you. The last asks a name, so the
-       welcome email can use it. -->
+  <!-- After a signup, this card takes the form's place: five questions, with
+       Previous and Continue to move between them and change an answer
+       (js/waitlist.js); Continue waits for an answer. Then a thank you. The
+       last asks a name, optional, so the welcome email can use it. -->
   <template id="wl-panel">
     <div class="wl-panel" role="status">
       <div class="wl-panel-head">
         <h2 class="wl-panel-title" tabindex="-1">You&rsquo;re on the list.</h2>
-        <p class="wl-panel-sub">Five quick questions, all optional, so we know how to help.</p>
+        <p class="wl-panel-sub">Five quick questions, so we know how to help.</p>
         <ol class="wl-progress" aria-hidden="true"><li></li><li></li><li></li><li></li><li></li></ol>
       </div>
       <div class="wl-steps">
         <fieldset class="wl-step" data-q="excited">
           <legend><span class="wl-count">1 of 5</span>What are you most excited by?</legend>
-          <p class="wl-step-hint">Choose any.</p>
+          <p class="wl-step-hint">Choose one or more.</p>
           <div class="wl-choices" data-name="a" data-mode="any">
             <button type="button" data-a="legal-home" aria-pressed="false" style="--c:var(--q-blue)">A legal home for gifts and grants</button>
             <button type="button" data-a="organization" aria-pressed="false" style="--c:var(--q-green)">Help building the organization</button>
@@ -584,7 +584,7 @@
             <button type="button" data-a="human-services" aria-pressed="false">Human services</button>
             <button type="button" data-a="other" aria-pressed="false">Something else</button>
           </div>
-          <p class="wl-step-hint">And its form. Choose any.</p>
+          <p class="wl-step-hint">And its form. Choose one or more.</p>
           <div class="wl-choices wl-choices--plain" data-name="form" data-mode="any">
             <button type="button" data-a="festival" aria-pressed="false">Festival</button>
             <button type="button" data-a="event" aria-pressed="false">Event or series</button>
@@ -603,6 +603,7 @@
         </fieldset>
         <fieldset class="wl-step" data-q="source" hidden>
           <legend><span class="wl-count">4 of 5</span>How did you hear about Mulvium?</legend>
+          <p class="wl-step-hint">Pick one.</p>
           <div class="wl-choices wl-choices--plain" data-name="a" data-mode="one">
             <button type="button" data-a="friend" aria-pressed="false">A friend or colleague</button>
             <button type="button" data-a="community" aria-pressed="false">An online community</button>
