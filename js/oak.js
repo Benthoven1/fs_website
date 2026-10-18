@@ -27,7 +27,10 @@ const LEAF_TONES   = [0xb7cda0, 0xa9c295, 0xc4ddb8, 0x9fb98b, 0xbfd3a6];
 
 // ── Renderer, scene, lights (same sculptural lighting as the home cosmos) ────
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+// At most 1.5× the CSS pixels: the crown is thousands of leaves, and above
+// that the extra sharpness costs more frames than it shows. Drops to 1× if
+// the pull-back still can't keep pace (see animate).
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.02;
@@ -454,7 +457,7 @@ function pavingTexture() {
   }
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
-  t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
   return t;
 }
 
@@ -633,6 +636,32 @@ function resize() {
 window.addEventListener("resize", resize);
 resize();
 
+// ── Warm-up: the tree and the esplanade are hidden until the pull-back, so
+// left alone their shaders would compile and their buffers and textures
+// upload on the first frame of scrolling, a visible stall. Their shaders
+// compile now, off the main thread where the browser allows; then, once,
+// the whole scene is drawn from the end of the path and drawn over in the
+// same frame, so everything is on the GPU before the reader can scroll.
+let warm = 0; // 0 compiling, 1 ready to draw once, 2 done
+{
+  tree.visible = esplanade.visible = true;
+  const compiled = renderer.compileAsync(scene, camera);
+  tree.visible = esplanade.visible = false;
+  compiled.then(() => { warm = 1; }, () => { warm = 1; });
+}
+const warmCam = camera.clone();
+function drawWarmUp() {
+  warmCam.aspect = camera.aspect;
+  warmCam.near = 1;
+  warmCam.far = 900;
+  warmCam.position.copy(T1).addScaledVector(DIR1, endDist());
+  warmCam.lookAt(T1);
+  warmCam.updateProjectionMatrix();
+  tree.visible = esplanade.visible = true;
+  renderer.render(scene, warmCam);
+  warm = 2;
+}
+
 // ── Entrance: the planet appears as the loading screen opens, then becomes
 // an acorn once it has finished ─────────────────────────────────────────────
 const clock = new THREE.Clock();
@@ -646,11 +675,12 @@ function onDone() {
 if (window["__mulvium_ls-hole"]) onHole(); else document.addEventListener("mulvium:ls-hole", onHole);
 if (window["__mulvium_ls-done"]) onDone(); else document.addEventListener("mulvium:ls-done", onDone);
 setTimeout(onDone, 10000); // safety if the overlay never reports
+setTimeout(() => { if (warm < 2) warm = 2; }, 9000); // and if the warm-up never settles
 
 const PINK = new THREE.Color(PASTEL_OAK), NUTC = new THREE.Color(ACORN_NUT);
 const MORPH_DUR = 2.6;
 
-let lastT = 0;
+let lastT = 0, slowFrames = 0;
 function animate() {
   const t = clock.getElapsedTime();
   const dt = Math.min(0.25, t - lastT);
@@ -699,25 +729,41 @@ function animate() {
   // Title fades as the camera retreats; the scroll cue waits for the acorn
   if (heroText) heroText.style.opacity = String(1 - smooth(0.02, 0.14, pSmooth));
   cue.ready(m >= 0.9);
-  if (m >= 0.95) releaseScroll();
+  if (m >= 0.95 && warm === 2) releaseScroll();
 
+  // If the pull-back can't hold ~45 fps for half a second, draw fewer pixels
+  if (pSmooth > 0.002 && pSmooth < 1 && !covered) {
+    slowFrames = dt > 1 / 45 ? slowFrames + 1 : Math.max(0, slowFrames - 1);
+    if (slowFrames > 24 && renderer.getPixelRatio() > 1) { renderer.setPixelRatio(1); resize(); }
+  }
+
+  if (warm === 1) { drawWarmUp(); placeCamera(pSmooth, easeInOut(smooth(0.25, 0.95, m))); }
   if (!covered) renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
 animate();
 
-// ── Set the scene: once the transcript is well in view its specifics light
-// up one by one, and a moment later fade to blanks (css/oak.css) ──────────
+// ── The evening's conversation: once the transcript is well in view its
+// specifics light up one by one, hold, then soften and fade to blanks
+// (css/oak.css). Each mark's text sits in its own span so the blur and the
+// highlight can fade at their own pace ─────────────────────────────────────
 {
   const card = document.getElementById("oak-transcript");
   if (card) {
-    card.querySelectorAll("mark").forEach((m, i) => m.style.setProperty("--i", i));
+    const marks = card.querySelectorAll("mark");
+    marks.forEach((m, i) => {
+      const inner = document.createElement("span");
+      while (m.firstChild) inner.appendChild(m.firstChild);
+      m.appendChild(inner);
+      m.style.setProperty("--i", i);
+    });
+    const lit = 0.28 * marks.length + 0.9;   // seconds until the last is highlighted
     const forget = () => {
       card.classList.add("is-marked");
-      setTimeout(() => card.classList.add("is-forgotten"), motionOK ? 3400 : 0);
+      setTimeout(() => card.classList.add("is-forgotten"), motionOK ? (lit + 2.2) * 1000 : 0);
     };
     const io = new IntersectionObserver(([en]) => {
-      if (en.isIntersecting) { io.disconnect(); setTimeout(forget, motionOK ? 500 : 0); }
+      if (en.isIntersecting) { io.disconnect(); setTimeout(forget, motionOK ? 400 : 0); }
     }, { threshold: 0.6 });
     io.observe(card);
   }

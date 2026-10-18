@@ -70,77 +70,52 @@ html.oak-locked body {
     var(--paper) clamp(240px, 40vh, 420px));
 }
 
-.oak-shell > section {
-  max-width: 980px;
-  margin-left: auto;
-  margin-right: auto;
+/* ---- One story in one column; the tree and the bars step a little wider ---- */
+.oak-story {
+  max-width: 700px;
+  margin: 0 auto;
 }
 
-/* The deck's pastel wash: pink, butter, sky */
 .oak-page {
-  --oak-pink: #f2c7d3;
-  --oak-butter: #f6e6a6;
   --oak-sky: #a9cbe8;
   --oak-moss: #5d7a4a;
+  --oak-bark: #a6917a;
+  --oak-nut: #d6b08a;
+  --oak-cap: #a98e62;
 }
 
-/* ---- The dual mandate ---- */
-.oak-mandate { padding-top: 24px; }
-
-.oak-mandates {
-  list-style: none;
-  margin: 8px 0 40px;
-  padding: 0;
-  display: grid;
-  gap: 18px;
-}
-
-.oak-mandates li {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  column-gap: 22px;
-  align-items: baseline;
-}
-
-.oak-mnum {
-  font-weight: 300;
-  font-size: clamp(30px, 3.6vw, 44px);
-  color: var(--clay-deep);
-  font-variant-numeric: lining-nums;
-}
-
-.oak-mtext {
-  font-weight: 300;
-  font-size: clamp(36px, 5.4vw, 68px);
-  line-height: 1.05;
-  color: var(--ink);
-}
-
-.oak-mnote {
-  grid-column: 2;
-  margin-top: 10px;
-  font-style: italic;
-  font-size: 18px;
-  color: var(--ink-soft);
-}
-.oak-mnote a { color: var(--clay-deep); text-underline-offset: 3px; }
-
-.oak-about {
-  max-width: 34em;
+.oak-p {
   font-weight: 500;
-  font-size: clamp(19px, 1.8vw, 22px);
-  line-height: 1.65;
+  font-size: clamp(19px, 1.7vw, 21px);
+  line-height: 1.75;
   color: var(--ink-soft);
-  margin: 0;
+  margin: 0 0 30px;
+}
+.oak-p em { font-style: italic; color: var(--clay-deep); }
+.oak-p strong { font-weight: 600; color: var(--ink); }
+
+.oak-big {
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(27px, 3.2vw, 38px);
+  line-height: 1.32;
+  color: var(--ink);
+  margin: 0 0 56px;
 }
 
-/* ---- Set the scene: a transcript whose specifics light up, then fade ---- */
+/* ---- An evening's conversation, typed out. Its specifics are highlighted
+   one after another (.is-marked), then soften, blur and fade, leaving pale
+   blanks (.is-forgotten); js/oak.js sets both and each mark's --i ---- */
+@property --hl {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: rgba(246, 226, 122, 0.95);
+}
+
 .oak-transcript {
-  position: relative;
-  max-width: 760px;
-  margin: 10px 0 0;
+  margin: 0 0 30px;
   padding: clamp(22px, 3vw, 34px) clamp(20px, 3vw, 38px);
-  border: 1px solid rgba(27, 22, 19, 0.22);
+  border: 1px solid rgba(27, 22, 19, 0.2);
   border-radius: 4px;
   background: var(--paper-warm);
   box-shadow: 0 18px 50px rgba(27, 22, 19, 0.06);
@@ -149,159 +124,190 @@ html.oak-locked body {
 .oak-transcript p {
   margin: 0;
   font-family: "DM Mono", ui-monospace, monospace;
-  font-size: clamp(13.5px, 1.25vw, 15.5px);
-  line-height: 1.9;
+  font-size: clamp(13.5px, 1.25vw, 15px);
+  line-height: 1.95;
   color: var(--ink);
 }
 .oak-transcript cite { font-style: italic; }
 
-/* Each specific is highlighted in turn (.is-marked), then fades to a blank
-   (.is-forgotten): js/oak.js sets both, and each mark's --i */
 .oak-transcript mark {
+  --hl: rgba(246, 226, 122, 0.95);
   color: inherit;
   border-radius: 2px;
-  background: linear-gradient(rgba(246, 226, 122, 0.95), rgba(246, 226, 122, 0.95)) left / 0 100% no-repeat;
-  transition:
-    background-size 0.55s var(--ease) calc(var(--i, 0) * 0.22s),
-    color 1.2s var(--ease) calc(var(--i, 0) * 0.16s),
-    text-shadow 1.2s var(--ease) calc(var(--i, 0) * 0.16s),
-    background-color 1.2s var(--ease) calc(var(--i, 0) * 0.16s);
+  background: linear-gradient(var(--hl), var(--hl)) left / 0 100% no-repeat;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
+  transition:
+    background-size 0.9s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i, 0) * 0.28s),
+    --hl 2.2s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i, 0) * 0.2s);
+}
+.oak-transcript mark > span {
+  transition:
+    filter 2.4s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i, 0) * 0.2s),
+    opacity 2.4s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i, 0) * 0.2s);
 }
 .oak-transcript.is-marked mark { background-size: 100% 100%; }
-.oak-transcript.is-forgotten mark {
-  color: transparent;
-  text-shadow: 0 0 9px rgba(27, 22, 19, 0.28);
-  background-image: none;
-  background-color: rgba(27, 22, 19, 0.05);
-}
+.oak-transcript.is-forgotten mark { --hl: rgba(27, 22, 19, 0.055); }
+.oak-transcript.is-forgotten mark > span { filter: blur(5px); opacity: 0.28; }
 
 .oak-later {
-  max-width: 760px;
-  margin: 26px 0 70px;
+  margin: 0 0 64px;
   font-weight: 300;
   font-size: clamp(26px, 3.2vw, 40px);
   line-height: 1.2;
   color: var(--ink);
   opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 1s var(--ease) 0.8s, transform 1s var(--ease) 0.8s;
+  filter: blur(6px);
+  transform: translateY(10px);
+  transition: opacity 1.6s var(--ease) 1.4s, filter 1.6s var(--ease) 1.4s, transform 1.6s var(--ease) 1.4s;
 }
-.oak-transcript.is-forgotten + .oak-later { opacity: 1; transform: none; }
+.oak-transcript.is-forgotten + .oak-later { opacity: 1; filter: none; transform: none; }
 
-/* ---- The current options: what each costs ---- */
-.oak-options {
-  list-style: none;
-  counter-reset: oakopt;
-  margin: 8px 0 34px;
-  padding: 0;
-  border-top: 1px solid var(--hairline);
-}
-
-.oak-options li {
-  counter-increment: oakopt;
-  display: grid;
-  grid-template-columns: 34px minmax(0, 1.25fr) minmax(0, 1fr) auto;
-  column-gap: 20px;
-  align-items: baseline;
-  padding: 22px 2px;
-  border-bottom: 1px solid var(--hairline);
-  opacity: 0;
-  transition: opacity 0.7s var(--ease) calc(0.15s + var(--i, 0) * 0.12s);
-}
-.oak-options.is-in li { opacity: 1; }
-
-.oak-options li::before {
-  content: counter(oakopt);
-  font-size: 17px;
-  color: var(--clay-deep);
-  font-variant-numeric: lining-nums;
+/* ---- The same conversation as a tree. Each branch curves off the one above;
+   the lines and labels arrive in order (--d) as the tree comes into view ---- */
+.oak-convo {
+  margin: 10px 0 44px;
+  padding: clamp(24px, 3.4vw, 40px) clamp(20px, 3.4vw, 44px) clamp(20px, 3vw, 32px);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid var(--hairline);
 }
 
-.oak-opt {
-  font-size: clamp(22px, 2.4vw, 28px);
-  line-height: 1.2;
-  color: var(--ink);
-}
-
-.oak-flaw {
-  font-style: italic;
-  font-size: 19px;
-  color: var(--ink-soft);
-}
-
-.oak-cost {
-  justify-self: end;
-  padding: 3px 14px 4px;
-  border: 1px solid rgba(184, 119, 88, 0.4);
-  border-radius: 999px;
-  background: rgba(240, 213, 187, 0.34);
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 15px;
-  letter-spacing: 0.14em;
-  color: var(--clay-deep);
-}
-
-/* ---- The market: nested rings, and two bars ---- */
-.oak-market {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(36px, 6vw, 80px);
+.oc-root {
+  display: flex;
   align-items: center;
-  margin-top: 10px;
-}
-
-.oak-rings {
-  position: relative;
-  width: 100%;
-  max-width: 420px;
-  aspect-ratio: 1;
-  margin: 0 auto;
-}
-
-.oak-ring {
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  border-radius: 50%;
-  transform: translateX(-50%) scale(0.6);
-  opacity: 0;
-  transform-origin: 50% 100%;
-  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s var(--ease);
-}
-.oak-ring--1 { width: 100%; height: 100%; background: var(--oak-pink); }
-.oak-ring--2 { width: 70%; height: 70%; background: var(--oak-sky); transition-delay: 0.2s; }
-.oak-ring--3 { width: 38%; height: 38%; background: var(--oak-butter); transition-delay: 0.4s; }
-.oak-rings.is-in .oak-ring { transform: translateX(-50%); opacity: 1; }
-
-.oak-ring p {
-  position: absolute;
-  left: 12%;
-  right: 12%;
+  gap: 12px;
   margin: 0;
-  text-align: center;
-  font-size: clamp(13px, 1.25vw, 15.5px);
+  font-size: clamp(22px, 2.4vw, 28px);
+  color: var(--ink);
+}
+.oc-trunk {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--oak-bark);
+}
+
+.oc-branches,
+.oc-acorns {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.oc-branches { margin-left: 6px; }
+.oc-acorns { margin-left: 8px; }
+
+.oc-branches > li,
+.oc-acorns > li {
+  position: relative;
+  padding: 14px 0 0 34px;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.8s var(--ease) var(--d, 0s), transform 0.8s var(--ease) var(--d, 0s);
+}
+.oc-acorns > li { padding: 9px 0 0 28px; }
+
+/* The elbow from the line above to this label, and the line on to the next */
+.oc-branches > li::before,
+.oc-acorns > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+  height: 29px;
+  border-left: 2px solid var(--oak-bark);
+  border-bottom: 2px solid var(--oak-bark);
+  border-bottom-left-radius: 14px;
+}
+.oc-branches > li:not(:last-child)::after,
+.oc-acorns > li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-left: 2px solid var(--oak-bark);
+}
+.oc-acorns > li::before { width: 20px; height: 26px; border-width: 0 0 1.5px 1.5px; border-color: #b9c9a4; border-style: solid; border-bottom-left-radius: 12px; }
+.oc-acorns > li:not(:last-child)::after { border-left: 1.5px solid #b9c9a4; }
+
+.oak-convo.is-in .oc-branches > li,
+.oak-convo.is-in .oc-acorns > li { opacity: 1; transform: none; }
+
+.oc-topic {
+  font-size: clamp(20px, 2vw, 23px);
   line-height: 1.3;
+  color: var(--ink);
+}
+
+.oc-bare {
+  margin-left: 12px;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-soft);
+  opacity: 0.75;
+}
+
+.oc-acorn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 14px 4px 9px;
+  border-radius: 999px;
+  background: rgba(214, 176, 138, 0.22);
+  border: 1px solid rgba(169, 142, 98, 0.32);
+  font-size: 17.5px;
+  line-height: 1.3;
+  color: var(--ink);
+}
+.oc-acorn cite { font-style: italic; }
+
+.oc-glyph {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  fill: var(--oak-nut);
+  stroke: var(--oak-cap);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.oc-glyph .oc-cap { fill: var(--oak-cap); }
+
+/* The chickadee lands beside the richest acorn */
+.oc-bird {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 0 10px;
+  font-style: italic;
+  font-size: 16.5px;
+  color: var(--oak-moss);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(93, 122, 74, 0.35);
+  opacity: 0;
+  transform: translate(10px, -8px);
+  transition: opacity 0.9s var(--ease) 1.6s, transform 1.1s cubic-bezier(0.16, 1, 0.3, 1) 1.6s, color 0.3s var(--ease);
+}
+.oak-convo.is-in .oc-bird { opacity: 1; transform: none; }
+.oc-bird:hover { color: var(--ink); }
+.oc-glyph--bird { width: 30px; height: 30px; fill: none; stroke: var(--oak-moss); stroke-width: 1.8; }
+.oc-glyph--bird .oc-cap { fill: var(--oak-moss); }
+
+.oak-convo figcaption {
+  margin: 26px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--hairline);
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.55;
   color: var(--ink-soft);
 }
-.oak-ring--1 p { top: 6%; }
-.oak-ring--2 p { top: 9%; }
-.oak-ring--3 p { top: 16%; left: 6%; right: 6%; font-size: clamp(11.5px, 1vw, 13px); }
 
-.oak-ring strong {
-  display: block;
-  font-weight: 400;
-  font-size: clamp(24px, 2.6vw, 32px);
-  line-height: 1.1;
-  color: var(--ink);
-  font-variant-numeric: lining-nums;
-}
-.oak-ring--3 strong { font-size: clamp(19px, 2vw, 25px); }
-.oak-ring-pre { display: block; font-style: italic; }
-
-.oak-bars { display: grid; gap: 44px; }
+/* ---- Two bars: a track is all adults; the pale fill those who do it, the
+   dark those who use AI for it ---- */
+.oak-bars { display: grid; gap: 30px; margin: -6px 0 52px; }
 
 .oak-bar-head,
 .oak-bar-foot {
@@ -320,12 +326,10 @@ html.oak-locked body {
 .oak-bar-foot { font-style: italic; }
 .oak-bar-foot strong { font-style: normal; font-size: 22px; color: var(--clay-deep); }
 
-/* A track is all adults; the pale fill those who do it, the dark those who
-   use AI for it */
 .oak-bar-track {
   position: relative;
-  height: 14px;
-  margin: 12px 0 10px;
+  height: 12px;
+  margin: 10px 0 8px;
   border-radius: 999px;
   background: rgba(27, 22, 19, 0.06);
   overflow: hidden;
@@ -345,102 +349,62 @@ html.oak-locked body {
 .oak-bars.is-in .oak-bar-all { width: calc(var(--all) * 1%); }
 .oak-bars.is-in .oak-bar-ai { width: calc(var(--ai) * 1%); }
 
-.oak-source {
-  margin: 28px 0 0;
-  font-style: italic;
-  font-size: 15px;
-  color: var(--ink-soft);
-}
+.oak-source { margin: -10px 0 0; font-style: italic; font-size: 14.5px; color: var(--ink-soft); }
 
-/* ---- The conversation tree: what becomes what ---- */
-.oak-legend {
+/* ---- Consent: the code the other person reads aloud ---- */
+.oak-consent {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(20px, 3vw, 36px);
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 34px);
+  align-items: start;
 }
-
-.oak-legend li {
-  padding: 26px 22px 24px;
-  border: 1px solid var(--hairline);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.42);
+.oak-code {
+  display: flex;
+  gap: 6px;
+  margin: 6px 0 0;
 }
-.oak-legend li:nth-child(2) { transition-delay: 0.12s; }
-.oak-legend li:nth-child(3) { transition-delay: 0.24s; }
-
-.oak-glyph {
-  display: block;
-  width: 58px;
-  height: 58px;
-  margin-bottom: 18px;
-  fill: none;
-  stroke: var(--oak-moss);
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.oak-glyph .oak-cap { fill: var(--oak-moss); }
-
-.oak-legend p {
-  margin: 0;
-  font-size: 19px;
-  line-height: 1.5;
-  color: var(--ink-soft);
-}
-.oak-term { display: block; font-size: 25px; color: var(--ink); }
-.oak-becomes { font-style: italic; color: var(--oak-moss); }
-
-/* ---- Privacy and consent ---- */
-.oak-pair {
+.oak-code span {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(28px, 5vw, 64px);
-}
-
-.oak-h3 {
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 19px;
-  letter-spacing: 0.1em;
+  place-items: center;
+  width: 38px;
+  height: 48px;
+  border-radius: 9px;
+  border: 1px solid rgba(184, 119, 88, 0.4);
+  background: rgba(240, 213, 187, 0.4);
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 22px;
   color: var(--clay-deep);
-  margin: 0 0 12px;
+  opacity: 0;
+  transform: translateY(10px) rotateX(70deg);
+  transition: opacity 0.6s var(--ease) calc(0.3s + var(--d)), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) calc(0.3s + var(--d));
 }
+.oak-consent.is-in .oak-code span { opacity: 1; transform: none; }
 
-.oak-pair p {
-  margin: 0;
-  font-weight: 500;
-  font-size: 18.5px;
-  line-height: 1.7;
-  color: var(--ink-soft);
+/* ---- Close ---- */
+.oak-close {
+  margin-top: 70px;
+  padding-top: 40px;
+  border-top: 1px solid var(--hairline);
+  text-align: center;
 }
+.oak-close p { font-style: italic; font-size: 21px; color: var(--ink-soft); margin: 0 0 22px; }
 
-/* ---- Narrow screens ---- */
-@media (max-width: 860px) {
-  .oak-options li {
-    grid-template-columns: 28px minmax(0, 1fr) auto;
-    row-gap: 4px;
-  }
-  .oak-flaw { grid-column: 2; grid-row: 2; }
-  .oak-cost { grid-column: 3; grid-row: 1; }
-  .oak-market { grid-template-columns: 1fr; }
-  .oak-legend { grid-template-columns: 1fr; }
-  .oak-pair { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 480px) {
-  .oak-options li { grid-template-columns: 22px minmax(0, 1fr); }
-  .oak-cost { grid-column: 2; grid-row: 3; justify-self: start; margin-top: 8px; font-size: 13.5px; }
+@media (max-width: 600px) {
   .oak-transcript { padding: 18px 16px; }
-  .oak-transcript p { font-size: 13px; line-height: 1.8; }
+  .oak-transcript p { font-size: 13px; line-height: 1.85; }
+  .oak-convo { padding: 20px 16px 18px; }
+  .oc-branches > li { padding-left: 28px; }
+  .oc-acorns > li { padding-left: 24px; }
+  .oc-acorn { font-size: 16px; }
+  .oc-bare { display: block; margin: 2px 0 0; }
+  .oc-bird { margin-left: 0; }
+  .oak-consent { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .oak-transcript mark, .oak-later, .oak-options li,
-  .oak-ring, .oak-bar-all, .oak-bar-ai { transition: none; }
+  .oak-transcript mark, .oak-transcript mark > span, .oak-later,
+  .oc-branches > li, .oc-acorns > li, .oc-bird,
+  .oak-bar-all, .oak-bar-ai, .oak-code span { transition: none; }
 }
 
 .oak-page #site-footer {

@@ -70,7 +70,12 @@ be announced.
   into a sphere made only of words (the twenty agents of Atelier and Grove and the work they
   handle) as a porcelain figure grows beneath it; the
   sphere is its head. The page's text then scrolls up over the scene, as on the Oak page.
+- `js/msos.js` — the MulviumSOS page's figures: an example blueprint whose open question
+  the founder can settle, rosters of Atelier's and Grove's agents (choose one to see the
+  work it handles, read from `js/fsos-words.js`), a month of Grove's work approved at one
+  meeting, and the operating-system figure, whose layers light their counterparts.
 - `js/fsos-words.js` — the MulviumSOS vocabulary: each agent, its focus and its eight words.
+  The page's rosters list the agents' names and focuses too; change both together.
 - `js/fsos-cloud.js` — generated: where each word sits on the sphere, packed by the shape of
   its letters so the words fit together like puzzle pieces. After changing the vocabulary,
   open `tools/pack-fsos-cloud.html` over HTTP and save its output over this file.
@@ -80,15 +85,17 @@ be announced.
 - `js/fiscal.js` — the Fiscal Sponsorship page's text motion: rising headings, a turning
   word, reveals, the steps' timeline, and the plain-terms rows that open.
 - `js/oak.js` — the Oak page: the planet becomes an acorn among leaves, and
-  scrolling pulls back to the whole oak on its esplanade. The copy follows the first half of
-  the Oak deck: the dual mandate, a conversation whose specifics light up and
-  then fade, the options that fall short, the market, the conversation tree,
-  the forest, and privacy and consent.
+  scrolling pulls back to the whole oak on its esplanade. The tree's shaders,
+  buffers and textures are readied while the acorn forms, before scrolling is
+  allowed, so the pull-back never stalls. The copy is one story, from the Oak
+  deck: an evening's conversation whose specifics light up and fade, why it
+  should be kept, the same evening drawn as a conversation tree, the forest,
+  and privacy and consent.
 - `pages/offerings/` — Fiscal Sponsorship (what a fiscal sponsor is, how it works, and
   four hypothetical projects, each set beside one of Mulvium's four beautiful things:
   the aesthetic > the grotesque, the sublime > the spectacle, role models >
-  parasocial icons, myth & epic > conspiracy), MulviumSOS (Atelier, Grove, and how the two run on one
-  operating system; `css/msos.css` draws its stack diagram), and Oak.
+  parasocial icons, myth & epic > conspiracy), MulviumSOS (Atelier and Grove, the two parts of one
+  operating system, and how people approve each step; `css/msos.css`), and Oak.
   `fsos.html` forwards old links to `msos.html`. Each of the four projects is shown with one
   of the loading screen's pictures (`Musical.webp`, `Batad.webp`, `Luxor.webp`,
   `Pictorial.webp`), the same files the loading screen uses: replace a file and both follow.
