@@ -7,6 +7,7 @@
   <title>MulviumSOS &mdash; Mulvium</title>
   <meta name="description" content="MulviumSOS (M.SOS), the Mulvium Sponsorship Operating System: Atelier builds an institution around a founder's idea, and Grove makes it known, both on one core where agents draft and people decide." />
   <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/editorial.css" />
   <link rel="stylesheet" href="../../css/msos.css" />
   <link rel="preload" as="image" type="image/webp" href="../../Musical.webp" />
   <link rel="preload" as="image" type="image/webp" href="../../Pictorial.webp" />
@@ -82,78 +83,161 @@
   <p class="fsos-cue" id="fsos-cue" aria-hidden="true">Scroll</p>
 
   <main class="fsos-prose">
-    <header class="fsos-prose-header">
-      <p class="fsos-eyebrow">Mulvium Sponsorship Operating System</p>
-      <h1 class="fsos-prose-title">MulviumSOS</h1>
+
+    <!-- ── Overview ─────────────────────────────────────────────────────── -->
+    <header class="msos-hero" id="overview">
+      <p class="fs-eyebrow fs-reveal">Mulvium Sponsorship Operating System</p>
+      <h1 class="fs-title fs-words">MulviumSOS</h1>
+      <p class="msos-tagline fs-reveal">The software that builds an institution around a founder&rsquo;s idea, and makes it known.</p>
+      <p class="fs-lede fs-reveal">
+        M.SOS, for short, is what our engagement leads work in. It has two
+        tools on one core. Both work from the same record of the institution
+        and answer to the same rules, which is what makes M.SOS an operating
+        system rather than two programs.
+      </p>
+      <nav class="msos-tools fs-reveal" aria-label="The two tools">
+        <a class="msos-tool" href="#atelier">
+          <span class="msos-tool-name">Atelier</span>
+          <span class="msos-tool-line">Plans and builds the institution</span>
+          <span class="msos-tool-meta">Twelve agents under a Chief of Staff</span>
+        </a>
+        <a class="msos-tool msos-tool--grove" href="#grove">
+          <span class="msos-tool-name">Grove</span>
+          <span class="msos-tool-line">Gives it a public voice</span>
+          <span class="msos-tool-meta">Eight agents, directed by an account lead</span>
+        </a>
+      </nav>
     </header>
 
-      <div class="fsos-prose-body">
-        <p>
-          MulviumSOS, or M.SOS for short, is the software our engagement leads
-          use to build an institution around a founder&rsquo;s idea, and to
-          make it known. It has two tools on one core: <em>Atelier</em>, where
-          the institution is planned and built, and <em>Grove</em>, where it
-          finds its public voice. Both work from the same record of the
-          institution and answer to the same rules, which is what makes M.SOS
-          an operating system rather than two programs.
-        </p>
+    <!-- ── Atelier ──────────────────────────────────────────────────────── -->
+    <section class="fs-section" id="atelier" aria-labelledby="msos-atelier">
+      <p class="fs-kicker fs-reveal">1</p>
+      <h2 class="fs-h2 fs-words" id="msos-atelier">Atelier</h2>
+      <p class="fs-definition fs-reveal">Where the institution is <mark>planned and built</mark>.</p>
+      <div class="msos-split">
+        <div class="fs-prose fs-reveal">
+          <p>
+            From a first consultation, Atelier drafts the institution&rsquo;s
+            complete plan: the <em>blueprint</em>. Every value states its
+            basis, so nothing is invented without saying so, and no work waits
+            on an answer: open questions carry sensible defaults until the
+            founder decides.
+          </p>
+          <p>
+            From the blueprint, Atelier assembles an AI workforce organized like
+            a small, real organization. Every agent is drawn from an approved
+            catalogue, holds only the tools its job requires, and hands its
+            drafts to a person for review. A permanent, sourced memory records
+            everything decided and learned.
+          </p>
+        </div>
+        <figure class="msos-blueprint fs-reveal" aria-labelledby="msos-bp-title">
+          <p class="msos-bp-title" id="msos-bp-title">The blueprint</p>
+          <ul class="msos-bp-parts">
+            <li>Mission</li>
+            <li>Programs</li>
+            <li>Audiences</li>
+            <li>Legal &amp; operational requirements</li>
+            <li>Funding model</li>
+            <li>Timeline</li>
+            <li class="msos-bp-open">Decisions still open</li>
+          </ul>
+          <figcaption>
+            <span class="msos-basis msos-basis--stated">Stated by the founder</span>
+            <span class="msos-basis msos-basis--inferred">Inferred</span>
+            <span class="msos-basis msos-basis--assumed">Assumed</span>
+          </figcaption>
+        </figure>
+      </div>
 
-        <h2 id="atelier">Atelier</h2>
-        <p>
-          Atelier builds the institution. From a first consultation it drafts
-          the institution&rsquo;s complete plan, the <em>blueprint</em>: its
-          mission, programs, audiences, legal and operational requirements,
-          funding model, timeline, and the decisions still open. Every value
-          states its basis&mdash;stated by the founder, inferred, or
-          assumed&mdash;so nothing is invented without saying so, and no work
-          waits on an answer: open questions carry sensible defaults until the
-          founder decides.
-        </p>
-        <p>
-          From the blueprint, Atelier assembles an AI workforce organized like
-          a small, real organization, under a Chief of Staff who turns goals
-          into tasks and sequences the work: research, grants, development,
-          finance, governance, compliance, programs, and evaluation. Every
-          agent is drawn from an approved catalogue, holds only the tools its
-          job requires, and hands its drafts to a person for review. A
-          permanent, sourced memory records everything decided and learned.
-        </p>
+      <div class="msos-team fs-reveal">
+        <p class="msos-team-head"><span class="msos-lead">Chief of Staff</span><span class="msos-lead-gloss">turns goals into tasks and sequences the work</span></p>
+        <ul class="msos-team-grid" aria-label="Atelier's twelve agents and what each looks after">
+          <li style="--i:0"><span class="msos-agent">Research</span><span class="msos-focus">Evidence</span></li>
+          <li style="--i:1"><span class="msos-agent">Grants</span><span class="msos-focus">Funders</span></li>
+          <li style="--i:2"><span class="msos-agent">Communications</span><span class="msos-focus">Press</span></li>
+          <li style="--i:3"><span class="msos-agent">Governance</span><span class="msos-focus">Board</span></li>
+          <li style="--i:4"><span class="msos-agent">Development</span><span class="msos-focus">Donors</span></li>
+          <li style="--i:5"><span class="msos-agent">Finance</span><span class="msos-focus">Budgets</span></li>
+          <li style="--i:6"><span class="msos-agent">Compliance</span><span class="msos-focus">Filings</span></li>
+          <li style="--i:7"><span class="msos-agent">Programs</span><span class="msos-focus">Services</span></li>
+          <li style="--i:8"><span class="msos-agent">Volunteers</span><span class="msos-focus">Recruiting</span></li>
+          <li style="--i:9"><span class="msos-agent">Marketing</span><span class="msos-focus">Outreach</span></li>
+          <li style="--i:10"><span class="msos-agent">Operations</span><span class="msos-focus">Logistics</span></li>
+          <li style="--i:11"><span class="msos-agent">Evaluation</span><span class="msos-focus">Impact</span></li>
+        </ul>
+      </div>
+    </section>
 
-        <h2 id="grove">Grove</h2>
+    <!-- ── Grove ────────────────────────────────────────────────────────── -->
+    <section class="fs-section" id="grove" aria-labelledby="msos-grove">
+      <p class="fs-kicker fs-reveal">2</p>
+      <h2 class="fs-h2 fs-words" id="msos-grove">Grove</h2>
+      <p class="fs-definition fs-reveal">Where the institution <mark>finds its public voice</mark>.</p>
+      <div class="fs-prose fs-reveal">
         <p>
-          Grove makes the institution known. Being seen is one of the largest
-          costs of building an institution, and most of an agency retainer
-          pays for hours of production. Grove&rsquo;s team does that
-          production&mdash;brand and storytelling, media relations, content,
-          social, the mailing list, awards, crisis, and reporting&mdash;directed
-          by an account lead, so a full public relations program costs a
-          fraction of a traditional retainer.
+          Being seen is one of the largest costs of building an institution,
+          and most of an agency retainer pays for hours of production.
+          Grove&rsquo;s team does that production, directed by an account
+          lead, so a full public relations program costs a fraction of a
+          traditional retainer.
         </p>
+      </div>
+
+      <div class="msos-team msos-team--grove fs-reveal">
+        <p class="msos-team-head"><span class="msos-lead">Account lead</span><span class="msos-lead-gloss">a person, who directs the team and presents its work</span></p>
+        <ul class="msos-team-grid" aria-label="Grove's eight agents and what each looks after">
+          <li style="--i:0"><span class="msos-agent">Brand</span><span class="msos-focus">Storytelling</span></li>
+          <li style="--i:1"><span class="msos-agent">Media Relations</span><span class="msos-focus">Reporters</span></li>
+          <li style="--i:2"><span class="msos-agent">Content</span><span class="msos-focus">Editorial</span></li>
+          <li style="--i:3"><span class="msos-agent">Social</span><span class="msos-focus">Channels</span></li>
+          <li style="--i:4"><span class="msos-agent">Mailing List</span><span class="msos-focus">Subscribers</span></li>
+          <li style="--i:5"><span class="msos-agent">Awards</span><span class="msos-focus">Honors</span></li>
+          <li style="--i:6"><span class="msos-agent">Crisis</span><span class="msos-focus">Response</span></li>
+          <li style="--i:7"><span class="msos-agent">Reporting</span><span class="msos-focus">Results</span></li>
+        </ul>
+      </div>
+
+      <div class="msos-pair">
+        <div class="fs-reveal">
+          <h3 class="msos-h3">For the projects we sponsor</h3>
+          <p>Grove can be added to a sponsorship, so a new institution is heard from its first day.</p>
+        </div>
+        <div class="fs-reveal">
+          <h3 class="msos-h3">For organizations outside sponsorship</h3>
+          <p>Grove can be retained on its own. The organization approves its own statements.</p>
+        </div>
+      </div>
+      <div class="fs-prose fs-reveal">
         <p>
-          Grove serves the projects we sponsor, which can add it to their
-          sponsorship, and organizations outside sponsorship, which can retain
-          it on its own and approve their own statements. It is the public
-          relations people already know: the press, an institution&rsquo;s own
-          channels, awards, and care in a crisis.
-        </p>
-        <p>
+          It is the public relations people already know: the press, an
+          institution&rsquo;s own channels, awards, and care in a crisis.
           Clients work with it as they would with any firm. Their account lead
           presents the work in person, and the client&rsquo;s decisions are
-          recorded at the meeting, often a month of the calendar at once. One
-          media directory and one awards directory serve every client, holding
-          only public, professional facts, so research done once benefits
-          everyone and no reporter hears from Grove too often. Each
+          recorded at the meeting, often a month of the calendar at once.
+        </p>
+        <p>
+          One media directory and one awards directory serve every client,
+          holding only public, professional facts, so research done once
+          benefits everyone and no reporter hears from Grove too often. Each
           client&rsquo;s own work stays walled off from the others.
         </p>
+      </div>
+    </section>
 
-        <h2 id="operating-system">An operating system</h2>
+    <!-- ── An operating system ──────────────────────────────────────────── -->
+    <section class="fs-section" id="operating-system" aria-labelledby="msos-os">
+      <p class="fs-kicker fs-reveal">3</p>
+      <h2 class="fs-h2 fs-words" id="msos-os">An operating system</h2>
+      <p class="fs-definition fs-reveal">Each layer deals <mark>only with its neighbors</mark>.</p>
+      <div class="fs-prose fs-reveal">
         <p>
           A computer works in layers. A person uses an application; the
           application runs on the operating system; and the operating system
-          runs the hardware, the machine itself. Each layer deals only with
-          its neighbors, so the person never has to manage the machine, and
-          no application can misuse it.
+          runs the hardware, the machine itself. So the person never has to
+          manage the machine, and no application can misuse it.
         </p>
+      </div>
 
         <figure class="os-fig" id="os-stack">
           <div class="os-chains">
@@ -175,6 +259,7 @@
           <figcaption>User, application, operating system, hardware: a computer&rsquo;s layers, and Mulvium&rsquo;s.</figcaption>
         </figure>
 
+      <div class="fs-prose fs-reveal">
         <p>
           M.SOS stands in the same place. The founder, through their lead,
           works with Atelier and Grove. Atelier and Grove run on M.SOS, which
@@ -191,22 +276,58 @@
           For an organization Grove serves outside sponsorship, its own board
           and accounts take the sponsor&rsquo;s place at the bottom.
         </p>
-
-        <h2 id="people-decide">People decide</h2>
-        <p>
-          Agents draft; people decide. When work reaches a step with
-          real-world effect&mdash;signing a contract, accepting a gift,
-          submitting a grant, spending money, speaking in public&mdash;the
-          agent does not act. It files a request tied to the exact draft.
-          Every factual claim in public copy cites a confirmed record or a
-          verified source, checked before anyone reviews it. The founder or
-          client approves, the sponsor approves where required, and only the
-          approved words go out, at their scheduled time. Founders and clients
-          never log in to M.SOS: they meet their lead and receive finished
-          work.
-        </p>
       </div>
+    </section>
 
+    <!-- ── People decide ────────────────────────────────────────────────── -->
+    <section class="fs-section" id="people-decide" aria-labelledby="msos-people">
+      <p class="fs-kicker fs-reveal">4</p>
+      <h2 class="fs-h2 fs-words" id="msos-people">Agents draft; people decide.</h2>
+      <p class="fs-intro fs-reveal">When work reaches a step with real-world effect, the agent does not act.</p>
+      <ul class="msos-effects fs-reveal" aria-label="Steps with real-world effect">
+        <li>Signing a contract</li>
+        <li>Accepting a gift</li>
+        <li>Submitting a grant</li>
+        <li>Spending money</li>
+        <li>Speaking in public</li>
+      </ul>
+      <ol class="fs-steps">
+        <li class="fs-reveal">
+          <h3>Draft</h3>
+          <p>An agent prepares the work and stops short of acting.</p>
+        </li>
+        <li class="fs-reveal">
+          <h3>Request</h3>
+          <p>It files a request tied to the exact draft.</p>
+        </li>
+        <li class="fs-reveal">
+          <h3>Verify</h3>
+          <p>Every factual claim in public copy cites a confirmed record or a verified source, checked before anyone reviews it.</p>
+        </li>
+        <li class="fs-reveal">
+          <h3>Approve</h3>
+          <p>The founder or client approves, and the sponsor too, where required.</p>
+        </li>
+        <li class="fs-reveal">
+          <h3>Act</h3>
+          <p>Only the approved words go out, at their scheduled time.</p>
+        </li>
+      </ol>
+      <p class="fs-definition fs-reveal">
+        Founders and clients never log in to M.SOS: they <mark>meet their lead</mark>
+        and <mark>receive finished work</mark>.
+      </p>
+    </section>
+
+    <!-- ── Begin ────────────────────────────────────────────────────────── -->
+    <section class="fs-close" id="begin" aria-labelledby="msos-begin">
+      <h2 class="fs-h2 fs-words" id="msos-begin">Have an institution to build?</h2>
+      <p class="fs-reveal">Mulvium is not open yet. Join the waitlist, and we&rsquo;ll write when it opens.</p>
+      <p class="fs-close-links fs-reveal">
+        <a class="fs-cta" href="../../index.html#waitlist">Join the waitlist <span aria-hidden="true">&rarr;</span></a>
+        <a class="fs-cta fs-cta-quiet" href="../about/about.html#contact">Start a conversation <span aria-hidden="true">&rarr;</span></a>
+      </p>
+    </section>
   </main>
   <footer id="site-footer" class="site-footer">
     <div class="sf-inner">
@@ -258,6 +379,7 @@
     { "imports": { "three": "https://unpkg.com/three@0.161.0/build/three.module.min.js" } }
   </script>
   <script type="module" src="../../js/fsos.js"></script>
+  <script src="../../js/fiscal.js" defer></script>
   <script src="../../js/cursor.js" defer></script>
   <script src="../../js/nav.js"></script>
   <script src="../../js/page-transition.js"></script>

@@ -1,8 +1,10 @@
-/* msos.css — MulviumSOS (pages/offerings/msos.html): the operating-system
-   figure. Two chains of layers, user ↔ application ↔ operating system ↔
-   hardware, a computer's above Mulvium's; on phones they stand side by side.
-   Loaded after css/style.css by that page alone. (The page's other rules
-   are in style.css under their original fsos- names.) */
+/* msos.css — MulviumSOS (pages/offerings/msos.html): the two tools, the
+   blueprint, the agents of Atelier and Grove, the steps with real-world
+   effect, and the operating-system figure (two chains of layers, user ↔
+   application ↔ operating system ↔ hardware, a computer's above Mulvium's;
+   on phones they stand side by side). Loaded after css/style.css and
+   css/editorial.css by that page alone. (The stage and the paper wash are in
+   style.css under their original fsos- names.) */
 
 .msos-page {
   --os-tint: rgba(196, 221, 184, 0.42);      /* M.SOS's green */
@@ -10,11 +12,259 @@
   --os-edge: rgba(104, 146, 90, 0.34);
   --os-sponsor: rgba(184, 202, 224, 0.52);   /* Fiscal Sponsorship's blue */
   --os-sponsor-edge: rgba(84, 116, 158, 0.32);
+  --os-ink: #4f6b3a;                         /* M.SOS's green, deepened for text */
+  --os-blue-ink: #54749e;
   --os-link: 32px;                           /* the space an arrow spans */
   --os-pair: 30px;                           /* between a layer and its counterpart */
   /* A two-headed arrow, in clay */
   --os-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 10'%3E%3Cpath d='M2 5h20M6 1.5 2 5l4 3.5M18 1.5 22 5l-4 3.5' fill='none' stroke='%23b87758' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
+
+/* ---- Overview: the title, then the two tools as doors into the page ---- */
+.msos-hero { padding-top: 12px; }
+.msos-hero .fs-title { margin-bottom: 18px; }
+
+.msos-tagline {
+  font-style: italic;
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.28;
+  color: var(--ink);
+  max-width: 22em;
+  margin: 0 0 22px;
+}
+
+.msos-tools {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 2.6vw, 28px);
+  margin-top: -8px;
+}
+
+.msos-tool {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 26px 28px 24px;
+  border: 1px solid var(--os-edge);
+  border-radius: 20px;
+  background: var(--os-tint);
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s var(--ease), background 0.5s var(--ease);
+}
+.msos-tool--grove { background: rgba(255, 255, 255, 0.5); }
+.msos-tool:hover,
+.msos-tool:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 44px rgba(27, 22, 19, 0.09);
+  background: var(--os-tint-strong);
+}
+/* An arrow that leans toward the section it opens */
+.msos-tool::after {
+  content: "\2193";
+  position: absolute;
+  top: 24px;
+  right: 26px;
+  font-size: 22px;
+  color: var(--os-ink);
+  transition: transform 0.5s var(--ease);
+}
+.msos-tool:hover::after { transform: translateY(4px); }
+
+.msos-tool-name { font-weight: 300; font-size: clamp(34px, 3.6vw, 46px); line-height: 1; }
+.msos-tool-line { font-style: italic; font-size: 21px; color: var(--ink); }
+.msos-tool-meta {
+  margin-top: 8px;
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  font-size: 14.5px;
+  letter-spacing: 0.12em;
+  color: var(--os-ink);
+}
+
+/* ---- Atelier: the prose beside the blueprint ---- */
+.msos-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: start;
+  margin-bottom: 56px;
+}
+
+.fsos-prose .fs-prose em { font-style: italic; color: var(--ink); }
+
+/* The blueprint, as a sheet: its parts, and the three bases a value can have */
+.msos-blueprint {
+  margin: 0;
+  padding: 24px 26px 20px;
+  border-radius: 16px;
+  border: 1px solid var(--os-sponsor-edge);
+  background:
+    linear-gradient(rgba(84, 116, 158, 0.07) 1px, transparent 1px) 0 0 / 100% 22px,
+    linear-gradient(90deg, rgba(84, 116, 158, 0.07) 1px, transparent 1px) 0 0 / 22px 100%,
+    rgba(255, 255, 255, 0.5);
+  box-shadow: 0 18px 50px rgba(27, 22, 19, 0.06);
+}
+
+.msos-bp-title {
+  margin: 0 0 12px;
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 0.2em;
+  color: var(--os-blue-ink);
+}
+
+.msos-bp-parts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: bp;
+}
+.msos-bp-parts li {
+  counter-increment: bp;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(84, 116, 158, 0.16);
+  font-size: 19px;
+  color: var(--ink);
+}
+.msos-bp-parts li::before {
+  content: counter(bp, decimal-leading-zero);
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--os-blue-ink);
+}
+.msos-bp-open { font-style: italic; }
+
+.msos-blueprint figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin-top: 14px;
+  font-style: italic;
+  font-size: 15.5px;
+  color: var(--ink-soft);
+}
+.msos-basis::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 7px;
+  border: 1.2px solid var(--os-blue-ink);
+  border-radius: 50%;
+  vertical-align: 0.05em;
+}
+.msos-basis--stated::before { background: var(--os-blue-ink); }
+.msos-basis--inferred::before { background: linear-gradient(90deg, var(--os-blue-ink) 50%, transparent 50%); }
+
+/* ---- The agents: a lead above, the team below, a cell each ---- */
+.msos-team {
+  margin: 0 0 44px;
+  border: 1px solid var(--os-edge);
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.36);
+}
+
+.msos-team-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--os-edge);
+  background: var(--os-tint);
+}
+.msos-lead {
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  font-size: 19px;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+.msos-lead-gloss { font-style: italic; font-size: 18px; color: var(--ink-soft); }
+
+.msos-team-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.msos-team-grid li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 16px 20px 17px;
+  border-right: 1px solid rgba(104, 146, 90, 0.18);
+  border-bottom: 1px solid rgba(104, 146, 90, 0.18);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease), background 0.3s var(--ease);
+  transition-delay: calc(0.1s + var(--i, 0) * 0.05s);
+}
+.msos-team-grid li:nth-child(4n) { border-right: 0; }
+.msos-team-grid li:nth-last-child(-n + 4) { border-bottom: 0; }
+.msos-team.is-in .msos-team-grid li { opacity: 1; transform: none; }
+.msos-team-grid li:hover { background: rgba(196, 221, 184, 0.28); }
+
+.msos-agent {
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+}
+.msos-focus { font-style: italic; font-size: 16px; color: var(--os-ink); }
+
+/* ---- Grove: whom it serves ---- */
+.msos-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  margin: 0 0 30px;
+}
+.msos-h3 {
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: 0.1em;
+  color: var(--clay-deep);
+  margin: 0 0 8px;
+}
+.msos-pair p {
+  margin: 0;
+  font-weight: 500;
+  font-size: 18.5px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+/* ---- People decide: the steps that wait for a person ---- */
+.msos-effects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  margin: -12px 0 56px;
+  padding: 0;
+}
+.msos-effects li {
+  padding: 6px 16px 7px;
+  border: 1px solid rgba(184, 119, 88, 0.4);
+  border-radius: 999px;
+  background: rgba(240, 213, 187, 0.34);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--clay-deep);
+}
+.msos-page .fs-steps { margin-bottom: 56px; }
 
 /* The figure is a little wider than the column */
 .os-fig {
@@ -162,6 +412,22 @@
 .os-fig.is-in .os-chain li::before,
 .os-fig.is-in .os-chain li::after { opacity: 1; }
 
+@media (max-width: 860px) {
+  .msos-split, .msos-pair { grid-template-columns: 1fr; }
+  .msos-team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .msos-team-grid li:nth-child(4n) { border-right: 1px solid rgba(104, 146, 90, 0.18); }
+  .msos-team-grid li:nth-child(2n) { border-right: 0; }
+  .msos-team-grid li:nth-last-child(-n + 4) { border-bottom: 1px solid rgba(104, 146, 90, 0.18); }
+  .msos-team-grid li:nth-last-child(-n + 2) { border-bottom: 0; }
+}
+@media (max-width: 600px) {
+  .msos-tools { grid-template-columns: 1fr; }
+  .msos-tool { padding: 22px 22px 20px; }
+  .msos-team-grid li { padding: 13px 14px 14px; }
+  .msos-agent { font-size: 16px; }
+  .msos-focus { font-size: 15px; }
+}
+
 /* ---- Phones: the chains stand side by side, the layers top to bottom ---- */
 @media (max-width: 720px) {
   .msos-page { --os-link: 26px; --os-pair: 14px; }
@@ -218,6 +484,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .msos-team-grid li { opacity: 1; transform: none; transition: none; }
   .os-fig .os-label,
   .os-chain li { opacity: 1; transform: none; transition: none; }
   .os-chain li::before,

@@ -60,6 +60,9 @@ be announced.
   hello@mulvium.org about them.
 - `css/style.css` — the stylesheet every page shares; `css/fiscal.css`, `css/oak.css` and
   `css/about.css` hold rules only one page needs, and only that page loads them.
+- `css/editorial.css` and `js/fiscal.js` — the type and motion the Fiscal Sponsorship,
+  MulviumSOS and Oak pages share: numbered sections, headings whose words rise, reveals,
+  definitions with highlighter strokes, a timeline of steps, and the closing links.
 - `js/main.js` — Three.js module for the landing page: the cosmos and its framing
   per layout, the hero, the 2D night transition, and interactions.
 - `js/fsos.js` — the MulviumSOS page (`pages/offerings/msos.html`; MulviumSOS was called
@@ -77,9 +80,14 @@ be announced.
 - `js/fiscal.js` — the Fiscal Sponsorship page's text motion: rising headings, a turning
   word, reveals, the steps' timeline, and the plain-terms rows that open.
 - `js/oak.js` — the Oak page: the planet becomes an acorn among leaves, and
-  scrolling pulls back to the whole oak on its esplanade.
+  scrolling pulls back to the whole oak on its esplanade. The copy follows the first half of
+  the Oak deck: the dual mandate, a conversation whose specifics light up and
+  then fade, the options that fall short, the market, the conversation tree,
+  the forest, and privacy and consent.
 - `pages/offerings/` — Fiscal Sponsorship (what a fiscal sponsor is, how it works, and
-  four hypothetical projects), MulviumSOS (Atelier, Grove, and how the two run on one
+  four hypothetical projects, each set beside one of Mulvium's four beautiful things:
+  the aesthetic > the grotesque, the sublime > the spectacle, role models >
+  parasocial icons, myth & epic > conspiracy), MulviumSOS (Atelier, Grove, and how the two run on one
   operating system; `css/msos.css` draws its stack diagram), and Oak.
   `fsos.html` forwards old links to `msos.html`. Each of the four projects is shown with one
   of the loading screen's pictures (`Musical.webp`, `Horticulture.webp`, `Luxor.webp`,

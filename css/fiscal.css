@@ -24,31 +24,6 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
   font-family: "Cormorant Garamond", serif;
 }
 
-/* ---- Reveals: blocks rise; heading words rise out of their masks ---- */
-.fs-reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
-}
-
-.fs-reveal.is-in { opacity: 1; transform: none; }
-
-.fs-w {
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: top;
-  padding: 0 0.06em 0.14em;
-  margin: 0 -0.06em -0.14em;
-}
-
-.fs-w > span {
-  display: inline-block;
-  transform: translateY(112%);
-  transition: transform var(--dur, 1.1s) cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s);
-}
-
-.fs-words.is-in .fs-w > span { transform: none; }
-
 /* ---- Opening stage: the planet becomes the bowl (js/bowl.js) ---- */
 .fs-stage {
   position: relative;
@@ -90,23 +65,6 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
   padding: calc(var(--nav-h) + 40px) 0 48px;
 }
 
-.fs-eyebrow {
-  font-family: "Cormorant SC", serif;
-  font-size: 14px;
-  letter-spacing: 0.26em;
-  color: var(--clay-deep);
-  margin: 0 0 14px;
-}
-
-.fs-title {
-  font-weight: 300;
-  font-size: clamp(54px, 9vw, 120px);
-  line-height: 0.98;
-  letter-spacing: -0.015em;
-  color: var(--ink);
-  margin: 0 0 22px;
-}
-
 .fs-rotor-line {
   font-style: italic;
   font-size: clamp(24px, 3.2vw, 40px);
@@ -138,83 +96,6 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
 .fs-rotor-word.is-on { position: relative; opacity: 1; transform: none; }
 .fs-rotor-word.is-out { opacity: 0; transform: translateY(-105%); }
 .fs-nw { white-space: nowrap; }
-
-.fs-lede {
-  font-weight: 500;
-  font-size: clamp(19px, 1.8vw, 22px);
-  line-height: 1.65;
-  color: var(--ink-soft);
-  max-width: 32em;
-  margin: 0 0 44px;
-}
-
-/* Numerals in lining figures: Cormorant's old-style "1" reads as an "I" */
-.fs-kicker, .fs-steps li::before, .fs-domain-num, .fs-list li::before { font-variant-numeric: lining-nums; }
-
-/* ---- Sections ---- */
-.fs-section,
-.fs-close { scroll-margin-top: calc(var(--nav-h) + 8px); }
-
-.fs-section { padding-top: clamp(84px, 14vh, 150px); }
-
-.fs-kicker {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  font-weight: 300;
-  font-size: 22px;
-  letter-spacing: 0.08em;
-  color: var(--clay-deep);
-  margin: 0 0 6px;
-}
-
-.fs-kicker::after {
-  content: "";
-  width: 56px;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.5;
-}
-
-.fs-h2 {
-  font-weight: 300;
-  font-size: clamp(38px, 5.2vw, 64px);
-  line-height: 1.04;
-  color: var(--ink);
-  margin: 0 0 26px;
-}
-
-.fs-definition {
-  font-style: italic;
-  font-size: clamp(25px, 3vw, 36px);
-  line-height: 1.38;
-  color: var(--ink);
-  max-width: 22em;
-  margin: 0 0 30px;
-}
-
-/* Highlighter strokes draw in under the key phrases */
-.fs-definition mark {
-  color: inherit;
-  background: linear-gradient(transparent 60%, rgba(240, 213, 187, 0.85) 60%, rgba(240, 213, 187, 0.85) 92%, transparent 92%) left / 0 100% no-repeat;
-  transition: background-size 1.1s var(--ease) 0.35s;
-}
-
-.fs-definition mark + mark { transition-delay: 0.8s; }
-.fs-definition.is-in mark { background-size: 100% 100%; }
-
-.fs-prose { max-width: 40em; }
-
-.fs-prose p,
-.fs-intro {
-  font-weight: 500;
-  font-size: 19px;
-  line-height: 1.75;
-  color: var(--ink-soft);
-  margin: 0 0 18px;
-}
-
-.fs-intro { font-style: italic; font-weight: 400; font-size: 21px; margin-bottom: 36px; }
 
 /* ---- On your own and with Mulvium, side by side in one table ---- */
 .fs-compare { margin-top: 52px; }
@@ -376,78 +257,6 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
   background: repeating-linear-gradient(to right, var(--ink-soft) 0 6px, transparent 6px 10px);
 }
 
-/* ---- Five steps: the line fills as the reader moves through them ---- */
-.fs-steps {
-  --fill: 0;
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 26px;
-  list-style: none;
-  counter-reset: fsstep;
-  margin: 0 0 80px;
-  padding: 0;
-}
-
-.fs-steps::before,
-.fs-steps::after {
-  content: "";
-  position: absolute;
-  top: 22px;
-  left: 22px;
-  right: 22px;
-  height: 1px;
-  background: var(--hairline);
-}
-
-.fs-steps::after {
-  background: var(--clay-deep);
-  transform: scaleX(var(--fill));
-  transform-origin: left;
-}
-
-.fs-steps li { position: relative; counter-increment: fsstep; }
-
-.fs-steps li::before {
-  content: counter(fsstep);
-  position: relative;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  margin-bottom: 16px;
-  border: 1px solid #cdbe96;
-  border-radius: 50%;
-  background: var(--paper);
-  font-size: 17px;
-  color: var(--clay-deep);
-  transition: background 0.5s var(--ease), color 0.5s var(--ease), border-color 0.5s var(--ease);
-}
-
-.fs-steps li.is-reached::before {
-  border-color: var(--clay-deep);
-  background: var(--clay-deep);
-  color: var(--paper);
-}
-
-.fs-steps h3 {
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 20px;
-  letter-spacing: 0.1em;
-  color: var(--ink);
-  margin: 0 0 8px;
-}
-
-.fs-steps p {
-  font-weight: 500;
-  font-size: 16.5px;
-  line-height: 1.6;
-  color: var(--ink-soft);
-  margin: 0;
-}
-
 /* ---- In plain terms: rows that open ---- */
 .fs-terms { max-width: 760px; }
 
@@ -519,6 +328,129 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
   color: var(--ink-soft);
   margin: 0 0 22px;
   max-width: 34em;
+}
+
+/* ---- Why these four: Scarry on beauty, then one bubble per project, each a
+   beautiful thing set over what it displaces. A bubble links to its project,
+   whose picture carries the same bubble as a seal. ---- */
+.fs-beauty {
+  max-width: 36em;
+  margin: 56px 0 40px;
+  padding-left: 24px;
+  border-left: 1px solid rgba(184, 119, 88, 0.45);
+}
+.fs-beauty blockquote { margin: 0; }
+.fs-beauty p {
+  font-style: italic;
+  font-size: clamp(21px, 2.2vw, 26px);
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 0 0 14px;
+}
+.fs-beauty figcaption {
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0.14em;
+  color: var(--clay-deep);
+}
+.fs-beauty cite { font-family: "Cormorant Garamond", serif; letter-spacing: 0; font-size: 17px; }
+
+.fs-virtues {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(14px, 2.4vw, 28px);
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+.fs-virtues a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+/* A bubble: the beautiful thing above, what it displaces below */
+.fs-bubble,
+.fs-seal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--dom-soft);
+  text-align: center;
+  font-family: "Cormorant SC", serif;
+  font-weight: 500;
+  line-height: 1.12;
+}
+.fs-bubble {
+  width: 100%;
+  max-width: 188px;
+  padding: 12%;
+  box-shadow: inset 0 0 0 1px rgba(27, 22, 19, 0.06);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s var(--ease);
+}
+.fs-v-hi { font-size: clamp(16px, 1.7vw, 21px); letter-spacing: 0.06em; color: var(--ink); }
+.fs-v-gt {
+  margin: 0.18em 0 0.12em;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 300;
+  font-size: 1.9em;
+  line-height: 0.8;
+  color: var(--dom-ink);
+}
+.fs-v-lo { font-size: clamp(13px, 1.3vw, 16px); letter-spacing: 0.08em; color: var(--ink-soft); }
+.fs-v-name {
+  font-style: italic;
+  font-size: 16px;
+  color: var(--dom-ink);
+  font-variant-numeric: lining-nums;
+}
+.fs-virtues a:hover .fs-bubble,
+.fs-virtues a:focus-visible .fs-bubble {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: inset 0 0 0 1px rgba(27, 22, 19, 0.06), 0 18px 40px rgba(27, 22, 19, 0.1);
+}
+
+/* The bubbles swell into place one after another */
+.fs-virtues li { opacity: 0; transform: scale(0.86); transition: opacity 0.8s var(--ease), transform 1.1s cubic-bezier(0.16, 1, 0.3, 1); }
+.fs-virtues li:nth-child(2) { transition-delay: 0.12s; }
+.fs-virtues li:nth-child(3) { transition-delay: 0.24s; }
+.fs-virtues li:nth-child(4) { transition-delay: 0.36s; }
+.fs-virtues.is-in li { opacity: 1; transform: none; }
+
+/* The same bubble, small, on the project's picture */
+.fs-seal {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  width: 128px;
+  padding: 14px;
+  background: color-mix(in srgb, var(--dom-soft) 92%, transparent);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 10px 30px rgba(27, 22, 19, 0.18);
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.7s var(--ease) 1s, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1s;
+}
+.fs-seal .fs-v-hi { font-size: 15px; }
+.fs-seal .fs-v-lo { font-size: 12px; }
+.fs-plate.is-in .fs-seal { opacity: 1; transform: none; }
+
+/* Under each title, why the project is beautiful */
+.fs-why {
+  font-style: italic;
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--dom-ink);
+  max-width: 28em;
+  margin: -6px 0 22px;
 }
 
 /* ---- Four projects, each paired with one of the loading screen's pictures ---- */
@@ -612,14 +544,6 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
   border-left: 2px solid var(--dom-soft);
 }
 
-.fs-label {
-  font-family: "Cormorant SC", serif;
-  font-size: 15px;
-  letter-spacing: 0.16em;
-  color: var(--ink);
-  margin: 0 0 12px;
-}
-
 .fs-needs {
   font-style: italic;
   font-size: 18px;
@@ -628,63 +552,6 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
 }
 
 .fs-needs .fs-label { margin-right: 10px; font-style: normal; }
-
-.fs-list {
-  display: grid;
-  gap: 10px;
-  list-style: none;
-  counter-reset: fscan;
-  margin: 0;
-  padding: 0;
-}
-
-.fs-list li {
-  position: relative;
-  counter-increment: fscan;
-  padding-left: 40px;
-  font-weight: 500;
-  font-size: 17.5px;
-  line-height: 1.6;
-  color: var(--ink-soft);
-}
-
-.fs-list li::before {
-  content: counter(fscan);
-  position: absolute;
-  left: 0;
-  top: 0.05em;
-  font-size: 15px;
-  color: var(--dom-ink);
-}
-
-/* ---- Begin ---- */
-.fs-close { padding: clamp(100px, 16vh, 170px) 0 10px; text-align: center; }
-
-.fs-close p { font-style: italic; font-size: 21px; color: var(--ink-soft); margin: 0 0 26px; }
-
-.fs-close .fs-close-links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 32px;
-  font-style: normal;
-}
-
-.fs-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding-bottom: 3px;
-  border-bottom: 1px solid currentColor;
-  font-style: italic;
-  font-size: 23px;
-  color: var(--ink);
-  text-decoration: none;
-  transition: color 0.3s var(--ease), gap 0.3s var(--ease);
-}
-
-.fs-cta:hover { color: var(--clay); gap: 16px; }
-.fs-cta-quiet { font-size: 20px; color: var(--ink-soft); }
 
 /* ---- Narrow screens ---- */
 @media (max-width: 860px) {
@@ -709,12 +576,11 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
   .fs-flow:not(.is-in) .fs-paper .fs-arrow { clip-path: inset(100% -8px -12px -8px); }
   .fs-key { margin-bottom: 60px; }
 
-  .fs-steps { grid-template-columns: 1fr; gap: 24px; }
-  .fs-steps::before,
-  .fs-steps::after { top: 22px; bottom: 22px; left: 22px; right: auto; width: 1px; height: auto; }
-  .fs-steps::after { transform: scaleY(var(--fill)); transform-origin: top; }
-  .fs-steps li { padding-left: 64px; }
-  .fs-steps li::before { position: absolute; left: 0; top: -6px; margin: 0; }
+  .fs-virtues { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 30px; }
+  .fs-bubble { max-width: 168px; }
+  .fs-seal { width: 112px; left: 14px; bottom: 14px; padding: 12px; }
+  .fs-seal .fs-v-hi { font-size: 13.5px; }
+  .fs-seal .fs-v-lo { font-size: 11px; }
 
   /* Each project: its picture first, then its story */
   .fs-project { grid-template-columns: 1fr; gap: 26px; }
@@ -737,9 +603,9 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
 
 @media (prefers-reduced-motion: reduce) {
   html:has(body.fs-page) { scroll-behavior: auto; }
-  .fs-reveal, .fs-w > span { transition: none; transform: none; }
   .fs-table tbody tr { opacity: 1; transition: none; }
   .fs-arrow { clip-path: none !important; transition: none; }
   .fs-plate { clip-path: inset(0 0 0 0 round 22px); transition: none; }
   .fs-plate img { transform: none; transition: none; }
+  .fs-virtues li, .fs-seal { opacity: 1; transform: none; transition: none; }
 }

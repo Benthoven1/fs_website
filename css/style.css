@@ -444,7 +444,6 @@ body.mode-2d .cosmos-hint { opacity: 0; }
 body.mode-2d .hint-join,
 body.footer-open .hint-join { pointer-events: none; }
 
-
 /* ---------- Letter Section ---------- */
 #letter-section {
   background: var(--paper);
@@ -946,7 +945,6 @@ body.hero-reset .hero-statement .hw > span { transition: none !important; }
 /* Tablet and below (≤ 900px) */
 @media (max-width: 900px) {
   .letter-body p { font-size: 16px; }
-  .fsos-prose-body p { font-size: 16px; line-height: 1.78; }
 }
 
 /* Small tablet and large phone (≤ 720px) */
@@ -955,7 +953,6 @@ body.hero-reset .hero-statement .hw > span { transition: none !important; }
   .nav-trigger { font-size: 11px; letter-spacing: 0.10em; }
   .dropdown { min-width: 220px; }
   #letter-section { padding: 72px clamp(20px, 7vw, 80px); }
-  .fsos-prose-body p { font-size: 16px; line-height: 1.75; }
 }
 
 /* Card responsive — pages stack on narrow screens */
@@ -994,8 +991,6 @@ body.hero-reset .hero-statement .hw > span { transition: none !important; }
 
   .cosmos-hint { font-size: 11px; bottom: 22px; letter-spacing: 0.18em; }
   .fsos-prose { padding-bottom: 72px; }
-  .fsos-prose-header { margin: 32px 0 28px; }
-  .fsos-prose-body p { font-size: 15px; line-height: 1.75; }
 
   .footer-copy { font-size: 10px; letter-spacing: 0.10em; }
 }
@@ -1007,7 +1002,6 @@ body.hero-reset .hero-statement .hw > span { transition: none !important; }
   #letter-section { padding-top: 48px; padding-bottom: 48px; }
   .letter-close { margin-top: 32px; }
   .fsos-prose { padding-bottom: 64px; }
-  .fsos-prose-header { margin-top: 28px; margin-bottom: 24px; }
   .footer-copy { font-size: 10px; letter-spacing: 0.10em; }
 }
 
@@ -1053,50 +1047,11 @@ body.hero-reset .hero-statement .hw > span { transition: none !important; }
     var(--paper) clamp(240px, 40vh, 420px));
 }
 .fsos-prose > * {
-  max-width: 680px;
+  max-width: 980px;
   margin-left: auto;
   margin-right: auto;
 }
 .fsos-page #site-footer { position: relative; z-index: 2; }
-
-.fsos-prose-header { text-align: center; margin: 24px 0 40px; }
-
-.fsos-prose-title {
-  font-family: "Cormorant Garamond", serif;
-  font-weight: 300;
-  font-size: clamp(34px, 4.6vw, 52px);
-  line-height: 1.1;
-  color: var(--ink);
-  margin: 0;
-}
-
-.fsos-prose-body p {
-  font-size: 17px;
-  line-height: 1.85;
-  color: var(--ink-soft);
-  margin: 0 0 24px;
-  text-indent: 1.6em;
-}
-
-.fsos-prose-body p:first-child,
-.fsos-prose-body h2 + p { text-indent: 0; }
-
-/* Section heads within the essay, in the small capitals of the site's eyebrows */
-.fsos-prose-body h2 {
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 15px;
-  letter-spacing: 0.24em;
-  text-align: center;
-  color: var(--clay-deep);
-  margin: 60px 0 22px;
-}
-
-.fsos-prose-body em {
-  font-style: italic;
-  font-size: 1.0em;
-  color: var(--ink);
-}
 
 /* ---------- Loading screen ---------- */
 /* js/ls.js plays it. While it plays, the paper is drawn by four bands around
@@ -1757,15 +1712,6 @@ body.night-mode .letter-body > p:first-of-type::first-letter { color: #ffffff; }
 
 .letter-close.rv-in .letter-sig-img {
   clip-path: inset(-8% -2% -8% -2%);
-}
-
-/* ---------- MulviumSOS prose eyebrow ---------- */
-.fsos-eyebrow {
-  font-family: "Cormorant SC", serif;
-  font-size: 14px;
-  letter-spacing: 0.26em;
-  color: var(--clay-deep);
-  margin: 0 0 14px;
 }
 
 /* ---------- Cinematic vignette in night mode ---------- */
