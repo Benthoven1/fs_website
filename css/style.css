@@ -1194,7 +1194,7 @@ html.ls-instant-cover #loading-screen {
 #ls-f4 { z-index: 4; }
 #ls-f1 .ls-img { background-image: url('../Musical.webp');      }
 #ls-f2 .ls-img { background-image: url('../Pictorial.webp');    }
-#ls-f3 .ls-img { background-image: url('../image-13.webp');     }
+#ls-f3 .ls-img { background-image: url('../Luxor.webp');        }
 #ls-f4 .ls-img { background-image: url('../Horticulture.webp'); }
 
 /* ---------- Nav-cap: hides content in the gap above the floating navbar ---------- */
