@@ -396,17 +396,9 @@ window.addEventListener("pointermove", (e) => {
 canvas.setAttribute("role", "img");
 canvas.setAttribute("aria-label", "A porcelain figure, thinking, whose head is a sphere of words: the twenty agents of MulviumSOS, twelve in Atelier, which builds the institution, and eight in Grove, which makes it known, and the work each one handles");
 
-// ── Prose rises in as it scrolls into view (same .rv classes as the home page)
+// ── The operating-system stack builds from the hardware up as it comes into
+// view (css/msos.css); js/fiscal.js reveals the rest of the text
 {
-  const els = document.querySelectorAll(".fsos-prose-header, .fsos-prose-body > p");
-  els.forEach((el) => el.classList.add("rv"));
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((en) => {
-      if (en.isIntersecting) { en.target.classList.add("rv-in"); io.unobserve(en.target); }
-    });
-  }, { threshold: 0.06, rootMargin: "0px 0px -6% 0px" });
-  els.forEach((el) => io.observe(el));
-  // The operating-system stack builds from the hardware up (css/msos.css)
   const stack = document.getElementById("os-stack");
   if (stack) {
     const so = new IntersectionObserver(([en]) => {

@@ -705,3 +705,20 @@ function animate() {
   requestAnimationFrame(animate);
 }
 animate();
+
+// ── Set the scene: once the transcript is well in view its specifics light
+// up one by one, and a moment later fade to blanks (css/oak.css) ──────────
+{
+  const card = document.getElementById("oak-transcript");
+  if (card) {
+    card.querySelectorAll("mark").forEach((m, i) => m.style.setProperty("--i", i));
+    const forget = () => {
+      card.classList.add("is-marked");
+      setTimeout(() => card.classList.add("is-forgotten"), motionOK ? 3400 : 0);
+    };
+    const io = new IntersectionObserver(([en]) => {
+      if (en.isIntersecting) { io.disconnect(); setTimeout(forget, motionOK ? 500 : 0); }
+    }, { threshold: 0.6 });
+    io.observe(card);
+  }
+}
