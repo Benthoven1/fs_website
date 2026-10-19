@@ -275,26 +275,6 @@ html.oak-locked body {
 }
 .oc-glyph .oc-cap { fill: var(--oak-cap); }
 
-/* The chickadee lands beside the richest acorn */
-.oc-bird {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin: 8px 0 0 10px;
-  font-style: italic;
-  font-size: 16.5px;
-  color: var(--oak-moss);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(93, 122, 74, 0.35);
-  opacity: 0;
-  transform: translate(10px, -8px);
-  transition: opacity 0.9s var(--ease) 1.6s, transform 1.1s cubic-bezier(0.16, 1, 0.3, 1) 1.6s, color 0.3s var(--ease);
-}
-.oak-convo.is-in .oc-bird { opacity: 1; transform: none; }
-.oc-bird:hover { color: var(--ink); }
-/* The chickadee is drawn in its own colours: black cap and bib, white cheek */
-.oc-glyph--bird { width: 32px; height: 32px; fill: none; stroke: none; }
-
 .oak-convo figcaption {
   margin: 26px 0 0;
   padding-top: 18px;
@@ -303,6 +283,66 @@ html.oak-locked body {
   font-size: 17px;
   line-height: 1.55;
   color: var(--ink-soft);
+}
+
+/* ---- The deck's features: the conversation tree, and the forest ---- */
+.oak-feature { margin: 20px 0 64px; }
+.oak-h2 {
+  font-weight: 400;
+  font-size: clamp(30px, 3.6vw, 44px);
+  line-height: 1.1;
+  color: var(--ink);
+  margin: 0 0 26px;
+}
+.oak-legend {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(14px, 2.4vw, 24px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.oak-legend li {
+  padding: 24px 20px 22px;
+  border: 1px solid var(--hairline);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.42);
+}
+.oak-legend li:nth-child(2) { transition-delay: 0.12s; }
+.oak-legend li:nth-child(3) { transition-delay: 0.24s; }
+.oak-glyph {
+  display: block;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 16px;
+  fill: none;
+  stroke: var(--oak-moss);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* The chickadee is drawn in its own colours: black cap and bib, white cheek */
+.oak-glyph--bird { stroke: none; }
+.oak-legend p { margin: 0; font-size: 18px; line-height: 1.5; color: var(--ink-soft); }
+.oak-term { display: block; font-size: 23px; color: var(--ink); }
+.oak-becomes { font-style: italic; color: var(--oak-moss); }
+
+/* ---- Oak itself: the app's interface in a frame (oak-app/) ---- */
+.oak-app {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+  gap: clamp(24px, 5vw, 56px);
+  align-items: center;
+  margin: 10px 0 70px;
+}
+.oak-app-note { margin: 0; font-style: italic; font-size: 16px; color: var(--ink-soft); }
+.oak-phone iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 390 / 844;
+  border: 0;
+  background: transparent;
+  filter: drop-shadow(0 30px 50px rgba(40, 46, 30, 0.22));
 }
 
 /* ---- Two bars: a track is all adults; the pale fill those who do it, the
@@ -397,13 +437,15 @@ html.oak-locked body {
   .oc-acorns > li { padding-left: 24px; }
   .oc-acorn { font-size: 16px; }
   .oc-bare { display: block; margin: 2px 0 0; }
-  .oc-bird { margin-left: 0; }
+  .oak-legend { grid-template-columns: 1fr; }
+  .oak-app { grid-template-columns: 1fr; }
+  .oak-phone { width: min(340px, 86vw); margin: 0 auto; }
   .oak-consent { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .oak-transcript mark, .oak-transcript mark > span, .oak-later,
-  .oc-branches > li, .oc-acorns > li, .oc-bird,
+  .oc-branches > li, .oc-acorns > li,
   .oak-bar-all, .oak-bar-ai, .oak-code span { transition: none; }
 }
 

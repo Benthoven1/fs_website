@@ -20,6 +20,7 @@
   <link rel="preload" as="image" type="image/webp" href="../../Batad.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+SC:wght@500&family=Inter:wght@600&family=Italiana&family=Playfair+Display:wght@500&text=MULViuM&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Major+Mono+Display&display=swap" rel="stylesheet" />
   <link rel="modulepreload" href="https://unpkg.com/three@0.161.0/build/three.module.min.js" crossorigin />
 </head>
@@ -80,6 +81,9 @@
             <span class="offer-line">Four things worth making more of</span>
           </a></li>
         </ul>
+      </li>
+      <li class="nav-item nav-item--cta">
+        <a href="../../index.html#waitlist" class="nav-trigger nav-cta">Join the waitlist</a>
       </li>
     </ul>
   </nav>
@@ -161,26 +165,64 @@
           <li style="--d:.6s"><span class="oc-topic">The Philippines</span>
             <ul class="oc-acorns">
               <li style="--d:0.9s"><span class="oc-acorn"><svg class="oc-glyph" viewBox="0 0 20 20" aria-hidden="true"><path class="oc-cap" d="M4.6 8.2c0-2.6 2.4-4.2 5.4-4.2s5.4 1.6 5.4 4.2Z"/><path d="M5.6 8.2c0 5 2 7.9 4.4 8.8 2.4-.9 4.4-3.8 4.4-8.8"/><path d="M10 4V2.4"/></svg><span>The Battle of Leyte Gulf</span></span></li>
-              <li style="--d:1.0s" class="oc-rich"><span class="oc-acorn"><svg class="oc-glyph" viewBox="0 0 20 20" aria-hidden="true"><path class="oc-cap" d="M4.6 8.2c0-2.6 2.4-4.2 5.4-4.2s5.4 1.6 5.4 4.2Z"/><path d="M5.6 8.2c0 5 2 7.9 4.4 8.8 2.4-.9 4.4-3.8 4.4-8.8"/><path d="M10 4V2.4"/></svg><span>Taffy 3</span></span>
-                <a class="oc-bird" href="https://en.wikipedia.org/wiki/Battle_off_Samar" target="_blank" rel="noopener"><svg class="oc-glyph oc-glyph--bird" viewBox="0 0 32 32" aria-hidden="true"><path d="M21.5 19.5 30 22.6l-.6 2.2-9-1.4Z" fill="#5d7a4a"/><ellipse cx="16.5" cy="19.5" rx="8.6" ry="6.4" fill="#e4dccb" stroke="#5d7a4a" stroke-width="1"/><path d="M13 18.2c3.6-1.6 8.2-.9 10.6 2.6-3.2 2-7.6 1.9-10.6-.4Z" fill="#9fb98b" stroke="#5d7a4a" stroke-width=".8" stroke-linejoin="round"/><circle cx="10.6" cy="12.6" r="5.3" fill="#fbfaf6" stroke="#5d7a4a" stroke-width="1"/><path d="M5.4 12.2a5.3 5.3 0 0 1 10.5-.3c-3.4-.9-7-.8-10.5.3Z" fill="#2c2722"/><path d="M7.2 15.9c1.4 1.5 3.3 1.8 4.9.9-.9-.9-2.6-1.3-4.9-.9Z" fill="#2c2722"/><path d="M5.5 12.9 2.6 13.6l2.9.9Z" fill="#2c2722"/><path d="M14.6 25.7l-.6 3.3M18.8 25.8l.6 3.2" stroke="#5d7a4a" stroke-width="1" stroke-linecap="round"/></svg>Battle off Samar, on Wikipedia<span class="hidden-text"> (opens in a new tab)</span></a>
-              </li>
+              <li style="--d:1.0s"><span class="oc-acorn"><svg class="oc-glyph" viewBox="0 0 20 20" aria-hidden="true"><path class="oc-cap" d="M4.6 8.2c0-2.6 2.4-4.2 5.4-4.2s5.4 1.6 5.4 4.2Z"/><path d="M5.6 8.2c0 5 2 7.9 4.4 8.8 2.4-.9 4.4-3.8 4.4-8.8"/><path d="M10 4V2.4"/></svg><span>Taffy 3</span></span></li>
               <li style="--d:1.2s"><span class="oc-acorn"><svg class="oc-glyph" viewBox="0 0 20 20" aria-hidden="true"><path class="oc-cap" d="M4.6 8.2c0-2.6 2.4-4.2 5.4-4.2s5.4 1.6 5.4 4.2Z"/><path d="M5.6 8.2c0 5 2 7.9 4.4 8.8 2.4-.9 4.4-3.8 4.4-8.8"/><path d="M10 4V2.4"/></svg><span>David and Goliath</span></span></li>
             </ul>
           </li>
         </ul>
         <figcaption id="oak-convo-cap">
           Topics become branches, and what was worth keeping hangs from them as
-          acorns. An acorn rich enough draws a chickadee, who leads you to the
-          article.
+          acorns.
         </figcaption>
       </figure>
 
-      <p class="oak-p fs-reveal">
-        Over months and years, trees make a forest, and ideas and patterns
-        that no single evening shows become visible. Revisit an old tree and
-        pick up where you left off. Share one with the people who were there.
-        Export everything, whenever you like.
-      </p>
+      <!-- The deck's features: the conversation tree, and the forest -->
+      <section class="oak-feature" aria-labelledby="oak-tree">
+        <h2 class="oak-h2 fs-words" id="oak-tree">Each conversation grows a tree</h2>
+        <ol class="oak-legend">
+          <li class="fs-reveal">
+            <svg class="oak-glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 44V26M24 26 13 13M24 26l12-15M18.5 19.5 11 18M30 18.5l8 1" /></svg>
+            <p><span class="oak-term">Topics</span> become <span class="oak-becomes">branches</span></p>
+          </li>
+          <li class="fs-reveal">
+            <svg class="oak-glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M13 21c0-5 5-8 11-8s11 3 11 8H13Z" /><path d="M15 21c0 10 4 17 9 19 5-2 9-9 9-19" /><path d="M24 13V8" /></svg>
+            <p><span class="oak-term">Meaningful moments</span> become <span class="oak-becomes">acorns</span></p>
+          </li>
+          <li class="fs-reveal">
+            <svg class="oak-glyph oak-glyph--bird" viewBox="0 0 32 32" aria-hidden="true"><path d="M21.5 19.5 30 22.6l-.6 2.2-9-1.4Z" fill="#5d7a4a"/><ellipse cx="16.5" cy="19.5" rx="8.6" ry="6.4" fill="#e4dccb" stroke="#5d7a4a" stroke-width="1"/><path d="M13 18.2c3.6-1.6 8.2-.9 10.6 2.6-3.2 2-7.6 1.9-10.6-.4Z" fill="#9fb98b" stroke="#5d7a4a" stroke-width=".8" stroke-linejoin="round"/><circle cx="10.6" cy="12.6" r="5.3" fill="#fbfaf6" stroke="#5d7a4a" stroke-width="1"/><path d="M5.4 12.2a5.3 5.3 0 0 1 10.5-.3c-3.4-.9-7-.8-10.5.3Z" fill="#2c2722"/><path d="M7.2 15.9c1.4 1.5 3.3 1.8 4.9.9-.9-.9-2.6-1.3-4.9-.9Z" fill="#2c2722"/><path d="M5.5 12.9 2.6 13.6l2.9.9Z" fill="#2c2722"/><path d="M14.6 25.7l-.6 3.3M18.8 25.8l.6 3.2" stroke="#5d7a4a" stroke-width="1" stroke-linecap="round"/></svg>
+            <p><span class="oak-term">Rich acorns</span> attract a <span class="oak-becomes">chickadee</span>, who leads you to the Wikipedia article</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="oak-feature" aria-labelledby="oak-forest">
+        <h2 class="oak-h2 fs-words" id="oak-forest">Many trees make a forest</h2>
+        <p class="fs-definition fs-reveal">
+          A longitudinal record, in which <mark>ideas and patterns become visible</mark>.
+        </p>
+        <ol class="fs-list fs-reveal">
+          <li>Revisit an old tree, and start the conversation where you left off.</li>
+          <li>Share a tree with the people you spoke with.</li>
+          <li>Export everything. Your trees are kept on your device, and never used to train models or for analysis.</li>
+        </ol>
+      </section>
+
+      <!-- Oak itself: the app's own interface, from Benthoven1/ConversationTree
+           (oak-app/), running in a frame -->
+      <section class="oak-app" aria-labelledby="oak-app">
+        <div class="oak-app-text fs-reveal">
+          <h2 class="oak-h2" id="oak-app">Try Oak</h2>
+          <p class="oak-p">
+            This is Oak&rsquo;s own interface, from the app in development.
+            Everyone at the table consents; Oak listens while you talk; then
+            walk up to the tree and tap an acorn to read what was kept.
+          </p>
+          <p class="oak-app-note">An example conversation. Nothing is recorded here.</p>
+        </div>
+        <div class="oak-phone fs-reveal">
+          <iframe src="../../oak-app/index.html" title="Oak, the app: an interactive demonstration" loading="lazy"></iframe>
+        </div>
+      </section>
 
       <p class="oak-p fs-reveal">
         Most people are curious; few have tools made for it. Among U.S.
@@ -227,7 +269,7 @@
   <footer id="site-footer" class="site-footer">
     <div class="sf-inner">
       <div class="sf-brand">
-        <a class="sf-wordmark" aria-label="Mulvium home" href="../../index.html">Mulvium</a>
+        <a class="sf-wordmark" aria-label="Mulvium home" href="../../index.html">Mulvium<sup class="sf-tm" aria-hidden="true">&trade;</sup></a>
       </div>
       <nav class="sf-cols" aria-label="Site">
         <div class="sf-col">

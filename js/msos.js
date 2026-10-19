@@ -254,8 +254,93 @@ function inView(el) {
   }
 }
 
+// ── Grove's client dashboard, as in M.SOS (pr-dashboard.tsx, metrics.tsx):
+// a hero figure, a row of figures with sparklines, views per day with a
+// crosshair on hover, and bars with the client in Grove's rose. Example data.
+{
+  const dash = document.getElementById("mx-demo");
+  if (dash) {
+    const NS = "http://www.w3.org/2000/svg";
+    const el = (tag, attrs, parent) => {
+      const e = document.createElementNS(NS, tag);
+      for (const k in attrs) e.setAttribute(k, attrs[k]);
+      if (parent) parent.appendChild(e);
+      return e;
+    };
+    const compact = (n) => (n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(/\.0$/, "") + "K" : String(Math.round(n)));
+
+    // Sparklines
+    dash.querySelectorAll("svg[data-spark]").forEach((svg) => {
+      const v = svg.dataset.spark.split(",").map(Number), W = 96, H = 26;
+      const max = Math.max(...v, 1), min = Math.min(...v, 0);
+      const x = (i) => (i / (v.length - 1)) * (W - 6) + 3, y = (n) => H - 4 - ((n - min) / (max - min || 1)) * (H - 8);
+      el("path", { d: v.map((n, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(n).toFixed(1)}`).join(" "), class: "mx-spark-line" }, svg);
+      el("circle", { cx: x(v.length - 1), cy: y(v[v.length - 1]), r: 3.5, class: "mx-spark-end" }, svg);
+    });
+
+    // Views per day: thirty days that build toward the festival's announcement
+    const host = document.getElementById("mx-trend");
+    const days = [];
+    const start = new Date(Date.UTC(2027, 1, 1));
+    for (let i = 0; i < 30; i++) {
+      const base = 3200 + i * 95 + Math.sin(i * 1.7) * 650 + (i % 7 === 5 ? 900 : 0);
+      const spike = i === 18 ? 9800 : i === 19 ? 5200 : i === 26 ? 4300 : 0;
+      const d = new Date(start); d.setUTCDate(d.getUTCDate() + i);
+      days.push({ date: d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }), views: Math.round(base + spike) });
+    }
+    const W = 720, H = 220, pad = { l: 44, r: 14, t: 12, b: 26 };
+    const top = 16000;
+    const x = (i) => pad.l + (i / (days.length - 1)) * (W - pad.l - pad.r);
+    const y = (v) => pad.t + (1 - v / top) * (H - pad.t - pad.b);
+    const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, class: "mx-trend", role: "img", "aria-label": "Views per day over the last 30 days" }, host);
+    [0, top / 2, top].forEach((t) => {
+      el("line", { x1: pad.l, x2: W - pad.r, y1: y(t), y2: y(t), class: "mx-grid" }, svg);
+      el("text", { x: pad.l - 8, y: y(t) + 4, "text-anchor": "end", class: "mx-axis" }, svg).textContent = compact(t);
+    });
+    days.forEach((p, i) => { if (i % 5 === 0) el("text", { x: x(i), y: H - 8, "text-anchor": "middle", class: "mx-axis" }, svg).textContent = p.date; });
+    const line = days.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(p.views).toFixed(1)}`).join(" ");
+    el("path", { d: `${line} L${x(days.length - 1)} ${H - pad.b} L${x(0)} ${H - pad.b} Z`, class: "mx-area" }, svg);
+    const path = el("path", { d: line, class: "mx-line", pathLength: 1 }, svg);
+    const cross = el("line", { y1: pad.t, y2: H - pad.b, class: "mx-cross", visibility: "hidden" }, svg);
+    const dot = el("circle", { r: 4.5, class: "mx-dot", visibility: "hidden" }, svg);
+    el("circle", { cx: x(days.length - 1), cy: y(days[days.length - 1].views), r: 4.5, class: "mx-dot mx-dot-end" }, svg);
+    const tip = document.createElement("div");
+    tip.className = "mx-tip";
+    tip.hidden = true;
+    host.appendChild(tip);
+    const show = (clientX) => {
+      const r = svg.getBoundingClientRect();
+      const px = ((clientX - r.left) / r.width) * W;
+      const i = Math.max(0, Math.min(days.length - 1, Math.round(((px - pad.l) / (W - pad.l - pad.r)) * (days.length - 1))));
+      cross.setAttribute("x1", x(i)); cross.setAttribute("x2", x(i)); cross.setAttribute("visibility", "visible");
+      dot.setAttribute("cx", x(i)); dot.setAttribute("cy", y(days[i].views)); dot.setAttribute("visibility", "visible");
+      tip.hidden = false;
+      tip.style.left = (x(i) / W) * 100 + "%";
+      tip.innerHTML = `<strong>${days[i].date}</strong><span>${days[i].views.toLocaleString("en-US")} views</span>`;
+    };
+    svg.addEventListener("pointermove", (e) => show(e.clientX));
+    svg.addEventListener("pointerleave", () => { cross.setAttribute("visibility", "hidden"); dot.setAttribute("visibility", "hidden"); tip.hidden = true; });
+    void path;
+
+    // Bars: the client in the accent, the rest in grey
+    dash.querySelectorAll(".mx-bars[data-rows]").forEach((bars) => {
+      const rows = bars.dataset.rows.split("|").map((r) => { const k = r.lastIndexOf(":"); return { label: r.slice(0, k), value: +r.slice(k + 1) }; });
+      const hi = bars.dataset.highlight;
+      const max = Math.max(...rows.map((r) => r.value));
+      rows.forEach((r) => {
+        const row = document.createElement("div");
+        row.className = "mx-bar-row" + (!hi || r.label === hi ? " is-accent" : "");
+        row.innerHTML = `<span class="mx-bar-label"></span><span class="mx-bar-track"><span class="mx-bar-fill"></span><span class="mx-bar-value">${Math.round(r.value * 100)}%</span></span>`;
+        row.querySelector(".mx-bar-label").textContent = r.label;
+        row.querySelector(".mx-bar-fill").style.setProperty("--w", Math.max(1.5, (r.value / max) * 100) + "%");
+        bars.appendChild(row);
+      });
+    });
+  }
+}
+
 // ── The market's figures count up as they arrive ───────────────────────────
-document.querySelectorAll(".msos-stats strong[data-count]").forEach((el) => {
+document.querySelectorAll(".msos-stats strong[data-count], .mx-hero-value[data-count]").forEach((el) => {
   const to = parseFloat(el.dataset.count), dec = String(el.dataset.count).includes(".") ? 1 : 0;
   const pre = el.dataset.prefix || "", suf = el.dataset.suffix || "";
   const fmt = (v) => pre + v.toLocaleString("en-US", { minimumFractionDigits: dec, maximumFractionDigits: dec }) + suf;

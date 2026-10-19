@@ -296,6 +296,73 @@
 .cv-agent.working .cv-status { color: var(--ink); }
 .cv-dot { flex: none; width: 8px; height: 8px; border-radius: 50%; }
 
+/* ---- Grove's client dashboard, brought from M.SOS (the mx- rules of its
+   globals.css), in Grove's rose ---- */
+.mx-demo {
+  --accent: #9b3d62;
+  --surface: #f9f8f5;
+  --muted: #6b625b;
+  --rule: #d9d4ca;
+  --mx-context: #d3ccc3;
+  margin: 8px 0 0;
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #f6e9ee;
+  box-shadow: 0 24px 60px rgba(27, 22, 19, 0.08);
+  font-family: "IBM Plex Sans", sans-serif;
+  color: var(--ink);
+}
+.mx-bar-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 18px; background: var(--surface); border-bottom: 1px solid var(--rule); box-shadow: inset 0 -3px 0 var(--accent); }
+.mx-client { display: inline-flex; align-items: center; gap: 10px; font-family: "Lora", serif; font-weight: 500; font-size: 18px; }
+.mx-client .sphere { width: 22px; height: 22px; }
+.mx-range { display: inline-flex; gap: 2px; padding: 3px; border-radius: 999px; background: var(--paper); font-size: 12.5px; color: var(--muted); }
+.mx-range span { padding: 4px 11px; border-radius: 999px; }
+.mx-range [aria-current] { background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 1px var(--rule); }
+.mx-demo figcaption { padding: 12px 20px 14px; border-top: 1px solid var(--rule); background: var(--surface); font-size: 13.5px; color: var(--muted); }
+.mx-dash { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; padding: 18px; }
+.mx-dash > .mx-hero, .mx-dash > .mx-kpis, .mx-dash > .mx-wide { grid-column: 1 / -1; }
+.mx-hero { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.mx-hero .mx-kpi-label { flex-basis: 100%; }
+.mx-hero-value { font-weight: 600; font-size: clamp(40px, 5vw, 56px); line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.mx-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.mx-kpi { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-radius: 14px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--hairline); }
+.mx-kpi-label { font-size: 13px; color: var(--muted); }
+.mx-kpi-value { font-weight: 600; font-size: 26px; line-height: 1.1; }
+.mx-kpi-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 26px; }
+.mx-delta { font-size: 12.5px; font-weight: 600; color: var(--ink-soft); }
+.mx-arrow { font-size: 10px; }
+.mx-arrow.up { color: #1f7a4d; }
+.mx-spark { display: block; overflow: visible; }
+.mx-spark-line { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; opacity: 0.7; }
+.mx-spark-end { fill: var(--accent); stroke: var(--surface); stroke-width: 2; }
+.mx-card { background: var(--surface); border-radius: 16px; padding: 16px 18px; box-shadow: inset 0 0 0 1px var(--hairline); display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.mx-card header { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.mx-card h3 { margin: 0; font-size: 15px; font-weight: 600; }
+.mx-muted { font-size: 12.5px; color: var(--muted); }
+.mx-chart { position: relative; }
+.mx-trend { width: 100%; height: auto; display: block; touch-action: pan-y; }
+.mx-grid { stroke: var(--hairline); stroke-width: 1; }
+.mx-axis { font-size: 11px; fill: var(--muted); font-family: "IBM Plex Sans", sans-serif; }
+.mx-line { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 2s cubic-bezier(0.4, 0, 0.2, 1) 0.3s; }
+.mx-area { fill: var(--accent); opacity: 0; transition: opacity 1s var(--ease) 1.6s; }
+.mx-demo.is-in .mx-line { stroke-dashoffset: 0; }
+.mx-demo.is-in .mx-area { opacity: 0.1; }
+.mx-cross { stroke: var(--rule); stroke-width: 1; }
+.mx-dot { fill: var(--accent); stroke: var(--surface); stroke-width: 2; }
+.mx-dot-end { opacity: 0; transition: opacity 0.4s var(--ease) 2.2s; }
+.mx-demo.is-in .mx-dot-end { opacity: 1; }
+.mx-tip { position: absolute; top: 4px; transform: translateX(-50%); display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border-radius: 10px; background: var(--ink); color: var(--paper); font-size: 12.5px; pointer-events: none; white-space: nowrap; }
+.mx-tip[hidden] { display: none; }
+.mx-bars { display: flex; flex-direction: column; gap: 10px; }
+.mx-bar-row { display: grid; grid-template-columns: minmax(90px, 42%) 1fr; align-items: center; gap: 10px; font-size: 13.5px; }
+.mx-bar-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-soft); }
+.mx-bar-track { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.mx-bar-fill { height: 12px; width: 0; border-radius: 0 4px 4px 0; background: var(--mx-context); flex: none; max-width: calc(100% - 52px); transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s; }
+.mx-demo.is-in .mx-bar-fill { width: var(--w); }
+.mx-bar-row.is-accent .mx-bar-fill { background: var(--accent); }
+.mx-bar-value { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--ink); font-size: 13px; }
+
 /* ---- An agent at work, brought from M.SOS (live-work.tsx): the orbit while
    it works, its steps arriving, its draft written behind a caret ---- */
 .lw-demo { --accent: #3d5e36; --gold: #cdbe96; font-family: "IBM Plex Sans", sans-serif; }
@@ -457,6 +524,7 @@
 @media (max-width: 860px) {
   .msos-two, .msos-stats, .msos-moat { grid-template-columns: 1fr; }
   .cv-mission { display: none; }
+  .mx-dash { grid-template-columns: 1fr; padding: 14px; }
 }
 @media (max-width: 600px) {
   .msos-card { padding: 22px 20px 24px; }
@@ -475,6 +543,7 @@
   .msos-long.is-in .msos-i { animation: none; }
   .msos-chips li { opacity: 1; transform: none; transition: none; }
   .msos-price-fill { transition: none; }
+  .mx-line, .mx-area, .mx-bar-fill, .mx-dot-end { transition: none; }
   .cv-live-dot, .cv-agent.working, .cv-edge.tone-working, .orbit, .caret, .live-steps li, .lw-review { animation: none; }
   .os-fig:not(.is-in) .os-layer { opacity: 1; transform: none; }
   .os-layer, .os-part { transition: none; }
