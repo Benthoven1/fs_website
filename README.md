@@ -115,9 +115,10 @@ be announced.
   `fsos.html` forwards old links to `msos.html`. Each of the four projects is shown with one
   of the loading screen's pictures (`Musical.webp`, `Batad.webp`, `Luxor.webp`,
   `Pictorial.webp`), the same files the loading screen uses: replace a file and both follow.
-- `pages/about/` — People, Careers, Contact Us, On the Name, and Values: the four
-  inequalities, each with the founder's letter's line it answers and the project that
-  serves it.
+- `pages/about/` — People, Careers, Contact Us, On the Name, and Values, drawn from the
+  founder's vision deck: beauty is vanishing, how societies made their values visible,
+  the four values as inequalities, and the patron, artist and citizen as three spheres
+  (`css/values.css`, `js/values.js`, pictures in `images/values/`).
 - `privacy/` — the privacy policy the waitlist links to.
 - `brand/` — the press kit (`mulvium.org/brand/`): the central sphere and the
   hero as images for profile icons, posts and banners, rendered from the site
