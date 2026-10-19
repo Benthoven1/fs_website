@@ -101,10 +101,14 @@ be announced.
   scrolling pulls back to the whole oak on its esplanade. The tree's shaders,
   buffers and textures are readied while the acorn forms, before scrolling is
   allowed, so the pull-back never stalls. The copy is one story, from the Oak
-  deck: an evening's conversation whose specifics light up and fade, why it
-  should be kept, the deck's features with the app's own screens (the tree,
-  an acorn, the chickadee's article, the forest; `images/oak/`), the market as
-  the deck shows it, and privacy and consent, with a consent code that turns over.
+  deck: an evening's conversation whose specifics are first plain, then all
+  highlighted, then all redacted, why it should be kept, the deck's features
+  with the app's own screens (the tree, an acorn, the chickadee's article, the
+  forest), the market as the deck shows it (`images/oak/market.webp`), and
+  privacy and consent, with a consent code that turns over.
+- `js/oak-screens.js` — Oak's screens rebuilt in HTML and SVG from the app's
+  stills, not pictures of them: it draws their seeded trees (trunk, forking
+  limbs, leaf clumps, acorns that grow in); the phones are styled in `css/oak.css`.
 - `pages/offerings/` — Fiscal Sponsorship (what a fiscal sponsor is, how it works, and
   four hypothetical projects, each set beside one of Mulvium's four beautiful things:
   the aesthetic > the grotesque, the sublime > the spectacle, role models >

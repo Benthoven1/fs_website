@@ -743,10 +743,10 @@ function animate() {
 }
 animate();
 
-// ── The evening's conversation: its specifics light up one by one as the
-// transcript rises into view, then soften and fade to blanks as it passes the
-// middle of the screen, so the forgetting happens while it is read, whatever
-// the pace of scrolling (css/oak.css). Each mark's text sits in its own span
+// ── The evening's conversation, in three states tied to scrolling: plain as
+// the transcript rises into view, every specific highlighted once it is well
+// in view, every specific redacted as it passes the middle of the screen, so
+// the forgetting happens while it is read, whatever the pace (css/oak.css). Each mark's text sits in its own span
 // so the blur and the highlight can fade at their own pace.
 {
   const card = document.getElementById("oak-transcript");
@@ -758,7 +758,6 @@ animate();
       while (m.firstChild) inner.appendChild(m.firstChild);
       m.appendChild(inner);
     });
-    const n = marks.length;
     let ticking = false;
     const update = () => {
       ticking = false;
@@ -766,11 +765,13 @@ animate();
       // 0 as the card's top enters the lower fifth of the screen; 1 as its
       // middle reaches the upper third
       const p = clamp01((vh * 0.8 - r.top) / (vh * 0.8 - vh * 0.33 + r.height / 2));
-      marks.forEach((m, k) => {
-        m.classList.toggle("is-lit", p > 0.04 + (k / n) * 0.4);
-        m.classList.toggle("is-gone", p > 0.58 + (k / n) * 0.3);
+      // Three states, all specifics together: plain, highlighted, redacted
+      const lit = p > 0.12, gone = p > 0.62;
+      marks.forEach((m) => {
+        m.classList.toggle("is-lit", lit);
+        m.classList.toggle("is-gone", gone);
       });
-      if (later) later.classList.toggle("is-on", p > 0.9);
+      if (later) later.classList.toggle("is-on", gone);
     };
     const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
     window.addEventListener("scroll", onScroll, { passive: true });
