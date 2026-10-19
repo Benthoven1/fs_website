@@ -743,28 +743,66 @@ function animate() {
 }
 animate();
 
-// ── The evening's conversation: once the transcript is well in view its
-// specifics light up one by one, hold, then soften and fade to blanks
-// (css/oak.css). Each mark's text sits in its own span so the blur and the
-// highlight can fade at their own pace ─────────────────────────────────────
+// ── The evening's conversation: its specifics light up one by one as the
+// transcript rises into view, then soften and fade to blanks as it passes the
+// middle of the screen, so the forgetting happens while it is read, whatever
+// the pace of scrolling (css/oak.css). Each mark's text sits in its own span
+// so the blur and the highlight can fade at their own pace.
 {
   const card = document.getElementById("oak-transcript");
+  const later = document.querySelector(".oak-later");
   if (card) {
-    const marks = card.querySelectorAll("mark");
-    marks.forEach((m, i) => {
+    const marks = [...card.querySelectorAll("mark")];
+    marks.forEach((m) => {
       const inner = document.createElement("span");
       while (m.firstChild) inner.appendChild(m.firstChild);
       m.appendChild(inner);
-      m.style.setProperty("--i", i);
     });
-    const lit = 0.28 * marks.length + 0.9;   // seconds until the last is highlighted
-    const forget = () => {
-      card.classList.add("is-marked");
-      setTimeout(() => card.classList.add("is-forgotten"), motionOK ? (lit + 2.2) * 1000 : 0);
+    const n = marks.length;
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const vh = window.innerHeight, r = card.getBoundingClientRect();
+      // 0 as the card's top enters the lower fifth of the screen; 1 as its
+      // middle reaches the upper third
+      const p = clamp01((vh * 0.8 - r.top) / (vh * 0.8 - vh * 0.33 + r.height / 2));
+      marks.forEach((m, k) => {
+        m.classList.toggle("is-lit", p > 0.04 + (k / n) * 0.4);
+        m.classList.toggle("is-gone", p > 0.58 + (k / n) * 0.3);
+      });
+      if (later) later.classList.toggle("is-on", p > 0.9);
     };
-    const io = new IntersectionObserver(([en]) => {
-      if (en.isIntersecting) { io.disconnect(); setTimeout(forget, motionOK ? 400 : 0); }
-    }, { threshold: 0.6 });
-    io.observe(card);
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    update();
+  }
+}
+
+// ── The consent code turns over through one four-digit code after another,
+// as the other person's phone would show it, settling for a moment on each
+{
+  const code = document.getElementById("oak-code");
+  if (code && motionOK) {
+    const digits = [...code.querySelectorAll("span")];
+    let running = false;
+    const roll = () => {
+      if (!running) return;
+      const next = String(Math.floor(Math.random() * 10000)).padStart(4, "0");
+      digits.forEach((d, k) => {
+        setTimeout(() => {
+          d.classList.remove("is-rolling");
+          void d.offsetWidth;
+          d.classList.add("is-rolling");
+          setTimeout(() => { d.textContent = next[k]; }, 160);
+        }, k * 90);
+      });
+      setTimeout(roll, 1700);
+    };
+    new IntersectionObserver(([en]) => {
+      const was = running;
+      running = en.isIntersecting;
+      if (running && !was) setTimeout(roll, 900);
+    }).observe(code);
   }
 }

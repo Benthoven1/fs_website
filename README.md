@@ -62,7 +62,7 @@ be announced.
   `css/values.css` and `css/about.css` hold rules only one page needs, and only that page
   loads them.
 - Type: three faces from Google Fonts. Lora for headings and prose; IBM Plex Sans for the
-  interface (navigation, footers, buttons, forms, the M.SOS and Oak demonstrations); Major
+  interface (navigation, footers, buttons, forms, the M.SOS demonstrations); Major
   Mono Display for small labels, always set lowercase. The one exception is the wordmark
   at the top left, whose letters keep their own faces (Cinzel, Playfair Display, Italiana,
   Inter, Cormorant SC), loaded for those letters alone. The footer's wordmark carries ™.
@@ -97,16 +97,14 @@ be announced.
   with one of the loading screen's four pictures.
 - `js/fiscal.js` — the Fiscal Sponsorship page's text motion: rising headings, a turning
   word, reveals, the steps' timeline, and the plain-terms rows that open.
-- `oak-app/` — Oak's own interface, from Benthoven1/ConversationTree (`Oakv0 UI/Oak.dc.html`
-  and its runtime, `support.js`): the interactive phone alone (consent, listening, the tree
-  and its acorns), set in the site's faces and shown in a frame on the Oak page.
 - `js/oak.js` — the Oak page: the planet becomes an acorn among leaves, and
   scrolling pulls back to the whole oak on its esplanade. The tree's shaders,
   buffers and textures are readied while the acorn forms, before scrolling is
   allowed, so the pull-back never stalls. The copy is one story, from the Oak
   deck: an evening's conversation whose specifics light up and fade, why it
-  should be kept, the same evening drawn as a conversation tree, the forest,
-  and privacy and consent.
+  should be kept, the deck's features with the app's own screens (the tree,
+  an acorn, the chickadee's article, the forest; `images/oak/`), the market as
+  the deck shows it, and privacy and consent, with a consent code that turns over.
 - `pages/offerings/` — Fiscal Sponsorship (what a fiscal sponsor is, how it works, and
   four hypothetical projects, each set beside one of Mulvium's four beautiful things:
   the aesthetic > the grotesque, the sublime > the spectacle, role models >
