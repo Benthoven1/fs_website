@@ -58,11 +58,17 @@ be announced.
   sends each new person one welcome email, by name if they gave it (or after
   twenty minutes if they leave the questions early), and tells
   hello@mulvium.org about them.
-- `css/style.css` — the stylesheet every page shares; `css/fiscal.css`, `css/oak.css` and
-  `css/about.css` hold rules only one page needs, and only that page loads them.
+- `css/style.css` — the stylesheet every page shares; `css/fiscal.css`, `css/oak.css`,
+  `css/values.css` and `css/about.css` hold rules only one page needs, and only that page
+  loads them.
+- Type: three faces from Google Fonts, and no others. Lora for headings and prose; IBM
+  Plex Sans for the interface (navigation, footers, buttons, forms, the M.SOS figures);
+  Major Mono Display for small labels, always set lowercase. Each letter of the wordmark
+  takes one of the three. `font-size-adjust` on `html` scales every face to one x-height,
+  so sizes set in px keep the layout's measure.
 - `css/editorial.css` and `js/fiscal.js` — the type and motion the Fiscal Sponsorship,
-  MulviumSOS and Oak pages share: numbered sections, headings whose words rise, reveals,
-  definitions with highlighter strokes, a timeline of steps, and the closing links.
+  MulviumSOS, Oak and Values pages share: headings whose words rise, reveals, definitions
+  with highlighter strokes, steps as cards, numbered lists, and the closing links.
 - `js/main.js` — Three.js module for the landing page: the cosmos and its framing
   per layout, the hero, the 2D night transition, and interactions.
 - `js/fsos.js` — the MulviumSOS page (`pages/offerings/msos.html`; MulviumSOS was called
@@ -70,12 +76,15 @@ be announced.
   into a sphere made only of words (the twenty agents of Atelier and Grove and the work they
   handle) as a porcelain figure grows beneath it; the
   sphere is its head. The page's text then scrolls up over the scene, as on the Oak page.
-- `js/msos.js` — the MulviumSOS page's figures: an example blueprint whose open question
-  the founder can settle, rosters of Atelier's and Grove's agents (choose one to see the
-  work it handles, read from `js/fsos-words.js`), a month of Grove's work approved at one
-  meeting, and the operating-system figure, whose layers light their counterparts.
-- `js/fsos-words.js` — the MulviumSOS vocabulary: each agent, its focus and its eight words.
-  The page's rosters list the agents' names and focuses too; change both together.
+- `js/msos.js` — the MulviumSOS page, told as a pitch (the problem, the market with its
+  sources, the solution, the two products, why it is hard to copy). Its two animations are
+  M.SOS's own, brought from its web app (Benthoven1/MulviumSOS) with its colours: the
+  workspace canvas, where work flows from the blueprint to the agents and on to review,
+  and an agent at work, its steps and draft arriving behind a caret until a person
+  approves. Then the market's figures count up, and the operating-system figure lights
+  each layer's counterpart.
+- `js/fsos-words.js` — the MulviumSOS vocabulary: each agent, its focus and its eight words,
+  and the faces the word sphere draws them in.
 - `js/fsos-cloud.js` — generated: where each word sits on the sphere, packed by the shape of
   its letters so the words fit together like puzzle pieces. After changing the vocabulary,
   open `tools/pack-fsos-cloud.html` over HTTP and save its output over this file.
@@ -99,7 +108,9 @@ be announced.
   `fsos.html` forwards old links to `msos.html`. Each of the four projects is shown with one
   of the loading screen's pictures (`Musical.webp`, `Batad.webp`, `Luxor.webp`,
   `Pictorial.webp`), the same files the loading screen uses: replace a file and both follow.
-- `pages/about/` — People, Careers, Contact Us.
+- `pages/about/` — People, Careers, Contact Us, On the Name, and Values: the four
+  inequalities, each with the founder's letter's line it answers and the project that
+  serves it.
 - `privacy/` — the privacy policy the waitlist links to.
 - `brand/` — the press kit (`mulvium.org/brand/`): the central sphere and the
   hero as images for profile icons, posts and banners, rendered from the site
@@ -108,6 +119,8 @@ be announced.
 - Every page's footer links to the waitlist (Offerings), the press kit
   (About Us) and the privacy policy (beside the copyright).
 - `images/` — stills of each company's animation, shown in the Offerings menu.
+  `offer-fiscal.webp` is the Fiscal Sponsorship page's bowl, rendered at 960 × 720 from
+  the page itself, so it shows the four current pictures; render it again when one changes.
 
 ## Images and speed
 

@@ -10,7 +10,7 @@
 // turning a little as words light up. The page's text then scrolls up over
 // the scene, as on the Oak page.
 import * as THREE from "three";
-import { STYLES, vocabulary, slotSize, drawWord } from "./fsos-words.js";
+import { STYLES, FAMILIES, vocabulary, slotSize, drawWord } from "./fsos-words.js";
 import CLOUD from "./fsos-cloud.js";
 import { scrollCue } from "./scroll-cue.js";
 
@@ -258,7 +258,6 @@ function setWordColor(span, color, ink = 1) {
 // Words are drawn with their web fonts, so wait for the font stylesheet and
 // the fonts (but not forever); if they arrive later, repaint.
 const FONTS = [STYLES.agent.font, STYLES.focus.font, STYLES.work.font];
-const FAMILIES = ["Cormorant SC", "Cormorant Garamond", "DM Mono"];
 // Each family has a face actually loaded (document.fonts.check() also says
 // yes when the stylesheet hasn't arrived to declare any faces at all)
 function fontsIn() {

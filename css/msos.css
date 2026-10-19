@@ -1,8 +1,8 @@
-/* msos.css — MulviumSOS (pages/offerings/msos.html): the name and what it
-   stands for, the two tools, the example blueprint, the agent rosters, a
-   month of Grove's work, the steps with real-world effect, and the
-   operating-system figure (a computer's layers beside Mulvium's, with Atelier
-   and Grove inside M.SOS). js/msos.js drives the figures. Loaded after
+/* msos.css — MulviumSOS (pages/offerings/msos.html), told as a pitch: the
+   name and what it stands for, the problem, the market, the solution in
+   M.SOS's own workspace and an agent at work (both brought from the M.SOS web
+   app, Benthoven1/MulviumSOS, with its colours), the two products, why it is
+   hard to copy, and the operating-system figure. js/msos.js drives them. Loaded after
    css/style.css and css/editorial.css by that page alone. (The stage and the
    paper wash are in style.css under their original fsos- names.) */
 
@@ -69,366 +69,278 @@
   margin: 0 0 36px;
 }
 
-.msos-tools {
+/* ---- The problem, and the two products: paired cards ---- */
+.msos-two {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(16px, 2.6vw, 28px);
 }
-
-.msos-tool {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 26px 28px 24px;
-  border: 1px solid var(--os-edge);
-  border-radius: 20px;
-  background: var(--os-tint);
-  color: var(--ink);
-  text-decoration: none;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s var(--ease), background 0.5s var(--ease);
-}
-.msos-tool--grove { background: rgba(255, 255, 255, 0.5); }
-.msos-tool:hover,
-.msos-tool:focus-visible {
-  transform: translateY(-4px);
-  box-shadow: 0 18px 44px rgba(27, 22, 19, 0.09);
-  background: var(--os-tint-strong);
-}
-.msos-tool::after {
-  content: "\2193";
-  position: absolute;
-  top: 24px;
-  right: 26px;
-  font-size: 22px;
-  color: var(--os-ink);
-  transition: transform 0.5s var(--ease);
-}
-.msos-tool:hover::after { transform: translateY(4px); }
-.msos-tool-name { font-weight: 300; font-size: clamp(34px, 3.6vw, 46px); line-height: 1; }
-.msos-tool-line { font-style: italic; font-size: 21px; }
-.msos-tool-meta {
-  margin-top: 8px;
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 14.5px;
-  letter-spacing: 0.12em;
-  color: var(--os-ink);
-}
-
-/* ---- The blueprint: an example sheet, every value marked with its basis ---- */
-.msos-blueprint {
-  margin: 0 0 56px;
-  padding: 24px clamp(18px, 3vw, 30px) 22px;
-  border-radius: 18px;
-  border: 1px solid var(--os-sponsor-edge);
-  background:
-    linear-gradient(rgba(84, 116, 158, 0.06) 1px, transparent 1px) 0 0 / 100% 24px,
-    linear-gradient(90deg, rgba(84, 116, 158, 0.06) 1px, transparent 1px) 0 0 / 24px 100%,
-    rgba(255, 255, 255, 0.55);
-  box-shadow: 0 18px 50px rgba(27, 22, 19, 0.06);
-}
-.msos-bp-top {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 8px 20px;
-  margin-bottom: 10px;
-}
-.msos-bp-title {
-  margin: 0;
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 17px;
-  letter-spacing: 0.18em;
-  color: var(--os-blue-ink);
-}
-.msos-bp-title span {
-  margin-left: 10px;
-  font-family: "Cormorant Garamond", serif;
-  font-style: italic;
-  letter-spacing: 0;
-  font-size: 16px;
-  color: var(--ink-soft);
-}
-.msos-bp-legend {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin: 0;
-  font-style: italic;
-  font-size: 15px;
-  color: var(--ink-soft);
-}
-.msos-bp-legend .msos-basis { margin-left: 10px; }
-
-.msos-bp-rows { list-style: none; margin: 0; padding: 0; }
-.msos-bp-rows li {
-  display: grid;
-  grid-template-columns: 140px minmax(0, 1fr) 16px;
-  gap: 16px;
-  align-items: baseline;
-  padding: 11px 0;
-  border-bottom: 1px solid rgba(84, 116, 158, 0.16);
-}
-.msos-bp-k {
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 16px;
-  letter-spacing: 0.1em;
-  color: var(--ink-soft);
-}
-.msos-bp-v { font-size: 19px; line-height: 1.4; color: var(--ink); }
-.msos-bp-open .msos-bp-v { transition: opacity 0.26s var(--ease), transform 0.26s var(--ease); }
-.msos-bp-open.is-changing .msos-bp-v { opacity: 0; transform: translateY(4px); }
-.msos-bp-q { font-style: italic; }
-.msos-bp-ans { color: var(--ink-soft); font-style: italic; }
-.msos-bp-open.is-decided .msos-bp-ans { color: var(--ink); font-style: normal; }
-.msos-bp-open { background: linear-gradient(90deg, var(--os-clay-wash), transparent 80%); margin: 0 -12px; padding-left: 12px !important; padding-right: 12px !important; border-radius: 8px; border-bottom: 0 !important; }
-.msos-bp-open.is-decided { background: linear-gradient(90deg, rgba(184, 202, 224, 0.4), transparent 80%); transition: background 0.6s var(--ease); }
-
-/* A value's basis: filled, stated by the founder; half, inferred; open, assumed */
-.msos-basis {
-  display: inline-block;
-  width: 11px;
-  height: 11px;
-  border: 1.3px solid var(--os-blue-ink);
-  border-radius: 50%;
-  transition: background 0.5s var(--ease), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.msos-basis--stated { background: var(--os-blue-ink); }
-.msos-basis--inferred { background: linear-gradient(90deg, var(--os-blue-ink) 50%, transparent 50%); }
-.msos-bp-open.is-decided .msos-basis { animation: msosPop 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
-@keyframes msosPop { 0% { transform: scale(0.4); } 60% { transform: scale(1.5); } 100% { transform: none; } }
-
-.msos-decide,
-.msos-approve {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 16px;
-  padding: 8px 18px 9px;
-  border-radius: 999px;
-  border: 1px solid var(--clay-deep);
-  font-style: italic;
-  font-size: 18px;
-  color: var(--clay-deep);
-  transition: background 0.3s var(--ease), color 0.3s var(--ease);
-}
-.msos-decide:hover,
-.msos-approve:hover { background: var(--clay-deep); color: var(--paper); }
-.msos-approve[aria-pressed="true"] { background: var(--os-ink); border-color: var(--os-ink); color: var(--paper); }
-
-/* ---- Rosters: a lead, a grid of agents to choose from, and the chosen
-   agent's work ---- */
-.msos-roster {
-  margin: 0 0 48px;
-  border: 1px solid var(--os-edge);
-  border-radius: 20px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.36);
-}
-.msos-team-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 14px;
-  margin: 0;
-  padding: 16px 22px;
-  border-bottom: 1px solid var(--os-edge);
-  background: var(--os-tint);
-}
-.msos-lead {
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 19px;
-  letter-spacing: 0.12em;
-  color: var(--ink);
-}
-.msos-lead-gloss { font-style: italic; font-size: 18px; color: var(--ink-soft); }
-
-.msos-team-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.msos-team-grid li {
-  border-right: 1px solid rgba(104, 146, 90, 0.18);
-  border-bottom: 1px solid rgba(104, 146, 90, 0.18);
-}
-.msos-team-grid li:nth-child(4n) { border-right: 0; }
-
-.msos-agent-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1px;
-  width: 100%;
-  height: 100%;
-  padding: 14px 18px 15px;
-  text-align: left;
-  transition: background 0.3s var(--ease);
-}
-.msos-agent-btn:hover { background: rgba(196, 221, 184, 0.25); }
-.msos-agent-btn[aria-pressed="true"] { background: var(--os-tint-strong); }
-.msos-agent {
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 17.5px;
-  letter-spacing: 0.06em;
-  color: var(--ink);
-}
-.msos-focus { font-style: italic; font-size: 16px; color: var(--os-ink); }
-
-.msos-work { padding: 18px 22px 22px; min-height: 118px; }
-.msos-work-head { margin: 0 0 12px; font-size: 18.5px; color: var(--ink-soft); }
-.msos-work-name {
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  color: var(--ink);
-}
-.msos-work-head em { color: var(--os-ink); }
-.msos-work-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.msos-work-list li {
-  padding: 4px 12px 5px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(104, 146, 90, 0.26);
-  font-family: "DM Mono", ui-monospace, monospace;
-  font-size: 13px;
-  color: var(--ink);
-}
-.msos-work-list.is-new li { animation: msosChip 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: calc(var(--i, 0) * 0.035s); }
-@keyframes msosChip { from { opacity: 0; transform: translateY(6px) scale(0.96); } to { opacity: 1; transform: none; } }
-
-/* ---- A month of Grove's work, presented at one meeting ---- */
-.msos-cal {
-  margin: 0 0 48px;
-  padding: 22px clamp(16px, 3vw, 28px) 20px;
+.msos-card {
+  padding: 26px 28px 28px;
   border: 1px solid var(--hairline);
-  border-radius: 18px;
+  border-radius: 20px;
   background: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 18px 50px rgba(27, 22, 19, 0.06);
 }
-.msos-cal-top {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px 20px;
-  margin-bottom: 14px;
-}
-.msos-cal-top .msos-approve { margin-top: 0; }
-.msos-cal-title {
-  margin: 0;
-  font-size: 22px;
-  color: var(--ink);
-}
-.msos-cal-title span { margin-left: 8px; font-style: italic; font-size: 16px; color: var(--ink-soft); }
-
-.msos-cal-days,
-.msos-cal-grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 8px;
-}
-.msos-cal-days {
-  margin-bottom: 6px;
-  font-family: "Cormorant SC", serif;
-  font-size: 14px;
-  letter-spacing: 0.12em;
-  color: var(--ink-soft);
-}
-.msos-cal-grid {
-  grid-template-rows: repeat(4, minmax(78px, auto));
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  /* the month's empty days, as faint cells behind the items */
-  background:
-    repeating-linear-gradient(90deg, transparent 0 calc((100% - 32px) / 5), transparent calc((100% - 32px) / 5) calc((100% - 32px) / 5 + 8px));
-}
-.msos-cal-item {
-  grid-column: calc(var(--dd) + 1);
-  grid-row: calc(var(--w) + 1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 9px 10px 8px;
-  border-radius: 10px;
-  border-left: 3px solid var(--k, var(--clay));
-  background: color-mix(in srgb, var(--k, var(--clay)) 12%, white);
-  font-size: 15px;
-  line-height: 1.3;
-  color: var(--ink);
-}
-.msos-cal-item--press { --k: #b87758; }
-.msos-cal-item--social { --k: #6f8f5a; }
-.msos-cal-item--mail { --k: #54749e; }
-.msos-cal-item--award { --k: #a98e62; }
-.msos-cal-item--report { --k: #7a6b8f; }
-
-.msos-cal-state {
-  position: relative;
-  height: 16px;
-  font-family: "Cormorant SC", serif;
+.msos-card--atelier { background: var(--os-tint); border-color: var(--os-edge); }
+.msos-card--grove { background: rgba(224, 184, 200, 0.28); border-color: rgba(155, 61, 98, 0.22); }
+.msos-card-k {
+  margin: 0 0 12px;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
   font-size: 13px;
-  letter-spacing: 0.1em;
-}
-.msos-cal-draft,
-.msos-cal-ok {
-  position: absolute;
-  left: 0;
-  top: 0;
-  transition: opacity 0.4s var(--ease), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  transition-delay: calc(var(--i) * 0.07s);
-}
-.msos-cal-draft { color: var(--ink-soft); }
-.msos-cal-ok { color: var(--os-ink); opacity: 0; transform: translateY(6px); }
-.msos-cal-ok::before { content: "\2713\00a0"; }
-.msos-cal.is-approved .msos-cal-draft { opacity: 0; transform: translateY(-6px); }
-.msos-cal.is-approved .msos-cal-ok { opacity: 1; transform: none; }
-.msos-cal-item { transition: background 0.5s var(--ease) calc(var(--i) * 0.07s); }
-.msos-cal.is-approved .msos-cal-item { background: color-mix(in srgb, var(--k) 22%, white); }
-
-.msos-cal figcaption {
-  margin-top: 14px;
-  font-style: italic;
-  font-size: 16px;
-  color: var(--ink-soft);
-}
-
-/* ---- People decide: the steps that wait for a person ---- */
-.msos-effects {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  list-style: none;
-  margin: -12px 0 56px;
-  padding: 0;
-}
-.msos-effects li {
-  padding: 6px 16px 7px;
-  border: 1px solid rgba(184, 119, 88, 0.4);
-  border-radius: 999px;
-  background: rgba(240, 213, 187, 0.34);
-  font-style: italic;
-  font-size: 18px;
+  letter-spacing: 0.04em;
   color: var(--clay-deep);
 }
-.msos-page .fs-steps { margin-bottom: 56px; }
+.msos-card-big { margin: 0 0 16px; font-size: clamp(23px, 2.4vw, 29px); line-height: 1.25; color: var(--ink); }
+.msos-card-p { margin: 0; font-weight: 500; font-size: 18px; line-height: 1.65; color: var(--ink-soft); }
+.msos-chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.msos-chips li {
+  padding: 5px 13px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(184, 119, 88, 0.38);
+  background: rgba(240, 213, 187, 0.34);
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 15px;
+  color: var(--clay-deep);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+}
+.msos-card.is-in .msos-chips li { opacity: 1; transform: none; }
+.msos-chips li:nth-child(2) { transition-delay: 0.08s; }
+.msos-chips li:nth-child(3) { transition-delay: 0.16s; }
+.msos-chips li:nth-child(4) { transition-delay: 0.24s; }
+.msos-chips li:nth-child(5) { transition-delay: 0.32s; }
+.msos-chips li:nth-child(6) { transition-delay: 0.4s; }
+.msos-chips li:nth-child(7) { transition-delay: 0.48s; }
+
+/* ---- The market: three figures that count up ---- */
+.msos-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2.6vw, 28px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.msos-stats li {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px 24px 26px;
+  border-top: 2px solid var(--clay);
+  background: linear-gradient(rgba(240, 213, 187, 0.26), transparent 70%);
+}
+.msos-stats li:nth-child(2) { border-color: var(--os-ink); background: linear-gradient(rgba(196, 221, 184, 0.3), transparent 70%); }
+.msos-stats li:nth-child(3) { border-color: #9b3d62; background: linear-gradient(rgba(224, 184, 200, 0.3), transparent 70%); }
+.msos-stats strong {
+  font-weight: 400;
+  font-size: clamp(36px, 4.2vw, 52px);
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.msos-stats span { font-weight: 500; font-size: 17.5px; line-height: 1.5; color: var(--ink-soft); }
+.msos-source { margin: 18px 0 0; font-size: 14px; line-height: 1.6; color: var(--ink-soft); font-family: "IBM Plex Sans", sans-serif; }
+.msos-source a { color: inherit; }
+
+/* ---- Grove's price beside an agency's ---- */
+.msos-price { display: grid; gap: 12px; margin-top: 22px; }
+.msos-price-row {
+  display: grid;
+  grid-template-columns: 9.5em minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 14.5px;
+  color: var(--ink-soft);
+}
+.msos-price-bar { height: 10px; border-radius: 999px; background: rgba(27, 22, 19, 0.06); overflow: hidden; }
+.msos-price-fill { display: block; height: 100%; width: 0; border-radius: 999px; transition: width 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s; }
+.msos-price-fill--agency { background: rgba(27, 22, 19, 0.35); }
+.msos-price-fill--grove { background: #9b3d62; transition-delay: 0.9s; }
+.msos-card.is-in .msos-price-fill--agency { width: 100%; }
+.msos-card.is-in .msos-price-fill--grove { width: 12%; }
+
+/* ---- Why it is hard to copy ---- */
+.msos-moat {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2.6vw, 28px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.msos-moat li { display: flex; flex-direction: column; gap: 8px; }
+.msos-moat .sphere { width: 34px; height: 34px; margin-bottom: 8px; }
+.msos-moat strong { font-weight: 500; font-size: 23px; color: var(--ink); }
+.msos-moat span:last-child { font-weight: 500; font-size: 17.5px; line-height: 1.6; color: var(--ink-soft); }
+
+/* ---- Porcelain spheres, as in M.SOS: a matte ball lit from the upper left,
+   in one of the planet colours ---- */
+.sphere {
+  display: inline-block;
+  flex: none;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #ffffff 0%, var(--sphere) 46%, color-mix(in srgb, var(--sphere) 68%, #3b332f) 100%);
+  box-shadow: 0 1px 2px rgba(27, 22, 19, 0.18);
+}
+.sphere-star { --sphere: #f0d5bb; }
+.sphere-sage { --sphere: #c4ddb8; }
+.sphere-slate { --sphere: #b8cae0; }
+.sphere-rose { --sphere: #e0b8c8; }
+.sphere-clay { --sphere: #d9a689; }
+
+/* ---- M.SOS's workspace canvas, brought from its web app (globals.css, the
+   cv- rules) with its colours: blue for work under way, orange for work
+   waiting on a person, grey for finished ---- */
+.cv-demo {
+  --viz-working: #2a78d6;
+  --viz-you: #eb6834;
+  --viz-done: #b8b5ad;
+  --cv-bg: #f4f2ed;
+  --cv-dot: #d6d2c9;
+  --cv-edge: #b9b4aa;
+  --cv-shadow: 0 1px 2px rgba(27, 26, 23, 0.06), 0 6px 18px rgba(27, 26, 23, 0.06);
+  --surface: #f9f8f5;
+  --rule: #d9d4ca;
+  --muted: #6b625b;
+  --accent: #3d5e36;
+  /* wider than the column, so the workspace keeps a readable size */
+  width: min(1240px, calc(100vw - 32px));
+  margin: 8px 0 0 calc(50% - min(620px, 50vw - 16px));
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: 0 24px 60px rgba(27, 22, 19, 0.08);
+  font-family: "IBM Plex Sans", sans-serif;
+}
+.cv-demo figcaption {
+  padding: 12px 20px 14px;
+  border-top: 1px solid var(--rule);
+  font-size: 13.5px;
+  color: var(--muted);
+}
+.cv-toolbar { display: flex; align-items: center; gap: 10px 14px; flex-wrap: wrap; padding: 12px 18px; border-bottom: 1px solid var(--rule); }
+.cv-toolbar-title { display: flex; align-items: baseline; gap: 12px; min-width: 0; flex: 1 1 320px; }
+.cv-toolbar-title strong { font-family: "Lora", serif; font-weight: 500; font-size: 19px; white-space: nowrap; color: var(--ink); }
+.cv-mission { color: var(--muted); font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.cv-live { display: inline-flex; gap: 6px; align-items: center; font-size: 12.5px; color: var(--muted); }
+.cv-live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: cvbeat 2.4s ease-in-out infinite; }
+@keyframes cvbeat { 50% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent); } }
+.cv-stat { display: inline-flex; gap: 7px; align-items: center; padding: 4px 11px; border: 1px solid var(--rule); border-radius: 999px; background: var(--surface); color: var(--ink); font-size: 13px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cv-key { display: inline-block; flex: none; width: 10px; height: 10px; border-radius: 3px; }
+.st-working { background: var(--viz-working, #2a78d6); }
+.st-you { background: var(--viz-you, #eb6834); }
+.st-queued { background: transparent; box-shadow: inset 0 0 0 1.5px var(--muted, #6b625b); }
+.st-done { background: var(--viz-done, #b8b5ad); }
+
+.cv-canvas {
+  position: relative;
+  overflow: hidden;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  background-color: var(--cv-bg);
+  background-image: radial-gradient(circle, var(--cv-dot) 1.1px, transparent 1.4px);
+  background-size: 22px 22px;
+}
+.cv-world { position: absolute; left: 0; top: 0; transform-origin: 0 0; opacity: 0; transition: opacity 0.4s; }
+.cv-world.ready { opacity: 1; }
+.cv-edges { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.cv-edge { fill: none; stroke: var(--cv-edge); stroke-width: 2; transition: opacity 0.4s, stroke 0.4s; }
+.cv-edge.tone-working { stroke: var(--viz-working); stroke-dasharray: 7 6; animation: cvflow 0.8s linear infinite; }
+.cv-edge.tone-you { stroke: var(--viz-you); }
+.cv-edge.is-off { opacity: 0; }
+.cv-edge.dashed { stroke-dasharray: 3 5; }
+@keyframes cvflow { to { stroke-dashoffset: -13; } }
+
+.cv-node {
+  position: absolute;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  box-shadow: var(--cv-shadow);
+  transition: box-shadow 0.3s, border-color 0.3s;
+}
+.cv-side { align-items: center; gap: 10px; }
+.cv-side.kind-idea, .cv-side.kind-memory { border-radius: 36px 12px 12px 36px; padding-left: 16px; }
+.cv-side.kind-review, .cv-side.kind-approve { border-radius: 12px 36px 36px 12px; }
+.cv-side.is-you { border-color: color-mix(in srgb, var(--viz-you) 55%, var(--rule)); }
+.cv-agent.working { border-color: color-mix(in srgb, var(--viz-working) 60%, var(--rule)); animation: cvglow 2.2s ease-in-out infinite; }
+@keyframes cvglow {
+  0%, 100% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--viz-working) 12%, transparent), var(--cv-shadow); }
+  50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--viz-working) 20%, transparent), var(--cv-shadow); }
+}
+.cv-handle { position: absolute; top: 50%; width: 11px; height: 11px; margin-top: -5.5px; border-radius: 50%; background: var(--surface); border: 2px solid var(--cv-edge); }
+.cv-handle.in { left: -6.5px; }
+.cv-handle.out { right: -6.5px; }
+.cv-agent.working .cv-handle { border-color: var(--viz-working); }
+.cv-icon { flex: none; width: 42px; height: 42px; border-radius: 11px; display: grid; place-items: center; font-weight: 600; font-size: 14px; letter-spacing: 0.02em; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); transition: color 0.3s, border-color 0.3s, background 0.3s; }
+.cv-icon.side { width: 36px; height: 36px; border-radius: 50%; background: transparent; border: 0; }
+.cv-icon.side .sphere { width: 30px; height: 30px; }
+.cv-icon.working { color: var(--viz-working); border-color: color-mix(in srgb, var(--viz-working) 45%, var(--rule)); background: color-mix(in srgb, var(--viz-working) 9%, var(--surface)); }
+.cv-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
+.cv-title { display: flex; gap: 6px; align-items: center; font-size: 15px; font-weight: 600; line-height: 1.25; min-width: 0; }
+.cv-title-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cv-status { display: flex; gap: 6px; align-items: center; min-width: 0; color: var(--muted); font-size: 13px; }
+.cv-status-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cv-agent.working .cv-status { color: var(--ink); }
+.cv-dot { flex: none; width: 8px; height: 8px; border-radius: 50%; }
+
+/* ---- An agent at work, brought from M.SOS (live-work.tsx): the orbit while
+   it works, its steps arriving, its draft written behind a caret ---- */
+.lw-demo { --accent: #3d5e36; --gold: #cdbe96; font-family: "IBM Plex Sans", sans-serif; }
+.live-work {
+  max-width: 760px;
+  padding: 20px 22px 22px;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--hairline));
+  border-radius: 16px;
+  background: #f9f8f5;
+  box-shadow: 0 24px 60px rgba(27, 22, 19, 0.08);
+  display: grid;
+  gap: 14px;
+}
+.live-work-head { display: flex; gap: 10px; align-items: center; font-size: 15px; }
+.live-work-head strong { font-weight: 600; }
+.lw-doing { color: #6b625b; }
+.orbit { position: relative; display: inline-block; flex: none; width: 18px; height: 18px; border: 1.5px solid var(--gold); border-radius: 50%; animation: orbit 1.6s linear infinite; }
+.orbit span { position: absolute; top: -4px; left: 5px; width: 6px; height: 6px; border-radius: 50%; background: #c4ddb8; box-shadow: 0 1px 2px rgba(27, 22, 19, 0.3); }
+@keyframes orbit { to { transform: rotate(360deg); } }
+.lw-demo.is-waiting .orbit, .lw-demo.is-done .orbit { animation-play-state: paused; opacity: 0.4; }
+.live-steps { margin: 0; padding-left: 28px; font-size: 14px; color: #6b625b; display: grid; gap: 3px; min-height: 1px; }
+.live-steps li { animation: line-in 0.3s var(--ease); }
+@keyframes line-in { from { opacity: 0; transform: translateY(4px); } }
+.live-draft { padding: 16px 18px; background: var(--paper-warm); border-radius: 12px; min-height: 150px; }
+.live-draft h3 { margin: 0 0 8px; font-family: "Lora", serif; font-weight: 500; font-size: 19px; color: var(--ink); }
+.lw-text { margin: 0; font-family: "Lora", serif; font-size: 17.5px; line-height: 1.65; color: var(--ink); }
+.caret { display: inline-block; width: 2px; height: 1.05em; margin-left: 2px; vertical-align: text-bottom; background: var(--accent); animation: caret-blink 1s steps(2, start) infinite; }
+@keyframes caret-blink { to { visibility: hidden; } }
+.lw-review { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; animation: line-in 0.4s var(--ease); }
+.lw-review[hidden] { display: none; }
+.lw-state { display: inline-flex; gap: 8px; align-items: center; font-size: 14.5px; color: var(--ink); }
+.lw-actions { display: flex; gap: 8px; }
+.lw-actions button {
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--accent);
+  transition: background 0.2s, color 0.2s, opacity 0.2s;
+}
+.lw-actions .lw-approve { background: var(--accent); color: #fff; }
+.lw-actions button:hover:not([disabled]) { filter: brightness(1.1); }
+.lw-actions button[disabled] { opacity: 0.4; cursor: default; }
 
 /* ---- The operating system: two stacks, layer beside layer. The system
    layer holds its parts, the core beneath the other two ---- */
@@ -443,10 +355,11 @@
 .os-label {
   margin: 0 0 2px;
   text-align: center;
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 15px;
-  letter-spacing: 0.2em;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: 12px;
+  letter-spacing: 0.04em;
   color: var(--ink-soft);
 }
 .os-label--m { color: var(--clay-deep); }
@@ -542,27 +455,14 @@
 
 /* ---- Narrow screens ---- */
 @media (max-width: 860px) {
-  .msos-team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .msos-team-grid li:nth-child(4n) { border-right: 1px solid rgba(104, 146, 90, 0.18); }
-  .msos-team-grid li:nth-child(2n) { border-right: 0; }
-  .msos-cal-grid { grid-template-rows: repeat(4, minmax(92px, auto)); gap: 6px; }
-  .msos-cal-days { gap: 6px; }
-  .msos-cal-item { font-size: 13.5px; padding: 7px 7px 6px; }
+  .msos-two, .msos-stats, .msos-moat { grid-template-columns: 1fr; }
+  .cv-mission { display: none; }
 }
 @media (max-width: 600px) {
-  .msos-tools { grid-template-columns: 1fr; }
-  .msos-tool { padding: 22px 22px 20px; }
-  .msos-bp-rows li { grid-template-columns: minmax(0, 1fr) 14px; gap: 2px 12px; }
-  .msos-bp-k { grid-column: 1 / -1; font-size: 14px; }
-  .msos-bp-v { grid-column: 1; font-size: 17.5px; }
-  .msos-agent-btn { padding: 12px 14px 13px; }
-  .msos-agent { font-size: 16px; }
-  .msos-focus { font-size: 15px; }
-  /* The calendar becomes a list of the month's pieces */
-  .msos-cal-days { display: none; }
-  .msos-cal-grid { display: flex; flex-direction: column; gap: 8px; }
-  .msos-cal-item { flex-direction: row; align-items: center; font-size: 15px; }
-  .msos-cal-state { flex: none; width: 82px; }
+  .msos-card { padding: 22px 20px 24px; }
+  .msos-price-row { grid-template-columns: 1fr auto; }
+  .msos-price-row .msos-price-bar { grid-column: 1 / -1; grid-row: 2; }
+  .cv-toolbar-title strong { font-size: 17px; white-space: normal; }
   .os-name { font-size: 18px; }
   .os-gloss { font-size: 14px; }
   .os-layer { padding: 11px 9px 12px; }
@@ -572,7 +472,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .msos-long.is-in .msos-i, .msos-work-list.is-new li, .msos-bp-open.is-decided .msos-basis { animation: none; }
+  .msos-long.is-in .msos-i { animation: none; }
+  .msos-chips li { opacity: 1; transform: none; transition: none; }
+  .msos-price-fill { transition: none; }
+  .cv-live-dot, .cv-agent.working, .cv-edge.tone-working, .orbit, .caret, .live-steps li, .lw-review { animation: none; }
   .os-fig:not(.is-in) .os-layer { opacity: 1; transform: none; }
-  .os-layer, .os-part, .msos-cal-draft, .msos-cal-ok, .msos-cal-item { transition: none; }
+  .os-layer, .os-part { transition: none; }
 }

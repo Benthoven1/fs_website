@@ -242,14 +242,16 @@ function labelTexture(name, status, night, flip) {
 
   function drawText(nameY, statusY) {
     g.fillStyle = ink;
-    g.font = "74px 'Cormorant SC', serif";
-    if ("letterSpacing" in g) g.letterSpacing = "10px";
-    // Long names (e.g. "Fiscal Sponsorship") shrink to fit the texture
-    const nameW = g.measureText(name).width;
-    if (nameW > 960) g.font = `${Math.floor(74 * 960 / nameW)}px 'Cormorant SC', serif`;
-    g.fillText(name, 512, nameY);
+    g.font = "58px 'Major Mono Display', monospace";
+    if ("letterSpacing" in g) g.letterSpacing = "2px";
+    // Major Mono Display is set lowercase only. Long names (e.g. "Fiscal
+    // Sponsorship") shrink to fit the texture
+    const label = name.toLowerCase();
+    const nameW = g.measureText(label).width;
+    if (nameW > 960) g.font = `${Math.floor(58 * 960 / nameW)}px 'Major Mono Display', monospace`;
+    g.fillText(label, 512, nameY);
     if (status) {
-      g.font = "italic 50px 'Cormorant Garamond', serif";
+      g.font = "italic 44px 'Lora', serif";
       if ("letterSpacing" in g) g.letterSpacing = "3px";
       g.fillStyle = soft;
       g.fillText(status, 512, statusY);

@@ -1,7 +1,6 @@
 // fiscal.js — the Fiscal Sponsorship page's text motion (the opening scene is
 // js/bowl.js): headings whose words rise, a rotating word in the headline,
-// blocks and pictures revealed as they arrive, a timeline that fills as it is
-// read, and plain-terms rows that open.
+// blocks and pictures revealed as they arrive, and plain-terms rows that open.
 (function () {
   var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var root = document.documentElement;
@@ -66,28 +65,6 @@
       next.classList.add("is-on");
     }, 2600);
   }
-
-  // ── The steps' timeline fills as it moves up through the view ────────────
-  var steps = document.querySelector(".fs-steps");
-  var stepItems = steps ? steps.querySelectorAll("li") : [];
-  var ticking = false;
-
-  function onScroll() {
-    ticking = false;
-    if (!steps) return;
-    var vh = window.innerHeight;
-    var r = steps.getBoundingClientRect();
-    var f = Math.min(1, Math.max(0, (vh * 0.75 - r.top) / (r.height + vh * 0.25)));
-    steps.style.setProperty("--fill", f.toFixed(3));
-    stepItems.forEach(function (li, i) {
-      li.classList.toggle("is-reached", f >= (i + 0.5) / stepItems.length - 0.05);
-    });
-  }
-  window.addEventListener("scroll", function () {
-    if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
-  }, { passive: true });
-  window.addEventListener("resize", onScroll);
-  onScroll();
 
   // ── In plain terms: rows that open ────────────────────────────────────────
   document.querySelectorAll(".fs-term button").forEach(function (btn) {

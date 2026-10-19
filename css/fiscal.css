@@ -4,8 +4,8 @@
 
 /* =====================================================================
    FISCAL SPONSORSHIP PAGE — text only. The motion is in the type and the
-   navigation: rising headings, a turning word, a section index, a timeline
-   that fills as it is read, a comparison switch, and projects as tabs.
+   navigation: rising headings, a turning word, a comparison table, the
+   steps, and four projects, each beside its picture.
    Domain colours are the home page's planet pastels, deepened for text.
    ===================================================================== */
 .fs-page { --fs-gold: #c9a874; }
@@ -21,7 +21,7 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
   max-width: 980px;
   margin: 0 auto;
   padding: 0 clamp(20px, 5vw, 56px) 110px;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
 }
 
 /* ---- Opening stage: the planet becomes the bowl (js/bowl.js) ---- */
@@ -46,7 +46,7 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
   bottom: clamp(18px, 4vh, 36px);
   margin: 0;
   text-align: center;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-size: 15px;
   letter-spacing: 0.04em;
   color: var(--ink-soft);
@@ -119,10 +119,11 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
 .fs-table thead th {
   padding-top: 16px;
   padding-bottom: 14px;
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 17px;
-  letter-spacing: 0.12em;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
   border-bottom-color: rgba(27, 22, 19, 0.28);
 }
 .fs-table thead th.fs-own { width: 36%; color: var(--ink-soft); }
@@ -130,10 +131,11 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
 
 .fs-table tbody th {
   padding-left: 2px;
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 18px;
-  letter-spacing: 0.05em;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: 13.5px;
+  letter-spacing: 0.04em;
   line-height: 1.35;
   color: var(--ink);
 }
@@ -261,9 +263,11 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
 .fs-terms { max-width: 760px; }
 
 .fs-terms-head {
-  font-family: "Cormorant SC", serif;
-  font-size: 15px;
-  letter-spacing: 0.22em;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: 12px;
+  letter-spacing: 0.04em;
   color: var(--clay-deep);
   margin: 0 0 6px;
 }
@@ -348,13 +352,14 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
   margin: 0 0 14px;
 }
 .fs-beauty figcaption {
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 15px;
-  letter-spacing: 0.14em;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: 12px;
+  letter-spacing: 0.04em;
   color: var(--clay-deep);
 }
-.fs-beauty cite { font-family: "Cormorant Garamond", serif; letter-spacing: 0; font-size: 17px; }
+.fs-beauty cite { font-family: "Lora", serif; letter-spacing: 0; font-size: 17px; }
 
 .fs-virtues {
   display: grid;
@@ -384,8 +389,9 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
   border-radius: 50%;
   background: var(--dom-soft);
   text-align: center;
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
   line-height: 1.12;
 }
 .fs-bubble {
@@ -398,7 +404,7 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
 .fs-v-hi { font-size: clamp(16px, 1.7vw, 21px); letter-spacing: 0.06em; color: var(--ink); }
 .fs-v-gt {
   margin: 0.18em 0 0.12em;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 300;
   font-size: 1.9em;
   line-height: 0.8;
@@ -505,23 +511,12 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
   align-items: center;
   gap: 12px;
   margin: 0 0 12px;
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 17px;
-  letter-spacing: 0.14em;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
   color: var(--dom-ink);
-}
-
-.fs-domain-num {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border: 1px solid currentColor;
-  border-radius: 50%;
-  font-family: "Cormorant Garamond", serif;
-  font-size: 15px;
-  letter-spacing: 0;
 }
 
 .fs-panel-meta { font-style: italic; font-size: 18px; color: var(--dom-ink); margin: 0 0 8px; }
