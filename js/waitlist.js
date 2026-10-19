@@ -10,8 +10,9 @@
 // a code was sent, a card asks for it, and only the right code opens the
 // questions; otherwise they open at once. What a visitor gives is kept
 // in sessionStorage for the visit, so a return within it picks up where they
-// left off. Everything sent carries `sid`, a random id for the visit, so one
-// person's rows can be joined.
+// left off. Everything sent carries `visit`, a random id for the visit, so
+// one person's rows can be joined. (Not `sid`: Google's servers refuse any
+// request to an Apps Script web app that carries a field of that name.)
 (function () {
   "use strict";
 
@@ -49,7 +50,7 @@
   save(rec);
 
   function context() {
-    var c = { sid: rec.sid };
+    var c = { visit: rec.sid };
     ["for", "v", "ref", "ref_host", "utm_source", "utm_medium", "utm_campaign", "utm_content"].forEach(function (k) {
       if (rec[k]) c[k] = rec[k];
     });

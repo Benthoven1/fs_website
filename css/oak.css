@@ -103,9 +103,9 @@ html.oak-locked body {
   margin: 0 0 56px;
 }
 
-/* ---- An evening's conversation, typed out. As it scrolls into view its
-   specifics are highlighted one after another (.is-lit), then soften, blur
-   and fade, leaving pale blanks (.is-gone); js/oak.js ties both to scrolling ---- */
+/* ---- An evening's conversation, typed out, in three states: plain; every
+   specific highlighted (.is-lit); every specific redacted to a pale blank
+   (.is-gone). js/oak.js ties them to scrolling ---- */
 @property --hl {
   syntax: "<color>";
   inherits: false;
@@ -201,32 +201,180 @@ html.oak-locked body {
 .oak-term { display: block; font-size: 23px; color: var(--ink); }
 .oak-becomes { font-style: italic; color: var(--oak-moss); }
 
-/* ---- The app itself: the stills from the deck, each under its feature ---- */
+/* ---- The app itself: Oak's screens, rebuilt from its stills in HTML and
+   SVG (the trees are drawn by js/oak-screens.js). Each phone is laid out at
+   the screen's own 390 × 844 points and scaled by --k ---- */
 .oak-legend li { display: flex; flex-direction: column; }
-.oak-still {
-  display: block;
-  width: 100%;
-  max-width: 230px;
-  height: auto;
+.ph {
+  --k: 0.56;
+  position: relative;
+  flex: none;
+  width: calc(390px * var(--k));
+  height: calc(844px * var(--k));
   margin: auto auto 0;
-  padding-top: 22px;
-  /* the deck's mock-ups carry their own soft shadow */
-  transform: translateY(28px) rotate(-1.5deg);
+  transform: translateY(28px);
   opacity: 0;
   transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) calc(0.25s + var(--d, 0s)), opacity 0.8s var(--ease) calc(0.25s + var(--d, 0s));
 }
-.oak-legend li:nth-child(2) .oak-still { transform: translateY(28px) rotate(1.2deg); }
-.oak-legend .is-in .oak-still,
-.oak-still--forest.is-in { opacity: 1; transform: none; }
-.oak-legend li.is-in:hover .oak-still { transform: translateY(-6px); transition-delay: 0s; }
+.oak-legend li .ph { margin-top: 22px; }
+.oak-legend li.is-in .ph, .ph.fs-reveal.is-in { opacity: 1; transform: none; }
+.ph-inner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 390px;
+  height: 844px;
+  transform: scale(var(--k));
+  transform-origin: 0 0;
+  border-radius: 64px;
+  padding: 12px;
+  box-sizing: border-box;
+  background: linear-gradient(150deg, #e4dfd5, #b9b2a6 40%, #d6d0c4 70%, #aaa397);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.7), inset 0 0 0 4px rgba(120, 112, 100, 0.25), 0 30px 60px rgba(40, 46, 30, 0.2), 0 6px 14px rgba(40, 46, 30, 0.1);
+}
+.ph-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 52px;
+  background: #fff;
+  box-shadow: 0 0 0 5px #0d0d0d;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-size-adjust: none;
+  color: #1d1d1b;
+}
+.ph-notch { position: absolute; top: 12px; left: 50%; width: 132px; height: 34px; margin-left: -66px; border-radius: 0 0 22px 22px; background: #0d0d0d; z-index: 9; }
+.ph-status { position: absolute; top: 14px; left: 0; right: 0; z-index: 8; display: flex; justify-content: space-between; padding: 0 30px 0 44px; font-size: 16px; font-weight: 600; letter-spacing: 0.01em; }
+.ph-time { position: relative; }
+.ph-crumb { position: absolute; left: -18px; top: 19px; font-size: 10.5px; font-weight: 500; white-space: nowrap; }
+.ph-icons { display: flex; gap: 5px; align-items: center; }
+.ph-sig { display: flex; align-items: flex-end; gap: 1.5px; height: 11px; }
+.ph-sig b { width: 3px; border-radius: 1px; background: currentColor; }
+.ph-sig b:nth-child(1) { height: 4px; } .ph-sig b:nth-child(2) { height: 6px; } .ph-sig b:nth-child(3) { height: 8.5px; } .ph-sig b:nth-child(4) { height: 11px; }
+.ph-wifi { width: 16px; height: 12px; fill: currentColor; }
+.ph-bat { font-style: normal; font-size: 10.5px; line-height: 13px; padding: 0 5px; border-radius: 4px; background: #4cd964; color: #fff; font-weight: 700; }
+
+/* Scenery: sky, the far hills in haze, the meadow */
+.ph-sky { position: absolute; inset: 0 0 50% 0; background: linear-gradient(#bcd8ee, #c8dcea); }
+.ph-sky--dusk { inset: 0; background: linear-gradient(#a9c3d2, #b4c8d0); }
+.ph-sky--blue { bottom: 46%; background: linear-gradient(#b9d9f1, #c6dff1); }
+.ph-hill { position: absolute; left: -5%; right: -5%; bottom: 0; }
+.ph-hill--a { top: 110px; background: #b5cad5; border-radius: 55% 45% 0 0 / 6px 4px 0 0; }
+.ph-hill--b { top: 236px; background: #a6bcc4; border-radius: 40% 60% 0 0 / 12px 4px 0 0; }
+.ph-hill--far { top: 372px; background: #a8bfb6; border-radius: 30% 70% 0 0 / 14px 40px 0 0; }
+.ph-meadow { position: absolute; left: 0; right: 0; top: 354px; bottom: 0; background: #6b8a46; border-radius: 60% 40% 0 0 / 5px 3px 0 0; }
+.ph-meadow--slope { top: 150px; background: #66853f; clip-path: polygon(0 40px, 100% 0, 100% 100%, 0 100%); border-radius: 0; }
+.ph-meadow--soft { top: 444px; background: #7e9d7d; border-radius: 0 80% 0 0 / 0 14px 0 0; }
+
+.ph-tree { position: absolute; overflow: visible; }
+.ph-tree--small { left: 54px; top: 316px; width: 210px; height: 262px; }
+.ph-tree--near { left: 96px; top: 176px; width: 320px; height: 600px; }
+.ph-forest { position: absolute; left: -70px; top: 262px; display: flex; }
+.ph-forest .ph-tree { position: relative; width: 230px; height: 260px; margin-right: -100px; }
+.ph-forest .ph-tree:nth-child(2) { top: -6px; }
+.ph-crown { animation: phSway 7s ease-in-out infinite; }
+.ph-forest .ph-tree:nth-child(2) .ph-crown { animation-delay: -2.4s; }
+.ph-forest .ph-tree:nth-child(3) .ph-crown { animation-delay: -4.1s; }
+.ph-forest .ph-tree:nth-child(4) { top: 4px; }
+.ph-forest .ph-tree:nth-child(4) .ph-crown { animation-delay: -5.6s; }
+@keyframes phSway { 0%, 100% { transform: rotate(-0.8deg); } 50% { transform: rotate(0.8deg); } }
+.ph-acorn { transform: scale(0); transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) calc(0.9s + var(--i) * 0.07s); }
+.is-in .ph-acorn { transform: none; }
+
+/* The app's header, over the scene */
+.ph-head { position: absolute; top: 56px; left: 0; right: 0; z-index: 5; text-align: center; }
+.ph-back { position: absolute; left: 19px; top: -2px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255, 255, 255, 0.72); }
+.ph-back::after { content: ""; position: absolute; left: 15px; top: 13px; width: 8px; height: 8px; border-left: 2.2px solid #222; border-bottom: 2.2px solid #222; transform: rotate(45deg); }
+.ph-title { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; color: #1e2420; }
+.ph-sub { margin-top: 1px; font-size: 11px; color: rgba(30, 36, 32, 0.55); }
+.ph-head--light .ph-title { color: rgba(255, 255, 255, 0.8); font-size: 23px; margin-top: 4px; }
+.ph-head--light .ph-sub { color: rgba(255, 255, 255, 0.6); font-size: 12px; }
+.ph-pill { position: absolute; right: 16px; top: 2px; padding: 6px 13px; border-radius: 999px; border: 1px solid #c9d3c1; background: #f4f6ef; font-size: 12.5px; font-weight: 600; color: #2b4a2e; }
+
+/* The tree screen: the topic, the item chips, the hint */
+.ph-topic { position: absolute; left: 95px; width: 200px; top: 606px; z-index: 5; box-sizing: border-box; display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-radius: 14px; background: rgba(236, 242, 231, 0.96); font-size: 12.5px; line-height: 1.3; font-weight: 600; color: #2e4632; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08); }
+.ph-chips { position: absolute; left: -177px; top: 698px; z-index: 5; display: flex; gap: 12px; }
+.ph-chips--under { left: -155px; }
+.ph-chip { display: flex; gap: 11px; align-items: center; box-sizing: border-box; width: 195px; height: 66px; padding: 0 14px; border-radius: 16px; background: #faf6ec; font-size: 13.5px; line-height: 1.3; font-weight: 500; color: #23241f; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1); }
+.ph-chip em { display: block; font-style: normal; font-size: 8.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #b47a2c; }
+.ph-thumb { flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 4px; background: linear-gradient(#a9c6d6 0 30%, #6f9a47 30% 62%, #4f7a33 62%); font-style: normal; font-size: 11px; font-weight: 600; color: rgba(255, 255, 255, 0.85); }
+.ph-hint { position: absolute; left: 0; right: 0; bottom: 34px; z-index: 5; text-align: center; font-size: 10.5px; color: rgba(214, 226, 200, 0.6); }
+.ph-hint--mid { bottom: 186px; font-size: 10.5px; color: rgba(255, 255, 255, 0.7); }
+
+/* The opened acorn: the chickadee lands, the screen dims, the sheet rises */
+.ph-bird { position: absolute; left: 120px; top: 368px; width: 44px; height: 35px; z-index: 4; transform: translate(-70px, -110px) rotate(-14deg); opacity: 0; transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1) 1.4s, opacity 0.5s var(--ease) 1.4s; }
+.is-in .ph-bird { transform: none; opacity: 1; }
+.ph-scrim { position: absolute; inset: 0; z-index: 6; background: rgba(28, 34, 26, 0.3); opacity: 0; transition: opacity 0.6s var(--ease) 2.1s; }
+.is-in .ph-scrim { opacity: 1; }
+.ph-sheet { position: absolute; left: 13px; right: 13px; bottom: 14px; z-index: 7; padding: 20px 20px 22px; border-radius: 26px; background: #faf6ee; box-shadow: 0 -6px 30px rgba(0, 0, 0, 0.18); transform: translateY(125%); transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 2.2s; }
+.is-in .ph-sheet { transform: none; }
+.ph-sheet-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 13px; }
+.ph-kind { display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 999px; background: #f6e5cc; font-size: 10.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #b47a2c; }
+.ph-kind::before { content: ""; width: 7px; height: 7px; background: #d6913a; transform: rotate(45deg); }
+.ph-x { position: relative; width: 30px; height: 30px; border-radius: 50%; background: #ece5d7; }
+.ph-x::before, .ph-x::after { content: ""; position: absolute; left: 8px; top: 14px; width: 14px; height: 1.6px; background: #6e6a5e; transform: rotate(45deg); }
+.ph-x::after { transform: rotate(-45deg); }
+.ph-sheet-title { font-size: 23px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 9px; }
+.ph-sheet-from { font-size: 11.5px; line-height: 1.5; color: #8d897c; }
+.ph-sheet-from b { font-weight: 600; color: #6f6b60; }
+
+/* The chickadee's article, in the browser */
+.wk { position: absolute; inset: 0; padding-top: 50px; background: #fff; color: #202122; }
+.wk-bar { display: flex; align-items: center; gap: 14px; height: 50px; padding: 0 16px; background: #eaecf0; }
+.wk-menu { width: 18px; height: 13px; background: linear-gradient(#3a3b3d 0 2px, transparent 2px 5.5px, #3a3b3d 5.5px 7.5px, transparent 7.5px 11px, #3a3b3d 11px 13px); }
+.wk-logo { flex: 1; font-family: "Lora", serif; font-size: 20px; font-variant: small-caps; letter-spacing: 0.03em; color: #3a3b3d; }
+.wk-tools { display: flex; gap: 18px; }
+.wk-tools svg, .wk-acts svg { width: 19px; height: 19px; color: #3a3b3d; }
+.wk-page { padding: 14px 16px 0; opacity: 0; transform: translateY(10px); transition: opacity 0.7s var(--ease) 0.9s, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.9s; }
+.is-in .wk-page { opacity: 1; transform: none; }
+.wk-h { margin: 8px 0 14px; font-family: "Lora", serif; font-weight: 400; font-size: 26px; }
+.wk-tabs { display: flex; gap: 14px; border-bottom: 1px solid #c8ccd1; font-size: 13px; font-weight: 600; color: #54595d; }
+.wk-tabs span { padding-bottom: 6px; }
+.wk-tabs .is-on { color: #202122; box-shadow: inset 0 -2px 0 #202122; }
+.wk-acts { display: flex; justify-content: space-between; align-items: center; height: 44px; border-bottom: 1px solid #eaecf0; }
+.wk-lang { font-size: 15px; font-weight: 600; } .wk-lang small { font-size: 11px; }
+.wk-acts-r { display: flex; gap: 18px; }
+.wk-hat { margin: 0 -16px 8px; padding: 6px 16px 7px; background: #f8f9fa; font-size: 11.5px; font-style: italic; color: #54595d; }
+.wk-page p { margin: 0 0 12px; font-size: 14.5px; line-height: 1.6; }
+.wk-page sup { font-size: 9px; line-height: 0; }
+.wk u { text-decoration: none; color: #3366cc; }
+.wk-box { border: 1px solid #c8ccd1; background: #f8f9fa; text-align: center; }
+.wk-box-h { padding: 7px; background: #cdeedb; font-weight: 700; font-size: 15.5px; }
+.wk-box-s { padding: 5px; font-size: 12px; border-bottom: 1px solid #eaecf0; }
+.wk-kylix { display: block; width: 210px; height: 161px; margin: 8px auto 3px; opacity: 0; transition: opacity 0.8s var(--ease) 1.7s; }
+.is-in .wk-kylix { opacity: 1; }
+.wk-cap { padding: 0 10px 8px; font-size: 11.5px; line-height: 1.45; }
+.wk-safari { position: absolute; left: 0; right: 0; bottom: 0; height: 92px; display: flex; gap: 8px; align-items: flex-start; padding: 12px 14px 0; background: linear-gradient(rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.95) 45%); }
+.wk-btn { flex: none; position: relative; width: 46px; height: 46px; border-radius: 50%; background: rgba(250, 250, 250, 0.96); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14); }
+.wk-btn--back::after { content: ""; position: absolute; left: 19px; top: 17px; width: 10px; height: 10px; border-left: 2px solid #444; border-bottom: 2px solid #444; transform: rotate(45deg); }
+.wk-btn--more { display: flex; gap: 3px; justify-content: center; align-items: center; }
+.wk-btn--more b { width: 4px; height: 4px; border-radius: 50%; background: #333; }
+.wk-url { flex: 1; display: flex; align-items: center; justify-content: space-between; height: 46px; padding: 0 14px; border-radius: 999px; background: rgba(60, 64, 67, 0.92); color: #fff; font-size: 14px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18); }
+.wk-url-i { width: 12px; height: 10px; border: 1.5px solid #fff; border-radius: 2px; }
+.wk-url-r { width: 11px; height: 11px; border: 1.6px solid #fff; border-top-color: transparent; border-radius: 50%; }
+
+/* The forest: its trees, the list, the tabs */
+.ph-cards { position: absolute; left: 8px; top: 697px; z-index: 5; display: flex; gap: 13px; }
+.ph-card { display: flex; align-items: center; gap: 12px; box-sizing: border-box; width: 241px; height: 59px; padding: 0 12px 0 16px; border-radius: 15px; border: 1.2px solid #59654f; background: #f8f6ee; font-size: 11px; color: #7a786f; transform: translateX(40px); opacity: 0; transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.1s, opacity 0.6s var(--ease) 1.1s; }
+.ph-card + .ph-card { border-color: #c4cbbb; transition-delay: 1.3s; }
+.is-in .ph-card { transform: none; opacity: 1; }
+.ph-card i { flex: none; width: 11px; height: 11px; border-radius: 50%; background: #2b4a2e; }
+.ph-card b { display: block; font-size: 14.5px; font-weight: 700; color: #1e2420; }
+.ph-card span { flex: 1; white-space: nowrap; }
+.ph-card em { width: 7px; height: 7px; margin-right: 6px; border-right: 2px solid #555; border-top: 2px solid #555; transform: rotate(45deg); }
+.ph-tabs { position: absolute; left: 0; right: 0; top: 777px; bottom: 0; z-index: 6; display: flex; justify-content: space-around; padding: 12px 10px 0; background: #f6f4ec; font-size: 11.5px; font-weight: 500; color: #8f8c80; }
+.ph-tabs .is-on { color: #2b4a2e; font-weight: 700; }
+.ph-tabs span::before { content: ""; display: block; width: 5px; height: 5px; margin: 0 auto 6px; border-radius: 50%; background: #d6d1c0; }
+.ph-tabs .is-on::before { background: #2b4a2e; }
 
 .oak-forest-pair {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 230px);
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: clamp(24px, 5vw, 56px);
   align-items: center;
 }
-.oak-still--forest { margin: 0; }
+.oak-forest-pair .ph { margin: 0; }
 
 /* ---- The market, as the deck shows it ---- */
 .oak-market {
@@ -303,13 +451,15 @@ html.oak-locked body {
   .oak-transcript p { font-size: 13px; line-height: 1.85; }
   .oak-legend { grid-template-columns: 1fr; }
   .oak-forest-pair { grid-template-columns: 1fr; }
-  .oak-still { max-width: 220px; }
+  .ph { --k: 0.54; }
+  .oak-forest-pair .ph { margin: 0 auto; }
   .oak-consent { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .oak-transcript mark, .oak-transcript mark > span, .oak-later,
-  .oak-still, .oak-code span { transition: none; }
+  .ph, .ph-acorn, .ph-bird, .ph-sheet, .ph-scrim, .ph-card, .wk-page, .wk-kylix, .oak-code span { transition: none; }
+  .ph-crown { animation: none; }
 }
 
 .oak-page #site-footer {
