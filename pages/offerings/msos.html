@@ -15,6 +15,7 @@
   <link rel="preload" as="image" type="image/webp" href="../../Batad.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+SC:wght@500&family=Inter:wght@600&family=Italiana&family=Playfair+Display:wght@500&text=MULViuM&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Major+Mono+Display&display=swap" rel="stylesheet" />
   <link rel="modulepreload" href="https://unpkg.com/three@0.161.0/build/three.module.min.js" crossorigin />
 </head>
@@ -75,6 +76,9 @@
             <span class="offer-line">Four things worth making more of</span>
           </a></li>
         </ul>
+      </li>
+      <li class="nav-item nav-item--cta">
+        <a href="../../index.html#waitlist" class="nav-trigger nav-cta">Join the waitlist</a>
       </li>
     </ul>
   </nav>
@@ -211,6 +215,49 @@
       </div>
     </section>
 
+    <!-- ── Grove's client dashboard, as in M.SOS (pr-dashboard.tsx) ──────── -->
+    <section class="fs-section mx-section" id="grove-dashboard" aria-labelledby="msos-dash">
+      <h2 class="fs-h2 fs-words" id="msos-dash">What a client sees, every month</h2>
+      <p class="msos-p fs-reveal">
+        Each Grove client&rsquo;s lead presents the month from this dashboard:
+        how often the institution was seen, how much of the conversation it
+        held, and whether its messages landed.
+      </p>
+      <figure class="mx-demo fs-reveal" id="mx-demo" aria-label="An example of Grove&rsquo;s client dashboard in M.SOS, for the Beethoven Bicentennial Festival: views over the last 30 days, share of voice, message penetration, engagement, followers gained, and stories">
+        <div class="mx-bar-top">
+          <span class="mx-client"><span class="sphere sphere-rose" aria-hidden="true"></span>The Beethoven Bicentennial Festival</span>
+          <span class="mx-range"><span>7 days</span><span aria-current="page">30 days</span><span>90 days</span></span>
+        </div>
+        <div class="mx-dash">
+          <div class="mx-hero">
+            <span class="mx-kpi-label">Views &middot; last 30 days</span>
+            <span class="mx-hero-value" data-count="184260">184,260</span>
+            <span class="mx-delta"><span class="mx-arrow up">&#9650;</span> 38%</span>
+          </div>
+          <div class="mx-kpis">
+            <div class="mx-kpi"><span class="mx-kpi-label">Share of voice</span><span class="mx-kpi-value">24%</span><span class="mx-kpi-foot"><span class="mx-delta"><span class="mx-arrow up">&#9650;</span> 6.2 pts</span><svg class="mx-spark" data-spark="11,13,12,16,18,21,24" width="96" height="26" aria-hidden="true"></svg></span></div>
+            <div class="mx-kpi"><span class="mx-kpi-label">Message penetration</span><span class="mx-kpi-value">61%</span><span class="mx-kpi-foot"></span></div>
+            <div class="mx-kpi"><span class="mx-kpi-label">Engagement rate</span><span class="mx-kpi-value">4.8%</span><span class="mx-kpi-foot"><span class="mx-delta"><span class="mx-arrow up">&#9650;</span> 0.9 pts</span></span></div>
+            <div class="mx-kpi"><span class="mx-kpi-label">Followers gained</span><span class="mx-kpi-value">+2.4K</span><span class="mx-kpi-foot"><span class="mx-delta"><span class="mx-arrow up">&#9650;</span> 41%</span><svg class="mx-spark" data-spark="28,31,37,44,52" width="96" height="26" aria-hidden="true"></svg></span></div>
+            <div class="mx-kpi"><span class="mx-kpi-label">Stories</span><span class="mx-kpi-value">14</span><span class="mx-kpi-foot"></span></div>
+          </div>
+          <section class="mx-card mx-wide">
+            <header><h3>Views per day</h3><span class="mx-muted">8.9K likes &middot; 1.2K comments &middot; 2.1K shares</span></header>
+            <div class="mx-chart" id="mx-trend"></div>
+          </section>
+          <section class="mx-card">
+            <header><h3>Share of voice</h3><span class="mx-muted">412 mentions</span></header>
+            <div class="mx-bars" data-highlight="This festival" data-rows="This festival:0.24|A city orchestra series:0.31|A regional summer festival:0.27|A university concert series:0.18"></div>
+          </section>
+          <section class="mx-card">
+            <header><h3>Message penetration</h3></header>
+            <div class="mx-bars" data-rows="Beethoven, for everyone:0.72|Music made live, together:0.64|The town&rsquo;s own festival:0.47"></div>
+          </section>
+        </div>
+        <figcaption>An example, with illustrative figures. In M.SOS the figures come from the client&rsquo;s accounts and media monitoring.</figcaption>
+      </figure>
+    </section>
+
     <!-- ── Why it is hard to copy ───────────────────────────────────────── -->
     <section class="fs-section" id="moat" aria-labelledby="msos-moat">
       <h2 class="fs-h2 fs-words" id="msos-moat">Why it is hard to copy</h2>
@@ -291,7 +338,7 @@
   <footer id="site-footer" class="site-footer">
     <div class="sf-inner">
       <div class="sf-brand">
-        <a class="sf-wordmark" aria-label="Mulvium home" href="../../index.html">Mulvium</a>
+        <a class="sf-wordmark" aria-label="Mulvium home" href="../../index.html">Mulvium<sup class="sf-tm" aria-hidden="true">&trade;</sup></a>
       </div>
       <nav class="sf-cols" aria-label="Site">
         <div class="sf-col">

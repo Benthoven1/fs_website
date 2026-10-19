@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Oak, the app</title>
+<!-- Oak's interface, from Benthoven1/ConversationTree (Oakv0 UI/Oak.dc.html):
+     the interactive device alone, set in the site's faces, shown in a frame
+     on the Oak page. support.js is that repository's runtime, unchanged. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<rect width="100" height="100" rx="18" fill="#cfe0e6"/>
+<rect x="30" y="30" width="40" height="40" rx="6" fill="none"/>
+<path d="M50 72 L50 48" stroke="#5b4632" stroke-width="5" stroke-linecap="round"/>
+<circle cx="50" cy="42" r="16" fill="#5e8c41"/>
+<circle cx="38" cy="48" r="10" fill="#6a9648"/>
+<circle cx="62" cy="48" r="10" fill="#4f7d3a"/>
+<ellipse cx="50" cy="40" rx="4.5" ry="5.5" fill="#c98a3f"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  *{ -webkit-font-smoothing:antialiased; }
+  html, body{ margin:0; background:transparent; overflow:hidden; }
+  @keyframes oakBreath{ 0%,100%{ transform:scale(1); opacity:.55 } 50%{ transform:scale(1.18); opacity:.18 } }
+  @keyframes oakWave{ 0%,100%{ transform:scaleY(.28) } 50%{ transform:scaleY(1) } }
+  @keyframes oakRise{ from{ transform:translateY(14px); opacity:0 } to{ transform:translateY(0); opacity:1 } }
+  @keyframes oakScreenIn{ from{ opacity:0; transform:translateX(22px) } to{ opacity:1; transform:translateX(0) } }
+  @keyframes oakSway{ 0%,100%{ transform:rotate(var(--r)) } 50%{ transform:rotate(calc(var(--r) + 7deg)) } }
+</style>
+<script>
+  // Fit the phone to the frame it is shown in (pages/offerings/oak.html)
+  (function () {
+    function fit() {
+      var el = document.getElementById('oak-stage');
+      if (!el) return;
+      var k = Math.min(innerWidth / 390, innerHeight / 844);
+      el.style.transform = 'scale(' + k + ')';
+    }
+    addEventListener('resize', fit);
+    new MutationObserver(fit).observe(document.documentElement, { childList: true, subtree: true });
+    // the runtime may mount the stage before this page's observer sees it
+    var tries = 0, t = setInterval(function () { fit(); if (++tries > 40) clearInterval(t); }, 100);
+  })();
+</script>
+</helmet>
+
+<div id="oak-stage" style="position:absolute; left:0; top:0; width:390px; height:844px; transform-origin:0 0; font-family:'IBM Plex Sans',system-ui,sans-serif;">
+    <!-- ============ DEVICE A — interactive, warm ============ -->
+    <div style="flex:none; width:390px;">
+
+      <div style="position:relative; width:390px; height:844px; border-radius:52px; background:#0c0d0a; box-shadow:0 0 0 1px rgba(0,0,0,.2); overflow:hidden;">
+        <div style="position:absolute; inset:7px; border-radius:46px; overflow:hidden; background:#f4efe6;">
+
+          <!-- ---------- ONBOARD ---------- -->
+          <sc-if value="{{ isOnboard }}" hint-placeholder-val="{{ true }}">
+            <div style="position:absolute; inset:0; box-sizing:border-box; padding:62px 26px 30px; background:radial-gradient(125% 70% at 50% -8%, #fcf9f2 0%, #f4efe6 46%, #e9e3d4 100%); display:flex; flex-direction:column; animation:oakScreenIn .42s ease both;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div style="width:9px; height:9px; border-radius:50%; background:#c98a3f;"></div>
+                <div style="font-family:'Lora'; font-weight:600; font-size:12px; letter-spacing:.3em; text-transform:uppercase; color:#2b5232;">Oak</div>
+              </div>
+              <div style="font-family:'Lora'; font-weight:700; font-size:50px; line-height:.98; letter-spacing:-.02em; color:#222a1e; margin-top:26px;">Keep what<br>matters.</div>
+              <div style="font-size:15.5px; line-height:1.5; color:#5c5f52; margin-top:14px; max-width:280px;">A quiet memory for the people you think out loud with.</div>
+
+              <div style="margin-top:26px; padding:18px 18px 6px; background:#fbf8f1; border:1px solid #e6ddca; border-radius:20px;">
+                <div style="font-family:'Lora'; font-weight:600; font-size:13px; color:#2b5232; letter-spacing:.02em; margin-bottom:2px;">Built to forget.</div>
+                <div style="font-size:12.5px; color:#8a8472; margin-bottom:12px;">Three promises, kept in code.</div>
+                <div style="display:flex; gap:12px; padding:11px 0; border-top:1px solid #efe7d6;">
+                  <div style="flex:none; width:26px; height:26px; border-radius:50%; background:#eef3e7; display:flex; align-items:center; justify-content:center;"><div style="width:9px; height:9px; border-radius:50%; background:#2b5232;"></div></div>
+                  <div><div style="font-weight:600; font-size:13.5px; color:#2e3326;">Heard, never recorded</div><div style="font-size:12.5px; line-height:1.4; color:#8a8472;">Audio is understood in the moment and discarded — never written to disk.</div></div>
+                </div>
+                <div style="display:flex; gap:12px; padding:11px 0; border-top:1px solid #efe7d6;">
+                  <div style="flex:none; width:26px; height:26px; border-radius:50%; background:#eef3e7; display:flex; align-items:center; justify-content:center;"><div style="width:9px; height:9px; border-radius:2px; background:#c98a3f; transform:rotate(45deg);"></div></div>
+                  <div><div style="font-weight:600; font-size:13.5px; color:#2e3326;">Yours alone</div><div style="font-size:12.5px; line-height:1.4; color:#8a8472;">Only the meaningful moments are kept, encrypted on this device.</div></div>
+                </div>
+                <div style="display:flex; gap:12px; padding:11px 0; border-top:1px solid #efe7d6;">
+                  <div style="flex:none; width:26px; height:26px; border-radius:50%; background:#eef3e7; display:flex; align-items:center; justify-content:center;"><div style="width:11px; height:11px; border:2px solid #2b5232; border-radius:50%;"></div></div>
+                  <div><div style="font-weight:600; font-size:13.5px; color:#2e3326;">Never synced</div><div style="font-size:12.5px; line-height:1.4; color:#8a8472;">Nothing leaves your phone. No account, no cloud copy.</div></div>
+                </div>
+              </div>
+
+              <div style="flex:1;"></div>
+              <div style="font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; color:#9a9482; margin-bottom:7px;">Standing group</div>
+              <input value="{{ groupId }}" onInput="{{ onGroup }}" placeholder="group code — e.g. sunday-table" style="width:100%; box-sizing:border-box; border:1px solid #ddd3bd; background:#fff; border-radius:14px; padding:14px 16px; font-size:15px; font-family:'IBM Plex Sans'; color:#2e3326; outline:none; margin-bottom:12px;">
+              <div onClick="{{ consent }}" style="cursor:pointer; background:#2b5232; color:#f4efe6; border-radius:16px; padding:17px; text-align:center; font-weight:600; font-size:16px; box-shadow:0 8px 20px rgba(43,82,50,.28);">Everyone here consents — begin</div>
+              <div style="font-size:11px; line-height:1.45; color:#9a9482; text-align:center; margin-top:11px;">Starting a session means everyone present agrees to be heard. Consent is asked once, at the table.</div>
+            </div>
+          </sc-if>
+
+          <!-- ---------- CAPTURE ---------- -->
+          <sc-if value="{{ isCapture }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute; inset:0; box-sizing:border-box; padding:62px 26px 30px; background:linear-gradient(180deg,#f6f1e9 0%, #f1ece2 60%, #ece5d6 100%); display:flex; flex-direction:column; animation:oakScreenIn .42s ease both;">
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div>
+                  <div style="font-family:'Lora'; font-weight:700; font-size:24px; color:#222a1e; letter-spacing:-.01em;">Listening</div>
+                  <div style="font-size:12.5px; color:#8a8472; margin-top:1px;">Group · {{ groupCode }}</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:7px; padding:7px 12px; background:#fbf8f1; border:1px solid #e6ddca; border-radius:999px;">
+                  <div style="width:8px; height:8px; border-radius:50%; background:#2b5232;"></div>
+                  <span style="font-size:12px; font-weight:600; color:#3a4530;">on this device</span>
+                </div>
+              </div>
+
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;">
+                <div style="position:relative; width:230px; height:230px; display:flex; align-items:center; justify-content:center;">
+                  <div style="position:absolute; width:230px; height:230px; border-radius:50%; background:radial-gradient(circle, rgba(43,82,50,.16), transparent 68%); animation:oakBreath 4.4s ease-in-out infinite;"></div>
+                  <div style="position:absolute; width:170px; height:170px; border-radius:50%; background:radial-gradient(circle, rgba(201,138,63,.20), transparent 70%); animation:oakBreath 3.6s ease-in-out infinite .4s;"></div>
+                  <sc-if value="{{ recording }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex; align-items:flex-end; gap:5px; height:64px;">
+                      <div style="width:6px; height:60px; border-radius:3px; background:#2b5232; transform-origin:bottom; animation:oakWave 1s ease-in-out infinite 0s;"></div>
+                      <div style="width:6px; height:60px; border-radius:3px; background:#37683f; transform-origin:bottom; animation:oakWave 1s ease-in-out infinite .15s;"></div>
+                      <div style="width:6px; height:60px; border-radius:3px; background:#c98a3f; transform-origin:bottom; animation:oakWave 1s ease-in-out infinite .3s;"></div>
+                      <div style="width:6px; height:60px; border-radius:3px; background:#37683f; transform-origin:bottom; animation:oakWave 1s ease-in-out infinite .45s;"></div>
+                      <div style="width:6px; height:60px; border-radius:3px; background:#2b5232; transform-origin:bottom; animation:oakWave 1s ease-in-out infinite .6s;"></div>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ idle }}" hint-placeholder-val="{{ true }}">
+                    <div style="width:128px; height:128px; border-radius:50%; background:linear-gradient(160deg,#fbf8f1,#efe7d6); border:1px solid #e6ddca; display:flex; align-items:center; justify-content:center;">
+                      <div style="width:18px; height:18px; border-radius:50%; background:#c98a3f;"></div>
+                    </div>
+                  </sc-if>
+                </div>
+                <div style="font-family:'Lora'; font-weight:700; font-size:46px; letter-spacing:-.02em; color:#222a1e; margin-top:6px;">{{ elapsedStr }}</div>
+                <div style="font-size:14px; color:#6f7263;"><b style="color:#2b5232;">{{ itemsFound }}</b> meaningful moments so far</div>
+              </div>
+
+              <sc-if value="{{ idle }}" hint-placeholder-val="{{ true }}">
+                <div onClick="{{ toggleRecord }}" style="cursor:pointer; background:#2b5232; color:#f4efe6; border-radius:20px; padding:20px; text-align:center; font-weight:600; font-size:17px; box-shadow:0 10px 24px rgba(43,82,50,.26);">Start listening</div>
+              </sc-if>
+              <sc-if value="{{ recording }}" hint-placeholder-val="{{ false }}">
+                <div onClick="{{ toggleRecord }}" style="cursor:pointer; background:#fbf8f1; color:#9a3b2e; border:1.5px solid #e7c7bf; border-radius:20px; padding:20px; text-align:center; font-weight:600; font-size:17px; display:flex; align-items:center; justify-content:center; gap:10px;"><span style="width:14px; height:14px; border-radius:3px; background:#9a3b2e; display:inline-block;"></span>Stop &amp; keep the tree</div>
+              </sc-if>
+              <sc-if value="{{ showSeeTree }}" hint-placeholder-val="{{ false }}">
+                <div onClick="{{ goItems }}" style="cursor:pointer; margin-top:11px; text-align:center; font-weight:600; font-size:15px; color:#2b5232;">See your tree →</div>
+              </sc-if>
+              <sc-if value="{{ idle }}" hint-placeholder-val="{{ true }}">
+                <div style="font-size:11.5px; line-height:1.45; color:#9a9482; text-align:center; margin-top:11px;">Audio is transcribed and judged for meaning, then discarded. Only moments are kept.</div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <!-- ---------- ITEMS / TREE ---------- -->
+          <sc-if value="{{ isItems }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute; inset:0; overflow:hidden; background:#9fc1d6;">
+              <canvas id="oak-canvas-a" style="position:absolute; inset:0; width:100%; height:100%; display:block; touch-action:none;"></canvas>
+              <div style="position:absolute; top:0; left:0; right:0; padding:60px 22px 14px; display:flex; align-items:center; justify-content:space-between; background:linear-gradient(180deg, rgba(238,240,228,.92), rgba(238,240,228,0)); z-index:3;">
+                <div onClick="{{ backItems }}" style="cursor:pointer; width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,.78); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(40,46,30,.12);">
+                  <div style="width:11px; height:11px; border-left:2.4px solid #3a4530; border-bottom:2.4px solid #3a4530; transform:rotate(45deg); margin-left:3px;"></div>
+                </div>
+                <div style="text-align:center;">
+                  <div style="font-family:'Lora'; font-weight:700; font-size:19px; color:#222a1e;">Sunday, the table</div>
+                  <div style="font-size:11.5px; color:#5f7050;">{{ topicCount }} branches · {{ itemTotal }} acorns</div>
+                </div>
+                <div style="width:38px; height:38px;"></div>
+              </div>
+              <div id="oak-chips-a" style="position:absolute; bottom:74px; left:0; right:0; padding:0 18px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center; z-index:3; pointer-events:none;">
+                <sc-for list="{{ topics }}" as="t" hint-placeholder-count="3">
+                  <div style="padding:7px 14px; background:rgba(251,248,241,.84); backdrop-filter:blur(6px); border:1px solid rgba(43,82,50,.18); border-radius:999px; font-size:12.5px; font-weight:600; color:#2b5232; box-shadow:0 2px 8px rgba(40,46,30,.08); white-space:nowrap;">{{ t.short }}</div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ isTreeView }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute; bottom:38px; left:0; right:0; text-align:center; font-size:12px; color:#3a4f2e; z-index:3; text-shadow:0 1px 3px rgba(255,255,255,.5);">Tap an acorn to read it</div>
+              </sc-if>
+              <sc-if value="{{ isPrairie }}" hint-placeholder-val="{{ true }}">
+                <div style="position:absolute; bottom:48px; left:0; right:0; text-align:center; z-index:3;">
+                  <div style="display:inline-block; padding:12px 22px; background:rgba(251,248,241,.88); backdrop-filter:blur(6px); border:1px solid rgba(43,82,50,.2); border-radius:999px; font-size:13.5px; font-weight:600; color:#2b5232; box-shadow:0 6px 18px rgba(40,46,30,.18);">Tap the tree to step closer →</div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ cardOpen }}" hint-placeholder-val="{{ false }}">
+                <div onClick="{{ closeCard }}" style="position:absolute; inset:0; background:rgba(34,42,30,.28); backdrop-filter:blur(2px); z-index:6;"></div>
+                <div style="position:absolute; left:16px; right:16px; bottom:24px; z-index:7; background:#fbf8f1; border-radius:26px; padding:24px 22px 22px; box-shadow:0 24px 60px rgba(34,42,30,.35); animation:oakRise .34s cubic-bezier(.6,0,.2,1);">
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+                    <sc-if value="{{ cardIsTopic }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:inline-flex; align-items:center; gap:7px; padding:6px 12px; background:#eef3e7; border-radius:999px;"><div style="width:8px; height:8px; border-radius:50%; background:#2b5232;"></div><span style="font-size:11px; font-weight:700; letter-spacing:.14em; color:#2b5232;">TOPIC</span></div>
+                    </sc-if>
+                    <sc-if value="{{ cardIsItem }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:inline-flex; align-items:center; gap:7px; padding:6px 12px; background:#f6ead6; border-radius:999px;"><div style="width:8px; height:8px; border-radius:2px; background:#c98a3f; transform:rotate(45deg);"></div><span style="font-size:11px; font-weight:700; letter-spacing:.14em; color:#a96f2a;">{{ cardKind }}</span></div>
+                    </sc-if>
+                    <div onClick="{{ closeCard }}" style="cursor:pointer; width:30px; height:30px; border-radius:50%; background:#efe7d6; display:flex; align-items:center; justify-content:center; color:#7a7563; font-size:16px;">✕</div>
+                  </div>
+                  <div style="font-family:'Lora'; font-weight:600; font-size:23px; line-height:1.22; letter-spacing:-.01em; color:#222a1e;">{{ cardText }}</div>
+                  <sc-if value="{{ showSalience }}" hint-placeholder-val="{{ true }}">
+                    <div style="margin-top:14px; padding-top:14px; border-top:1px solid #ece3d0; font-size:13.5px; line-height:1.5; color:#8a8472;"><span style="color:#5f7050; font-weight:600;">Why it was kept · </span>{{ cardSalience }}</div>
+                  </sc-if>
+                  <div style="margin-top:10px; font-size:12px; color:#a39c89;">from <b style="color:#5f7050;">{{ cardTopic }}</b></div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <!-- bezel overlays -->
+          <div style="position:absolute; top:12px; left:50%; transform:translateX(-50%); width:118px; height:34px; border-radius:20px; background:#0c0d0a; z-index:40;"></div>
+          <div style="position:absolute; top:20px; left:30px; font-size:14px; font-weight:600; color:#2e3326; z-index:39;">9:41</div>
+          <div style="position:absolute; top:21px; right:28px; display:flex; gap:6px; align-items:center; z-index:39;">
+            <div style="width:17px; height:11px; border:1.4px solid #2e3326; border-radius:3px; opacity:.85;"></div>
+            <div style="width:2px; height:5px; background:#2e3326; opacity:.85; margin-left:-4px; border-radius:1px;"></div>
+          </div>
+          <div style="position:absolute; bottom:9px; left:50%; transform:translateX(-50%); width:132px; height:5px; border-radius:9px; background:rgba(20,24,16,.32); z-index:40;"></div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;season&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;Summer&quot;, &quot;Autumn&quot;, &quot;Spring&quot;], &quot;default&quot;: &quot;Summer&quot;, &quot;tsType&quot;: &quot;string&quot; },
+  &quot;showSalience&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot; }
+}">
+class Component extends DCLogic {
+  state = {
+    screen: 'onboard', groupId: '', recording: false, elapsed: 0,
+    itemsFound: 0, captured: false, itemsView: 'prairie',
+    cardOpen: false, card: { kind: '', text: '', salience: '', topic: '', isTopic: false },
+  };
+
+  CONVO = [
+    { topic: "Beethoven's Eroica", gist: "How one symphony broke the form it was born into.",
+      items: [
+        { type: 'fact', text: "Opened with hammered repetition, not the customary grand orchestral tutti", why: "A genuine break with the form — the conversation's own observation, not easily found." },
+        { type: 'reference', text: "Symphony No. 3 in E\u266D major, Op. 55", why: "The work itself — kept as a bare, durable pointer." },
+        { type: 'reference', text: "Napoleon", why: "The dedication that was famously struck out." },
+        { type: 'idea', text: "Art that outlives the cause it was dedicated to", why: "A thread the table kept circling back to." },
+      ] },
+    { topic: "Saturday on Breakneck Ridge", gist: "A plan that actually got made.",
+      items: [
+        { type: 'decision', text: "Hike Breakneck Ridge on Saturday.", why: "A decision was reached and held." },
+        { type: 'action_item', text: "Book the 8:10 train up to Cold Spring.", why: "A concrete next step someone owns." },
+        { type: 'recommendation', text: "Lunch in Cold Spring after the descent", why: "A recommendation worth remembering." },
+      ] },
+    { topic: "Wanderer above the Sea of Fog", gist: "Standing at the edge of what you can't quite see.",
+      items: [
+        { type: 'reference', text: "Caspar David Friedrich", why: "The painter reached for by allusion." },
+        { type: 'quote', text: "\u201CWe're all just standing at the edge of our own fog.\u201D", why: "Said plainly enough that paraphrase would lose it." },
+        { type: 'takeaway', text: "The unknown as something to stand before, not solve", why: "The distilled so-what of the exchange." },
+      ] },
+  ];
+
+  total() { return this.CONVO.reduce((a, t) => a + t.items.length, 0); }
+
+  palA() { return { bark: 0x5b4632, fog: 0xdfe2cf, acorn: 0xc98a3f, topic: 0x2b5232, dark: false }; }
+  palB() { return { bark: 0x4a3a2c, fog: 0x101810, acorn: 0xe6ad5c, topic: 0x9ec78a, dark: true }; }
+
+  componentDidMount() {
+    this.scenes = [];
+    this._waitThree();
+  }
+  componentWillUnmount() {
+    if (this._raf) cancelAnimationFrame(this._raf);
+    if (this._timer) clearInterval(this._timer);
+    (this.scenes || []).forEach(s => { try { s.renderer.dispose(); } catch (e) {} });
+  }
+  componentDidUpdate(prev) {
+    if (this.state.screen === 'items') requestAnimationFrame(() => this._ensureSceneA());
+    if (prev && prev.season !== this.props.season && this.scenes && this.scenes.length) {
+      const base = this.seasonBase();
+      this.scenes.forEach(s => {
+        if (!s.leafMat) return;
+        s.leafMat.color.setHex(base);
+        if (s.leafMat.emissive) { s.leafMat.emissive.setHex(base); s.leafMat.emissive.multiplyScalar(0.5); }
+      });
+    }
+  }
+
+  // single tint multiplied over the (partly desaturated) real-leaf texture
+  seasonBase() {
+    const s = this.props.season || 'Summer';
+    if (s === 'Autumn') return 0xcf8730;
+    if (s === 'Spring') return 0xc6dd86;
+    return 0xd7e2b0;
+  }
+
+  _waitThree() {
+    if (window.THREE) { this._initAll(); return; }
+    this._tw = setTimeout(() => this._waitThree(), 70);
+  }
+
+  async _initAll() {
+    await this._loadTextures();
+    const b = this._buildScene(document.getElementById('oak-canvas-b'), this.palB(), true);
+    if (b) { this.sceneB = b; this.scenes.push(b); this._attachPointer(b, true); }
+    this._animate();
+    if (this.state.screen === 'items') this._ensureSceneA();
+  }
+
+  _loadImage(src) {
+    return new Promise((res, rej) => {
+      const im = new Image(); im.crossOrigin = 'anonymous';
+      im.onload = () => res(im); im.onerror = rej; im.src = src;
+    });
+  }
+
+  async _loadTextures() {
+    const T = window.THREE;
+    // trunk bark is fully custom-modeled (procedural), not a photo
+    this.barkTex = this._makeBarkTexture();
+    try {
+      const leafImg = await this._loadImage('./oak-leaf.webp');
+      this.leafTex = this._buildLeafCluster(leafImg);
+    } catch (e) { this.leafTex = this._makeLeafTexture(); }
+  }
+
+  // Key the white background out of the real oak leaf, partly desaturate (so the
+  // season tint reads), and composite a few into one leaf-cluster card.
+  _buildLeafCluster(img) {
+    const T = window.THREE;
+    const sw = 256, s = document.createElement('canvas'); s.width = s.height = sw;
+    const sx = s.getContext('2d');
+    sx.drawImage(img, 0, 0, sw, sw);
+    const id = sx.getImageData(0, 0, sw, sw), p = id.data;
+    for (let i = 0; i < p.length; i += 4) {
+      const r = p[i], g = p[i + 1], b = p[i + 2];
+      const minC = Math.min(r, g, b), maxC = Math.max(r, g, b);
+      let a = Math.max((232 - minC) / 55, (maxC - minC) / 38);
+      a = Math.max(0, Math.min(1, a));
+      const lum = 0.3 * r + 0.59 * g + 0.11 * b, mix = 0.5;
+      p[i] = r * (1 - mix) + lum * mix;
+      p[i + 1] = g * (1 - mix) + lum * mix;
+      p[i + 2] = b * (1 - mix) + lum * mix;
+      p[i + 3] = Math.round(a * 255);
+    }
+    sx.putImageData(id, 0, 0);
+    const cl = document.createElement('canvas'); cl.width = cl.height = 256;
+    const cx = cl.getContext('2d');
+    let seed = 5; const rr = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+    for (let n = 0; n < 16; n++) {
+      cx.save();
+      cx.translate(128 + (rr() - 0.5) * 86, 128 + (rr() - 0.5) * 86);
+      cx.rotate(rr() * 6.283);
+      const sc = 0.26 + rr() * 0.22;
+      if (rr() < 0.5) cx.scale(-1, 1);
+      cx.globalAlpha = 0.9;
+      cx.drawImage(s, -128 * sc, -128 * sc, 256 * sc, 256 * sc);
+      cx.restore();
+    }
+    const tex = new T.CanvasTexture(cl); tex.anisotropy = 4;
+    return tex;
+  }
+
+  _fib(i, n) {
+    const ga = Math.PI * (3 - Math.sqrt(5));
+    const y = 1 - (i / Math.max(n - 1, 1)) * 2;
+    const r = Math.sqrt(Math.max(0, 1 - y * y));
+    const t = ga * i;
+    return [Math.cos(t) * r, y, Math.sin(t) * r];
+  }
+
+  // A soft cluster of little oak leaves, drawn desaturated so material.color tints it (season changes read).
+  _makeLeafTexture() {
+    const T = window.THREE;
+    const S = 256, c = document.createElement('canvas'); c.width = c.height = S;
+    const x = c.getContext('2d');
+    x.clearRect(0, 0, S, S);
+    const cx = S / 2, cy = S / 2;
+    let seed = 99;
+    const rr = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+    const leaf = (px, py, r, rot, v) => {
+      x.save(); x.translate(px, py); x.rotate(rot);
+      const g = Math.round(120 + v * 120);
+      x.fillStyle = 'rgb(' + Math.round(g * 0.84) + ',' + g + ',' + Math.round(g * 0.7) + ')';
+      x.beginPath();
+      // lobed oak-leaf silhouette via mirrored bumps
+      x.moveTo(0, -r);
+      const lobes = 4;
+      for (let s = -1; s <= 1; s += 2) {
+        for (let i = 0; i < lobes; i++) {
+          const t0 = -r + (2 * r) * (i / lobes), t1 = -r + (2 * r) * ((i + 1) / lobes);
+          const w = r * 0.42 * (1 - Math.abs((i / (lobes - 1)) - 0.5) * 0.7);
+          x.quadraticCurveTo(s * w * 1.5, (t0 + t1) / 2, 0, t1);
+        }
+        if (s === -1) { /* go back down other side */ }
+      }
+      x.closePath();
+      x.fill();
+      x.restore();
+    };
+    for (let i = 0; i < 96; i++) {
+      const a = rr() * 6.283, rad = Math.pow(rr(), 0.62) * 118;
+      const px = cx + Math.cos(a) * rad, py = cy + Math.sin(a) * rad;
+      const edge = rad / 118;
+      if (rr() < edge * 0.55) continue; // ragged outer edge
+      leaf(px, py, 16 + rr() * 16, rr() * 6.283, (1 - edge * 0.7) * (0.55 + rr() * 0.45));
+    }
+    const tex = new T.CanvasTexture(c);
+    tex.anisotropy = 4;
+    return tex;
+  }
+
+  // Vertical-ridged oak bark with mossy patches.
+  _makeBarkTexture() {
+    const T = window.THREE;
+    const W = 256, H = 512, c = document.createElement('canvas'); c.width = W; c.height = H;
+    const x = c.getContext('2d');
+    x.fillStyle = '#4a3a2a'; x.fillRect(0, 0, W, H);
+    let seed = 7;
+    const rr = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+    // vertical ridges
+    for (let i = 0; i < 70; i++) {
+      const px = rr() * W, wd = 3 + rr() * 10, light = rr() < 0.5;
+      x.strokeStyle = light ? 'rgba(120,98,72,0.5)' : 'rgba(28,20,12,0.55)';
+      x.lineWidth = wd;
+      x.beginPath();
+      let yy = -10, xx = px;
+      x.moveTo(xx, yy);
+      while (yy < H + 10) { yy += 18 + rr() * 22; xx = px + Math.sin(yy * 0.05 + i) * (6 + rr() * 10); x.lineTo(xx, yy); }
+      x.stroke();
+    }
+    // deep cracks
+    for (let i = 0; i < 10; i++) {
+      x.strokeStyle = 'rgba(10,7,4,0.6)'; x.lineWidth = 1 + rr() * 2;
+      const px = rr() * W; let yy = rr() * H * 0.4, xx = px;
+      x.beginPath(); x.moveTo(xx, yy);
+      for (let s = 0; s < 12; s++) { yy += 12 + rr() * 18; xx += (rr() - 0.5) * 14; x.lineTo(xx, yy); }
+      x.stroke();
+    }
+    // mossy green patches near base (bottom of texture)
+    for (let i = 0; i < 50; i++) {
+      const py = H * (0.55 + rr() * 0.45), px = rr() * W, r = 4 + rr() * 16;
+      x.fillStyle = 'rgba(' + (70 + rr() * 30) + ',' + (90 + rr() * 40) + ',' + (50 + rr() * 20) + ',' + (0.05 + rr() * 0.13) + ')';
+      x.beginPath(); x.arc(px, py, r, 0, 6.283); x.fill();
+    }
+    // speckle
+    for (let i = 0; i < 1400; i++) {
+      x.fillStyle = 'rgba(' + (rr() < 0.5 ? '20,14,8' : '110,90,66') + ',' + (rr() * 0.25) + ')';
+      x.fillRect(rr() * W, rr() * H, 1.5, 1.5);
+    }
+    const tex = new T.CanvasTexture(c);
+    tex.wrapS = tex.wrapT = T.RepeatWrapping;
+    tex.repeat.set(2.2, 1.4);
+    tex.anisotropy = 4;
+    return tex;
+  }
+
+  _ensureSceneA() {
+    const el = document.getElementById('oak-canvas-a');
+    if (!el) return;
+    if (this.sceneA && this.sceneA.canvas === el) return;
+    if (this.sceneA) {
+      this.scenes = this.scenes.filter(s => s !== this.sceneA);
+      try { this.sceneA._detach && this.sceneA._detach(); } catch (e) {}
+      try { this.sceneA.renderer.dispose(); } catch (e) {}
+    }
+    const a = this._buildScene(el, this.palA(), false);
+    if (!a) return;
+    this.sceneA = a;
+    this.scenes.push(a);
+    this._attachPointer(a);
+    a.growth = 0; a.growing = true;
+  }
+
+  _buildScene(canvas, pal, grown) {
+    if (!canvas) return null;
+    const T = window.THREE;
+    const w = canvas.clientWidth || 376, h = canvas.clientHeight || 830;
+    const renderer = new T.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
+    renderer.setSize(w, h, false);
+    renderer.outputEncoding = T.sRGBEncoding;
+
+    const scene = new T.Scene();
+    const aspect = w / h;
+    const FH = 14; // world units visible at zoom 1
+    const camera = new T.OrthographicCamera(-FH * aspect / 2, FH * aspect / 2, FH / 2, -FH / 2, 0.1, 100);
+    camera.position.set(0, 5, 30);
+    camera.lookAt(0, 5, 0);
+    // atmospheric fog gives the layered hills their hazy depth (tree stays clear, sits in front of near plane)
+    scene.fog = new T.Fog(pal.dark ? 0x16221a : 0xcfe0e6, 34, 64);
+
+    scene.add(new T.HemisphereLight(pal.dark ? 0x2c3a22 : 0xeaf3ff, pal.dark ? 0x0a0f08 : 0x5a6a3c, pal.dark ? 0.8 : 1.15));
+    const dir = new T.DirectionalLight(pal.dark ? 0xbfe0a8 : 0xfff4dd, pal.dark ? 0.7 : 1.25);
+    dir.position.set(5, 11, 7); scene.add(dir);
+    scene.add(new T.AmbientLight(0xffffff, pal.dark ? 0.24 : 0.42));
+
+    const root = new T.Group();
+    scene.add(root);
+    this._buildEnvironment(T, scene, pal);
+
+    const base = this.seasonBase();
+    // Lambert (cheap shading) for the heavily-overdrawn canopy — big fill-rate win
+    const leafMat = new T.MeshLambertMaterial({
+      map: this.leafTex, color: base, transparent: true, alphaTest: 0.4,
+      side: T.DoubleSide, depthWrite: true,
+    });
+    if (pal.dark) {
+      leafMat.emissive = new T.Color(base).multiplyScalar(0.5);
+      leafMat.emissiveMap = this.leafTex; leafMat.emissiveIntensity = 0.3;
+    }
+    const barkMat = new T.MeshStandardMaterial({
+      map: this.barkTex, color: pal.dark ? 0x96836a : 0xffffff,
+      roughness: 0.98, metalness: 0,
+    });
+
+    const store = { branches: [], pops: [], hits: [], leaves: [] };
+    this._buildTree(T, root, pal, barkMat, leafMat, store);
+    const maxOrder = store.branches.reduce((m, b) => Math.max(m, b.order), 1) + 1;
+
+    // ---- whole canopy = ONE instanced draw call (perf) ----
+    let leafInst = null;
+    const leaves = store.leaves;
+    if (leaves.length) {
+      leafInst = new T.InstancedMesh(new T.PlaneGeometry(1, 1), leafMat, leaves.length);
+      leafInst.frustumCulled = false;
+      const col = new T.Color(), d = new T.Object3D();
+      for (let i = 0; i < leaves.length; i++) {
+        const v = 0.74 + ((i * 0.6180339887) % 1) * 0.32;
+        col.setRGB(v, v, v); leafInst.setColorAt(i, col);
+        d.position.copy(leaves[i].pos); d.quaternion.copy(leaves[i].quat);
+        d.scale.setScalar(1e-4); d.updateMatrix(); leafInst.setMatrixAt(i, d.matrix);
+      }
+      if (leafInst.instanceColor) leafInst.instanceColor.needsUpdate = true;
+      leafInst.instanceMatrix.needsUpdate = true;
+      root.add(leafInst);
+    }
+
+    return {
+      canvas, renderer, scene, camera, root, aspect, FH,
+      branches: store.branches, pops: store.pops, hits: store.hits,
+      leafMat, leafInst, leafItems: leaves, leafDummy: new T.Object3D(), _leafDone: false,
+      maxOrder, growth: grown ? 1 : 0, growing: false,
+      interactive: !grown,
+      viewMode: grown ? 'tree' : 'prairie',
+      zoom: grown ? 0.92 : 0.26, py: grown ? 5.4 : 7.5,
+      tgtZoom: grown ? 0.92 : 0.26, tgtPy: grown ? 5.4 : 7.5,
+      growthDur: 6.0, raycaster: new T.Raycaster(),
+    };
+  }
+
+  _buildTree(T, root, pal, barkMat, leafMats, store) {
+    const UP = new T.Vector3(0, 1, 0), Z = new T.Vector3(0, 0, 1);
+    let seed = 20240601;
+    const srnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+    const rnd = (a, b) => a + srnd() * (b - a);
+    let order = 1;
+
+    const addBranch = (origin, dirRaw, len, rad, ord) => {
+      const dir = dirRaw.clone().normalize();
+      const pivot = new T.Object3D();
+      pivot.position.copy(origin);
+      pivot.quaternion.setFromUnitVectors(UP, dir);
+      const geo = new T.CylinderGeometry(Math.max(rad * 0.7, 0.01), rad, len, 8, 1, true);
+      const m = new T.Mesh(geo, barkMat);
+      m.position.y = len / 2;
+      pivot.add(m);
+      pivot.scale.y = 1e-4;
+      root.add(pivot);
+      store.branches.push({ pivot, order: ord });
+      return origin.clone().add(dir.clone().multiplyScalar(len));
+    };
+
+    // billowing canopy mass: CROSSED leaf-cards (each card + a perpendicular twin so foliage
+    // always faces the viewer — no edge-on slivers). All drawn as one InstancedMesh.
+    const tmp = new T.Object3D();
+    // a puff = a rounded mass volume-filled with many small randomly-oriented leaf-cards (fine foliage)
+    const addPuff = (center, radius, ord) => {
+      const K = Math.round(10 + radius * 14);
+      for (let i = 0; i < K; i++) {
+        const f = this._fib(i, K);
+        const u = Math.cbrt(srnd());
+        const dir = new T.Vector3(f[0], f[1] * 0.9 + 0.1, f[2]).normalize();
+        const p = center.clone().add(dir.clone().multiplyScalar(radius * u));
+        p.x += rnd(-0.14, 0.14); p.y += rnd(-0.1, 0.12) + radius * 0.08; p.z += rnd(-0.14, 0.14);
+        const target = rnd(0.55, 0.95);
+        const o = ord + srnd() * 0.25;
+        tmp.position.copy(p);
+        tmp.quaternion.setFromUnitVectors(Z, new T.Vector3(rnd(-1, 1), rnd(-1, 1), rnd(-1, 1)).normalize());
+        tmp.rotateZ(rnd(0, 6.283));
+        store.leaves.push({ pos: p.clone(), quat: tmp.quaternion.clone(), target: target, order: o });
+      }
+    };
+
+    const acGeo = new T.IcosahedronGeometry(0.12, 1);
+    const capGeo = new T.ConeGeometry(0.09, 0.1, 8);
+    const capMat = new T.MeshStandardMaterial({ color: pal.dark ? 0x6a4f33 : 0x5b4632, roughness: 0.8 });
+    const addAcorn = (pos, item, topic, ord) => {
+      const g = new T.Group();
+      g.position.copy(pos);
+      const mat = new T.MeshStandardMaterial({ color: pal.acorn, roughness: 0.42, metalness: 0.08, emissive: pal.acorn, emissiveIntensity: pal.dark ? 0.55 : 0.25 });
+      const body = new T.Mesh(acGeo, mat); body.scale.y = 1.25; g.add(body);
+      const cap = new T.Mesh(capGeo, capMat); cap.position.y = 0.13; g.add(cap);
+      g.scale.setScalar(1e-4);
+      root.add(g);
+      store.pops.push({ obj: g, order: ord, target: 1 });
+      const hit = new T.Mesh(new T.SphereGeometry(0.55, 8, 8), new T.MeshBasicMaterial({ visible: false }));
+      hit.position.copy(pos); hit.userData = { kind: 'acorn', item, topic };
+      root.add(hit); store.hits.push(hit);
+    };
+
+    const addTopic = (pos, topic, ord) => {
+      const mat = new T.MeshStandardMaterial({ color: pal.topic, roughness: 0.4, metalness: 0.05, emissive: pal.topic, emissiveIntensity: pal.dark ? 0.6 : 0.3 });
+      const m = new T.Mesh(new T.IcosahedronGeometry(0.3, 1), mat);
+      m.position.copy(pos); m.scale.setScalar(1e-4);
+      root.add(m); store.pops.push({ obj: m, order: ord, target: 1 });
+      const hit = new T.Mesh(new T.SphereGeometry(0.62, 8, 8), new T.MeshBasicMaterial({ visible: false }));
+      hit.position.copy(pos); hit.userData = { kind: 'topic', topic };
+      root.add(hit); store.hits.push(hit);
+    };
+
+    // ---- massive buttressed Fredville trunk ----
+    const H = 3.0, baseR = 0.82, topR = 0.6;
+    const rAt = (ny) => baseR + (topR - baseR) * ny;
+    const leanAt = (ny) => ny * 0.1;
+    (() => {
+      const geo = new T.CylinderGeometry(1, 1, H, 26, 46, true);
+      const pos = geo.attributes.position, v = new T.Vector3();
+      for (let i = 0; i < pos.count; i++) {
+        v.fromBufferAttribute(pos, i);
+        const ny = (v.y + H / 2) / H, ang = Math.atan2(v.z, v.x);
+        let r = rAt(ny);
+        const bf = Math.max(0, 1 - ny / 0.3);
+        r *= 1 + bf * 0.95 * (0.5 + 0.5 * Math.cos(ang * 5 + Math.sin(ny * 5)));
+        r *= 1 + 0.06 * Math.sin(ang * 9 + ny * 7) + 0.04 * Math.cos(ang * 6 - ny * 12);
+        pos.setXYZ(i, Math.cos(ang) * r + leanAt(ny), v.y, Math.sin(ang) * r);
+      }
+      geo.computeVertexNormals();
+      const pivot = new T.Object3D();
+      const mesh = new T.Mesh(geo, barkMat); mesh.position.y = H / 2;
+      pivot.add(mesh); pivot.scale.y = 1e-4;
+      root.add(pivot); store.branches.push({ pivot, order: 0 });
+    })();
+
+    // ---- recursive heavy gnarled limb ----
+    const addLimb = (origin, dirRaw, len, rad, depth, ord, anchors) => {
+      let o = origin.clone(), d = dirRaw.clone().normalize();
+      const segs = depth >= 2 ? 2 : 1;
+      for (let s = 0; s < segs; s++) {
+        d = d.clone();
+        d.x += rnd(-0.16, 0.16); d.y += rnd(-0.12, 0.05); d.z += rnd(-0.16, 0.16);
+        d.normalize();
+        o = addBranch(o, d, len / segs, rad * (1 - 0.06 * s), ord);
+      }
+      if (depth <= 0 || len < 0.7) {
+        if (anchors) anchors.push({ pos: o.clone(), order: ord });
+        addPuff(o, 0.95 + rad * 2.2, ord + 0.3);
+        return;
+      }
+      const kids = depth >= 3 ? 3 : (srnd() < 0.4 ? 2 : 3);
+      for (let k = 0; k < kids; k++) {
+        const nd = d.clone();
+        const ax = new T.Vector3(rnd(-1, 1), rnd(-1, 1), rnd(-1, 1)).normalize();
+        nd.applyAxisAngle(ax, rnd(0.35, 0.8));
+        nd.y += 0.22; nd.z *= 0.55; nd.normalize();   // damp depth → reads as a flat elevation
+        addLimb(o, nd, len * rnd(0.58, 0.74), rad * 0.66, depth - 1, ord + 1, anchors);
+      }
+      if (depth <= 2 && srnd() < 0.6) addPuff(o, 0.95 + rad * 1.5, ord + 0.3);
+    };
+
+    // ---- ONE primary branch per topic (topics ARE the branches) ----
+    // All share root-stage order 1 so they grow outward together like a time-lapse.
+    // CHRONOLOGICAL: first topic = lowest branch on the trunk, each later topic higher up.
+    // Earlier (lower) branches also lead the growth slightly, so the tree fills bottom→top.
+    const data = this.CONVO;
+    const NP = data.length;
+    for (let i = 0; i < NP; i++) {
+      const frac = NP > 1 ? i / (NP - 1) : 0.5;        // 0 = first/oldest, 1 = latest
+      // fan branches left/right in the VIEW plane (front ortho elevation), climbing with chronology
+      const side = (i % 2 === 0) ? -1 : 1;
+      const lean = side * (0.55 + 0.22 * frac + rnd(-0.08, 0.08));  // horizontal spread (screen X)
+      const ny = 0.4 + frac * 0.5 + rnd(-0.03, 0.03);  // climbs the trunk with chronology
+      const origin = new T.Vector3(side * 0.18 + leanAt(ny), ny * H, rnd(-0.12, 0.12));
+      const up = 0.92 + frac * 0.32;                    // higher branches angle up more
+      const dir = new T.Vector3(lean, up, rnd(-0.28, 0.28)).normalize();
+      const len = rnd(2.7, 3.3), rad = 0.32 - frac * 0.04;
+      const base = 1 + i * 0.45;                         // earlier topics start a beat sooner
+      const anchors = [];
+      addLimb(origin, dir, len, rad, 3, base, anchors);
+      const tp = origin.clone().add(dir.clone().normalize().multiplyScalar(0.55));
+      tp.y += 0.22;
+      addTopic(tp, data[i], base + 0.15);
+      data[i].items.forEach((item, ii) => {
+        const a = anchors[ii % anchors.length] || { pos: origin.clone().add(dir.clone().multiplyScalar(len)), order: base + 3 };
+        const off = new T.Vector3(rnd(-0.45, 0.45), rnd(-0.3, 0.25), rnd(-0.45, 0.45));
+        addAcorn(a.pos.clone().add(off), item, data[i], a.order + 0.6);
+      });
+    }
+
+    // central leader — the trunk doesn't stop at the topic branches: it continues up
+    // through the middle of the crown with its own branches and a full nest of leaves.
+    const leadStart = new T.Vector3(leanAt(0.99), H * 0.99, 0);
+    const leadDir = new T.Vector3(rnd(-0.12, 0.12), 1, rnd(-0.1, 0.1)).normalize();
+    addLimb(leadStart, leadDir, 2.9, 0.55, 3, 1.1, null);
+    // a couple of short interior limbs off the upper trunk so the centre fills out
+    for (let i = 0; i < 2; i++) {
+      const a = 1.4 + i * 3.0;
+      const o = new T.Vector3(leanAt(0.9) + Math.cos(a) * 0.3, H * (0.86 + i * 0.06), Math.sin(a) * 0.3);
+      const d = new T.Vector3(Math.cos(a) * 0.5, 1.1, Math.sin(a) * 0.5 * 0.55).normalize();
+      addLimb(o, d, 2.0, 0.32, 2, 1.2, null);
+    }
+  }
+
+  // procedural 3D environment inspired by the prairie photo: gradient sky, drifting clouds,
+  // and layered rolling-hill terrain that the tree is rooted in. All static (no per-frame cost).
+  _makeSky(dark) {
+    const T = window.THREE;
+    const c = document.createElement('canvas'); c.width = 8; c.height = 256;
+    const x = c.getContext('2d');
+    const g = x.createLinearGradient(0, 0, 0, 256);
+    if (dark) { g.addColorStop(0, '#0a1510'); g.addColorStop(0.5, '#14231a'); g.addColorStop(0.72, '#1d2c1f'); g.addColorStop(1, '#22321f'); }
+    else { g.addColorStop(0, '#5e9ed6'); g.addColorStop(0.44, '#9ec6e3'); g.addColorStop(0.64, '#cfe0e6'); g.addColorStop(1, '#d9e6e6'); }
+    x.fillStyle = g; x.fillRect(0, 0, 8, 256);
+    const tex = new T.CanvasTexture(c); tex.minFilter = T.LinearFilter; return tex;
+  }
+
+  _makeCloud() {
+    const T = window.THREE;
+    const S = 128, c = document.createElement('canvas'); c.width = c.height = S;
+    const x = c.getContext('2d');
+    let seed = 3; const rr = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+    for (let i = 0; i < 9; i++) {
+      const cx = 30 + rr() * 68, cy = 48 + rr() * 36, r = 18 + rr() * 26;
+      const g = x.createRadialGradient(cx, cy, 0, cx, cy, r);
+      g.addColorStop(0, 'rgba(255,255,255,0.9)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+      x.fillStyle = g; x.beginPath(); x.arc(cx, cy, r, 0, 6.283); x.fill();
+    }
+    return new T.CanvasTexture(c);
+  }
+
+  _buildEnvironment(T, scene, pal) {
+    const grp = new T.Group(); scene.add(grp);
+    if (!this._skyDay) { this._skyDay = this._makeSky(false); this._skyNight = this._makeSky(true); this._cloudTex = this._makeCloud(); }
+
+    const sky = new T.Mesh(new T.PlaneGeometry(240, 130),
+      new T.MeshBasicMaterial({ map: pal.dark ? this._skyNight : this._skyDay, fog: false, depthWrite: false }));
+    sky.position.set(0, 14, -46); grp.add(sky);
+
+    let seed = 8; const rr = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+    const cloudMat = new T.MeshBasicMaterial({ map: this._cloudTex, transparent: true, opacity: pal.dark ? 0.16 : 0.92, depthWrite: false, fog: false });
+    for (let i = 0; i < 7; i++) {
+      const cl = new T.Mesh(new T.PlaneGeometry(1, 1), cloudMat);
+      const s = 8 + rr() * 10;
+      cl.scale.set(s * 1.7, s, 1);
+      cl.position.set((rr() - 0.5) * 46, 12 + rr() * 10, -36 - rr() * 4);
+      grp.add(cl);
+    }
+
+    // layered rolling-hill ridges (far → near); fog lightens the distant ones for depth
+    const ridge = (z, baseY, amp, color) => {
+      const W = 64, segs = 90, bottom = -30, pos = [], idx = [];
+      let s2 = Math.floor(z * 131 + 1777) >>> 0; const rn = () => { s2 = (s2 * 1664525 + 1013904223) >>> 0; return s2 / 4294967296; };
+      for (let i = 0; i <= segs; i++) {
+        const xx = -W / 2 + W * (i / segs);
+        const top = baseY + Math.sin(i * 0.42 + z) * amp * 0.5 + Math.sin(i * 0.16 + z * 2.3) * amp * 0.4 + (rn() - 0.5) * amp * 0.3;
+        pos.push(xx, top, 0, xx, bottom, 0);
+      }
+      for (let i = 0; i < segs; i++) { const a = i * 2; idx.push(a, a + 1, a + 2, a + 2, a + 1, a + 3); }
+      const g = new T.BufferGeometry();
+      g.setAttribute('position', new T.Float32BufferAttribute(pos, 3)); g.setIndex(idx);
+      const m = new T.Mesh(g, new T.MeshBasicMaterial({ color }));
+      m.position.z = z; grp.add(m);
+    };
+    const greens = pal.dark
+      ? [0x1b2912, 0x213017, 0x27381b, 0x2d401e]
+      : [0x5b7b37, 0x678741, 0x73934b, 0x809f56];
+    ridge(-26, 3.6, 1.6, greens[3]);
+    ridge(-18, 2.5, 1.4, greens[2]);
+    ridge(-11, 1.5, 1.2, greens[1]);
+    ridge(-6, 0.75, 1.0, greens[0]);
+    ridge(-0.6, 0.04, 0.5, pal.dark ? 0x17230f : 0x54732e); // foreground the tree roots into
+  }
+
+  _attachPointer(s, viewOnly) {
+    const c = s.canvas;
+    let lx = 0, ly = 0, moved = false, dragging = false;
+    const down = e => { lx = e.clientX; ly = e.clientY; moved = false; dragging = true; };
+    const move = e => { if (!dragging) return; if (Math.abs(e.clientX - lx) + Math.abs(e.clientY - ly) > 6) moved = true; };
+    const up = e => { if (!dragging) return; dragging = false; if (!moved && !viewOnly) this._tap(s, e); };
+    c.addEventListener('pointerdown', down);
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    s._detach = () => {
+      c.removeEventListener('pointerdown', down);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+  }
+
+  // ortho, no rotation: prairie view → tap zooms cinematically into the tree; tree view → tap acorns/topics
+  _tap(s, e) {
+    const T = window.THREE;
+    if (s.viewMode === 'prairie') { this.setState({ itemsView: 'tree' }); return; }
+    const rect = s.canvas.getBoundingClientRect();
+    const mouse = new T.Vector2(
+      ((e.clientX - rect.left) / rect.width) * 2 - 1,
+      -((e.clientY - rect.top) / rect.height) * 2 + 1
+    );
+    s.camera.updateMatrixWorld();
+    s.raycaster.setFromCamera(mouse, s.camera);
+    const hits = s.raycaster.intersectObjects(s.hits, false);
+    if (!hits.length) return;
+    const u = hits[0].object.userData;
+    const card = u.kind === 'topic'
+      ? { kind: 'TOPIC', text: u.topic.topic, salience: u.topic.gist, topic: u.topic.topic, isTopic: true }
+      : { kind: u.item.type.replace(/_/g, ' ').toUpperCase(), text: u.item.text, salience: u.item.why, topic: u.topic.topic, isTopic: false };
+    this.setState({ cardOpen: true, card });
+  }
+
+  _ease(t) { t = Math.max(0, Math.min(1, t)); return 1 - Math.pow(1 - t, 3); }
+
+  _animate() {
+    let last = performance.now();
+    const loop = () => {
+      const now = performance.now();
+      const dt = Math.min((now - last) / 1000, 0.05); last = now;
+      (this.scenes || []).forEach(s => {
+        if (s.growing) { s.growth = Math.min(1, s.growth + dt / s.growthDur); if (s.growth >= 1) s.growing = false; }
+        const g = s.growth, mo = s.maxOrder;
+        s.branches.forEach(b => {
+          const n = b.order / mo;
+          const t = this._ease((g - n * 0.62) / 0.42);
+          b.pivot.scale.y = Math.max(t, 1e-4);
+        });
+        s.pops.forEach(p => {
+          const n = p.order / mo;
+          const t = this._ease((g - n * 0.62 - 0.12) / 0.32);
+          p.obj.scale.setScalar(Math.max(t * p.target, 1e-4));
+        });
+        // instanced canopy growth — only while growing, then frozen (no per-frame cost once grown)
+        if (s.leafInst && (s.growing || !s._leafDone)) {
+          const d = s.leafDummy, items = s.leafItems;
+          for (let i = 0; i < items.length; i++) {
+            const it = items[i];
+            const n = it.order / mo;
+            const t = this._ease((g - n * 0.62 - 0.12) / 0.32);
+            d.position.copy(it.pos); d.quaternion.copy(it.quat);
+            d.scale.setScalar(Math.max(t * it.target, 1e-4)); d.updateMatrix();
+            s.leafInst.setMatrixAt(i, d.matrix);
+          }
+          s.leafInst.instanceMatrix.needsUpdate = true;
+          if (!s.growing) s._leafDone = true;
+        }
+        // ortho zoom/pan tween (no rotation). Interactive scene follows itemsView.
+        if (s.interactive) {
+          const tree = this.state.itemsView === 'tree';
+          s.viewMode = tree ? 'tree' : 'prairie';
+          s.tgtZoom = tree ? 0.92 : 0.26;
+          s.tgtPy = tree ? 5.4 : 7.5;
+        }
+        const k = Math.min(1, dt * 3.0);
+        s.zoom += (s.tgtZoom - s.zoom) * k;
+        s.py += (s.tgtPy - s.py) * k;
+        s.camera.zoom = s.zoom;
+        s.camera.position.set(0, s.py, 30);
+        s.camera.lookAt(0, s.py, 0);
+        s.camera.updateProjectionMatrix();
+        // chips fade in as the camera arrives at the tree (loop owns opacity directly)
+        if (s.interactive) {
+          const f = Math.max(0, Math.min(1, (s.zoom - 0.26) / (0.92 - 0.26)));
+          const chips = document.getElementById('oak-chips-a');
+          if (chips) chips.style.opacity = f > 0.6 ? ((f - 0.6) / 0.4).toFixed(2) : '0';
+        }
+        s.renderer.render(s.scene, s.camera);
+      });
+      this._raf = requestAnimationFrame(loop);
+    };
+    this._raf = requestAnimationFrame(loop);
+  }
+
+  _toggleRecord() {
+    if (this.state.recording) {
+      if (this._timer) clearInterval(this._timer);
+      this.setState({ recording: false, captured: true });
+    } else {
+      this.setState({ recording: true, captured: false, elapsed: 0, itemsFound: 0 });
+      this._timer = setInterval(() => {
+        this.setState(st => {
+          const e = st.elapsed + 1;
+          let f = st.itemsFound;
+          if (e % 2 === 0 && f < this.total()) f++;
+          return { elapsed: e, itemsFound: f };
+        });
+      }, 1000);
+    }
+  }
+
+  _grassBlades() {
+    if (this._grass) return this._grass;
+    let seed = 7; const rr = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+    const g = [];
+    for (let i = 0; i < 46; i++) {
+      g.push({
+        left: (i / 46 * 100 + (rr() - 0.5) * 2.2).toFixed(2) + '%',
+        h: (20 + rr() * 34).toFixed(0) + 'px',
+        rot: ((rr() - 0.5) * 26).toFixed(1) + 'deg',
+        dur: (2.6 + rr() * 1.8).toFixed(2) + 's',
+        delay: (rr() * 2).toFixed(2) + 's',
+      });
+    }
+    this._grass = g;
+    return g;
+  }
+
+  renderVals() {
+    const st = this.state;
+    const mm = Math.floor(st.elapsed / 60);
+    const ss = String(st.elapsed % 60).padStart(2, '0');
+    return {
+      isOnboard: st.screen === 'onboard',
+      isCapture: st.screen === 'capture',
+      isItems: st.screen === 'items',
+      isPrairie: st.screen === 'items' && st.itemsView === 'prairie',
+      isTreeView: st.screen === 'items' && st.itemsView === 'tree',
+      groupId: st.groupId,
+      groupCode: st.groupId || 'sunday-table',
+      onGroup: e => this.setState({ groupId: e.target.value }),
+      consent: () => this.setState({ screen: 'capture' }),
+      toggleRecord: () => this._toggleRecord(),
+      goItems: () => this.setState({ screen: 'items', itemsView: 'prairie', cardOpen: false }),
+      backItems: () => {
+        if (this.state.itemsView === 'tree') this.setState({ itemsView: 'prairie', cardOpen: false });
+        else this.setState({ screen: 'capture', cardOpen: false });
+      },
+      enterTree: () => this.setState({ itemsView: 'tree' }),
+      recording: st.recording,
+      idle: !st.recording,
+      elapsedStr: `${mm}:${ss}`,
+      itemsFound: st.itemsFound,
+      showSeeTree: st.captured && !st.recording,
+      topics: [{ short: 'Eroica' }, { short: 'Breakneck Ridge' }, { short: 'Sea of Fog' }],
+      topicCount: this.CONVO.length,
+      itemTotal: this.total(),
+      cardOpen: st.cardOpen,
+      cardIsTopic: st.cardOpen && st.card.isTopic,
+      cardIsItem: st.cardOpen && !st.card.isTopic,
+      cardKind: st.card.kind,
+      cardText: st.card.text,
+      cardSalience: st.card.salience,
+      cardTopic: st.card.topic,
+      showSalience: this.props.showSalience !== false,
+      closeCard: () => this.setState({ cardOpen: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>

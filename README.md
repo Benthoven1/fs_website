@@ -61,10 +61,13 @@ be announced.
 - `css/style.css` — the stylesheet every page shares; `css/fiscal.css`, `css/oak.css`,
   `css/values.css` and `css/about.css` hold rules only one page needs, and only that page
   loads them.
-- Type: three faces from Google Fonts, and no others. Lora for headings and prose; IBM
-  Plex Sans for the interface (navigation, footers, buttons, forms, the M.SOS figures);
-  Major Mono Display for small labels, always set lowercase. Each letter of the wordmark
-  takes one of the three. `font-size-adjust` on `html` scales every face to one x-height,
+- Type: three faces from Google Fonts. Lora for headings and prose; IBM Plex Sans for the
+  interface (navigation, footers, buttons, forms, the M.SOS and Oak demonstrations); Major
+  Mono Display for small labels, always set lowercase. The one exception is the wordmark
+  at the top left, whose letters keep their own faces (Cinzel, Playfair Display, Italiana,
+  Inter, Cormorant SC), loaded for those letters alone. The footer's wordmark carries ™.
+- The main menu: Dear Leader, Offerings, About Us, and "Join the waitlist", a clay pill
+  that opens the waitlist drawer on the home page. `font-size-adjust` on `html` scales every face to one x-height,
   so sizes set in px keep the layout's measure.
 - `css/editorial.css` and `js/fiscal.js` — the type and motion the Fiscal Sponsorship,
   MulviumSOS, Oak and Values pages share: headings whose words rise, reveals, definitions
@@ -81,8 +84,9 @@ be announced.
   M.SOS's own, brought from its web app (Benthoven1/MulviumSOS) with its colours: the
   workspace canvas, where work flows from the blueprint to the agents and on to review,
   and an agent at work, its steps and draft arriving behind a caret until a person
-  approves. Then the market's figures count up, and the operating-system figure lights
-  each layer's counterpart.
+  approves; and Grove's client dashboard (views, share of voice, message penetration),
+  with example figures. Then the market's figures count up, and the operating-system
+  figure lights each layer's counterpart.
 - `js/fsos-words.js` — the MulviumSOS vocabulary: each agent, its focus and its eight words,
   and the faces the word sphere draws them in.
 - `js/fsos-cloud.js` — generated: where each word sits on the sphere, packed by the shape of
@@ -93,6 +97,9 @@ be announced.
   with one of the loading screen's four pictures.
 - `js/fiscal.js` — the Fiscal Sponsorship page's text motion: rising headings, a turning
   word, reveals, the steps' timeline, and the plain-terms rows that open.
+- `oak-app/` — Oak's own interface, from Benthoven1/ConversationTree (`Oakv0 UI/Oak.dc.html`
+  and its runtime, `support.js`): the interactive phone alone (consent, listening, the tree
+  and its acorns), set in the site's faces and shown in a frame on the Oak page.
 - `js/oak.js` — the Oak page: the planet becomes an acorn among leaves, and
   scrolling pulls back to the whole oak on its esplanade. The tree's shaders,
   buffers and textures are readied while the acorn forms, before scrolling is
