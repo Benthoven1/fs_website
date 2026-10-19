@@ -93,9 +93,9 @@
   var ctx = canvas.getContext("2d");
   var INK = ["#8f5a42", "#9c5370", "#4d6d96", "#4f7a45", "#3c7a74"];
   var FONTS = {
-    agent: '500 40px "Cormorant SC", serif',
-    focus: '500 40px "Cormorant Garamond", serif',
-    work: 'italic 400 40px "Cormorant Garamond", serif'
+    agent: '400 40px "Major Mono Display", monospace',
+    focus: '500 40px "Lora", serif',
+    work: 'italic 400 40px "Lora", serif'
   };
   var TILT = 0.55;
   var cosT = Math.cos(TILT), sinT = Math.sin(TILT);
@@ -112,8 +112,10 @@
         var n = [r[2], r[3], r[4]], e = [r[5], r[6], r[7]];
         var u = [n[1] * e[2] - n[2] * e[1], n[2] * e[0] - n[0] * e[2], n[0] * e[1] - n[1] * e[0]];
         ctx.font = FONTS[r[0]];
-        return { kind: r[0], text: r[1], n: n, e: e, u: u, w: r[8], h: r[9],
-                 tw: ctx.measureText(r[1]).width, ink: INK[(owner[r[1]] || 0) % INK.length] };
+        // Major Mono Display, the agents' face, is set lowercase only
+        var text = r[0] === "agent" ? r[1].toLowerCase() : r[1];
+        return { kind: r[0], text: text, n: n, e: e, u: u, w: r[8], h: r[9],
+                 tw: ctx.measureText(text).width, ink: INK[(owner[r[1]] || 0) % INK.length] };
       });
       var go = function () { size(); if (still) draw(); else start(); };
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () {

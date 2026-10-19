@@ -28,17 +28,18 @@ html:has(body.name-page) { scroll-behavior: smooth; }
 }
 
 .nm-eyebrow {
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 15px;
-  letter-spacing: 0.3em;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: 12px;
+  letter-spacing: 0.04em;
   text-indent: 0.3em;
   color: var(--clay-deep);
   margin: 0 0 10px;
 }
 
 .nm-title {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 300;
   font-size: clamp(64px, 12vw, 150px);
   line-height: 0.95;
@@ -49,7 +50,7 @@ html:has(body.name-page) { scroll-behavior: smooth; }
 
 /* A dictionary entry under the name */
 .nm-entry {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-size: clamp(17px, 1.9vw, 21px);
   line-height: 1.55;
   color: var(--ink-soft);
@@ -74,7 +75,7 @@ body.name-page.ls-hole .ar {
   bottom: clamp(18px, 4vh, 36px);
   margin: 0;
   text-align: center;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-size: 15px;
   letter-spacing: 0.04em;
   color: var(--ink-soft);
@@ -98,17 +99,18 @@ body.name-page.ls-hole .ar {
 .nm-sec { margin-bottom: clamp(56px, 9vh, 96px); }
 
 .nm-essay h2 {
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 17px;
-  letter-spacing: 0.22em;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
   text-align: center;
   color: var(--ink);
   margin: 0 0 30px;
 }
 .nm-essay h2 .nm-num {
   display: block;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 300;
   font-size: 34px;
   letter-spacing: 0.06em;
@@ -117,7 +119,7 @@ body.name-page.ls-hole .ar {
 }
 
 .nm-essay p {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-size: 19px;
   line-height: 1.85;
   color: var(--ink-soft);
@@ -144,7 +146,7 @@ body.name-page.ls-hole .ar {
   margin: 26px 0 26px 1.6em;
   padding-left: 18px;
   border-left: 1px solid var(--clay);
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-style: italic;
   font-size: 20px;
   line-height: 1.7;
@@ -175,15 +177,16 @@ body.name-page.ls-hole .ar {
 .nm-fig figcaption {
   max-width: 34em;
   margin: 16px auto 0;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-size: 15.5px;
   line-height: 1.6;
   color: var(--ink-soft);
 }
 .nm-fig figcaption .nm-fig-no {
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  letter-spacing: 0.04em;
   color: var(--ink);
   margin-right: 0.35em;
 }
@@ -226,9 +229,11 @@ body.name-page.ls-hole .ar {
 .nm-plate-road { fill: none; stroke: var(--road); stroke-width: 1.3; stroke-linecap: round; }
 .nm-plate-bed { fill: none; stroke: var(--road-bed); stroke-width: 9; stroke-linecap: round; }
 .nm-label {
-  font-family: "Cinzel", serif;
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: 12px;
+  letter-spacing: 0.04em;
   fill: var(--ink-soft);
 }
 /* A road's name, with a margin of paper where it crosses a line */
@@ -240,14 +245,15 @@ body.name-page.ls-hole .ar {
   stroke-linejoin: round;
 }
 .nm-plate-name {
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 17px;
-  letter-spacing: 0.24em;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
   fill: var(--ink);
 }
 .nm-plate-gloss {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-style: italic;
   font-size: 14px;
   fill: var(--ink-soft);
@@ -265,7 +271,7 @@ body.name-page.ls-hole .ar {
 .nm-notes-list {
   margin: 0;
   padding: 0 0 0 1.4em;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-size: 16px;
   line-height: 1.65;
   color: var(--ink-soft);
@@ -280,7 +286,9 @@ body.name-page.ls-hole .ar {
   line-height: 1.65;
   text-indent: 0;
 }
-.nm-credits-head { font-family: "Cormorant SC", serif; font-weight: 500; letter-spacing: 0.08em; color: var(--ink); margin-right: 0.3em; }
+.nm-credits-head { font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none; font-weight: 500; letter-spacing: 0.04em; color: var(--ink); margin-right: 0.3em; }
 .nm-back { margin-left: 6px; color: var(--clay-deep); text-decoration: none; }
 .nm-back:hover { text-decoration: underline; }
 .nm-ref a { scroll-margin-top: calc(var(--nav-h) + 80px); }

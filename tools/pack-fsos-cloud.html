@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pack the MulviumSOS word sphere</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Cormorant+SC:wght@500&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Major+Mono+Display&display=swap" rel="stylesheet" />
   <style>
     body { font: 15px/1.55 system-ui, sans-serif; margin: 32px; color: #1b1613; background: #eceae5; max-width: 760px; }
     pre { white-space: pre-wrap; max-height: 50vh; overflow: auto; background: #f7f5f1; padding: 14px; font-size: 12px; }
@@ -25,7 +25,7 @@
   <pre id="out"></pre>
 
   <script type="module">
-    import { STYLES, vocabulary, slotSize, drawWord } from "../js/fsos-words.js";
+    import { STYLES, FAMILIES, vocabulary, slotSize, drawWord } from "../js/fsos-words.js";
 
     const status = (t) => { document.getElementById("status").textContent = t; };
     const pause = () => new Promise((r) => setTimeout(r));
@@ -222,7 +222,7 @@
     const FONTS = Object.values(STYLES).map((s) => s.font);
     await Promise.all(FONTS.map((f) => document.fonts.load(f))).catch(() => {});
     const loaded = (fam) => [...document.fonts].some((f) => f.family.replace(/"/g, "") === fam && f.status === "loaded");
-    if (!["Cormorant SC", "Cormorant Garamond", "DM Mono"].every(loaded)) {
+    if (!FAMILIES.every(loaded)) {
       status("The web fonts did not load, so words cannot be measured. Check the connection and reload.");
     } else {
       status("Packing…");

@@ -40,13 +40,17 @@ export const CHIEF_OF_STAFF = {
   work: ["blueprint", "mission", "decisions", "memory", "drafts", "approvals", "handoffs", "sign-off"],
 };
 
-// Each style: the font words are drawn in, and a word's height in radians
-// on the sphere at full size
+// Each style: the font words are drawn in, a word's height in radians on the
+// sphere at full size, and whether it is set lowercase (Major Mono Display is
+// only ever set lowercase)
 export const STYLES = {
-  agent: { font: '500 72px "Cormorant SC"', px: 72, h: 0.21 },
-  focus: { font: '500 64px "Cormorant Garamond"', px: 64, h: 0.15 },
-  work:  { font: '400 48px "DM Mono"', px: 48, h: 0.1 },
+  agent: { font: '400 72px "Major Mono Display"', px: 72, h: 0.21, lower: true },
+  focus: { font: '500 64px "Lora"', px: 64, h: 0.15 },
+  work:  { font: '400 48px "IBM Plex Sans"', px: 48, h: 0.1 },
 };
+
+// The families those styles need, for the font checks of the sphere and its packer
+export const FAMILIES = ["Major Mono Display", "Lora", "IBM Plex Sans"];
 
 // Every word, with its kind and the agent it belongs to, in a fixed order:
 // the institution's twelve agents, then the agency's eight, then the rest
@@ -62,6 +66,7 @@ export function vocabulary() {
 
 // The slot a word is drawn in: its width plus a little air, by 1.25 em
 export function slotSize(ctx, text, style) {
+  if (style.lower) text = text.toLowerCase();
   ctx.font = style.font;
   return { w: Math.ceil(ctx.measureText(text).width + style.px * 0.2), h: Math.ceil(style.px * 1.25) };
 }
@@ -70,6 +75,7 @@ export function slotSize(ctx, text, style) {
 // fill it exactly, so it keeps its proportions on the sphere even if the font
 // has changed since the slot was measured.
 export function drawWord(ctx, text, style, cx, cy, slotW) {
+  if (style.lower) text = text.toLowerCase();
   ctx.font = style.font;
   const fit = slotW ? slotW / (ctx.measureText(text).width + style.px * 0.2) : 1;
   ctx.save();

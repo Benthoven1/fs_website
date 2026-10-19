@@ -1,7 +1,7 @@
 /* editorial.css — the type and motion the Fiscal Sponsorship, MulviumSOS and
    Oak pages share: rising headings and reveals (js/fiscal.js adds .is-in),
-   numbered section kickers, definitions with highlighter strokes, a timeline
-   of steps that fills as it is read, numbered lists, and the closing links.
+   definitions with highlighter strokes, a timeline
+   of steps, numbered lists, and the closing links.
    Loaded after css/style.css and before each page's own stylesheet. */
 
 /* ---- Reveals: blocks rise; heading words rise out of their masks ---- */
@@ -30,9 +30,11 @@
 .fs-words.is-in .fs-w > span { transform: none; }
 
 .fs-eyebrow {
-  font-family: "Cormorant SC", serif;
-  font-size: 14px;
-  letter-spacing: 0.26em;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: 12px;
+  letter-spacing: 0.04em;
   color: var(--clay-deep);
   margin: 0 0 14px;
 }
@@ -55,33 +57,14 @@
   margin: 0 0 44px;
 }
 
-/* Numerals in lining figures: Cormorant's old-style "1" reads as an "I" */
-.fs-kicker, .fs-steps li::before, .fs-domain-num, .fs-list li::before { font-variant-numeric: lining-nums; }
+/* Numerals in lining figures, so they sit level with capitals */
+.fs-list li::before { font-variant-numeric: lining-nums; }
 
 /* ---- Sections ---- */
 .fs-section,
 .fs-close { scroll-margin-top: calc(var(--nav-h) + 8px); }
 
 .fs-section { padding-top: clamp(84px, 14vh, 150px); }
-
-.fs-kicker {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  font-weight: 300;
-  font-size: 22px;
-  letter-spacing: 0.08em;
-  color: var(--clay-deep);
-  margin: 0 0 6px;
-}
-
-.fs-kicker::after {
-  content: "";
-  width: 56px;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.5;
-}
 
 .fs-h2 {
   font-weight: 300;
@@ -123,66 +106,29 @@
 
 .fs-intro { font-style: italic; font-weight: 400; font-size: 21px; margin-bottom: 36px; }
 
-/* ---- Five steps: the line fills as the reader moves through them ---- */
+/* ---- Steps: a row of short cards, read left to right ---- */
 .fs-steps {
-  --fill: 0;
-  position: relative;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 26px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
   list-style: none;
-  counter-reset: fsstep;
   margin: 0 0 80px;
   padding: 0;
 }
 
-.fs-steps::before,
-.fs-steps::after {
-  content: "";
-  position: absolute;
-  top: 22px;
-  left: 22px;
-  right: 22px;
-  height: 1px;
-  background: var(--hairline);
-}
-
-.fs-steps::after {
-  background: var(--clay-deep);
-  transform: scaleX(var(--fill));
-  transform-origin: left;
-}
-
-.fs-steps li { position: relative; counter-increment: fsstep; }
-
-.fs-steps li::before {
-  content: counter(fsstep);
-  position: relative;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  margin-bottom: 16px;
-  border: 1px solid #cdbe96;
-  border-radius: 50%;
-  background: var(--paper);
-  font-size: 17px;
-  color: var(--clay-deep);
-  transition: background 0.5s var(--ease), color 0.5s var(--ease), border-color 0.5s var(--ease);
-}
-
-.fs-steps li.is-reached::before {
-  border-color: var(--clay-deep);
-  background: var(--clay-deep);
-  color: var(--paper);
+.fs-steps li {
+  padding: 18px 18px 20px;
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.42);
 }
 
 .fs-steps h3 {
-  font-family: "Cormorant SC", serif;
-  font-weight: 500;
-  font-size: 20px;
-  letter-spacing: 0.1em;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: 15px;
+  letter-spacing: 0.04em;
   color: var(--ink);
   margin: 0 0 8px;
 }
@@ -196,9 +142,11 @@
 }
 
 .fs-label {
-  font-family: "Cormorant SC", serif;
-  font-size: 15px;
-  letter-spacing: 0.16em;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: 12px;
+  letter-spacing: 0.04em;
   color: var(--ink);
   margin: 0 0 12px;
 }
@@ -262,12 +210,7 @@
 
 /* ---- Narrow screens: the steps run down the page ---- */
 @media (max-width: 860px) {
-  .fs-steps { grid-template-columns: 1fr; gap: 24px; }
-  .fs-steps::before,
-  .fs-steps::after { top: 22px; bottom: 22px; left: 22px; right: auto; width: 1px; height: auto; }
-  .fs-steps::after { transform: scaleY(var(--fill)); transform-origin: top; }
-  .fs-steps li { padding-left: 64px; }
-  .fs-steps li::before { position: absolute; left: 0; top: -6px; margin: 0; }
+  .fs-steps { grid-template-columns: 1fr; gap: 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

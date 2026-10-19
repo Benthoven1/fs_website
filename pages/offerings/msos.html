@@ -15,7 +15,7 @@
   <link rel="preload" as="image" type="image/webp" href="../../Batad.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Cormorant+SC:wght@400;500&family=DM+Mono:wght@400&family=Inter:wght@600&family=Italiana&family=Playfair+Display:wght@500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Major+Mono+Display&display=swap" rel="stylesheet" />
   <link rel="modulepreload" href="https://unpkg.com/three@0.161.0/build/three.module.min.js" crossorigin />
 </head>
 <body style="opacity:0" class="fsos-page msos-page">
@@ -70,6 +70,10 @@
             <span class="offer-name">On the Name</span>
             <span class="offer-line">Many roads, one meeting place</span>
           </a></li>
+          <li style="--i:4"><a class="offer-card" href="../../pages/about/values.html">
+            <span class="offer-name">Values</span>
+            <span class="offer-line">Four things worth making more of</span>
+          </a></li>
         </ul>
       </li>
     </ul>
@@ -84,158 +88,159 @@
 
   <main class="fsos-prose">
 
-    <!-- ── Overview: the name and what it stands for, side by side in weight ── -->
+    <!-- ── The name and what it stands for, side by side in weight ───────── -->
     <header class="msos-hero" id="overview">
       <h1 class="msos-lockup">
         <span class="msos-short fs-reveal">MulviumSOS</span>
         <span class="msos-long fs-reveal"><span class="msos-w"><span class="msos-i">M</span>ulvium</span> <span class="msos-w"><span class="msos-i">S</span>ponsorship</span> <span class="msos-w"><span class="msos-i">O</span>perating</span> <span class="msos-w"><span class="msos-i">S</span>ystem</span></span>
       </h1>
-      <p class="msos-tagline fs-reveal">The software that builds an institution around a founder&rsquo;s idea, and makes it known.</p>
-      <nav class="msos-tools fs-reveal" aria-label="Its two tools">
-        <a class="msos-tool" href="#atelier">
-          <span class="msos-tool-name">Atelier</span>
-          <span class="msos-tool-line">Plans and builds the institution</span>
-          <span class="msos-tool-meta">Twelve agents under a Chief of Staff</span>
-        </a>
-        <a class="msos-tool msos-tool--grove" href="#grove">
-          <span class="msos-tool-name">Grove</span>
-          <span class="msos-tool-line">Gives it a public voice</span>
-          <span class="msos-tool-meta">Eight agents, directed by an account lead</span>
-        </a>
-      </nav>
+      <p class="msos-tagline fs-reveal">The software that turns a founder&rsquo;s idea into an institution, and makes it known, at a fraction of what either costs today.</p>
     </header>
 
-    <!-- ── Atelier ──────────────────────────────────────────────────────── -->
-    <section class="fs-section" id="atelier" aria-labelledby="msos-atelier">
-      <p class="fs-kicker fs-reveal">1</p>
-      <h2 class="fs-h2 fs-words" id="msos-atelier">Atelier</h2>
-      <p class="fs-definition fs-reveal">Where the institution is <mark>planned and built</mark>.</p>
+    <!-- ── The problem ──────────────────────────────────────────────────── -->
+    <section class="fs-section" id="problem" aria-labelledby="msos-problem">
+      <h2 class="fs-h2 fs-words" id="msos-problem">Good ideas stall between the idea and the institution</h2>
+      <div class="msos-two">
+        <article class="msos-card fs-reveal">
+          <p class="msos-card-k">building it</p>
+          <p class="msos-card-big">Months of work, and real money, before the first gift.</p>
+          <ul class="msos-chips" aria-label="What a new charity must set up">
+            <li>Incorporation</li><li>A board</li><li>Bylaws</li><li>An IRS application</li><li>Accounting</li><li>Insurance</li><li>Compliance, every year</li>
+          </ul>
+        </article>
+        <article class="msos-card fs-reveal">
+          <p class="msos-card-k">being seen</p>
+          <p class="msos-card-big">A public relations agency costs $5,000 to $25,000 a month.</p>
+          <p class="msos-card-p">Most of a retainer pays for production hours: writing, building media lists, monitoring, formatting reports. Few new institutions can pay it, so most are never heard of.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ── The market ───────────────────────────────────────────────────── -->
+    <section class="fs-section" id="market" aria-labelledby="msos-market">
+      <h2 class="fs-h2 fs-words" id="msos-market">A large field, poorly served</h2>
+      <ul class="msos-stats">
+        <li class="fs-reveal"><strong data-count="98417">98,417</strong><span>new charities recognized by the IRS in 2023</span></li>
+        <li class="fs-reveal"><strong data-count="12184">12,184</strong><span>projects under just 100 fiscal sponsors, who steward $2.6 billion in gifts and grants</span></li>
+        <li class="fs-reveal"><strong data-prefix="$" data-suffix=" billion" data-count="24.6">$24.6 billion</strong><span>earned by U.S. public relations firms in 2025</span></li>
+      </ul>
+      <p class="msos-source fs-reveal">
+        Sources: IRS Data Book, as reported by <a href="https://ministrywatch.com/takeaways-from-the-irss-latest-data-book/">MinistryWatch</a>;
+        <a href="https://thenopi.org/s/2023FiscalSponsorFieldScanFINAL_11-27-23.pdf">2023 Fiscal Sponsor Field Scan</a> (100 responding sponsors);
+        <a href="https://www.ibisworld.com/united-states/industry/public-relations-firms/1434/">IBISWorld</a>.
+      </p>
+    </section>
+
+    <!-- ── The solution: the workspace, as it runs in M.SOS ────────────────── -->
+    <section class="fs-section" id="solution" aria-labelledby="msos-solution">
+      <h2 class="fs-h2 fs-words" id="msos-solution">Software does the production. People make the decisions.</h2>
       <p class="msos-p fs-reveal">
-        From a first consultation, Atelier drafts the institution&rsquo;s
-        complete plan, the <em>blueprint</em>. Every value says where it came
-        from, and no work waits on an answer: an open question carries a
-        sensible default until the founder decides.
+        M.SOS drafts an institution&rsquo;s complete plan from a first
+        consultation, then puts an AI workforce to the research, analysis, and
+        drafting the plan calls for. Our staff review the work, the founder
+        decides, and the sponsor signs. This is the workspace our staff see,
+        live.
       </p>
 
-      <figure class="msos-blueprint fs-reveal" id="msos-blueprint" aria-labelledby="msos-bp-title">
-        <div class="msos-bp-top">
-          <p class="msos-bp-title" id="msos-bp-title">Blueprint <span>The Beethoven Bicentennial Festival &middot; an example</span></p>
-          <p class="msos-bp-legend">
-            <span class="msos-basis msos-basis--stated"></span>Stated
-            <span class="msos-basis msos-basis--inferred"></span>Inferred
-            <span class="msos-basis msos-basis--assumed"></span>Assumed
-          </p>
+      <figure class="cv-demo fs-reveal" id="cv-demo" aria-label="An animation of the M.SOS workspace: the founder&rsquo;s idea and the institution&rsquo;s memory feed its blueprint, which sends work to its research, grants, budget, programs, press, and awards; finished work goes to the lead&rsquo;s review and then to approval">
+        <div class="cv-toolbar">
+          <div class="cv-toolbar-title">
+            <strong>The Beethoven Bicentennial Festival</strong>
+            <span class="cv-mission">A multi-day festival for the 200th anniversary of Beethoven&rsquo;s death</span>
+          </div>
+          <span class="cv-live"><span class="cv-live-dot" aria-hidden="true"></span>Live</span>
+          <span class="cv-stat"><span class="cv-key st-working" aria-hidden="true"></span><span class="cv-n-working">0</span>&nbsp;working</span>
+          <span class="cv-stat"><span class="cv-key st-you" aria-hidden="true"></span><span class="cv-n-you">0</span>&nbsp;waiting on you</span>
         </div>
-        <ul class="msos-bp-rows">
-            <li><span class="msos-bp-k">Mission</span><span class="msos-bp-v">Celebrate Beethoven&rsquo;s 200th anniversary with his music, live</span><span class="msos-basis msos-basis--stated" title="Stated by the founder"><span class="hidden-text">Stated by the founder</span></span></li>
-            <li><span class="msos-bp-k">Programs</span><span class="msos-bp-v">Solo, chamber, vocal and orchestral concerts; talks with scholars and students</span><span class="msos-basis msos-basis--stated" title="Stated by the founder"><span class="hidden-text">Stated by the founder</span></span></li>
-            <li><span class="msos-bp-k">Audiences</span><span class="msos-bp-v">The town, its students, and visitors from abroad</span><span class="msos-basis msos-basis--inferred" title="Inferred"><span class="hidden-text">Inferred</span></span></li>
-            <li><span class="msos-bp-k">Requirements</span><span class="msos-bp-v">Venue contracts, artists&rsquo; visas, event insurance</span><span class="msos-basis msos-basis--inferred" title="Inferred"><span class="hidden-text">Inferred</span></span></li>
-            <li><span class="msos-bp-k">Funding</span><span class="msos-bp-v">Sponsors, foundation grants, and tickets</span><span class="msos-basis msos-basis--assumed" title="Assumed"><span class="hidden-text">Assumed</span></span></li>
-            <li><span class="msos-bp-k">Timeline</span><span class="msos-bp-v">2027, the bicentennial year</span><span class="msos-basis msos-basis--stated" title="Stated by the founder"><span class="hidden-text">Stated by the founder</span></span></li>
-            <li class="msos-bp-open" id="msos-bp-open"><span class="msos-bp-k">Open</span><span class="msos-bp-v"><span class="msos-bp-q">How many days?</span> <span class="msos-bp-ans" data-default="Five, by default, until the founder decides" data-decided="Seven, as the founder decided">Five, by default, until the founder decides</span></span><span class="msos-basis msos-basis--assumed"><span class="hidden-text">Assumed</span></span></li>
-        </ul>
-        <button type="button" class="msos-decide" aria-controls="msos-bp-open" aria-pressed="false">The founder decides <span aria-hidden="true">&rarr;</span></button>
+        <div class="cv-canvas">
+          <div class="cv-world"></div>
+        </div>
+        <figcaption>An example. In M.SOS the workspace is live: each line is work moving, and each glow an agent at work.</figcaption>
       </figure>
+    </section>
 
+    <!-- ── Agents draft; people decide: an agent at work, as in M.SOS ──────── -->
+    <section class="fs-section" id="people-decide" aria-labelledby="msos-people">
+      <h2 class="fs-h2 fs-words" id="msos-people">Agents draft; people decide.</h2>
       <p class="msos-p fs-reveal">
-        From the blueprint, Atelier assembles a workforce of AI agents,
-        organized like a small, real organization. Each holds only the tools
-        its job requires and hands its drafts to a person. Choose one to see
-        its work.
+        An agent researches and writes, and stops. It never sends, signs, pays,
+        submits, or publishes. Anything with an effect in the world waits for
+        a person, and every fact in public copy cites its source.
       </p>
-      <div class="msos-roster fs-reveal" data-team="atelier">
-        <p class="msos-team-head"><span class="msos-lead">Chief of Staff</span><span class="msos-lead-gloss">turns goals into tasks and sequences the work</span></p>
-        <ul class="msos-team-grid" aria-label="Atelier's twelve agents">
-          <li><button type="button" class="msos-agent-btn" data-agent="Research" aria-pressed="true"><span class="msos-agent">Research</span><span class="msos-focus">Evidence</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Grants" aria-pressed="false"><span class="msos-agent">Grants</span><span class="msos-focus">Funders</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Communications" aria-pressed="false"><span class="msos-agent">Communications</span><span class="msos-focus">Press</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Governance" aria-pressed="false"><span class="msos-agent">Governance</span><span class="msos-focus">Board</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Development" aria-pressed="false"><span class="msos-agent">Development</span><span class="msos-focus">Donors</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Finance" aria-pressed="false"><span class="msos-agent">Finance</span><span class="msos-focus">Budgets</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Compliance" aria-pressed="false"><span class="msos-agent">Compliance</span><span class="msos-focus">Filings</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Programs" aria-pressed="false"><span class="msos-agent">Programs</span><span class="msos-focus">Services</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Volunteers" aria-pressed="false"><span class="msos-agent">Volunteers</span><span class="msos-focus">Recruiting</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Marketing" aria-pressed="false"><span class="msos-agent">Marketing</span><span class="msos-focus">Outreach</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Operations" aria-pressed="false"><span class="msos-agent">Operations</span><span class="msos-focus">Logistics</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Evaluation" aria-pressed="false"><span class="msos-agent">Evaluation</span><span class="msos-focus">Impact</span></button></li>
-        </ul>
-        <div class="msos-work" aria-live="polite">
-          <p class="msos-work-head"><span class="msos-work-name">Research</span> looks after <em>evidence</em>, and handles</p>
-          <ul class="msos-work-list"><li>interviews</li><li>literature review</li><li>citations</li><li>sources</li><li>memo</li><li>field notes</li><li>data sets</li><li>peer review</li></ul>
+      <div class="lw-demo fs-reveal" id="lw-demo">
+        <div class="live-work" aria-live="polite">
+          <div class="live-work-head">
+            <span class="orbit" aria-hidden="true"><span></span></span>
+            <strong>Grants</strong>
+            <span class="lw-doing">is reading the task</span>
+          </div>
+          <ol class="live-steps"></ol>
+          <div class="live-draft">
+            <h3>Letter of inquiry to a music foundation</h3>
+            <p class="lw-text"></p>
+          </div>
+          <div class="lw-review" hidden>
+            <span class="lw-state"><span class="cv-key st-you" aria-hidden="true"></span>Waiting on you: review</span>
+            <span class="lw-actions">
+              <button type="button" class="lw-approve">Approve</button>
+              <button type="button" class="lw-back">Send back</button>
+            </span>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ── Grove ────────────────────────────────────────────────────────── -->
-    <section class="fs-section" id="grove" aria-labelledby="msos-grove">
-      <p class="fs-kicker fs-reveal">2</p>
-      <h2 class="fs-h2 fs-words" id="msos-grove">Grove</h2>
-      <p class="fs-definition fs-reveal">Where the institution <mark>finds its public voice</mark>.</p>
-      <p class="msos-p fs-reveal">
-        Most of an agency retainer pays for hours of production. Grove&rsquo;s
-        agents do the production, an account lead directs them, and the client
-        decides, often a month of the calendar at a single meeting. A full
-        public relations program costs a fraction of a retainer.
-      </p>
-
-      <figure class="msos-cal fs-reveal" id="msos-cal" aria-labelledby="msos-cal-title">
-        <div class="msos-cal-top">
-          <p class="msos-cal-title" id="msos-cal-title">March, as the account lead presents it <span>an example</span></p>
-          <button type="button" class="msos-approve" aria-pressed="false">Approve the month</button>
-        </div>
-        <div class="msos-cal-days" aria-hidden="true"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span></div>
-        <ul class="msos-cal-grid">
-            <li class="msos-cal-item msos-cal-item--press" style="--w:0; --dd:0; --i:0"><span class="msos-cal-text">Press release: the festival is announced</span><span class="msos-cal-state"><span class="msos-cal-draft">Draft</span><span class="msos-cal-ok">Approved</span></span></li>
-            <li class="msos-cal-item msos-cal-item--social" style="--w:0; --dd:2; --i:1"><span class="msos-cal-text">Post: the first three artists</span><span class="msos-cal-state"><span class="msos-cal-draft">Draft</span><span class="msos-cal-ok">Approved</span></span></li>
-            <li class="msos-cal-item msos-cal-item--mail" style="--w:0; --dd:4; --i:2"><span class="msos-cal-text">Monthly letter</span><span class="msos-cal-state"><span class="msos-cal-draft">Draft</span><span class="msos-cal-ok">Approved</span></span></li>
-            <li class="msos-cal-item msos-cal-item--press" style="--w:1; --dd:1; --i:3"><span class="msos-cal-text">Op-ed: why Beethoven, why now</span><span class="msos-cal-state"><span class="msos-cal-draft">Draft</span><span class="msos-cal-ok">Approved</span></span></li>
-            <li class="msos-cal-item msos-cal-item--social" style="--w:1; --dd:3; --i:4"><span class="msos-cal-text">Post: the venue revealed</span><span class="msos-cal-state"><span class="msos-cal-draft">Draft</span><span class="msos-cal-ok">Approved</span></span></li>
-            <li class="msos-cal-item msos-cal-item--award" style="--w:2; --dd:0; --i:5"><span class="msos-cal-text">Award entry: festival of the year</span><span class="msos-cal-state"><span class="msos-cal-draft">Draft</span><span class="msos-cal-ok">Approved</span></span></li>
-            <li class="msos-cal-item msos-cal-item--social" style="--w:2; --dd:2; --i:6"><span class="msos-cal-text">Post: a student's story</span><span class="msos-cal-state"><span class="msos-cal-draft">Draft</span><span class="msos-cal-ok">Approved</span></span></li>
-            <li class="msos-cal-item msos-cal-item--mail" style="--w:3; --dd:1; --i:7"><span class="msos-cal-text">Invitation: opening night</span><span class="msos-cal-state"><span class="msos-cal-draft">Draft</span><span class="msos-cal-ok">Approved</span></span></li>
-            <li class="msos-cal-item msos-cal-item--report" style="--w:3; --dd:4; --i:8"><span class="msos-cal-text">Monthly report</span><span class="msos-cal-state"><span class="msos-cal-draft">Draft</span><span class="msos-cal-ok">Approved</span></span></li>
-        </ul>
-        <figcaption>One meeting, one decision, and each piece goes out on its day.</figcaption>
-      </figure>
-
-      <div class="msos-roster fs-reveal" data-team="grove">
-        <p class="msos-team-head"><span class="msos-lead">Account lead</span><span class="msos-lead-gloss">a person, who directs the team and presents its work</span></p>
-        <ul class="msos-team-grid" aria-label="Grove's eight agents">
-          <li><button type="button" class="msos-agent-btn" data-agent="Brand" aria-pressed="true"><span class="msos-agent">Brand</span><span class="msos-focus">Storytelling</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Media Relations" aria-pressed="false"><span class="msos-agent">Media Relations</span><span class="msos-focus">Reporters</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Content" aria-pressed="false"><span class="msos-agent">Content</span><span class="msos-focus">Editorial</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Social" aria-pressed="false"><span class="msos-agent">Social</span><span class="msos-focus">Channels</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Mailing List" aria-pressed="false"><span class="msos-agent">Mailing List</span><span class="msos-focus">Subscribers</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Awards" aria-pressed="false"><span class="msos-agent">Awards</span><span class="msos-focus">Honors</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Crisis" aria-pressed="false"><span class="msos-agent">Crisis</span><span class="msos-focus">Response</span></button></li>
-          <li><button type="button" class="msos-agent-btn" data-agent="Reporting" aria-pressed="false"><span class="msos-agent">Reporting</span><span class="msos-focus">Results</span></button></li>
-        </ul>
-        <div class="msos-work" aria-live="polite">
-          <p class="msos-work-head"><span class="msos-work-name">Brand</span> looks after <em>storytelling</em>, and handles</p>
-          <ul class="msos-work-list"><li>brand voice</li><li>messaging house</li><li>boilerplate</li><li>founder story</li><li>key messages</li><li>style guide</li><li>tagline</li><li>visual identity</li></ul>
-        </div>
+    <!-- ── Two products ─────────────────────────────────────────────────── -->
+    <section class="fs-section" id="products" aria-labelledby="msos-products">
+      <h2 class="fs-h2 fs-words" id="msos-products">Two products on one system</h2>
+      <div class="msos-two">
+        <article class="msos-card msos-card--atelier fs-reveal" id="atelier">
+          <p class="msos-card-k">atelier</p>
+          <p class="msos-card-big">Turns an idea into an operating institution.</p>
+          <p class="msos-card-p">Its plan, research, grants, budget, governance, and programs, built for every project Mulvium sponsors. Mulvium earns the sponsor&rsquo;s fee on the gifts a project receives.</p>
+        </article>
+        <article class="msos-card msos-card--grove fs-reveal" id="grove">
+          <p class="msos-card-k">grove</p>
+          <p class="msos-card-big">A public relations agency, at a fraction of the price.</p>
+          <p class="msos-card-p">Brand, press, content, social, the mailing list, awards, and crisis, for sponsored projects and for organizations that hire only the agency, on a monthly plan.</p>
+          <div class="msos-price" aria-label="A conventional agency costs $5,000 to $25,000 a month; Grove's plans cost hundreds to low thousands">
+            <div class="msos-price-row"><span>A conventional agency</span><span class="msos-price-bar"><span class="msos-price-fill msos-price-fill--agency"></span></span><span>$5,000&ndash;25,000</span></div>
+            <div class="msos-price-row"><span>Grove</span><span class="msos-price-bar"><span class="msos-price-fill msos-price-fill--grove"></span></span><span>hundreds to low thousands</span></div>
+          </div>
+        </article>
       </div>
+    </section>
 
-      <p class="msos-p fs-reveal">
-        Projects we sponsor can add Grove to their sponsorship; other
-        organizations can retain it on its own. One media directory and one
-        awards directory, holding only public facts, serve every client, so
-        no reporter hears from Grove too often, and each client&rsquo;s work
-        stays walled off from the rest.
-      </p>
+    <!-- ── Why it is hard to copy ───────────────────────────────────────── -->
+    <section class="fs-section" id="moat" aria-labelledby="msos-moat">
+      <h2 class="fs-h2 fs-words" id="msos-moat">Why it is hard to copy</h2>
+      <ul class="msos-moat">
+        <li class="fs-reveal">
+          <span class="sphere sphere-sage" aria-hidden="true"></span>
+          <strong>A record, not a chat</strong>
+          <span>Everything about an institution is kept as a structured, sourced record. Screens, briefs, and every agent&rsquo;s context are views of it.</span>
+        </li>
+        <li class="fs-reveal">
+          <span class="sphere sphere-slate" aria-hidden="true"></span>
+          <strong>Accountable by design</strong>
+          <span>Agents come only from an approved catalogue, approvals follow a legal matrix, and a tamper-evident trail records every step.</span>
+        </li>
+        <li class="fs-reveal">
+          <span class="sphere sphere-rose" aria-hidden="true"></span>
+          <strong>Memory that compounds</strong>
+          <span>What a client accepted, and what worked last month, guides the next draft. Each institution makes M.SOS better at the next.</span>
+        </li>
+      </ul>
     </section>
 
     <!-- ── An operating system ──────────────────────────────────────────── -->
     <section class="fs-section" id="operating-system" aria-labelledby="msos-os">
-      <p class="fs-kicker fs-reveal">3</p>
-      <h2 class="fs-h2 fs-words" id="msos-os">An operating system</h2>
-      <p class="fs-definition fs-reveal">Atelier and Grove are <mark>parts of M.SOS</mark>, not programs on top of it.</p>
+      <h2 class="fs-h2 fs-words" id="msos-os">Why an operating system</h2>
       <p class="msos-p fs-reveal">
-        An operating system is more than a core. It schedules the
-        machine&rsquo;s work, keeps its files, and carries what it says to the
-        network and the screen, and every application relies on those parts.
-        M.SOS is built the same way. Point to a layer to find its counterpart.
+        Atelier and Grove are parts of M.SOS, as a scheduler and a network
+        stack are parts of an operating system: they share one core, one
+        record, and one set of rules, and the sponsor beneath them finally
+        acts. Point to a layer to find its counterpart.
       </p>
 
       <figure class="os-fig" id="os-stack">
@@ -271,39 +276,6 @@
         </div>
         <figcaption>Layer for layer: a computer, and Mulvium. Atelier and Grove sit inside M.SOS, on one core.</figcaption>
       </figure>
-
-      <p class="msos-p fs-reveal">
-        Because they are parts of one system, Atelier and Grove share
-        everything beneath them: one record of the institution, one set of
-        rules, one sponsor. A new part would join them the same way. For an
-        organization Grove serves outside sponsorship, its own board and
-        accounts take the sponsor&rsquo;s place.
-      </p>
-    </section>
-
-    <!-- ── People decide ────────────────────────────────────────────────── -->
-    <section class="fs-section" id="people-decide" aria-labelledby="msos-people">
-      <p class="fs-kicker fs-reveal">4</p>
-      <h2 class="fs-h2 fs-words" id="msos-people">Agents draft; people decide.</h2>
-      <p class="fs-intro fs-reveal">When work reaches a step with real-world effect, the agent stops.</p>
-      <ul class="msos-effects fs-reveal" aria-label="Steps with real-world effect">
-        <li>Signing a contract</li>
-        <li>Accepting a gift</li>
-        <li>Submitting a grant</li>
-        <li>Spending money</li>
-        <li>Speaking in public</li>
-      </ul>
-      <ol class="fs-steps">
-        <li class="fs-reveal"><h3>Draft</h3><p>An agent prepares the work.</p></li>
-        <li class="fs-reveal"><h3>Request</h3><p>It files a request tied to the exact draft.</p></li>
-        <li class="fs-reveal"><h3>Verify</h3><p>Every fact in public copy cites a confirmed record or source.</p></li>
-        <li class="fs-reveal"><h3>Approve</h3><p>The founder or client approves; the sponsor too, where required.</p></li>
-        <li class="fs-reveal"><h3>Act</h3><p>Only the approved words go out, on their scheduled day.</p></li>
-      </ol>
-      <p class="fs-definition fs-reveal">
-        Founders and clients never log in to M.SOS: they <mark>meet their lead</mark>
-        and <mark>receive finished work</mark>.
-      </p>
     </section>
 
     <!-- ── Begin ────────────────────────────────────────────────────────── -->
@@ -344,6 +316,7 @@
             <li><a href="../../pages/about/about.html#careers">Careers</a></li>
             <li><a href="../../pages/about/about.html#contact">Contact Us</a></li>
             <li><a href="../../pages/about/name.html">On the Name</a></li>
+            <li><a href="../../pages/about/values.html">Values</a></li>
             <li><a href="../../brand/">Press kit</a></li>
           </ul>
         </div>

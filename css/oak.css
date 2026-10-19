@@ -28,7 +28,7 @@
 .oak-hero .eyebrow { margin: 0 0 10px; }
 
 .oak-title {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 300;
   font-size: clamp(44px, 6vw, 76px);
   letter-spacing: 0.3em;
@@ -40,7 +40,7 @@
 }
 
 .oak-lede {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-style: italic;
   font-size: clamp(17px, 1.8vw, 22px);
   color: var(--ink-soft);
@@ -123,7 +123,7 @@ html.oak-locked body {
 
 .oak-transcript p {
   margin: 0;
-  font-family: "DM Mono", ui-monospace, monospace;
+  font-family: "IBM Plex Sans", sans-serif;
   font-size: clamp(13.5px, 1.25vw, 15px);
   line-height: 1.95;
   color: var(--ink);
@@ -292,8 +292,8 @@ html.oak-locked body {
 }
 .oak-convo.is-in .oc-bird { opacity: 1; transform: none; }
 .oc-bird:hover { color: var(--ink); }
-.oc-glyph--bird { width: 30px; height: 30px; fill: none; stroke: var(--oak-moss); stroke-width: 1.8; }
-.oc-glyph--bird .oc-cap { fill: var(--oak-moss); }
+/* The chickadee is drawn in its own colours: black cap and bib, white cheek */
+.oc-glyph--bird { width: 32px; height: 32px; fill: none; stroke: none; }
 
 .oak-convo figcaption {
   margin: 26px 0 0;
@@ -371,7 +371,7 @@ html.oak-locked body {
   border-radius: 9px;
   border: 1px solid rgba(184, 119, 88, 0.4);
   background: rgba(240, 213, 187, 0.4);
-  font-family: "DM Mono", ui-monospace, monospace;
+  font-family: "IBM Plex Sans", sans-serif;
   font-size: 22px;
   color: var(--clay-deep);
   opacity: 0;

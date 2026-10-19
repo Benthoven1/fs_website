@@ -1,0 +1,187 @@
+/* values.css — the Values page (pages/about/values.html): four values, each an
+   inequality, each shown with the picture of the project that serves it.
+   Loaded after css/style.css and css/editorial.css by that page alone. */
+
+/* The four projects' colours, as on the Fiscal Sponsorship page */
+.values-page .fs-art { --dom-ink: #8a6a2e; --dom-soft: #ecdcb4; }
+.values-page .fs-sci { --dom-ink: #4f6b3a; --dom-soft: #d0dec2; }
+.values-page .fs-edu { --dom-ink: #9b5636; --dom-soft: #f0d2c0; }
+.values-page .fs-cha { --dom-ink: #3c6b66; --dom-soft: #cde2dd; }
+
+html:has(body.values-page) { scroll-behavior: smooth; }
+
+.vl-main {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: calc(var(--nav-h) + clamp(60px, 12vh, 120px)) clamp(20px, 5vw, 56px) 110px;
+}
+
+.vl-prose { max-width: 36em; }
+.vl-prose p {
+  font-weight: 500;
+  font-size: clamp(18.5px, 1.6vw, 20px);
+  line-height: 1.72;
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+}
+
+/* ---- Opening: the four values as bubbles, as in the deck ---- */
+.vl-index {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 2.2vw, 26px);
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+}
+.vl-index a { display: block; text-decoration: none; color: var(--ink); }
+.vl-dot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  max-width: 200px;
+  aspect-ratio: 1;
+  margin: 0 auto;
+  padding: 12%;
+  border-radius: 50%;
+  background: var(--dom-soft);
+  text-align: center;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: clamp(11px, 1.15vw, 14px);
+  line-height: 1.3;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s var(--ease);
+}
+.vl-dot span:last-child { color: var(--ink-soft); }
+.vl-dot i { font-style: normal; font-family: "Lora", serif; font-size: 1.9em; line-height: 0.9; color: var(--dom-ink); text-transform: none; }
+.vl-index a:hover .vl-dot,
+.vl-index a:focus-visible .vl-dot { transform: translateY(-6px) scale(1.03); box-shadow: 0 18px 40px rgba(27, 22, 19, 0.1); }
+
+/* ---- Why beauty ---- */
+.vl-why { padding-top: clamp(90px, 14vh, 150px); }
+.vl-quote {
+  max-width: 36em;
+  margin: 0 0 36px;
+  padding-left: 24px;
+  border-left: 1px solid rgba(184, 119, 88, 0.45);
+}
+.vl-quote blockquote { margin: 0; }
+.vl-quote p { font-style: italic; font-size: clamp(21px, 2.2vw, 26px); line-height: 1.5; color: var(--ink); margin: 0 0 14px; }
+.vl-quote figcaption,
+.vl-letter span,
+.vl-project-k {
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--clay-deep);
+}
+.vl-quote cite { font-style: normal; }
+
+/* ---- Each value: the project's picture as an orb, the inequality beside ---- */
+.vl-value {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(32px, 6vw, 80px);
+  align-items: center;
+  padding-top: clamp(100px, 16vh, 170px);
+  scroll-margin-top: calc(var(--nav-h) + 10px);
+}
+.vl-value:nth-of-type(odd) .vl-orb { order: 2; }
+
+.vl-orb {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--dom-soft);
+  box-shadow: 0 30px 70px rgba(27, 22, 19, 0.14), inset 0 0 0 1px rgba(27, 22, 19, 0.06);
+  /* starts large enough to count as in view (Chrome measures the clipped
+     area), so the reveal fires */
+  clip-path: circle(24% at 50% 50%);
+  transition: clip-path 1.6s cubic-bezier(0.7, 0, 0.2, 1), opacity 0.6s var(--ease);
+}
+.vl-orb.is-in { clip-path: circle(50% at 50% 50%); }
+.vl-orb img { display: block; width: 100%; height: 100%; object-fit: cover; transform: scale(1.2); transition: transform 2.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.vl-orb.is-in img { transform: none; }
+/* A sheen, as on the porcelain spheres */
+.vl-orb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.35), transparent 42%), radial-gradient(circle at 70% 80%, rgba(27, 22, 19, 0.18), transparent 55%);
+}
+.fs-art .vl-orb img { object-position: 28% 50%; }
+.fs-cha .vl-orb img { object-position: 38% 50%; }
+
+.vl-ineq {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.3em;
+  margin: 0 0 10px;
+  font-weight: 400;
+  font-size: clamp(36px, 4.6vw, 58px);
+  line-height: 1.08;
+  color: var(--ink);
+}
+.vl-gt { color: var(--dom-ink); font-weight: 400; }
+.vl-lo { color: var(--ink-soft); font-style: italic; font-size: 0.72em; }
+
+.vl-clause {
+  margin: 0 0 26px;
+  font-style: italic;
+  font-size: clamp(20px, 2vw, 24px);
+  color: var(--dom-ink);
+}
+
+.vl-letter {
+  padding: 14px 0 0 20px;
+  border-left: 2px solid var(--dom-soft, rgba(240, 213, 187, 0.9));
+  font-style: italic;
+  color: var(--ink) !important;
+}
+.vl-letter span { display: block; margin-top: 8px; font-style: normal; }
+
+.vl-project {
+  display: grid;
+  gap: 3px;
+  max-width: 30em;
+  margin-top: 10px;
+  padding: 16px 20px 18px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--dom-soft) 55%, transparent);
+  text-decoration: none;
+  color: var(--ink);
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+.vl-project:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(27, 22, 19, 0.08); }
+.vl-project-k { color: var(--dom-ink); }
+.vl-project-t { font-size: 22px; }
+.vl-project-t::after { content: " \2192"; color: var(--dom-ink); }
+.vl-project-d { font-size: 16.5px; line-height: 1.5; color: var(--ink-soft); }
+
+/* ---- Close ---- */
+.vl-close { padding-top: clamp(110px, 16vh, 170px); }
+.vl-close .fs-close-links { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 30px; }
+.vl-close .vl-letter { border-left-color: rgba(240, 213, 187, 0.9); }
+
+@media (max-width: 860px) {
+  .vl-index { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 18px; }
+  .vl-value { grid-template-columns: 1fr; gap: 28px; }
+  .vl-value:nth-of-type(odd) .vl-orb { order: 0; }
+  .vl-orb { width: min(320px, 78vw); margin: 0 auto; }
+  .vl-dot { font-size: 12px; max-width: 170px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:has(body.values-page) { scroll-behavior: auto; }
+  .vl-orb, .vl-orb img { clip-path: none; transform: none; transition: none; }
+}

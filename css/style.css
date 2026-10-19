@@ -26,8 +26,11 @@ html, body {
   padding: 0;
   background-color: var(--paper);
   color: var(--ink);
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 400;
+  /* Lora and Plex are drawn larger than the Cormorant the sizes were set for:
+     this scales every face to one x-height, so the layout keeps its measure */
+  font-size-adjust: 0.44;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -49,6 +52,14 @@ body.cosmos-only { overflow: hidden; height: 100vh; height: 100svh; overscroll-b
 html:has(body.cosmos-only) { overflow: hidden; }
 
 a { color: inherit; }
+
+button,
+input,
+textarea,
+select {
+  /* form controls reset font-size-adjust; keep them on the page's scale */
+  font-size-adjust: inherit;
+}
 
 button {
   font-family: inherit;
@@ -103,16 +114,17 @@ button {
 
 .nav-brand a:hover { color: var(--pastel-hover); }
 
-/* Collage brand letters — each letter of "Mulvium" in a different editorial font.
+/* Collage brand letters — each letter of "Mulvium" in one of the site's three
+   faces: Lora, IBM Plex Sans, and Major Mono Display (set lowercase only).
    Parent is inline-flex/align-items:baseline so all text baselines align exactly. */
-.bl { display: inline-block; }
-/* M */ .bl-1 { font-family: "Cinzel", serif; font-weight: 500; }
-/* U */ .bl-2 { font-family: "Playfair Display", serif; font-weight: 500; }
-/* L */ .bl-3 { font-family: "Cinzel", serif; font-weight: 400; }
-/* V */ .bl-4 { font-family: "Italiana", serif; -webkit-text-fill-color: transparent; -webkit-text-stroke: 1.5px currentColor; }
-/* i */ .bl-5 { font-family: "Inter", sans-serif; font-weight: 900; margin-left: 0.03em; }
-/* u */ .bl-6 { font-family: "Cormorant SC", serif; font-weight: 500; font-size: 1.22em; margin-left: 0.03em; }
-/* M */ .bl-7 { font-family: "Cinzel", serif; font-weight: 500; margin-left: 0.03em; }
+.bl { display: inline-block; font-size-adjust: none; }
+/* M */ .bl-1 { font-family: "Lora", serif; font-weight: 600; }
+/* U */ .bl-2 { font-family: "IBM Plex Sans", sans-serif; font-weight: 300; }
+/* L */ .bl-3 { font-family: "Major Mono Display", monospace; text-transform: lowercase; font-size: 0.92em; }
+/* V */ .bl-4 { font-family: "Lora", serif; font-style: italic; -webkit-text-fill-color: transparent; -webkit-text-stroke: 1.2px currentColor; }
+/* i */ .bl-5 { font-family: "IBM Plex Sans", sans-serif; font-weight: 700; margin-left: 0.03em; }
+/* u */ .bl-6 { font-family: "Major Mono Display", monospace; text-transform: lowercase; font-size: 0.92em; margin-left: 0.03em; }
+/* M */ .bl-7 { font-family: "Lora", serif; font-weight: 500; margin-left: 0.03em; }
 
 /* Hover wiggle — letters wave in sequence */
 @keyframes blWiggle {
@@ -170,7 +182,7 @@ body.night-mode .nav-brand { --glint-base: rgba(255, 255, 255, 0.92); --glint-hi
 .nav-trigger {
   font-size: 13px;
   font-weight: 500;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.04em;
   text-transform: none;
   text-decoration: none;
   color: var(--ink);
@@ -456,7 +468,7 @@ body.footer-open .hint-join { pointer-events: none; }
 }
 
 .letter-to {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 400;
   font-style: italic;
   font-size: clamp(22px, 2.4vw, 30px);
@@ -466,7 +478,7 @@ body.footer-open .hint-join { pointer-events: none; }
 }
 
 .letter-body p {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 500;
   font-size: 19px;
   line-height: 1.85;
@@ -483,7 +495,7 @@ body.footer-open .hint-join { pointer-events: none; }
 }
 
 .letter-quote p {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 500;
   font-size: 17px;
   font-style: italic;
@@ -503,7 +515,7 @@ body.footer-open .hint-join { pointer-events: none; }
   width: fit-content;
   margin: clamp(64px, 10vh, 104px) auto 0;
   padding: 6px 2px;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-style: italic;
   font-size: 22px;
   color: var(--ink);
@@ -517,7 +529,7 @@ body.footer-open .hint-join { pointer-events: none; }
 body.night-mode .letter-reply { color: #ffffff; }
 
 .letter-close p {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 500;
   font-size: 17px;
   color: var(--ink-soft);
@@ -532,7 +544,7 @@ body.night-mode .letter-reply { color: #ffffff; }
 }
 
 .letter-sig {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 600;
   font-size: 18px;
   color: var(--ink);
@@ -540,7 +552,7 @@ body.night-mode .letter-reply { color: #ffffff; }
 }
 
 .letter-title {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 500;
   font-size: 15px;
   color: var(--ink-soft);
@@ -550,7 +562,7 @@ body.night-mode .letter-reply { color: #ffffff; }
 
 /* The mission statement, emphasized within the letter */
 .letter-body p.letter-mission {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 500;
   font-style: italic;
   font-size: clamp(21px, 2.3vw, 26px);
@@ -613,7 +625,7 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
 }
 
 .ci-salutation {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 400;
   font-size: clamp(18px, 1.8vw, 23px);
   color: var(--ink);
@@ -649,14 +661,16 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
 }
 
 .ci-label {
-  font-family: "Cormorant SC", serif;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
   font-size: 12px;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.04em;
   color: var(--ink-soft);
 }
 
 .ci-input {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-size: 17px;
   color: var(--ink);
   background: transparent;
@@ -688,9 +702,11 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
 }
 
 .ci-submit {
-  font-family: "Cormorant SC", serif;
-  font-size: 14px;
-  letter-spacing: 0.12em;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: 12px;
+  letter-spacing: 0.04em;
   color: var(--ink);
   background: transparent;
   border: 1px solid rgba(27, 22, 19, 0.30);
@@ -738,7 +754,7 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
 }
 
 .ci-success-title {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 500;
   font-size: 24px;
   color: var(--ink);
@@ -746,7 +762,7 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
 }
 
 .ci-success-msg {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-size: 15px;
   color: var(--ink-soft);
   margin: 0;
@@ -771,7 +787,7 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
   --sf-ink: var(--ink);
   --sf-light: #b8925a;
   display: inline-block;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 300;
   font-size: 30px;
   letter-spacing: 0.3em;
@@ -804,9 +820,11 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
 }
 
 .sf-head {
-  font-family: "Cormorant SC", serif;
-  font-size: 14px;
-  letter-spacing: 0.22em;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: 12px;
+  letter-spacing: 0.04em;
   color: var(--clay-deep);
   margin: 6px 0 12px;
 }
@@ -816,7 +834,7 @@ body.ls-done .card { animation: pageRise 0.9s var(--ease) 0.28s both; }
 .sf-col a {
   display: inline-block;
   padding: 5px 0;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-size: 18px;
   color: var(--ink);
   text-decoration: none;
@@ -884,7 +902,7 @@ body.hero-reset .hero-statement .hw > span { transition: none !important; }
 .page-shell .eyebrow { margin-bottom: 18px; }
 
 .page-shell h1 {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 300;
   font-size: clamp(40px, 6vw, 72px);
   line-height: 1.06;
@@ -933,7 +951,7 @@ body.hero-reset .hero-statement .hw > span { transition: none !important; }
 }
 
 .static-nav .back-home {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-size: 12px;
   letter-spacing: 0.2em;
   text-transform: none;
@@ -1277,7 +1295,7 @@ body.night-mode .dropdown a:hover { color: rgba(255, 255, 255, 0.92); }
     width: auto;
     height: auto;
     background: none;
-    font-family: "Cormorant Garamond", serif;
+    font-family: "Lora", serif;
     font-size: 24px;
     font-weight: 300;
     line-height: 1;
@@ -1433,7 +1451,7 @@ body.night-mode .dropdown a:hover { color: rgba(255, 255, 255, 0.92); }
 .offer-name {
   display: block;
   margin: 14px 6px 4px;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-size: 22px;
   font-weight: 500;
   line-height: 1.15;
@@ -1451,10 +1469,10 @@ body.night-mode .dropdown a:hover { color: rgba(255, 255, 255, 0.92); }
   color: rgba(27, 22, 19, 0.62);
 }
 
-/* About Us: the same panel and type, without the stills, four across */
+/* About Us: the same panel and type, without the stills, five across */
 .dropdown.offer-grid--text {
-  width: min(780px, calc(100vw - 32px));
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: min(900px, calc(100vw - 32px));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 .offer-grid--text .offer-card { padding: 16px 16px 18px; }
 .offer-grid--text .offer-name { margin-top: 0; }
@@ -1569,7 +1587,7 @@ body.cosmos-intro .hero-wrap { opacity: 1; }
 
 .hero-brand {
   display: inline-block;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 300;
   font-size: clamp(38px, 6.5vw, 84px);
   letter-spacing: 0.3em;
@@ -1604,7 +1622,7 @@ body.cosmos-intro .hero-wrap { opacity: 1; }
   transform: translateX(-50%);
   margin: 0;
   text-align: center;
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   color: var(--ink);
   /* Paper glow so orbit lines and passing planets never fight the words */
   text-shadow: 0 0 14px var(--paper), 0 0 5px var(--paper), 0 0 2px var(--paper);
@@ -1693,7 +1711,7 @@ body.cosmos-intro .hero-statement .hw > span { transform: none; }
 
 /* ---------- Letter storytelling — drop cap, signature wipe ---------- */
 .letter-body > p:first-of-type::first-letter {
-  font-family: "Cormorant Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 500;
   font-size: 3.55em;
   line-height: 0.78;
@@ -1839,3 +1857,26 @@ body.ls-done .ar {
 }
 .oak-cue.is-shown,
 .fsos-cue.is-shown { opacity: 1; transition-duration: 1.2s; }
+
+/* ---------- Interface text: IBM Plex Sans ----------
+   Navigation, footers, cues, and form controls read as the site's interface,
+   set apart from the Lora of its prose and the Major Mono of its labels */
+.nav-trigger,
+.offer-line,
+.sf-col a,
+.footer-copy,
+.cosmos-hint,
+.hint-join,
+.oak-cue,
+.fsos-cue,
+.fs-cue,
+.page-shell .back,
+.wl-input,
+.wl-button,
+.wl-choices button,
+.wl-micro,
+.wl-error,
+.wl-suggest {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-style: normal;
+}

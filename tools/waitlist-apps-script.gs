@@ -183,16 +183,16 @@ function clean(p) {
 }
 
 function sendCode(to, code) {
-  var serif = "'Cormorant Garamond', Georgia, 'Times New Roman', serif";
+  var serif = "'Lora', Georgia, 'Times New Roman', serif";
   var html =
     '<!DOCTYPE html><html><head><meta charset="utf-8">' +
-    '<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Cormorant+SC:wght@500&display=swap" rel="stylesheet"></head>' +
+    '<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Major+Mono+Display&display=swap" rel="stylesheet"></head>' +
     '<body style="margin:0;padding:0;background:#eceae5;">' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eceae5;"><tr><td align="center" style="padding:36px 16px;">' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#f7f5f1;border:1px solid #ddd8d0;border-radius:18px;overflow:hidden;">' +
     '<tr><td style="height:5px;line-height:5px;font-size:0;background:#f0d5bb;background-image:linear-gradient(90deg,#f0d5bb,#c4ddb8,#b8ddd8,#b8cae0,#e0b8c8);">&nbsp;</td></tr>' +
     '<tr><td style="padding:32px 36px 30px;font-family:' + serif + ';color:#3b332f;">' +
-    '<p style="margin:0 0 22px;font-family:\'Cormorant SC\',' + serif + ';font-size:15px;letter-spacing:0.28em;color:#8f5a42;">MULVIUM</p>' +
+    '<p style="margin:0 0 22px;font-family:\'Major Mono Display\',monospace;font-size:13px;letter-spacing:0.08em;color:#8f5a42;">mulvium</p>' +
     '<p style="margin:0 0 14px;font-size:19px;line-height:1.5;">Your code to join the Mulvium waitlist:</p>' +
     '<p style="margin:0 0 18px;font-family:Georgia,serif;font-size:36px;letter-spacing:0.3em;color:#1b1613;">' + code + '</p>' +
     '<p style="margin:0;font-size:16px;line-height:1.5;color:#7a706a;">It works for ' + CODE_MINUTES + ' minutes. If you didn&rsquo;t ask for it, ignore this email and nothing happens.</p>' +
@@ -316,18 +316,18 @@ function esc(s) {
 function welcome(to, name) {
   name = String(name || "").trim();
   var hello = name ? "Dear " + name + "," : "Hello,";
-  var serif = "'Cormorant Garamond', Georgia, 'Times New Roman', serif";
+  var serif = "'Lora', Georgia, 'Times New Roman', serif";
   var p = "margin:0 0 18px;font-family:" + serif + ";font-size:19px;line-height:1.55;color:#3b332f;";
   var html =
     '<!DOCTYPE html><html><head><meta charset="utf-8">' +
-    '<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Cormorant+SC:wght@500&display=swap" rel="stylesheet"></head>' +
+    '<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Major+Mono+Display&display=swap" rel="stylesheet"></head>' +
     '<body style="margin:0;padding:0;background:#eceae5;">' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eceae5;"><tr><td align="center" style="padding:36px 16px;">' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#f7f5f1;border:1px solid #ddd8d0;border-radius:18px;overflow:hidden;">' +
     // the cosmos's five colors, as a band across the top
     '<tr><td style="height:5px;line-height:5px;font-size:0;background:#f0d5bb;background-image:linear-gradient(90deg,#f0d5bb,#c4ddb8,#b8ddd8,#b8cae0,#e0b8c8);">&nbsp;</td></tr>' +
     '<tr><td style="padding:34px 40px 8px;">' +
-    '<p style="margin:0 0 26px;font-family:\'Cormorant SC\',' + serif + ';font-size:15px;letter-spacing:0.28em;color:#8f5a42;">MULVIUM</p>' +
+    '<p style="margin:0 0 26px;font-family:\'Major Mono Display\',monospace;font-size:13px;letter-spacing:0.08em;color:#8f5a42;">mulvium</p>' +
     '<p style="' + p + 'color:#1b1613;font-size:21px;">' + esc(hello) + '</p>' +
     '<p style="' + p + '">Thank you for joining the Mulvium waitlist.</p>' +
     '<p style="' + p + '">Mulvium gives a public-benefit project a legal home and builds the organization beneath it. We&rsquo;ll let you know when submissions open.</p>' +
