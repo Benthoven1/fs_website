@@ -13,7 +13,7 @@
 // Whether a signup must also be confirmed with an emailed code is set in the
 // back end (CODE in tools/waitlist-apps-script.gs); the page follows it.
 window.MULVIUM_WAITLIST = {
-  endpoint: "https://github.com/Benthoven1/fs_website/blob/main/tools/waitlist-apps-script.gs",
+  endpoint: "https://script.google.com/macros/s/AKfycbw_7RLH7NjGJI6V2R0j24REJiuJmRduqjRv01Or9nWH8_5MC_YfEL6c-k7hoX0VDhJBQg/exec",
   umami: "",
   suggest: true,
 };

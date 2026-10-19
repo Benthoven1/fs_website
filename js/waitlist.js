@@ -168,7 +168,7 @@
           .then(function (ans) {
             busy(false);
             // No back end (ans is null): the questions open all the same
-            if (ans && !ans.ok) return fail(say(ans.error));
+            if (ans && !ans.ok) return fail(say(ans.error), ans.error === "network" || !SAY[ans.error] ? email : null);
             if (ans && ans.code) return pending(at, email, false);
             confirmed(at, email);
           });
@@ -178,8 +178,19 @@
           if (on) button.setAttribute("aria-busy", "true"); else button.removeAttribute("aria-busy");
           button.textContent = on ? label : "Join the waitlist";
         }
-        function fail(msg) {
-          error.textContent = msg;
+        // When the list can't be reached, the visitor can still join by
+        // email: one tap opens a message to us with their address in it
+        function fail(msg, unsent) {
+          error.textContent = unsent ? "That didn’t go through. " : msg;
+          if (unsent) {
+            var mail = document.createElement("a");
+            mail.href = "mailto:hello@mulvium.org?subject=" + encodeURIComponent("Join the waitlist") +
+              "&body=" + encodeURIComponent("Please add " + unsent + " to the Mulvium waitlist.");
+            mail.textContent = "Email us to join instead";
+            mail.addEventListener("click", function () { track("email_fallback", { position: block.dataset.position }); });
+            error.appendChild(mail);
+            error.appendChild(document.createTextNode(", and we’ll add you."));
+          }
           input.setAttribute("aria-invalid", "true");
           input.focus();
         }
