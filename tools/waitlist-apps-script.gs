@@ -56,7 +56,12 @@ var THROWAWAY = ["mailinator.com", "guerrillamail.com", "guerrillamail.net", "sh
   "moakt.com", "inboxkitten.com", "emailfake.com", "fakemail.net", "mytemp.email", "tempail.com"];
 
 function doPost(e) {
-  var p = e.parameter || {};
+  // The page sends the visit's id as `visit`: Google refuses any request to a
+  // web app carrying a field named `sid`, so it never reaches this script.
+  // Inside, and in the Sheet, it is still `sid`.
+  var p = Object.assign({}, e.parameter || {});
+  if (p.visit && !p.sid) p.sid = p.visit;
+  delete p.visit;
   var kind = String(p.kind || "unknown").replace(/[^a-z]/g, "") || "unknown";
   var out = { ok: true };
   try {
