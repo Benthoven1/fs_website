@@ -1145,6 +1145,44 @@ function updateHover() {
   }
 }
 
+// The landing's navigation points out the sphere of the place it names,
+// as hovering the sphere itself would (index.html .lnav)
+function pointToSphere(id) {
+  if (state.mode !== "3d" || footerOpen) return;
+  if (id === "star") {
+    state.labelPlanet = null;
+    state.labelStar   = true;
+    setLabel("Enter Mulvium", "", true, true);
+  } else {
+    const o = orbits.find((x) => x.def.id === id);
+    if (!o) return;
+    state.labelPlanet = o;
+    state.labelStar   = false;
+    o.planet.getWorldPosition(worldPos);
+    setLabel(o.def.name, o.def.status, worldPos.y > 0.9);
+  }
+  labelVisTarget = 1;
+}
+{
+  const lnav = document.getElementById("lnav");
+  if (lnav) {
+    const menu = lnav.querySelector(".lnav-menu"), word = lnav.querySelector(".lnav-menu-word");
+    const setOpen = (open) => {
+      lnav.classList.toggle("is-open", open);
+      menu.setAttribute("aria-expanded", String(open));
+      word.textContent = open ? "Close" : "Menu";
+    };
+    menu.addEventListener("click", () => setOpen(!lnav.classList.contains("is-open")));
+    lnav.addEventListener("click", (e) => { if (e.target.closest("a")) setOpen(false); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
+    lnav.querySelectorAll("[data-sphere]").forEach((a) => {
+      const point = () => pointToSphere(a.dataset.sphere);
+      a.addEventListener("mouseenter", point);
+      a.addEventListener("focus", point);
+    });
+  }
+}
+
 // Tracks the annotation sprite to its sphere and eases its opacity. Runs in
 // animate(); the sprite's depthTest handles occlusion by rings and spheres.
 function trackLabel(dt) {
