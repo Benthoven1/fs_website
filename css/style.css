@@ -2031,9 +2031,10 @@ body.cosmos-only.cosmos-intro:not(.footer-open):not(.lnav-classic) .lnav::after 
   .lnav-list { gap: 16px; }
   .lnav-join { padding: 5px 12px !important; }
 }
-/* Phones: the hamburger alone, just where the navbar keeps its own, so the
-   navbar and its menu appear around it (js/main.js) */
-@media (max-width: 720px) {
+/* Phones, upright or on their side: the hamburger alone, just where the
+   navbar keeps its own (or its right end, on its side), so the navbar and
+   its menu appear around it (js/main.js) */
+@media (max-width: 720px), (hover: none) and (pointer: coarse) and (max-height: 500px) {
   .lnav { display: flex; justify-content: flex-end; padding: 0; }
   .lnav::after { display: none; }
   .lnav-sheet { display: none; }
