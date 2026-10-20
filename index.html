@@ -139,6 +139,36 @@
     </ul>
   </nav>
 
+  <!-- The landing's own navigation, over the cosmos: no bar, a line of words
+       under a fine orbit-gold rule. Each place has its sphere's colour, and
+       pointing at one points out its sphere in the scene. It gives way to the
+       navbar in the orbit view, and while the waitlist is open. On phones it
+       folds into "Menu" (css/style.css .lnav, js/main.js) -->
+  <nav class="lnav" id="lnav" aria-label="Site">
+    <button type="button" class="lnav-menu" aria-expanded="false" aria-controls="lnav-sheet"><span class="lnav-orbit" aria-hidden="true"><i></i></span><span class="lnav-menu-word">Menu</span></button>
+    <div class="lnav-sheet" id="lnav-sheet">
+      <ul class="lnav-list">
+        <li><a href="#orbit" data-orbit-link data-sphere="star" style="--dot:#dcb894"><i class="lnav-dot" aria-hidden="true"></i>Dear Leader</a></li>
+        <li><a href="pages/offerings/fiscal-sponsorship.html" data-sphere="castles" style="--dot:#98aecb"><i class="lnav-dot" aria-hidden="true"></i>Fiscal Sponsorship</a></li>
+        <li><a href="pages/offerings/msos.html" data-sphere="ifo" style="--dot:#a2c394"><i class="lnav-dot" aria-hidden="true"></i>MulviumSOS</a></li>
+        <li><a href="pages/offerings/oak.html" data-sphere="education" style="--dot:#d29db1"><i class="lnav-dot" aria-hidden="true"></i>Oak</a></li>
+      </ul>
+      <ul class="lnav-list lnav-list--end">
+        <li class="lnav-about">
+          <a href="pages/about/about.html">About Us</a>
+          <ul class="lnav-sub">
+            <li><a href="pages/about/about.html#people">People</a></li>
+            <li><a href="pages/about/about.html#careers">Careers</a></li>
+            <li><a href="pages/about/about.html#contact">Contact Us</a></li>
+            <li><a href="pages/about/name.html">On the Name</a></li>
+            <li><a href="pages/about/values.html">Values</a></li>
+          </ul>
+        </li>
+        <li><a class="lnav-join" href="#waitlist">Join the waitlist</a></li>
+      </ul>
+    </div>
+  </nav>
+
   <main id="stage">
     <div id="expansion-wrapper">
       <div id="canvas-wrap">

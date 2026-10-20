@@ -1908,3 +1908,192 @@ a.nav-cta:visited {
   .nav-cta,
   a.nav-cta:visited { justify-content: center; padding: 12px 18px; }
 }
+
+/* ---------- The landing's navigation (index.html .lnav) ----------
+   Over the cosmos there is no bar: a line of words under a fine rule in the
+   rings' gold, each place marked with its sphere's colour. It arrives with
+   the hero, and gives way to the navbar in the orbit view and while the
+   waitlist is open. On phones it folds into "Menu", which opens a sheet. */
+.lnav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 45;
+  padding: 20px clamp(22px, 4.4vw, 64px) 12px;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-size: 13.5px;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease), visibility 0s linear 0.6s;
+}
+body.cosmos-only.cosmos-intro:not(.footer-open) .lnav {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.9s var(--ease) 0.5s, transform 0.9s var(--ease) 0.5s, visibility 0s linear 0s;
+}
+/* the rule draws out from the middle, like an orbit traced */
+.lnav::after {
+  content: "";
+  position: absolute;
+  left: clamp(22px, 4.4vw, 64px);
+  right: clamp(22px, 4.4vw, 64px);
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(168, 148, 98, 0.55) 14%, rgba(168, 148, 98, 0.55) 86%, transparent);
+  transform: scaleX(0);
+  transition: transform 0.6s var(--ease);
+}
+body.cosmos-only.cosmos-intro:not(.footer-open) .lnav::after { transform: none; transition: transform 1.6s var(--ease) 0.7s; }
+
+.lnav-sheet { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+.lnav-list { display: flex; align-items: center; gap: clamp(18px, 2.3vw, 34px); list-style: none; margin: 0; padding: 0; }
+.lnav a { color: var(--ink-soft); text-decoration: none; }
+.lnav-list > li > a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  transition: color 0.3s ease;
+}
+.lnav-list > li > a:hover, .lnav-list > li > a:focus-visible { color: var(--ink); }
+/* a small sphere, lit from the upper left like the ones in the scene */
+.lnav-dot {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.75) 0 16%, var(--dot) 52%);
+  box-shadow: inset 0 -1px 2px rgba(27, 22, 19, 0.18);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.lnav-list > li > a:hover .lnav-dot, .lnav-list > li > a:focus-visible .lnav-dot { transform: scale(1.45); }
+/* a hairline underline traced from the left */
+.lnav-list > li > a:not(.lnav-join)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.45;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s var(--ease);
+}
+.lnav-list > li > a:has(.lnav-dot)::after { left: 17px; }
+.lnav-list > li > a:hover::after, .lnav-list > li > a:focus-visible::after { transform: none; }
+.lnav-join {
+  padding: 6px 15px !important;
+  border: 1px solid rgba(143, 90, 66, 0.45);
+  border-radius: 999px;
+  color: var(--clay-deep) !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease !important;
+}
+.lnav-join:hover, .lnav-join:focus-visible { background: rgba(240, 213, 187, 0.5); border-color: var(--clay-deep); }
+
+/* About Us opens a short list beneath it */
+.lnav-about { position: relative; }
+.lnav-sub {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: -16px;
+  min-width: 168px;
+  margin: 0;
+  padding: 8px 0;
+  list-style: none;
+  border-radius: 12px;
+  background: rgba(236, 234, 229, 0.9);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 14px 34px rgba(27, 22, 19, 0.08), inset 0 0 0 1px rgba(168, 148, 98, 0.25);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0.25s;
+}
+.lnav-about::before { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 10px; } /* bridges the gap for the pointer */
+.lnav-about:hover .lnav-sub, .lnav-about:focus-within .lnav-sub { opacity: 1; visibility: visible; transform: none; transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s; }
+.lnav-sub a { display: block; padding: 6px 16px; font-size: 13px; }
+.lnav-sub a:hover, .lnav-sub a:focus-visible { color: var(--ink); background: rgba(240, 213, 187, 0.35); }
+
+.lnav-menu { display: none; }
+
+@media (max-width: 900px) {
+  .lnav { display: flex; justify-content: flex-end; padding: 12px 18px 8px; }
+  .lnav::after { left: 18px; right: 18px; }
+  .lnav-menu {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 2px;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  /* a ring with a sphere going round it */
+  .lnav-orbit { position: relative; width: 18px; height: 18px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(168, 148, 98, 0.85); animation: lnavOrbit 7s linear infinite; }
+  .lnav-orbit i { position: absolute; top: -3px; left: 50%; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.75) 0 16%, #d29db1 52%); }
+  .lnav.is-open .lnav-orbit { animation-duration: 2.4s; }
+
+  .lnav-sheet {
+    position: fixed;
+    inset: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 34px;
+    padding: 90px 34px 48px;
+    background: rgba(236, 234, 229, 0.95);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+  }
+  .lnav.is-open .lnav-sheet { opacity: 1; visibility: visible; transition: opacity 0.35s ease, visibility 0s; }
+  .lnav-list { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .lnav-list > li { opacity: 0; transform: translateY(8px); transition: opacity 0.4s ease, transform 0.5s var(--ease); }
+  .lnav.is-open .lnav-list > li { opacity: 1; transform: none; }
+  .lnav.is-open .lnav-list > li:nth-child(2) { transition-delay: 0.05s; }
+  .lnav.is-open .lnav-list > li:nth-child(3) { transition-delay: 0.1s; }
+  .lnav.is-open .lnav-list > li:nth-child(4) { transition-delay: 0.15s; }
+  .lnav.is-open .lnav-list--end > li { transition-delay: 0.2s; }
+  .lnav-list > li > a { gap: 14px; font-family: "Lora", serif; font-size: 28px; letter-spacing: 0; color: var(--ink); }
+  .lnav-dot { width: 13px; height: 13px; }
+  .lnav-list > li > a:has(.lnav-dot)::after { left: 27px; }
+  .lnav-sub {
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    min-width: 0;
+    padding: 6px 0 0;
+    background: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+    opacity: 1;
+    visibility: inherit;
+    transform: none;
+  }
+  .lnav-about::before { display: none; }
+  .lnav-sub a { padding: 4px 0; font-size: 15px; color: var(--ink-soft); }
+  .lnav-sub a:hover { background: none; }
+  .lnav-join { margin-top: 8px; padding: 10px 20px !important; font-family: "IBM Plex Sans", sans-serif !important; font-size: 16px !important; }
+}
+@keyframes lnavOrbit { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .lnav, .lnav::after, .lnav-sheet, .lnav-list > li, .lnav-sub { transition: none !important; }
+  .lnav-orbit { animation: none; }
+}
