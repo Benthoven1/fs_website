@@ -566,6 +566,13 @@ function resize() {
 }
 resize();
 window.addEventListener("resize", resize);
+// A phone reports its new size late after turning: once it settles, every
+// resize listener measures again (the scene, the hero, the drawer, the nav)
+{
+  const settle = () => [250, 700].forEach((ms) => setTimeout(() => window.dispatchEvent(new Event("resize")), ms));
+  window.addEventListener("orientationchange", settle);
+  if (screen.orientation) screen.orientation.addEventListener("change", settle);
+}
 // Layout is read only when it can have changed (the window, the canvas or the
 // scroll wrapper resizing), never once a frame
 if ("ResizeObserver" in window) {
@@ -1182,8 +1189,11 @@ function pointToSphere(id) {
     // navbar goes again
     const burger = lnav.querySelector(".lnav-burger"), own = navbar.querySelector(".nav-burger");
     const placeBurger = () => {
-      burger.style.left = navbar.offsetLeft + own.offsetLeft + "px";
-      burger.style.top = navbar.offsetTop + own.offsetTop + "px";
+      // On a phone on its side the navbar shows its links, not its burger:
+      // the hamburger sits at the navbar's right end instead
+      const shown = own.offsetParent !== null;
+      burger.style.left = navbar.offsetLeft + (shown ? own.offsetLeft : navbar.offsetWidth - 44 - 22) + "px";
+      burger.style.top = navbar.offsetTop + (shown ? own.offsetTop : (navbar.offsetHeight - 44) / 2) + "px";
     };
     placeBurger();
     window.addEventListener("resize", placeBurger);
@@ -1194,7 +1204,7 @@ function pointToSphere(id) {
       navbar.setAttribute("aria-hidden", "false");
       own.setAttribute("aria-expanded", "true");
       own.setAttribute("aria-label", "Close menu");
-      own.focus({ preventScroll: true });
+      if (own.offsetParent !== null) own.focus({ preventScroll: true });
     });
     new MutationObserver(() => {
       if (!body.classList.contains("lnav-classic") || navbar.classList.contains("menu-open")) return;
