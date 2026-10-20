@@ -445,8 +445,11 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
   transform: scale(0.8);
   transition: opacity 0.7s var(--ease) 1s, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1s;
 }
-.fs-seal .fs-v-hi { font-size: 15px; }
-.fs-seal .fs-v-lo { font-size: 12px; }
+/* A small circle is narrow near its top and bottom: tighter letters and a
+   shorter > keep both lines clear of the edge */
+.fs-seal .fs-v-hi { font-size: 13.5px; letter-spacing: 0.03em; }
+.fs-seal .fs-v-gt { margin: 0.06em 0 0.02em; font-size: 1.5em; }
+.fs-seal .fs-v-lo { font-size: 11px; letter-spacing: 0.04em; }
 .fs-plate.is-in .fs-seal { opacity: 1; transform: none; }
 
 /* Under each title, why the project is beautiful */
@@ -574,8 +577,8 @@ html:has(body.fs-page) { scroll-behavior: smooth; }
   .fs-virtues { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 30px; }
   .fs-bubble { max-width: 168px; }
   .fs-seal { width: 112px; left: 14px; bottom: 14px; padding: 12px; }
-  .fs-seal .fs-v-hi { font-size: 13.5px; }
-  .fs-seal .fs-v-lo { font-size: 11px; }
+  .fs-seal .fs-v-hi { font-size: 12px; }
+  .fs-seal .fs-v-lo { font-size: 10px; }
 
   /* Each project: its picture first, then its story */
   .fs-project { grid-template-columns: 1fr; gap: 26px; }
