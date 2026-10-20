@@ -143,10 +143,11 @@
        under a fine orbit-gold rule. Each place has its sphere's colour, and
        pointing at one points out its sphere in the scene. It gives way to the
        navbar in the orbit view, and while the waitlist is open. On phones it
-       folds into "Menu" (css/style.css .lnav, js/main.js) -->
+       is the hamburger alone, which opens the navbar's own menu
+       (css/style.css .lnav, js/main.js) -->
   <nav class="lnav" id="lnav" aria-label="Site">
-    <button type="button" class="lnav-menu" aria-expanded="false" aria-controls="lnav-sheet"><span class="lnav-orbit" aria-hidden="true"><i></i></span><span class="lnav-menu-word">Menu</span></button>
-    <div class="lnav-sheet" id="lnav-sheet">
+    <button type="button" class="nav-burger lnav-burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+    <div class="lnav-sheet">
       <ul class="lnav-list">
         <li><a href="#orbit" data-orbit-link data-sphere="star" style="--dot:#dcb894"><i class="lnav-dot" aria-hidden="true"></i>Dear Leader</a></li>
         <li><a href="pages/offerings/fiscal-sponsorship.html" data-sphere="castles" style="--dot:#98aecb"><i class="lnav-dot" aria-hidden="true"></i>Fiscal Sponsorship</a></li>
