@@ -946,7 +946,8 @@ brandLink.addEventListener("click", (e) => {
   window.location.reload();
 });
 
-// "Dear Leader" links (navbar and footer) open the overhead orbit view
+// "Dear Leader" links (navbar and footer) and the waitlist's thought bubbles
+// open the overhead orbit view, from the start of its animation
 document.querySelectorAll("#home-link, [data-orbit-link]").forEach((el) => {
   el.addEventListener("click", (e) => {
     e.preventDefault();
@@ -956,7 +957,7 @@ document.querySelectorAll("#home-link, [data-orbit-link]").forEach((el) => {
 });
 
 // The founder's letter: the orbit view, scrolled on under cover to the
-// letter's start (index.html#letter, and the waitlist's thought bubbles).
+// letter's start (index.html#letter).
 // The jump is made again as the layout settles (a phone's toolbar resizes
 // the screen as the page moves), unless the reader has started scrolling.
 function toLetter() {
@@ -982,8 +983,7 @@ function toLetter() {
   }, 1500);
 }
 
-// Links within the page: to the letter (from the waitlist's bubbles), under
-// the loading screen; to the waitlist (the footer's "Join the waitlist"), by
+// Links within the page: to the letter, under the loading screen; to the waitlist (the footer's "Join the waitlist"), by
 // its drawer, from the orbit view by way of the 3D view
 document.addEventListener("click", (ev) => {
   const link = ev.target.closest('a[href="#letter"], a[href="#waitlist"]');
