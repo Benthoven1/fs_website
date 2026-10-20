@@ -518,10 +518,14 @@ function layoutHero() {
     root.style.setProperty("--hero-col", `${col}px`);
     root.style.setProperty("--hero-mid", `${(T + B) / 2}px`);
   } else {
-    // Statement under the wordmark; mission under the cosmos, clear of the hint
+    // Statement under the wordmark; mission under the cosmos, clear of the
+    // hint. Measured from the cosmos's own top, so a resize while it is
+    // lifted (the waitlist open, a phone's toolbar coming and going) still
+    // places them for the cosmos at rest.
     const vgap = Math.max(12, Math.min(22, h * 0.02));
-    root.style.setProperty("--st-top", `${heroBrand.getBoundingClientRect().bottom + vgap}px`);
-    const hintTop = cosmosHint.firstElementChild.getBoundingClientRect().top || h;
+    const lift = canvasWrap.getBoundingClientRect().top;
+    root.style.setProperty("--st-top", `${heroBrand.getBoundingClientRect().bottom - lift + vgap}px`);
+    const hintTop = (cosmosHint.firstElementChild.getBoundingClientRect().top - lift) || h;
     const mh = heroMission.offsetHeight;
     root.style.setProperty("--mi-top", `${Math.max(0, Math.min(B + vgap, hintTop - mh - vgap))}px`);
   }
