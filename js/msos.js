@@ -190,6 +190,7 @@ function inView(el) {
     const steps = demo.querySelector(".live-steps");
     const text = demo.querySelector(".lw-text");
     const review = demo.querySelector(".lw-review");
+    const cites = demo.querySelector(".lw-cites");
     const state = demo.querySelector(".lw-state");
     const approve = demo.querySelector(".lw-approve"), back = demo.querySelector(".lw-back");
     const STEPS = [
@@ -205,6 +206,7 @@ function inView(el) {
     async function run() {
       steps.replaceChildren();
       text.textContent = "";
+      cites.hidden = true;
       review.hidden = true;
       state.innerHTML = STATE0;
       approve.disabled = back.disabled = false;
@@ -226,6 +228,9 @@ function inView(el) {
       }
       caret.before(DRAFT.slice(text.textContent.length));
       caret.remove();
+      // The draft's [1], listed with its source
+      cites.hidden = false;
+      await wait(700);
       doing.textContent = "has stopped, and is waiting for a person";
       demo.classList.add("is-waiting");
       review.hidden = false;

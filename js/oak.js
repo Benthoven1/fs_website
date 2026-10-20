@@ -746,8 +746,9 @@ animate();
 // ── The evening's conversation, in three states tied to scrolling: plain as
 // the transcript rises into view, every specific highlighted once it is well
 // in view, every specific redacted as it passes the middle of the screen, so
-// the forgetting happens while it is read, whatever the pace (css/oak.css). Each mark's text sits in its own span
-// so the blur and the highlight can fade at their own pace.
+// the forgetting happens while it is read, whatever the pace (css/oak.css).
+// Each mark's text sits in its own span so the blur and the highlight can
+// fade at their own pace.
 {
   const card = document.getElementById("oak-transcript");
   const later = document.querySelector(".oak-later");
@@ -780,30 +781,54 @@ animate();
   }
 }
 
-// ── The consent code turns over through one four-digit code after another,
-// as the other person's phone would show it, settling for a moment on each
+// ── The consent code, as the other person's phone might show it: one
+// four-digit code after another, each digit a reel that slides hard through
+// a run of numbers and lands with a kick, the later reels spinning longer
 {
   const code = document.getElementById("oak-code");
   if (code && motionOK) {
-    const digits = [...code.querySelectorAll("span")];
+    const H = 48; // a digit's height, as in css/oak.css
+    const rand = () => String(Math.floor(Math.random() * 10));
+    const reels = [...code.querySelectorAll("span")].map((d) => {
+      const reel = document.createElement("i");
+      reel.className = "oak-reel";
+      reel.dataset.v = d.textContent;
+      reel.innerHTML = `<b>${d.textContent}</b>`;
+      d.textContent = "";
+      d.appendChild(reel);
+      return reel;
+    });
     let running = false;
+    const spin = (reel, to, k) => {
+      const from = reel.dataset.v;
+      reel.dataset.v = to;
+      const run = [from];
+      for (let n = 0; n < 7 + k * 3; n++) run.push(rand());
+      run.push(to, rand()); // one past the last, for the overshoot to show
+      reel.innerHTML = run.map((c) => `<b>${c}</b>`).join("");
+      reel.style.transition = "none";
+      reel.style.transform = "none";
+      void reel.offsetWidth;
+      reel.classList.add("is-spinning");
+      reel.style.transition = `transform ${0.42 + k * 0.08}s cubic-bezier(0.25, 1.35, 0.45, 1)`;
+      reel.style.transform = `translateY(${-(run.length - 2) * H}px)`;
+      reel.addEventListener("transitionend", () => {
+        reel.classList.remove("is-spinning");
+        reel.style.transition = "none";
+        reel.style.transform = "none";
+        reel.innerHTML = `<b>${to}</b>`;
+      }, { once: true });
+    };
     const roll = () => {
       if (!running) return;
       const next = String(Math.floor(Math.random() * 10000)).padStart(4, "0");
-      digits.forEach((d, k) => {
-        setTimeout(() => {
-          d.classList.remove("is-rolling");
-          void d.offsetWidth;
-          d.classList.add("is-rolling");
-          setTimeout(() => { d.textContent = next[k]; }, 160);
-        }, k * 90);
-      });
-      setTimeout(roll, 1700);
+      reels.forEach((reel, k) => setTimeout(() => spin(reel, next[k], k), k * 45));
+      setTimeout(roll, 1150);
     };
     new IntersectionObserver(([en]) => {
       const was = running;
       running = en.isIntersecting;
-      if (running && !was) setTimeout(roll, 900);
+      if (running && !was) setTimeout(roll, 700);
     }).observe(code);
   }
 }

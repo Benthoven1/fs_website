@@ -118,8 +118,8 @@ be announced.
   of the loading screen's pictures (`Musical.webp`, `Batad.webp`, `Luxor.webp`,
   `Pictorial.webp`), the same files the loading screen uses: replace a file and both follow.
 - `pages/about/` — People, Careers, Contact Us, On the Name, and Values, drawn from the
-  founder's vision deck: beauty is vanishing, how societies made their values visible,
-  the four values as inequalities, and the patron, artist and citizen as three spheres
+  founder's vision deck: beauty (in anything, not only art) is vanishing, the four
+  values as inequalities, and the patron, maker and citizen as three spheres
   (`css/values.css`, `js/values.js`, pictures in `images/values/`).
 - `privacy/` — the privacy policy the waitlist links to.
 - `brand/` — the press kit (`mulvium.org/brand/`): the central sphere and the

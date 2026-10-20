@@ -1,6 +1,6 @@
 /* values.css — the Values page (pages/about/values.html), drawn from the
    vision deck it follows: a slate-blue ground with a fine grain, cream type,
-   torn-paper panels, the four values as inequalities, and the patron, artist
+   torn-paper panels, the four values as inequalities, and the patron, maker
    and citizen as three overlapping spheres (js/values.js).
    Loaded after css/style.css and css/editorial.css by that page alone. */
 
@@ -27,7 +27,6 @@ html:has(body.values-page) { scroll-behavior: smooth; }
 .vl-main > * { max-width: 1000px; margin-left: auto; margin-right: auto; }
 
 .vl-eyebrow,
-.vl-age-k,
 .vl-role-k {
   font-family: "Major Mono Display", monospace;
   text-transform: lowercase;
@@ -87,29 +86,8 @@ html:has(body.values-page) { scroll-behavior: smooth; }
 }
 .vl-paper p:last-child { margin-bottom: 0; }
 
-/* ---- Societies made their values visible ---- */
-.vl-ages { padding-top: clamp(90px, 14vh, 150px); }
-.vl-age-list {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(14px, 2.6vw, 30px);
-  list-style: none;
-  margin: 0 0 40px;
-  padding: 0;
-}
-.vl-age-list li {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 22px 22px 24px;
-  border-top: 1px solid rgba(243, 236, 220, 0.4);
-  background: linear-gradient(rgba(255, 255, 255, 0.07), transparent);
-}
-.vl-age-list li:nth-child(2) { transition-delay: 0.12s; }
-.vl-age-list li:nth-child(3) { transition-delay: 0.24s; }
-.vl-age-k { margin: 0; }
-.vl-age-what { font-size: clamp(23px, 2.4vw, 29px); line-height: 1.2; color: var(--vl-cream); }
-.vl-age-why { font-style: italic; font-size: 17.5px; color: var(--vl-cream-soft); }
+/* ---- Where beauty went ---- */
+.vl-now { padding-top: clamp(90px, 14vh, 150px); }
 .vl-statement {
   max-width: 24em;
   font-size: clamp(24px, 2.8vw, 34px);
@@ -163,7 +141,7 @@ html:has(body.values-page) { scroll-behavior: smooth; }
 .vl-v1 .vl-pull, .vl-v3 .vl-pull { transform: rotate(-0.8deg); }
 .vl-pull p { margin: 0; font-style: italic; font-size: clamp(21px, 2.2vw, 26px); line-height: 1.4; }
 
-/* ---- Patron, artist, citizen: three spheres; the chosen one comes forward ---- */
+/* ---- Patron, maker, citizen: three spheres; the chosen one comes forward ---- */
 .vl-roles { padding-top: clamp(100px, 15vh, 160px); text-align: center; }
 .vl-roles-intro { margin: -14px 0 34px; font-style: italic; font-size: 19px; color: var(--vl-cream-soft); }
 .vl-orbs {
@@ -228,7 +206,6 @@ html:has(body.values-page) { scroll-behavior: smooth; }
 .vl-close .fs-cta-quiet { color: var(--vl-cream-soft); }
 
 @media (max-width: 760px) {
-  .vl-age-list { grid-template-columns: 1fr; }
   .vl-value { grid-template-columns: 1fr; grid-template-areas: "ineq" "body" "pull"; }
   .vl-orbs { height: auto; padding: 10px 0; }
   .vl-orb { width: 138px; margin: 0 -18px; }
