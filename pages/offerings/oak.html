@@ -105,6 +105,10 @@
     <article class="oak-story">
 
       <!-- An evening's conversation: its specifics light up, then fade (js/oak.js) -->
+      <header class="oak-scene fs-reveal">
+        <p class="oak-scene-k">set the scene</p>
+        <p class="oak-scene-line">Interesting information&hellip; <span>lots of it.</span></p>
+      </header>
       <div class="oak-transcript fs-reveal" id="oak-transcript">
         <p>
           You and three friends are talking about the <mark>2026 World Cup</mark>.
@@ -129,14 +133,16 @@
         personal growth, and the building blocks of a life&rsquo;s meaning.
       </p>
 
-      <p class="oak-p fs-reveal">
-        Yet every way of keeping one asks for a compromise. Voice memos and
-        ambient pendants record everything, and give up <em>privacy</em>. AI
-        note takers turn a dinner into minutes, and give up <em>beauty</em>.
-        Pen and paper make you stop talking, and give up <em>ease</em>. None of
-        them can be shared, and none shows a conversation&rsquo;s shape: where
-        it starts, where it goes, and how it gets there.
-      </p>
+      <!-- Every way of keeping a conversation gives something up; Oak doesn't -->
+      <section class="oak-tradeoffs" aria-labelledby="oak-tradeoffs">
+        <h2 class="oak-tradeoffs-h fs-reveal" id="oak-tradeoffs">Every way of keeping one gives something up</h2>
+        <ul class="oak-ways">
+          <li class="oak-way fs-reveal" style="--d:0.00s"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 6c2 8 6 12 10 14 4-2 8-6 10-14"/><circle cx="24" cy="28" r="7"/><path d="M8 24c-2 3-2 7 0 10M40 24c2 3 2 7 0 10M12 26c-1 2-1 4 0 6M36 26c1 2 1 4 0 6"/></svg><p class="oak-way-name">Voice memos &amp; pendants</p><p class="oak-way-does">Record everything</p><ul class="oak-keeps"><li class="is-lost">privacy</li><li>beauty</li><li>ease</li></ul></li>
+          <li class="oak-way fs-reveal" style="--d:0.12s"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 6h18l8 8v28H12Z"/><path d="M30 6v8h8M17 20h14M17 26h14M17 32h9"/></svg><p class="oak-way-name">AI note takers</p><p class="oak-way-does">Turn dinner into minutes</p><ul class="oak-keeps"><li>privacy</li><li class="is-lost">beauty</li><li>ease</li></ul></li>
+          <li class="oak-way fs-reveal" style="--d:0.24s"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 38l3-10L32 9l7 7-19 19Z"/><path d="M28 13l7 7M10 38l10-3"/><path d="M8 43h32"/></svg><p class="oak-way-name">Pen &amp; paper</p><p class="oak-way-does">Stop the talking</p><ul class="oak-keeps"><li>privacy</li><li>beauty</li><li class="is-lost">ease</li></ul></li>
+          <li class="oak-way oak-way--oak fs-reveal" style="--d:0.36s"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M13 21c0-5 5-8 11-8s11 3 11 8H13Z"/><path d="M15 21c0 10 4 17 9 19 5-2 9-9 9-19"/><path d="M24 13V8"/></svg><p class="oak-way-name">Oak</p><p class="oak-way-does">Keeps what mattered</p><ul class="oak-keeps"><li>privacy</li><li>beauty</li><li>ease</li></ul><p class="oak-way-lose">and it&rsquo;s shared, with the conversation&rsquo;s shape</p></li>
+        </ul>
+      </section>
 
       <p class="oak-p fs-reveal">
         <strong>Oak keeps what mattered, and lets the rest go.</strong> It is a

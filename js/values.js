@@ -1,4 +1,4 @@
-// values.js — the Values page's patron, artist and citizen: three spheres, as
+// values.js — the Values page's patron, maker and citizen: three spheres, as
 // in the deck the page is drawn from; choosing one brings it forward and
 // shows what it is asked for. Arrow keys move between them.
 (function () {

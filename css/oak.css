@@ -159,6 +159,80 @@ html.oak-locked body {
 }
 .oak-later.is-on { opacity: 1; filter: none; transform: none; }
 
+/* "Set the scene": what the transcript below is full of */
+.oak-scene { margin: 0 0 18px; }
+.oak-scene-k {
+  margin: 0 0 8px;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size-adjust: none;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--clay-deep);
+}
+.oak-scene-line { margin: 0; font-weight: 300; font-size: clamp(26px, 3.2vw, 38px); line-height: 1.2; color: var(--ink); }
+.oak-scene-line span {
+  background: linear-gradient(rgba(246, 226, 122, 0.95), rgba(246, 226, 122, 0.95)) left 88% / 0 0.42em no-repeat;
+  transition: background-size 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.6s;
+}
+.oak-scene.is-in .oak-scene-line span { background-size: 100% 0.42em; }
+
+/* ---- Every way of keeping a conversation gives something up: three cards,
+   each with its loss struck through, and Oak, which keeps all three ---- */
+.oak-tradeoffs { margin: 0 0 56px; }
+.oak-tradeoffs-h { margin: 0 0 22px; font-weight: 400; font-size: clamp(22px, 2.4vw, 27px); line-height: 1.3; color: var(--ink); }
+.oak-ways {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.oak-way {
+  display: flex;
+  flex-direction: column;
+  padding: 18px 16px 16px;
+  border: 1px solid rgba(27, 22, 19, 0.14);
+  border-radius: 14px;
+  background: var(--paper-warm);
+  transition-delay: var(--d, 0s);
+}
+.oak-way svg { width: 34px; height: 34px; margin-bottom: 12px; fill: none; stroke: var(--ink-soft); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.oak-way-name { margin: 0; font-size: 17px; line-height: 1.25; color: var(--ink); }
+.oak-way-does { margin: 4px 0 14px; font-size: 14px; line-height: 1.4; font-style: italic; color: var(--ink-soft); }
+.oak-keeps { display: flex; flex-direction: column; gap: 5px; margin: auto 0 0; padding: 12px 0 0; border-top: 1px solid rgba(27, 22, 19, 0.1); list-style: none; }
+.oak-keeps li {
+  position: relative;
+  align-self: flex-start;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+.oak-keeps li::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 8px; border-radius: 50%; background: var(--oak-moss); vertical-align: 1px; }
+.oak-keeps li.is-lost { color: var(--clay-deep); transition: opacity 0.6s var(--ease) calc(1.1s + var(--d, 0s)); }
+.oak-keeps li.is-lost::before { background: transparent; box-shadow: inset 0 0 0 1.5px var(--clay-deep); }
+/* the loss, struck through once the card is in */
+.oak-keeps li.is-lost::after {
+  content: "";
+  position: absolute;
+  left: 13px;
+  right: -3px;
+  top: 52%;
+  height: 2px;
+  background: var(--clay-deep);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1) calc(0.7s + var(--d, 0s));
+}
+.oak-way.is-in .oak-keeps li.is-lost::after { transform: none; }
+.oak-way.is-in .oak-keeps li.is-lost { opacity: 0.6; }
+.oak-way-lose { margin: 10px 0 0; font-size: 12.5px; line-height: 1.4; color: var(--ink-soft); }
+.oak-way--oak { border-color: var(--oak-moss); background: linear-gradient(160deg, rgba(122, 150, 92, 0.16), var(--paper-warm) 70%); }
+.oak-way--oak svg { stroke: var(--oak-moss); }
+.oak-way--oak .oak-way-name { font-weight: 600; }
+.oak-way--oak .oak-way-lose { color: var(--oak-moss); }
+
 /* ---- The deck's features: the conversation tree, and the forest ---- */
 .oak-feature { margin: 20px 0 64px; }
 .oak-h2 {
@@ -428,14 +502,12 @@ html.oak-locked body {
   transition: opacity 0.6s var(--ease) calc(0.3s + var(--d)), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) calc(0.3s + var(--d));
 }
 .oak-consent.is-in .oak-code span { opacity: 1; transform: none; }
-/* Each digit turns over as the code changes (js/oak.js) */
-.oak-code span.is-rolling { animation: oakRoll 0.34s cubic-bezier(0.4, 0, 0.2, 1); }
-@keyframes oakRoll {
-  0% { transform: none; }
-  45% { transform: rotateX(90deg); opacity: 0.4; }
-  55% { transform: rotateX(-90deg); opacity: 0.4; }
-  100% { transform: none; }
-}
+/* Each digit is a reel: as the code changes it slides hard through a run of
+   digits and lands with a kick (js/oak.js) */
+.oak-code span { overflow: hidden; position: relative; }
+.oak-reel { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; font-style: normal; }
+.oak-reel b { display: grid; place-items: center; height: 48px; font-weight: inherit; }
+.oak-reel.is-spinning { filter: blur(0.7px); }
 
 /* ---- Close ---- */
 .oak-close {
@@ -454,11 +526,13 @@ html.oak-locked body {
   .ph { --k: 0.54; }
   .oak-forest-pair .ph { margin: 0 auto; }
   .oak-consent { grid-template-columns: 1fr; }
+  .oak-ways { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .oak-transcript mark, .oak-transcript mark > span, .oak-later,
-  .ph, .ph-acorn, .ph-bird, .ph-sheet, .ph-scrim, .ph-card, .wk-page, .wk-kylix, .oak-code span { transition: none; }
+  .ph, .ph-acorn, .ph-bird, .ph-sheet, .ph-scrim, .ph-card, .wk-page, .wk-kylix, .oak-code span,
+  .oak-scene-line span, .oak-way, .oak-keeps li, .oak-keeps li::after { transition: none; }
   .ph-crown { animation: none; }
 }
 
