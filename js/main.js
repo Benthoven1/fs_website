@@ -637,6 +637,9 @@ let footerOpen = false;
 function setFooterHeight() {
   if (drawer) document.documentElement.style.setProperty("--sf-h", drawer.offsetHeight + "px");
 }
+// The waitlist, arriving under the loading screen, grows with its window
+// (js/ls.js), with the navbar that comes with it
+const waitlistZoom = () => [drawer, navbar];
 // force: open under cover of the loading screen (index.html#waitlist)
 function openFooter(force) {
   if (!drawer || state.mode !== "3d" || (lsActive && !force) || !body.classList.contains("cosmos-only")) return;
@@ -644,6 +647,9 @@ function openFooter(force) {
   setFooterHeight();
   footerOpen = true;
   body.classList.add("footer-open");
+  // The landing's line of words gives way to the classic navbar
+  navbar.classList.add("visible");
+  navbar.setAttribute("aria-hidden", "false");
   drawer.setAttribute("aria-hidden", "false");
   drawer.focus({ preventScroll: true }); // the keys scroll it from here
   labelVisTarget = 0;
@@ -652,6 +658,10 @@ function closeFooter() {
   if (!footerOpen) return;
   footerOpen = false;
   body.classList.remove("footer-open");
+  if (state.mode === "3d") {
+    navbar.classList.remove("visible", "menu-open");
+    navbar.setAttribute("aria-hidden", "true");
+  }
   drawer.setAttribute("aria-hidden", "true");
   canvas.focus({ preventScroll: true });
 }
@@ -731,7 +741,7 @@ let lsPlay        = null;
 let lsActive      = false;
 let lsHoleVisible = false; // true once the canvas window first opens
 
-function showLoadingScreen(onReady, duration) {
+function showLoadingScreen(onReady, duration, zoom) {
   if (lsActive) return;
   lsActive = true;
   lsHoleVisible = false;
@@ -752,6 +762,7 @@ function showLoadingScreen(onReady, duration) {
 
   lsPlay = window.mulviumLS.play({
     duration: duration || 4000,
+    zoom,
     onFrame(t) {
       // The overlay starts opaque, so the mode change happens under cover
       if (!readyCalled) {
@@ -919,7 +930,7 @@ function goToOrbit() {
 // This is the "fade-out before the loading screen" — the overlay fades IN
 // (covering the page) which from the viewer's perspective is a fade-out of
 // whatever was visible (the night sky, the letter, etc.).
-function fadeInLoadingScreen(onReady) {
+function fadeInLoadingScreen(onReady, zoom) {
   if (lsActive) return;
   lsActive = true;
   window.mulviumLS.reset();
@@ -935,7 +946,7 @@ function fadeInLoadingScreen(onReady) {
       setTimeout(() => {
         loadingScreen.style.transition = "";
         lsActive = false;
-        showLoadingScreen(onReady, 5000);
+        showLoadingScreen(onReady, 5000, zoom);
       }, 250);
     });
   });
@@ -992,7 +1003,7 @@ document.addEventListener("click", (ev) => {
   navbar.classList.remove("menu-open");
   if (link.getAttribute("href") === "#letter") fadeInLoadingScreen(() => toLetter());
   else if (state.mode === "3d") openFooter();
-  else fadeInLoadingScreen(() => { snapTo3D(); openFooter(true); });
+  else fadeInLoadingScreen(() => { snapTo3D(); openFooter(true); }, waitlistZoom);
 });
 
 // Fade to white before navigating to any sub-page from index.html.
@@ -1166,15 +1177,33 @@ function pointToSphere(id) {
 {
   const lnav = document.getElementById("lnav");
   if (lnav) {
-    const menu = lnav.querySelector(".lnav-menu"), word = lnav.querySelector(".lnav-menu-word");
-    const setOpen = (open) => {
-      lnav.classList.toggle("is-open", open);
-      menu.setAttribute("aria-expanded", String(open));
-      word.textContent = open ? "Close" : "Menu";
+    // Phones: the hamburger sits where the navbar keeps its own, and opens
+    // the navbar with its menu; when the menu closes over the cosmos, the
+    // navbar goes again
+    const burger = lnav.querySelector(".lnav-burger"), own = navbar.querySelector(".nav-burger");
+    const placeBurger = () => {
+      burger.style.left = navbar.offsetLeft + own.offsetLeft + "px";
+      burger.style.top = navbar.offsetTop + own.offsetTop + "px";
     };
-    menu.addEventListener("click", () => setOpen(!lnav.classList.contains("is-open")));
-    lnav.addEventListener("click", (e) => { if (e.target.closest("a")) setOpen(false); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
+    placeBurger();
+    window.addEventListener("resize", placeBurger);
+    burger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      body.classList.add("lnav-classic");
+      navbar.classList.add("visible", "menu-open");
+      navbar.setAttribute("aria-hidden", "false");
+      own.setAttribute("aria-expanded", "true");
+      own.setAttribute("aria-label", "Close menu");
+      own.focus({ preventScroll: true });
+    });
+    new MutationObserver(() => {
+      if (!body.classList.contains("lnav-classic") || navbar.classList.contains("menu-open")) return;
+      body.classList.remove("lnav-classic");
+      if (state.mode === "3d" && !footerOpen) {
+        navbar.classList.remove("visible");
+        navbar.setAttribute("aria-hidden", "true");
+      }
+    }).observe(navbar, { attributes: true, attributeFilter: ["class"] });
     lnav.querySelectorAll("[data-sphere]").forEach((a) => {
       const point = () => pointToSphere(a.dataset.sphere);
       a.addEventListener("mouseenter", point);
@@ -1557,7 +1586,7 @@ animate();
     if (_orbit) jumpTo2D();
     if (_letter) toLetter();
     if (_waitlist) openFooter(true);
-  }, _waitlist ? 2600 : _entering ? 5000 : 4000);
+  }, _waitlist ? 2600 : _entering ? 5000 : 4000, _waitlist ? waitlistZoom : undefined);
 }
 
 // When the page is restored from the browser back-forward cache the WebGL

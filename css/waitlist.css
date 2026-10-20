@@ -616,7 +616,8 @@ body.footer-open .wl-drawer {
   margin: 0 auto;
   padding: 64px 0 8px;
 }
-.wl-sec--lead { padding-top: 72px; }
+/* clear of the navbar, which comes with the drawer */
+.wl-sec--lead { padding-top: calc(var(--nav-h) + 36px); }
 .wl-h1 {
   margin: 0 0 12px;
   font-weight: 600;

@@ -10,7 +10,8 @@
 // data-no-scene: the window doesn't hold open for an entrance, and the
 // photographs close into it and it expands as soon as they have all opened.
 // The page itself shows through it whole, shrunk to fill the window, and
-// grows with the window to full size.
+// grows with the window to full size. The home page can ask for the same of
+// what it opens beneath the cover (play's `zoom`: the waitlist, arriving).
 // The home page loads this with data-manual and plays it itself through
 // window.mulviumLS (js/main.js).
 //
@@ -202,20 +203,25 @@
   }
   function hideOutline() { edges.forEach(function (e) { set(e, 'visibility', 'hidden'); }); }
 
-  // Without a scene, the page's own parts (the nav, the page, the footer;
-  // never the overlay) are scaled about the middle of the screen, so the
-  // whole first screen sits inside the window and grows with it
-  var shrink = [];
+  // What grows with the window (never the overlay), scaled about the middle
+  // of the screen so the whole first screen sits inside the window: without
+  // a scene, the page's own parts (the nav, the page, the footer); on the
+  // home page, whatever play's `zoom` names. Measured as the window first
+  // opens, once the page beneath the cover has been laid out.
+  var shrink = [], zoomOf = null, zoomPending = false;
+  function pageParts() {
+    return [].slice.call(document.querySelectorAll('body > #nav-cap, body > nav, body > main, body > footer'));
+  }
   function findShrink() {
     clearShrink();
-    if (!noScene) return;
-    shrink = [].slice.call(document.querySelectorAll('body > #nav-cap, body > nav, body > main, body > footer'));
+    shrink = (zoomOf ? zoomOf() : []).filter(Boolean);
     var ox = window.innerWidth / 2, oy = window.innerHeight / 2;
     shrink.forEach(function (el) {
+      el.style.transition = 'none'; // their own eased transforms wait
+      el.style.transform = 'none';  // measured where they come to rest
       var r = el.getBoundingClientRect();
       el.style.transformOrigin = (ox - r.left) + 'px ' + (oy - r.top) + 'px';
       el.style.willChange = 'transform';
-      el.style.transition = 'none'; // the nav eases its own transform; not now
     });
   }
   function setShrink(k) {
@@ -254,6 +260,7 @@
 
   function frame(t) {
     if (!sized) measure();
+    if (zoomPending && t >= P.win) { zoomPending = false; findShrink(); }
     set(ls, 'opacity', String(1 - ph(t, P.fade, P.end)));
 
     // The group rises from below and locks into the centre
@@ -318,7 +325,8 @@
   // their pictures (and the paper bands) raster before the clock starts
   function prepare() {
     reset();
-    findShrink();
+    clearShrink();
+    zoomPending = !!zoomOf;
     ls.classList.add('ls-banded');
     set(ls, 'opacity', '1');
     ls.style.display = 'block';
@@ -327,11 +335,13 @@
     frame(0);
   }
 
-  // opts: duration (ms), onFrame(t), onHole(), onDone()
+  // opts: duration (ms), onFrame(t), onHole(), onDone(), zoom() (the
+  // elements to grow with the window)
   var raf = null, waiting = null;
   function play(opts) {
     opts = opts || {};
     var dur = opts.duration || 4000;
+    zoomOf = opts.zoom || (noScene ? pageParts : null);
     if (raf) cancelAnimationFrame(raf);
     if (waiting) clearTimeout(waiting);
     raf = waiting = null;
