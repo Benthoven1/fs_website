@@ -9,6 +9,8 @@
 // A page with no scene to show through the window loads this with
 // data-no-scene: the window doesn't hold open for an entrance, and the
 // photographs close into it and it expands as soon as they have all opened.
+// The page itself shows through it whole, shrunk to fill the window, and
+// grows with the window to full size.
 // The home page loads this with data-manual and plays it itself through
 // window.mulviumLS (js/main.js).
 //
@@ -200,6 +202,33 @@
   }
   function hideOutline() { edges.forEach(function (e) { set(e, 'visibility', 'hidden'); }); }
 
+  // Without a scene, the page's own parts (the nav, the page, the footer;
+  // never the overlay) are scaled about the middle of the screen, so the
+  // whole first screen sits inside the window and grows with it
+  var shrink = [];
+  function findShrink() {
+    clearShrink();
+    if (!noScene) return;
+    shrink = [].slice.call(document.querySelectorAll('body > #nav-cap, body > nav, body > main, body > footer'));
+    var ox = window.innerWidth / 2, oy = window.innerHeight / 2;
+    shrink.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      el.style.transformOrigin = (ox - r.left) + 'px ' + (oy - r.top) + 'px';
+      el.style.willChange = 'transform';
+      el.style.transition = 'none'; // the nav eases its own transform; not now
+    });
+  }
+  function setShrink(k) {
+    shrink.forEach(function (el) { set(el, 'transform', k >= 0.9999 ? '' : 'scale(' + k.toFixed(4) + ')'); });
+  }
+  function clearShrink() {
+    shrink.forEach(function (el) {
+      el.style.transform = el.style.transformOrigin = el.style.willChange = el.style.transition = '';
+      last.delete(el);
+    });
+    shrink = [];
+  }
+
   // ── States ─────────────────────────────────────────────────────────────────
   // Everything hidden and at rest: the overlay may be shown as a plain cover
   function reset() {
@@ -216,6 +245,7 @@
 
   function hide() {
     reset();
+    clearShrink();
     set(ls, 'opacity', '0');
     ls.style.display = 'none';
     ls.style.pointerEvents = 'none';
@@ -233,6 +263,8 @@
     // The window, while it opens
     var winW = EWIN[0] * ph(t, P.win, P.winW, eRise);
     var winH = Math.max(3, EWIN[1] * ph(t, P.win, P.winH, eRise));
+    // The page behind it, scaled to cover the opened window
+    var fit = Math.max(EWIN[0] / vw, EWIN[1] / vh);
 
     if (t < P.conv) {
       // Phase 1: each frame opens as a slit. Until then it waits centred and
@@ -274,8 +306,11 @@
       // The frames have all closed into the window's edge, so they rest.
       frames.forEach(function (f) { set(f, 'visibility', 'hidden'); });
       var ep = ph(t, P.exp, P.expEnd, eExpand);
-      setWindow(EWIN[0] + (vw - EWIN[0]) * ep, EWIN[1] + (vh - EWIN[1]) * ep, vh / 2, false);
+      var ew = EWIN[0] + (vw - EWIN[0]) * ep, eh = EWIN[1] + (vh - EWIN[1]) * ep;
+      setWindow(ew, eh, vh / 2, false);
+      fit = Math.max(ew / vw, eh / vh);
     }
+    if (shrink.length) setShrink(fit);
   }
 
   // ── Playback ───────────────────────────────────────────────────────────────
@@ -283,6 +318,7 @@
   // their pictures (and the paper bands) raster before the clock starts
   function prepare() {
     reset();
+    findShrink();
     ls.classList.add('ls-banded');
     set(ls, 'opacity', '1');
     ls.style.display = 'block';

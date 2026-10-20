@@ -883,7 +883,12 @@ function snapTo3D() {
 // Instantly sets the overhead orbit view (the 2D state), skipping the 3D
 // landing. Used under cover of the loading screen when arriving at
 // index.html#orbit, i.e. from "Dear Leader" on another page.
+// A jump the page makes itself (to the top, to the letter) is not a fling:
+// the touch fling catcher (below) ignores the page's scrolling until then
+let quietScrollUntil = 0;
+
 function jumpTo2D() {
+  quietScrollUntil = performance.now() + 900;
   closeFooter();
   targetFov = camera.fov = FOV_DEFAULT;
   camera.updateProjectionMatrix();
@@ -951,13 +956,30 @@ document.querySelectorAll("#home-link, [data-orbit-link]").forEach((el) => {
 });
 
 // The founder's letter: the orbit view, scrolled on under cover to the
-// letter's start (index.html#letter, and the waitlist's thought bubbles)
+// letter's start (index.html#letter, and the waitlist's thought bubbles).
+// The jump is made again as the layout settles (a phone's toolbar resizes
+// the screen as the page moves), unless the reader has started scrolling.
 function toLetter() {
   jumpTo2D();
-  requestAnimationFrame(() => {
+  let moved = false;
+  const mark = () => { moved = true; };
+  window.addEventListener("touchstart", mark, { passive: true });
+  window.addEventListener("wheel", mark, { passive: true });
+  const place = () => {
     const letter = document.getElementById("letter-section");
-    if (letter) window.scrollTo(0, letter.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.1);
-  });
+    if (moved || !letter) return;
+    quietScrollUntil = performance.now() + 400;
+    window.scrollTo(0, letter.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.1);
+    resetCinematicScroll();
+  };
+  requestAnimationFrame(place);
+  setTimeout(place, 250);
+  setTimeout(place, 700);
+  setTimeout(() => {
+    place();
+    window.removeEventListener("touchstart", mark);
+    window.removeEventListener("wheel", mark);
+  }, 1500);
 }
 
 // Links within the page: to the letter (from the waitlist's bubbles), under
@@ -1457,6 +1479,7 @@ if (finePointer) {
   window.addEventListener("touchcancel", () => { touching = false; }, { passive: true });
   window.addEventListener("scroll", () => {
     const y = window.scrollY, t = performance.now(), dt = t - lastT;
+    if (t < quietScrollUntil) { lastY = y; lastT = 0; v = 0; return; }
     v = lastT && dt > 0 && dt < 100 ? 0.6 * ((y - lastY) / dt) + 0.4 * v : 0;
     lastY = y; lastT = t;
     if (touching || easing || v < FLING || !body.classList.contains("expansion-active")) return;
