@@ -20,9 +20,12 @@ the power of patronage", names the same thing.
 What patrons are offered (a prospectus for each project, three founding seats
 priced at one-tenth of its year-one budget, the First Circle's match of a new
 patron's first gifts, and letters from the founder), how they stay with
-Mulvium from one project to the next, and the rollout are set out in the
-MulviumSOS repository, in `docs/1-the-company/4-the-business-model-and-patronage.md`.
-Keep the site's figures (the 10% fee, $0 up front) in step with that page.
+Mulvium from one project to the next, the market, competitors, pricing, and
+finances are set out in the business plan in the MulviumSOS repository,
+`docs/1-the-company/4-the-business-plan.md`; the two products the site
+describes are documented there too, in `docs/2-the-product/13-atelier.md` and
+`docs/2-the-product/10-grove.md`. Keep the site's figures (the 10% fee, $0 up
+front, Grove's price range) in step with those pages.
 
 ## Structure
 
@@ -172,4 +175,4 @@ Then visit `http://localhost:8000`.
 Fiscal Sponsorship and MulviumSOS content is adapted from the FiscalSponsor design
 documents (`docs/` in the FiscalSponsor repository, where MulviumSOS is still called
 FSOS); Oak content from the Oak repository; how Mulvium earns from the MulviumSOS
-repository's `docs/1-the-company/4-the-business-model-and-patronage.md`.
+repository's `docs/1-the-company/4-the-business-plan.md`.

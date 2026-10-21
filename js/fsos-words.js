@@ -28,10 +28,10 @@ export const AGENCY = [
   { agent: "Media Relations", focus: "Reporters", work: ["pitch", "press kit", "embargo", "exclusive", "interview prep", "media directory", "coverage log", "spokesperson"] },
   { agent: "Content", focus: "Editorial", work: ["editorial calendar", "feature story", "blog post", "case study", "photo captions", "video script", "copy desk", "fact check"] },
   { agent: "Social", focus: "Channels", work: ["post calendar", "captions", "community replies", "event coverage", "carousel", "short video", "comment moderation", "platform insights"] },
-  { agent: "Mailing List", focus: "Subscribers", work: ["monthly letter", "welcome series", "segments", "subject lines", "event invitation", "replies", "unsubscribes", "sender reputation"] },
+  { agent: "Mailing List", focus: "Subscribers", work: ["newsletter", "welcome series", "segments", "subject lines", "event invitation", "replies", "unsubscribes", "sender reputation"] },
   { agent: "Awards", focus: "Honors", work: ["awards directory", "nominations", "entry deadlines", "submission packet", "judging criteria", "shortlist", "acceptance remarks", "award history"] },
   { agent: "Crisis", focus: "Response", work: ["holding statement", "rapid response", "Q&A sheet", "escalation path", "stakeholder update", "media monitoring", "correction request", "after-action review"] },
-  { agent: "Reporting", focus: "Results", work: ["monthly report", "coverage summary", "share of voice", "audience growth", "campaign recap", "goal tracking", "clips book", "client briefing"] },
+  { agent: "Reporting", focus: "Results", work: ["client report", "coverage summary", "share of voice", "audience growth", "campaign recap", "goal tracking", "clips book", "client briefing"] },
 ];
 
 export const CHIEF_OF_STAFF = {
