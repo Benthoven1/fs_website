@@ -6,6 +6,24 @@ Operating System of the for-profit arm, with two tools: Atelier, which builds an
 institution, and Grove, which handles its public relations), Oak, and a fourth to
 be announced.
 
+## How Mulvium earns
+
+The site speaks to founders, but the business runs on patrons. A founder pays
+nothing up front (the waitlist's "$0 upfront" slide); patrons give to the
+project through Mulvium, tax-deductibly; and Mulvium keeps one fee, 10% of
+gifts, never billing the founder for the institution built beneath them (the
+pitch's "One fee" line, and the Fiscal Sponsorship page's "A fee keeps it
+running"). The Values page's patron, "accumulated wealth should power the
+frontier", is the brief to patrons, and the mission's last clause, "mobilizing
+the power of patronage", names the same thing.
+
+What patrons are offered (a prospectus for each project, three founding seats
+priced at one-tenth of its year-one budget, the First Circle's match of a new
+patron's first gifts, and letters from the founder), how they stay with
+Mulvium from one project to the next, and the rollout are set out in the
+MulviumSOS repository, in `docs/1-the-company/4-the-business-model-and-patronage.md`.
+Keep the site's figures (the 10% fee, $0 up front) in step with that page.
+
 ## Structure
 
 - `index.html` — landing page. A 3D clay-colored solar system on paper: the star is
@@ -153,4 +171,5 @@ Then visit `http://localhost:8000`.
 
 Fiscal Sponsorship and MulviumSOS content is adapted from the FiscalSponsor design
 documents (`docs/` in the FiscalSponsor repository, where MulviumSOS is still called
-FSOS); Oak content from the Oak repository.
+FSOS); Oak content from the Oak repository; how Mulvium earns from the MulviumSOS
+repository's `docs/1-the-company/4-the-business-model-and-patronage.md`.
