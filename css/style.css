@@ -1911,9 +1911,9 @@ a.nav-cta:visited {
 
 /* ---------- The landing's navigation (index.html .lnav) ----------
    Over the cosmos there is no bar: a line of words under a fine rule in the
-   rings' gold, each place marked with its sphere's colour. It arrives with
-   the hero, and gives way to the classic navbar in the orbit view and as
-   the waitlist rises. On phones it is the hamburger alone, which brings
+   rings' gold, set like the classic navbar's; pointing at a place makes its
+   sphere answer (js/main.js). It arrives with the hero, and gives way to the
+   classic navbar in the orbit view and as the waitlist rises. On phones it is the hamburger alone, which brings
    in the navbar with its menu open. */
 .lnav {
   position: fixed;
@@ -1922,9 +1922,11 @@ a.nav-cta:visited {
   right: 0;
   z-index: 45;
   padding: 20px clamp(22px, 4.4vw, 64px) 12px;
-  font-family: "IBM Plex Sans", system-ui, sans-serif;
-  font-size: 13.5px;
-  letter-spacing: 0.02em;
+  /* the classic navbar's type (.nav-trigger) */
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-8px);
@@ -1952,7 +1954,7 @@ body.cosmos-only.cosmos-intro:not(.footer-open):not(.lnav-classic) .lnav::after 
 
 .lnav-sheet { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
 .lnav-list { display: flex; align-items: center; gap: clamp(18px, 2.3vw, 34px); list-style: none; margin: 0; padding: 0; }
-.lnav a { color: var(--ink-soft); text-decoration: none; }
+.lnav a { color: var(--ink); text-decoration: none; }
 .lnav-list > li > a {
   position: relative;
   display: inline-flex;
@@ -1961,18 +1963,7 @@ body.cosmos-only.cosmos-intro:not(.footer-open):not(.lnav-classic) .lnav::after 
   padding: 6px 0;
   transition: color 0.3s ease;
 }
-.lnav-list > li > a:hover, .lnav-list > li > a:focus-visible { color: var(--ink); }
-/* a small sphere, lit from the upper left like the ones in the scene */
-.lnav-dot {
-  flex: none;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.75) 0 16%, var(--dot) 52%);
-  box-shadow: inset 0 -1px 2px rgba(27, 22, 19, 0.18);
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.lnav-list > li > a:hover .lnav-dot, .lnav-list > li > a:focus-visible .lnav-dot { transform: scale(1.45); }
+.lnav-list > li > a:not(.lnav-join):hover, .lnav-list > li > a:not(.lnav-join):focus-visible { color: var(--clay); }
 /* a hairline underline traced from the left */
 .lnav-list > li > a:not(.lnav-join)::after {
   content: "";
@@ -1981,13 +1972,11 @@ body.cosmos-only.cosmos-intro:not(.footer-open):not(.lnav-classic) .lnav::after 
   right: 0;
   bottom: 2px;
   height: 1px;
-  background: currentColor;
-  opacity: 0.45;
+  background: var(--clay);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.45s var(--ease);
+  transition: transform 0.3s var(--ease);
 }
-.lnav-list > li > a:has(.lnav-dot)::after { left: 17px; }
 .lnav-list > li > a:hover::after, .lnav-list > li > a:focus-visible::after { transform: none; }
 .lnav-join {
   padding: 6px 15px !important;
@@ -2020,14 +2009,14 @@ body.cosmos-only.cosmos-intro:not(.footer-open):not(.lnav-classic) .lnav::after 
 }
 .lnav-about::before { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 10px; } /* bridges the gap for the pointer */
 .lnav-about:hover .lnav-sub, .lnav-about:focus-within .lnav-sub { opacity: 1; visibility: visible; transform: none; transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s; }
-.lnav-sub a { display: block; padding: 6px 16px; font-size: 13px; }
-.lnav-sub a:hover, .lnav-sub a:focus-visible { color: var(--ink); background: rgba(240, 213, 187, 0.35); }
+.lnav-sub a { display: block; padding: 6px 16px; font-size: 15px; font-weight: 400; } /* as .dropdown a */
+.lnav-sub a:hover, .lnav-sub a:focus-visible { color: var(--clay); background: rgba(240, 213, 187, 0.35); }
 
 .lnav-burger { display: none !important; }
 
 /* Narrow screens: the same line, a little smaller */
 @media (max-width: 900px) {
-  .lnav { font-size: 12.5px; }
+  .lnav { font-size: 15px; }
   .lnav-list { gap: 16px; }
   .lnav-join { padding: 5px 12px !important; }
 }
