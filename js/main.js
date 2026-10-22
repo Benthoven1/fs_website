@@ -392,6 +392,7 @@ const state = {
   target: 0,
   hoverStar: false,
   hoverPlanet: null,
+  navSphere: null, // the sphere the landing's navigation is pointing at
   labelPlanet: null,
   labelStar: false,
   clock: new THREE.Clock(),
@@ -1167,10 +1168,12 @@ function updateHover() {
   }
 }
 
-// The landing's navigation points out the sphere of the place it names,
-// as hovering the sphere itself would (index.html .lnav)
+// The landing's navigation makes the sphere of the place it names answer
+// as hovering the sphere itself would: it swells, and its label shows
+// (index.html .lnav)
 function pointToSphere(id) {
   if (state.mode !== "3d" || footerOpen) return;
+  state.navSphere = id;
   if (id === "star") {
     state.labelPlanet = null;
     state.labelStar   = true;
@@ -1220,8 +1223,11 @@ function pointToSphere(id) {
     }).observe(navbar, { attributes: true, attributeFilter: ["class"] });
     lnav.querySelectorAll("[data-sphere]").forEach((a) => {
       const point = () => pointToSphere(a.dataset.sphere);
+      const letGo = () => { if (state.navSphere === a.dataset.sphere) state.navSphere = null; };
       a.addEventListener("mouseenter", point);
       a.addEventListener("focus", point);
+      a.addEventListener("mouseleave", letGo);
+      a.addEventListener("blur", letGo);
     });
   }
 }
@@ -1297,7 +1303,8 @@ function animate() {
   // Star: shrinks as expansion progresses, then drifts to a flower centre once tiny
   const pulse      = 1 + Math.sin(performance.now() * 0.0011) * 0.01;
   const starShrink = lerp(1, 0.04, p1e);
-  const starTarget = (state.hoverStar && (state.mode === "3d" || state.mode === "2d") ? 1.1 : pulse) * starShrink;
+  const navOn = state.mode === "3d" && !footerOpen; // the landing's navigation shows
+  const starTarget = ((state.hoverStar && (state.mode === "3d" || state.mode === "2d")) || (navOn && state.navSphere === "star") ? 1.1 : pulse) * starShrink;
   star.scale.lerp(tmpVec.set(starTarget, starTarget, starTarget), 1 - Math.pow(0.0005, dt));
 
   // Center star stays at rose origin (0,0,0) — it becomes the heart of the rose
@@ -1310,7 +1317,7 @@ function animate() {
   star.material.roughness = lerp(0.38, 0.2, p1e);
 
   orbits.forEach((o) => {
-    const target = state.hoverPlanet === o && (state.mode === "3d" || state.mode === "2d") ? 1.18 : 1;
+    const target = (state.hoverPlanet === o && (state.mode === "3d" || state.mode === "2d")) || (navOn && state.navSphere === o.def.id) ? 1.18 : 1;
     o.planet.scale.lerp(tmpVec.set(target, target, target), 1 - Math.pow(0.001, dt));
   });
 
