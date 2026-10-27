@@ -497,9 +497,10 @@ html.pt-js .pt-vision[data-pt] { opacity: 1; translate: none; }
   .pt-close-l, .pt-close-r { width: 100%; display: flex; flex-direction: column; align-items: center; }
   .pt-close-l .wl-h2--leap { margin-bottom: 14px; font-size: 56px; }
   .pt-close-l .wl-sub { font-size: 24px; }
-  /* the signature's ink starts a fifth of the way into its image: shifted
-     back by half that, it sits centred */
-  #waitlist .pt-close-l .wl-sig { margin: 6px auto 4px; translate: calc(260px * -0.102) 0; }
+  /* the signature's ink runs from a fifth of the way into its image to a
+     fifth from its end, its middle 1% right of the image's: shifted back by
+     that, it sits centred over the name */
+  #waitlist .pt-close-l .wl-sig { margin: 6px auto 4px; translate: calc(260px * -0.0104) 0; }
   .pt-close-r .wl-signup { width: 100%; }
 }
 

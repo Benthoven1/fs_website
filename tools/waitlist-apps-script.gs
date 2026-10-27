@@ -339,7 +339,7 @@ function welcome(to, name) {
     '<p style="' + p + '">If you&rsquo;re passionate about building, send us an email at <a href="mailto:' + REPLY_TO + '" style="color:#8f5a42;">' + REPLY_TO + '</a>. We would love to connect and bring your vision to life!</p>' +
     '<p style="' + p + 'margin-bottom:4px;font-style:italic;">Symphonically yours,</p>' +
     '<img src="' + SIGNATURE + '" width="210" alt="Benjamin T. Rossen" style="display:block;width:210px;height:auto;margin:0 0 4px -42px;border:0;">' +
-    '<p style="' + p + 'margin:0;color:#1b1613;">Benjamin</p>' +
+    '<p style="' + p + 'margin:0;color:#1b1613;">Benjamin T. Rossen</p>' +
     '<p style="' + p + 'margin:0 0 30px;font-size:17px;">Founder, Mulvium</p>' +
     '</td></tr>' +
     '<tr><td style="padding:16px 40px 22px;border-top:1px solid #e4dfd7;font-family:' + serif + ';font-size:14px;color:#7a706a;">' +
@@ -348,7 +348,7 @@ function welcome(to, name) {
   MailApp.sendEmail({
     to: to,
     replyTo: REPLY_TO,
-    name: "Benjamin, Mulvium",
+    name: "Benjamin T. Rossen, Mulvium",
     subject: "Thank you so much, institution-builder",
     htmlBody: html,
     body: [
@@ -362,7 +362,7 @@ function welcome(to, name) {
       "",
       "Symphonically yours,",
       "",
-      "Benjamin",
+      "Benjamin T. Rossen",
       "Founder, Mulvium",
       "",
       "Reply \"stop\" and we'll take you off the list.",

@@ -662,7 +662,9 @@ body.footer-open .wl-drawer {
 /* The signature's ink starts a fifth of the way into its image: pulled back
    by that much, it lines up with the words above and below it */
 .wl-sig { display: block; width: 260px; max-width: none; height: auto; margin: 6px 0 4px calc(260px * -0.204); }
-.wl-sig-name { margin: 0 0 26px; font-size: 17px; color: var(--ink-soft); }
+/* As wide as the signature's ink and centred in it, so the name sits under
+   the middle of the signature wherever the signature is set */
+.wl-sig-name { width: calc(260px * 0.613); margin: 0 0 26px; font-size: 17px; text-align: center; color: var(--ink-soft); }
 
 /* -- The rotating noun in the headline (as on the fiscal sponsorship page).
    Its box is as wide as its widest word (js/waitlist.js), so turning over
