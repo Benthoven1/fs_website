@@ -1,0 +1,149 @@
+/* reels.css — the polymath reels' stage. Every moving value is written per
+   frame by reel.js; nothing here transitions on its own. */
+:root {
+  --ink: #1b1613;
+  --paper: #eceae5;
+  --clay: #b87758;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+}
+
+#stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1080px;
+  height: 1920px;
+  overflow: hidden;
+  background: var(--paper);
+  transform-origin: 0 0;
+  font-family: "Lora", serif;
+  -webkit-font-smoothing: antialiased;
+}
+#stage > * { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+
+#veil { background: var(--paper); opacity: 0; }
+#black { background: #000; opacity: 0; }
+
+/* ── The hero's words: each rises in its mask ─────────────────────────── */
+.cap {
+  position: absolute;
+  white-space: nowrap;
+  line-height: 1.2;
+  font-size: 62px;
+  will-change: opacity, filter;
+}
+.cap.c { width: 2000px; margin-left: -1000px; text-align: center; }
+.cap.ink { color: var(--ink); }
+.cap.clay { color: var(--clay); }
+.cap.it { font-style: italic; }
+.cap.sm { font-size: 54px; }
+.cap.xl { font-size: 118px; letter-spacing: 0.01em; }
+.cap .hw {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0 0.12em 0.16em;
+  margin: 0 -0.12em -0.16em;
+}
+.cap .hw > span { display: inline-block; }
+
+/* ── The close: the wordmark in its many faces, then its own ─────────── */
+#brand { pointer-events: none; }
+#brand .mark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: auto;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 118px;
+  line-height: 1;
+  color: var(--ink);
+}
+#brand .mark > span {
+  display: inline-block;
+  text-align: center;
+  vertical-align: baseline;
+  padding: 0.06em 0 0.1em;
+}
+#brand .cta {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  opacity: 0;
+}
+#brand .pill {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 500;
+  font-size: 30px;
+  letter-spacing: 0.02em;
+  color: #fff;
+  background: var(--clay);
+  padding: 20px 40px 22px;
+  border-radius: 999px;
+  box-shadow: 0 14px 40px rgba(143, 90, 66, 0.28);
+}
+#brand .url {
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size: 34px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  padding-right: 6px;
+}
+
+/* ── The lens ─────────────────────────────────────────────────────────── */
+#grain { mix-blend-mode: overlay; opacity: 0.06; pointer-events: none; }
+#vignette {
+  background: radial-gradient(ellipse 80% 70% at 50% 50%, rgba(20, 12, 6, 0) 58%, rgba(20, 12, 6, 0.5) 100%);
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+/* ── Playing in a browser ─────────────────────────────────────────────── */
+#play {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: rgba(27, 22, 19, 0.55);
+  color: #f7f2ea;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  cursor: pointer;
+  font-family: "Lora", serif;
+}
+#play[hidden] { display: none; }
+.play-mark {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 22px 0 22px 36px;
+  border-color: transparent transparent transparent #f7f2ea;
+  margin-left: 8px;
+}
+.play-label { font-size: 26px; font-style: italic; }
+.play-note {
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+}
