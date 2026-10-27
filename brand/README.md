@@ -1,6 +1,6 @@
 # Brand images
 
-Images of Mulvium's central sphere and the landing page's hero, for profile
+Mulvium's launch film, and images of Mulvium's central sphere and the landing page's hero, for profile
 icons, posts and banners. They are rendered from the site itself, not drawn:
 the sphere with the landing page's own material, lights and camera angle
 (`js/main.js`), and the hero captured from the live page after its entrance.
@@ -42,3 +42,59 @@ page as it orbits.
 - **The hero:** follow the steps at the top of `render/capture-hero.js` (a third
   argument such as `mulvium-wordmark` makes one set only), then
   scale each `@2x` capture to half size (Lanczos) for the exact sizes above.
+
+## The launch film
+
+Two cuts of one film, eighty-eight seconds at 30 fps, with its score:
+`mulvium-launch-film-1920x1080.mp4` for wide screens and
+`mulvium-launch-film-1080x1920.mp4` for phones (Instagram Reels and the like,
+its words kept clear of the app's own buttons and captions), previewed from
+`thumbs/`. It is the company and its vision, not any one product, told with
+the site's own pieces: the landing page's cosmos and night sky (`js/main.js`),
+MulviumSOS's sphere of words (`js/fsos.js`, drawn from `js/fsos-words.js` and
+`js/fsos-cloud.js`), the Fiscal Sponsorship page's bowl (`js/bowl.js`), the
+Contact Us page's network (`js/contact-mesh.js`), the navbar's many-faced
+wordmark, the hero's rising words, and lines from the site and the founder's
+letter.
+
+| Act | Seconds | |
+|---|---|---|
+| I | 0–15 | Millions of ideas, as stars met in flight and passed |
+| II | 15–27 | The organization you have to build: MulviumSOS's sphere of work inks in ahead, six stamps light its jobs in gold, and it fills the night |
+| III | 27–52 | One light: the rings gather, night turns to paper, and the cosmos takes its shape, framed by "At Mulvium, we change the norm and we build the organization beneath you". Each sphere glides into a quadrant of its own to be named (you, patrons, Mulvium, neighbors). It exists |
+| IV | 52–65 | Into the blue planet, which opens as the Fiscal Sponsorship bowl and takes in four projects, with four lines of the founder's letter set around it |
+| V | 65–78 | The next great expansion: the Contact Us network spreads out, its vertices named for ideas, and a ripple crosses it on "institutions" |
+| VI | 78–88 | The network gathers to a point, and the wordmark opens from it in the navbar's faces, turns through thirty more, and lands in its own, above "Join the waitlist" |
+
+`film/` holds its source:
+
+- `index.html`, `film.css`, `film.js` — the film as a page. Every frame is a
+  function of time alone: `film.seek(t)` draws the frame at `t` seconds.
+  Opened over HTTP (`brand/film/`), it plays itself with its score; `?t=60`
+  starts it a minute in, and `?format=reel` draws the phone cut.
+- `cues.json` — the cue sheet the picture and the score share: when each
+  idea lights, each stamp lands, the bloom, each sphere named, each project
+  settling in the bowl, each line of the letter, each ripple through the
+  network, each letter of the wordmark landing.
+- `score.py` — the score, synthesised in numpy and scipy from the cue sheet
+  (D major, 80 bpm): it writes `score.wav`, which is kept out of the
+  repository; `score.m4a` is its AAC encoding, which the page plays.
+- `render.js` — renders an MP4 frame by frame with Playwright and ffmpeg,
+  in parallel parts.
+
+To make them again, from the repository root:
+
+```
+python3 -m http.server 8765 &
+python3 brand/film/score.py
+ffmpeg -i brand/film/score.wav -c:a aac -b:a 192k brand/film/score.m4a
+node brand/film/render.js brand/mulvium-launch-film-1920x1080.mp4 3
+node brand/film/render.js brand/mulvium-launch-film-1080x1920.mp4 3 --reel
+ffmpeg -ss 87.5 -i brand/mulvium-launch-film-1920x1080.mp4 -frames:v 1 -vf scale=1280:-1 brand/thumbs/mulvium-launch-film-1920x1080.jpg
+ffmpeg -ss 87.5 -i brand/mulvium-launch-film-1080x1920.mp4 -frames:v 1 -vf scale=720:-1 brand/thumbs/mulvium-launch-film-1080x1920.jpg
+```
+
+Each render takes about half an hour with three parts on a machine without a
+GPU. A picture replaced in the site's root (`Musical.webp` and the others), or
+a word changed in MulviumSOS's vocabulary, appears in the film the next time
+it is rendered.

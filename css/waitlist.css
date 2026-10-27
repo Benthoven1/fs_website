@@ -662,7 +662,9 @@ body.footer-open .wl-drawer {
 /* The signature's ink starts a fifth of the way into its image: pulled back
    by that much, it lines up with the words above and below it */
 .wl-sig { display: block; width: 260px; max-width: none; height: auto; margin: 6px 0 4px calc(260px * -0.204); }
-.wl-sig-name { margin: 0 0 26px; font-size: 17px; color: var(--ink-soft); }
+/* As wide as the signature's ink and centred in it, so the name sits under
+   the middle of the signature wherever the signature is set */
+.wl-sig-name { width: calc(260px * 0.613); margin: 0 0 26px; font-size: 17px; text-align: center; color: var(--ink-soft); }
 
 /* -- The rotating noun in the headline (as on the fiscal sponsorship page).
    Its box is as wide as its widest word (js/waitlist.js), so turning over
@@ -845,6 +847,11 @@ html.wl-js .wl-bubble.is-in .wl-cloud > * { opacity: 1; translate: none; }
 .pk-card--sq { max-width: 260px; }
 .pk-img { display: block; border: 1px solid var(--hairline); border-radius: 10px; overflow: hidden; background: #eceae5; }
 .pk-img img { display: block; width: 100%; height: auto; }
+.pk-films { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 22px; }
+.pk-films .pk-card:first-child { flex: 1 1 420px; max-width: 720px; }
+.pk-films .pk-card:last-child { flex: 0 1 240px; }
+.pk-video { width: 100%; height: auto; aspect-ratio: 16 / 9; padding: 0; }
+.pk-video--tall { aspect-ratio: 9 / 16; }
 .pk-card figcaption { margin-top: 8px; font-size: 16px; line-height: 1.4; color: var(--ink-soft); }
 .pk-card strong { color: var(--ink); font-weight: 600; margin-right: 6px; }
 .pk-dl { display: block; font-size: 15px; }
