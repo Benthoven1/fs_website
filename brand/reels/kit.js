@@ -68,16 +68,24 @@ function arrowPts(x0, y0, x1, y1, bend) {
 // line landing in turn. y is the top of the first line, in frame pixels.
 export const say = (t0, t1, y, lines, o = {}) => ({ t: [t0, t1], y, lines: lines.map((l) => (typeof l === "string" ? { text: l } : l)), ...o });
 
-// The agreement, and the four programs it holds: each a circle that will
-// become one of the cosmos's spheres
-export function programs(...four) {
+// The agreement, its terms (the site's Model A, in brief) and the founder's
+// signature, and the four programs it holds: each a circle that will become
+// one of the cosmos's spheres
+const TERMS = ["1. The project becomes a program of the sponsor.", "2. Its gifts and grants are held in its own fund.",
+  "3. The sponsor signs, insures and keeps the books.", "4. The founder leads the work."];
+export function programs(signer, ...four) {
   const at = [35.0, 35.5, 36.0, 36.5];
   const spots = [[-330, -430, -4], [340, -370, 3], [-340, 165, 3], [350, 190, -3]];
   const colors = ["#C4DDB8", "#B8CAE0", "#E0B8C8", "#B8DDD8"];
+  const typed = { font: "Special Elite", size: 18, bg: "none", rot: -1.5, enter: "none" };
   return [
-    paper("#fbf8f1", 0, -40, 540, 560, { rot: -1.5, at: 34.4, edges: "cccc", enter: "slide", from: 90 }),
-    label("FISCAL SPONSORSHIP AGREEMENT", 0, -270, { font: "Special Elite", size: 28, bg: "none", rot: -1.5, at: 34.6, enter: "none" }),
+    paper("#fbf8f1", 0, -30, 560, 600, { rot: -1.5, at: 34.4, edges: "cccc", enter: "slide", from: 90 }),
+    label("FISCAL SPONSORSHIP AGREEMENT", 0, -270, { ...typed, size: 28, at: 34.6 }),
     ink([[-200, 0], [200, -4]], 0, -232, { at: 34.7, dur: 0.3, width: 3, color: "#1b1613", alpha: 0.6 }),
+    ...TERMS.map((t, i) => label(t, -8 - i * 1.2, -190 + i * 38, { ...typed, at: 34.6, color: "#3b332f" })),
+    ink([[-170, 0], [170, -4]], 30, 232, { at: 34.7, dur: 0.3, width: 2, color: "#1b1613", alpha: 0.5 }),
+    label("founder", -110, 252, { ...typed, size: 16, at: 34.6, color: "#6b605a" }),
+    hand(signer, 30, 198, { at: 37.2, dur: 0.8, size: 54, rot: -4, color: "#1b2a4a" }),
     ...four.flatMap(([name, icon], i) => {
       const [x, y, r] = spots[i];
       return [

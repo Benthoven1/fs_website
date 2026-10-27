@@ -548,9 +548,17 @@ function boardTile(color, seed) {
 function makeScene(def, name) {
   const keys = def.camera;
   const cam = ["x", "y", "z", "r"].map((_, j) => track(keys.map((k) => [k[0], k[j + 1]])));
-  const pieces = def.pieces.map((p, i) => ({ ...p, order: p.z ?? i }));
+  // Words, stamps and tape lie on top of the pictures they mark
+  const ON_TOP = new Set(["ransom", "label", "stamp", "hand", "ink", "tape"]);
+  const pieces = def.pieces.map((p, i) => ({ ...p, order: p.z ?? i + (ON_TOP.has(p.kind) ? 1000 : 0) }));
   pieces.sort((a, b) => a.order - b.order);
-  return { name, def, cam, pieces, tile: null, captions: (def.captions || []).map((c) => ({ ...c })), stamps: pieces.filter((p) => p.enter === "stamp").map((p) => p.at) };
+  // A caption is peeled away before the next one is laid in its place
+  const captions = (def.captions || []).map((c) => ({ ...c, t: [...c.t] })).sort((p, q) => p.t[0] - q.t[0]);
+  captions.forEach((c, i) => {
+    const next = captions.slice(i + 1).find((n) => n.y === c.y);
+    if (next && next.t[0] - c.t[1] < 0.55) c.t[1] = next.t[0] - 0.55;
+  });
+  return { name, def, cam, pieces, tile: null, captions, stamps: pieces.filter((p) => p.enter === "stamp").map((p) => p.at) };
 }
 const PAST = makeScene(STORY.past, "past"), NOW = makeScene(STORY.now, "now");
 const SCENES = [PAST, NOW];

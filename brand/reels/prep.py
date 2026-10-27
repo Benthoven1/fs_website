@@ -17,6 +17,7 @@ It also writes CREDITS.md, from each file's own record on Commons.
 import io
 import json
 import os
+import re
 import sys
 import time
 import urllib.parse
@@ -128,9 +129,10 @@ def credits():
         for p in data["query"]["pages"].values():
             ii = p["imageinfo"][0]
             m = ii.get("extmetadata", {})
-            clean = lambda k: " ".join(
-                __import__("re").sub(r"<[^>]+>", " ", m.get(k, {}).get("value", "")).split())[:140]
-            rows.append((p["title"][5:], clean("Artist") or "Unknown", clean("DateTimeOriginal"), clean("LicenseShortName"),
+            clean = lambda k: " ".join(re.sub(r"<[^>]+>", " ", m.get(k, {}).get("value", "")).split())[:140]
+            artist = " ".join(dict.fromkeys(clean("Artist").replace("Unknown author", "Unknown").split(" Unknown"))).strip() or "Unknown"
+            date = re.sub(r"\s*date QS:.*", "", clean("DateTimeOriginal"))
+            rows.append((p["title"][5:], artist, date, clean("LicenseShortName"),
                          ii["descriptionurl"]))
     used = {v[0]: k for k, v in ASSETS.items()}
     lines = ["# Picture credits", "",

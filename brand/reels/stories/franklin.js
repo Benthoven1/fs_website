@@ -29,12 +29,12 @@ export default {
     board: "#e7dcc6",
     // [t, x, y, zoom, roll]
     camera: [
-      [0, 0, -40, 1.08, -1], [4.6, 0, 20, 1.0, 0],
-      [5.6, 40, 1880, 1.04, 1], [10.6, 60, 1930, 1.1, 0],
-      [11.6, -100, 3800, 1.02, -1], [15.2, -90, 3840, 1.08, 0],
-      [16.2, 120, 5700, 1.0, 1], [21.0, 140, 5760, 1.07, 0],
-      [22.0, -60, 7600, 1.0, -1], [25.0, -40, 7640, 1.04, 0],
-      [26.0, 0, 9450, 0.98, 1], [30.0, 0, 9500, 1.06, 0],
+      [0, 0, -40, 1.08, -1], [4.6, 0, 20, 1, 0],
+      [5.6, 40, 1770, 1.144, 1], [10.6, 60, 1820, 1.21, 0],
+      [11.6, -100, 3690, 1.122, -1], [15.2, -90, 3730, 1.188, 0],
+      [16.2, 120, 5590, 1.1, 1], [21, 140, 5650, 1.177, 0],
+      [22, -60, 7490, 1.1, -1], [25, -40, 7530, 1.144, 0],
+      [26, 0, 9340, 1.078, 1], [30, 0, 9390, 1.166, 0],
     ],
     pieces: [
       // ── The founder ──
@@ -54,7 +54,7 @@ export default {
       // ── 1731: a subscription library ──
       img("almanac", 300, 1560, 330, { rot: 7, at: 5.3, enter: "slide", from: 0 }),
       paper(OXBLOOD, -210, 1830, 520, 330, { rot: -3, at: 5.5 }),
-      ransom("1731", -220, 1500, 150, { at: 5.9 }),
+      ransom("1731", -150, 1500, 150, { at: 5.9 }),
       label("PHILADELPHIA", -160, 1640, { ...TYPE, rot: -2, at: 6.4 }),
       shape("book", -250, 1840, 260, OCHRE, { aspect: 0.62, rot: -8, at: 6.9 }),
       shape("book", -170, 1930, 280, CREAM, { aspect: 0.62, rot: 5, at: 7.1 }),
@@ -71,13 +71,13 @@ export default {
       shape("bucket", -220, 3780, 170, OXBLOOD, { rot: -6, at: 12.7 }),
       shape("bucket", -40, 3800, 170, OXBLOOD, { rot: 4, at: 12.85 }),
       shape("bucket", 140, 3790, 170, OXBLOOD, { rot: -2, at: 13.0 }),
-      label("An ounce of prevention is worth a pound of cure.", 0, 3990, { font: "IM Fell English", size: 34, italic: true, bg: "#f2ead8", rot: -2, at: 13.6 }),
-      label("— Pennsylvania Gazette, 1735", 170, 4060, { font: "IM Fell English", size: 26, bg: "none", rot: -2, at: 14.0, enter: "none" }),
+      label("An ounce of prevention is worth a pound of cure.", -15, 3960, { font: "IM Fell English", size: 28, italic: true, bg: "#f2ead8", rot: -2, at: 13.6 }),
+      label("— Pennsylvania Gazette, 1735", 110, 4015, { font: "IM Fell English", size: 26, bg: "none", rot: -2, at: 14.0, enter: "none" }),
       label("UNION FIRE COMPANY", -150, 3500, { ...TYPE, rot: -3, at: 14.4 }),
 
       // ── 1751: a hospital, on a match ──
       img("press", 300, 5380, 300, { rot: 6, at: 16.0, enter: "slide", from: 0, d: 1.05 }),
-      ransom("1751", -230, 5280, 150, { at: 16.3 }),
+      ransom("1751", -90, 5280, 150, { at: 16.3 }),
       shape("house", -10, 5560, 460, CREAM, { aspect: 0.72, rot: -2, at: 16.8 }),
       shape("cross", -10, 5560, 92, OXBLOOD, { rot: -2, at: 17.2 }),
       paper("#f3ecdb", 120, 5900, 560, 300, { rot: 3, at: 17.9, lines: "rgba(79,96,124,0.35)", edges: "tctt" }),
@@ -120,12 +120,12 @@ export default {
       paper("#B8CAE0", -260, -380, 520, 700, { rot: -4, at: 30.25, edges: "cttc" }),
       paper("#E0B8C8", 280, 300, 560, 640, { rot: 3, at: 30.4, edges: "tcct" }),
       ransom("TODAY", 0, -560, 170, { at: 30.7, out: 34.3, papers: [["#f8f4ec", INK], ["#b87758", "#fffaf2"], ["#B8CAE0", INK], ["#1b1613", "#f8f4ec"], ["#C4DDB8", INK]] }),
-      ...programs(["the library", "book"], ["the fire company", "bucket"], ["the hospital", "cross"], ["the academy", "columns"]),
+      ...programs("B. Franklin", ["the library", "book"], ["the fire company", "bucket"], ["the hospital", "cross"], ["the academy", "columns"]),
       // Its work, stamped
-      stamp("GIFTS\nRECEIPTED", -110, -170, { size: 34, rot: -8, at: 38.7 }),
-      stamp("GRANTS\nRECEIVED", 120, -50, { size: 34, rot: 6, at: 39.3, color: "#3f5f8a" }),
-      stamp("CONTRACTS\nSIGNED", -100, 70, { size: 34, rot: 4, at: 39.9 }),
-      stamp("BOOKS\nKEPT", 130, 160, { size: 34, rot: -5, at: 40.5, color: "#3f5f8a" }),
+      stamp("GIFTS\nRECEIPTED", -110, -195, { size: 34, rot: -8, at: 38.7 }),
+      stamp("GRANTS\nRECEIVED", 120, -95, { size: 34, rot: 6, at: 39.3, color: "#3f5f8a" }),
+      stamp("CONTRACTS\nSIGNED", -100, 5, { size: 34, rot: 4, at: 39.9 }),
+      stamp("BOOKS\nKEPT", 130, 100, { size: 34, rot: -5, at: 40.5, color: "#3f5f8a" }),
       // And the founder, free for the work
       disc(0, -640, 150, { key: "star", orbit: "star", at: 42.6, fy: 0.35 }),
       hand("back to the experiments", 150, -470, { at: 43.4, size: 50, rot: -5, color: "#8f4e33" }),

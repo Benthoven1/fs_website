@@ -27,11 +27,11 @@ export default {
   past: {
     board: "#e2d9c8",
     camera: [
-      [0, 0, -40, 1.08, -1], [4.6, 0, 20, 1.0, 0],
-      [5.6, 30, 1880, 1.04, 1], [10.6, 50, 1930, 1.1, 0],
-      [11.6, -80, 3800, 1.02, -1], [17.0, -90, 3850, 1.08, 0],
-      [17.8, 0, 5700, 0.96, 0], [23.4, 0, 5740, 1.04, 0],
-      [24.2, 60, 7600, 1.0, 1], [30.0, 60, 7660, 1.07, 0],
+      [0, 0, -40, 1.08, -1], [4.6, 0, 20, 1, 0],
+      [5.6, 30, 1770, 1.144, 1], [10.6, 50, 1820, 1.21, 0],
+      [11.6, -80, 3690, 1.122, -1], [17, -90, 3740, 1.188, 0],
+      [17.8, 0, 5590, 1.056, 0], [23.4, 0, 5630, 1.144, 0],
+      [24.2, 60, 7490, 1.1, 1], [30, 60, 7550, 1.177, 0],
     ],
     pieces: [
       // ── The founder ──
@@ -47,45 +47,46 @@ export default {
       label("REFORMER", -320, -40, { ...TYPE, rot: 4, at: 3.4 }),
 
       // ── 1854: Scutari, by lamplight ──
-      paper(INK, 0, 1820, 900, 900, { rot: -2, at: 5.2, edges: "tttt" }),
-      img("scutari", 0, 1700, 720, { rot: 2, at: 5.6, h: 480 }),
-      ransom("1854", -220, 1380, 150, { at: 6.1 }),
-      label("SCUTARI · THE CRIMEAN WAR", 60, 1990, { ...TYPE, rot: -2, at: 6.8 }),
-      hand("38 nurses", -230, 2080, { at: 7.6, size: 60, rot: -4, color: "#f3e3c0" }),
-      glow(260, 2150, 300, { at: 9.0 }),
-      shape("lamp", 260, 2150, 170, GOLD, { aspect: 1.35, rot: 4, at: 8.8 }),
+      paper(INK, 0, 1800, 940, 1000, { rot: -2, at: 5.2, edges: "tttt" }),
+      img("scutari", 40, 1560, 760, { rot: 2, at: 5.6, h: 500 }),
+      ransom("1854", -120, 1260, 140, { at: 6.1 }),
+      label("SCUTARI · THE CRIMEAN WAR", 90, 1840, { ...TYPE, rot: -2, at: 6.8 }),
+      hand("38 nurses", -250, 1950, { at: 7.6, size: 64, rot: -4, color: "#f3e3c0" }),
+      img("litho", 170, 2060, 360, { rot: 5, at: 8.6, h: 460, fy: 0.3, d: 1.06 }),
+      glow(110, 2050, 340, { at: 9.4 }),
+      tape(60, 1840, 140, { rot: -20, at: 8.9 }),
 
       // ── She counts ──
-      paper("#f3ecdb", 0, 3640, 720, 800, { rot: 2, at: 11.7, lines: "rgba(47,61,85,0.3)" }),
-      hand("wounds", -200, 3420, { at: 12.2, size: 60, rot: 2, color: NAVY }),
-      ink([[0, 0], [0, 50], null, [26, 0], [26, 50], null, [-10, 34], [38, 18]], 50, 3400, { at: 12.8, dur: 0.4, width: 4, color: NAVY, rot: 2 }),
-      hand("disease", -200, 3560, { at: 13.3, size: 60, rot: 2, color: ROSE }),
-      ink([[0, 0], [0, 50], null, [24, 0], [24, 50], null, [48, 0], [48, 50], null, [72, 0], [72, 50], null, [-10, 34], [86, 14],
-        null, [110, 0], [110, 50], null, [134, 0], [134, 50], null, [158, 0], [158, 50], null, [182, 0], [182, 50], null, [100, 34], [196, 14],
-        null, [220, 0], [220, 50], null, [244, 0], [244, 50], null, [268, 0], [268, 50], null, [292, 0], [292, 50], null, [210, 34], [306, 14]],
-        30, 3540, { at: 13.9, dur: 1.4, width: 4, color: ROSE, rot: 2 }),
-      ring(-60, 3590, 300, 70, { at: 15.6, dur: 0.6, rot: 2, color: ROSE }),
-      label("PREVENTABLE", 160, 3760, { ...TYPE, rot: -4, at: 16.1, bg: ROSE, color: "#fff6ea" }),
-      tape(-300, 3270, 150, { rot: -30, at: 12.0 }),
-
+      paper(ROSE, -230, 3420, 420, 560, { rot: -5, at: 11.5, dots: "rgba(255,255,255,0.12)" }),
+      paper("#f3ecdb", 40, 3560, 720, 700, { rot: 2, at: 11.7, lines: "rgba(47,61,85,0.3)" }),
+      label("BARRACK HOSPITAL · WINTER 1854–55", 40, 3270, { ...TYPE, size: 28, rot: 2, at: 12.0 }),
+      hand("wounds", -170, 3400, { at: 12.3, size: 78, rot: 2, color: NAVY }),
+      tally(80, 3410, 1, 12.9, 0.5, NAVY),
+      hand("disease", -170, 3560, { at: 13.5, size: 78, rot: 2, color: ROSE }),
+      tally(80, 3570, 3, 14.0, 1.5, ROSE),
+      ring(0, 3570, 330, 85, { at: 15.7, dur: 0.6, rot: 2, color: ROSE, width: 7 }),
+      label("PREVENTABLE", 180, 3740, { ...TYPE, rot: -4, at: 16.2, bg: ROSE, color: "#fff6ea" }),
+      tape(-310, 3230, 150, { rot: -30, at: 11.9 }),
       // ── 1858: the rose ──
-      img("rose", 0, 5600, 940, { rot: -1, at: 18.0, enter: "unfold", h: 520 }),
-      ransom("1858", 220, 5250, 150, { at: 18.7 }),
+      img("rose", 0, 5600, 960, { rot: -1, at: 18.0, enter: "unfold", edges: "cccc" }),
+      img("coxcomb", -270, 5160, 330, { rot: -7, at: 18.4, d: 1.05 }),
+      ransom("1858", 150, 5270, 150, { at: 18.7 }),
       tape(-380, 5370, 160, { rot: -25, at: 18.3 }),
       tape(380, 5830, 160, { rot: -25, at: 18.4 }),
-      label("Diagram of the Causes of Mortality in the Army in the East", 0, 5930, { font: "IM Fell English", size: 28, italic: true, bg: CREAM, rot: 1, at: 19.6 }),
-      stamp("SANITARY\nREFORM", -250, 6010, { rot: -9, at: 21.0, color: NAVY }),
-      label("ROYAL STATISTICAL SOCIETY", 200, 6080, { ...TYPE, size: 28, rot: 3, at: 22.0 }),
+      label("Diagram of the Causes of Mortality in the Army in the East", 0, 5895, { font: "IM Fell English", size: 28, italic: true, bg: CREAM, rot: 1, at: 19.6 }),
+      stamp("SANITARY\nREFORM", -250, 5440, { rot: -9, at: 21.0, color: NAVY }),
+      label("ROYAL STATISTICAL SOCIETY", 190, 5800, { ...TYPE, size: 28, rot: 3, at: 22.0 }),
 
       // ── The Fund, and the school ──
-      img("litho", -210, 7400, 420, { rot: -4, at: 24.4 }),
-      paper("#f3ecdb", 200, 7470, 460, 380, { rot: 3, at: 24.9, lines: "rgba(47,61,85,0.3)", edges: "tctt" }),
-      hand("£44,000", 210, 7400, { at: 25.4, size: 74, rot: 3 }),
-      stamp("THE\nNIGHTINGALE\nFUND", 220, 7560, { rot: -7, at: 26.1, size: 30, color: PLUM }),
-      ransom("1860", -170, 7790, 140, { at: 27.1 }),
-      shape("house", 200, 7840, 340, CREAM, { aspect: 0.72, rot: 2, at: 27.6 }),
-      shape("cross", 200, 7840, 64, ROSE, { rot: 2, at: 27.9 }),
-      label("ST THOMAS’ HOSPITAL, LONDON", 120, 8020, { ...TYPE, size: 28, rot: -2, at: 28.4 }),
+      paper(PLUM, -150, 7380, 560, 640, { rot: -3, at: 24.3 }),
+      paper("#f3ecdb", 40, 7330, 560, 420, { rot: 3, at: 24.7, lines: "rgba(47,61,85,0.3)", edges: "tctt" }),
+      hand("£44,000", 40, 7250, { at: 25.2, size: 84, rot: 3 }),
+      hand("by public subscription", 60, 7350, { at: 25.8, size: 46, rot: 3, color: NAVY }),
+      stamp("THE\nNIGHTINGALE\nFUND", 200, 7480, { rot: -7, at: 26.3, size: 30, color: PLUM }),
+      ransom("1860", -140, 7690, 140, { at: 27.1 }),
+      shape("house", 200, 7760, 360, CREAM, { aspect: 0.72, rot: 2, at: 27.6 }),
+      shape("cross", 200, 7760, 66, ROSE, { rot: 2, at: 27.9 }),
+      label("ST THOMAS’ HOSPITAL, LONDON", 60, 7875, { ...TYPE, size: 28, rot: -2, at: 28.4 }),
     ],
     captions: [
       say(0.4, 4.7, 248, [{ text: "the polymath founder · no. 3", font: "Major Mono Display", size: 30, bg: INK, color: "#f3ede2" }]),
@@ -107,11 +108,11 @@ export default {
       paper("#E0B8C8", -250, -380, 540, 700, { rot: -4, at: 30.25, edges: "cttc" }),
       paper("#B8CAE0", 280, 280, 540, 620, { rot: 3, at: 30.4, edges: "tcct" }),
       ransom("TODAY", 0, -560, 170, { at: 30.7, out: 34.3, papers: [["#f8f4ec", INK], ["#b87758", "#fffaf2"], ["#E0B8C8", INK], ["#1b1613", "#f8f4ec"], ["#B8DDD8", INK]] }),
-      ...programs(["the school", "book"], ["the data", "chart"], ["the hospital", "cross"], ["the nurses", "lamp"]),
-      stamp("GIFTS\nRECEIPTED", -110, -170, { size: 34, rot: -8, at: 38.7 }),
-      stamp("FUND\nHELD", 120, -50, { size: 34, rot: 6, at: 39.3, color: "#3f5f8a" }),
-      stamp("GRANTS\nRECEIVED", -100, 70, { size: 34, rot: 4, at: 39.9 }),
-      stamp("BOOKS\nKEPT", 130, 160, { size: 34, rot: -5, at: 40.5, color: "#3f5f8a" }),
+      ...programs("Florence Nightingale", ["the school", "book"], ["the data", "chart"], ["the hospital", "cross"], ["the nurses", "lamp"]),
+      stamp("GIFTS\nRECEIPTED", -110, -195, { size: 34, rot: -8, at: 38.7 }),
+      stamp("FUND\nHELD", 120, -95, { size: 34, rot: 6, at: 39.3, color: "#3f5f8a" }),
+      stamp("GRANTS\nRECEIVED", -100, 5, { size: 34, rot: 4, at: 39.9 }),
+      stamp("BOOKS\nKEPT", 130, 100, { size: 34, rot: -5, at: 40.5, color: "#3f5f8a" }),
       disc(0, -640, 150, { key: "star", orbit: "star", at: 42.6, fy: 0.3 }),
       hand("back to the wards", 150, -470, { at: 43.4, size: 50, rot: -5 }),
     ],
@@ -123,3 +124,14 @@ export default {
     ],
   },
 };
+
+// Tally marks in groups of five, struck through, n groups
+function tally(x, y, groups, at, dur, color) {
+  const pts = [];
+  for (let g = 0; g < groups; g++) {
+    const x0 = g * 150;
+    for (let k = 0; k < 4; k++) pts.push([x0 + k * 26, -36], [x0 + k * 24 + 2, 36], null);
+    pts.push([x0 - 14, 22], [x0 + 104, -18], null);
+  }
+  return ink(pts, x, y, { at, dur, width: 6, color, rot: 2 });
+}
