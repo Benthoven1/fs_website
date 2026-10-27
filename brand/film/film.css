@@ -29,7 +29,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 #stage > * { position: absolute; left: 0; top: 0; }
-#gl, #ideas, #roads, #leads, #tags, #veil, #black, #scrim, #captions, #hero, #flash, #grain, #vignette, #bars {
+#gl, #ideas, #net, #leads, #tags, #veil, #black, #scrim, #captions, #brand, #flash, #grain, #vignette, #bars {
   width: 100%;
   height: 100%;
 }
@@ -64,7 +64,22 @@ html, body {
   text-shadow: 0 0 18px rgba(6, 4, 18, 0.9);
 }
 
-#roads line { stroke: var(--gold); stroke-linecap: round; }
+/* On the right of the frame, a name reads leftward from its spark */
+.idea.flip span { left: auto; right: 18px; }
+/* The network's ideas, on paper: the node is the spark */
+.idea.ink i { display: none; }
+.idea.ink span {
+  left: 0;
+  top: -0.6em;
+  font-size: 25px;
+  color: rgba(59, 51, 47, 0.82);
+  text-shadow: 0 0 10px rgba(236, 234, 229, 0.9), 0 0 4px rgba(236, 234, 229, 0.9);
+}
+.idea.ink.flip span { left: auto; right: 0; }
+
+/* The network's edges and the signals travelling them (js/contact-mesh.js) */
+#net line { stroke-linecap: round; }
+#net circle { fill: #6e5d38; }
 
 /* ── The star's light ──────────────────────────────────────────────────── */
 #glow {
@@ -150,6 +165,7 @@ html, body {
 .cap.r { text-align: right; }
 .cap.ink { color: var(--ink); }
 .cap.moon { color: #f7f2ea; text-shadow: 0 0 28px rgba(6, 4, 18, 0.85); }
+.cap.clay { color: var(--clay); }
 .cap.gold { color: var(--gold); text-shadow: 0 0 40px rgba(255, 210, 150, 0.55), 0 0 90px rgba(255, 190, 120, 0.3); }
 .cap.it { font-style: italic; }
 .cap.sm { font-size: 50px; }
@@ -183,61 +199,37 @@ html, body {
   opacity: 0;
 }
 
-/* ── The close: the landing page as it opens ──────────────────────────── */
-#hero { pointer-events: none; }
-#hero .wordmark {
+/* ── The close: the wordmark in its many faces, then its own ─────────── */
+#brand { pointer-events: none; }
+#brand .mark {
   position: absolute;
   left: 0;
-  top: 96px;
+  top: 0;
   width: 100%;
   text-align: center;
-  font-family: "Lora", serif;
-  font-weight: 400;
-  font-size: 92px;
-  letter-spacing: 0.3em;
-  text-indent: 0.3em;
-  text-transform: uppercase;
-  color: var(--ink);
-  opacity: 0;
-  background: linear-gradient(100deg, var(--ink) 0%, var(--ink) 40%, #c0965a 50%, var(--ink) 60%, var(--ink) 100%);
-  background-size: 300% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-#hero .statement {
-  position: absolute;
-  left: 110px;
-  top: 0;
-  width: 420px;
-  margin: 0;
-  font-size: 44px;
-  line-height: 1.28;
+  white-space: nowrap;
+  font-size: 150px;
+  line-height: 1;
   color: var(--ink);
 }
-#hero .statement .hw {
+:root[data-format="reel"] #brand .mark { font-size: 118px; }
+#brand .mark > span {
   display: inline-block;
-  overflow: hidden;
-  vertical-align: top;
-  padding: 0 0.12em 0.16em;
-  margin: 0 -0.12em -0.16em;
+  text-align: center;
+  vertical-align: baseline;
 }
-#hero .statement .hw > span { display: inline-block; }
-#hero .cta {
+#brand .cta {
   position: absolute;
-  right: 110px;
+  left: 0;
   top: 0;
-  width: 420px;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 26px;
+  align-items: center;
+  gap: 22px;
   opacity: 0;
 }
-:root[data-format="reel"] #hero .wordmark { top: 300px; font-size: 86px; }
-:root[data-format="reel"] #hero .statement { left: 110px; width: 860px; text-align: center; font-size: 48px; }
-:root[data-format="reel"] #hero .cta { right: auto; left: 0; width: 100%; align-items: center; gap: 22px; }
-#hero .pill {
+#brand .pill {
   font-family: "IBM Plex Sans", sans-serif;
   font-weight: 500;
   font-size: 30px;
@@ -248,7 +240,7 @@ html, body {
   border-radius: 999px;
   box-shadow: 0 14px 40px rgba(143, 90, 66, 0.28);
 }
-#hero .url {
+#brand .url {
   font-family: "Major Mono Display", monospace;
   text-transform: lowercase;
   font-size: 34px;

@@ -53,15 +53,18 @@ its words kept clear of the app's own buttons and captions), previewed from
 the site's own pieces: the landing page's cosmos and night sky (`js/main.js`),
 MulviumSOS's sphere of words (`js/fsos.js`, drawn from `js/fsos-words.js` and
 `js/fsos-cloud.js`), the Fiscal Sponsorship page's bowl (`js/bowl.js`), the
-hero's rising words, and lines from the site and the founder's letter.
+Contact Us page's network (`js/contact-mesh.js`), the navbar's many-faced
+wordmark, the hero's rising words, and lines from the site and the founder's
+letter.
 
 | Act | Seconds | |
 |---|---|---|
 | I | 0–15 | Millions of ideas, as stars met in flight and passed |
 | II | 15–27 | The organization you have to build: MulviumSOS's sphere of work inks in ahead, six stamps light its jobs in gold, and it fills the night |
-| III | 27–50 | One light: the rings gather, night turns to paper, and the cosmos takes its shape, with four lines of the founder's letter set around it |
-| IV | 50–69 | Into the blue planet, which opens as the Fiscal Sponsorship bowl and takes in four projects; then the four spheres named: you, patrons, Mulvium, neighbors. It exists |
-| V | 69–88 | The expansion: every idea lit, a road from each to the star, then the landing page |
+| III | 27–52 | One light: the rings gather, night turns to paper, and the cosmos takes its shape, framed by "At Mulvium, we change the norm and we build the organization beneath you". Each sphere glides into a quadrant of its own to be named (you, patrons, Mulvium, neighbors). It exists |
+| IV | 52–65 | Into the blue planet, which opens as the Fiscal Sponsorship bowl and takes in four projects, with four lines of the founder's letter set around it |
+| V | 65–78 | The next great expansion: the Contact Us network spreads out, its vertices named for ideas, and a ripple crosses it on "institutions" |
+| VI | 78–88 | The network gathers to a point, and the wordmark opens from it in the navbar's faces, turns through thirty more, and lands in its own, above "Join the waitlist" |
 
 `film/` holds its source:
 
@@ -70,8 +73,9 @@ hero's rising words, and lines from the site and the founder's letter.
   Opened over HTTP (`brand/film/`), it plays itself with its score; `?t=60`
   starts it a minute in, and `?format=reel` draws the phone cut.
 - `cues.json` — the cue sheet the picture and the score share: when each
-  idea lights, each stamp lands, the bloom, each line of the letter, each
-  project settling in the bowl, each sphere named.
+  idea lights, each stamp lands, the bloom, each sphere named, each project
+  settling in the bowl, each line of the letter, each ripple through the
+  network, each letter of the wordmark landing.
 - `score.py` — the score, synthesised in numpy and scipy from the cue sheet
   (D major, 80 bpm): it writes `score.wav`, which is kept out of the
   repository; `score.m4a` is its AAC encoding, which the page plays.

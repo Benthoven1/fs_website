@@ -9,6 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Major+Mono+Display&display=block" rel="stylesheet" />
+  <!-- The wordmark's own faces and the many it passes through, for its letters alone -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&amp;family=Playfair+Display:ital,wght@0,500;0,900;1,400&amp;family=Italiana&amp;family=Inter:wght@900&amp;family=Cormorant+SC:wght@500&amp;family=Abril+Fatface&amp;family=Bodoni+Moda:wght@700&amp;family=DM+Serif+Display:ital@0;1&amp;family=Fraunces:wght@300;900&amp;family=Space+Mono:wght@700&amp;family=Syne:wght@800&amp;family=Unbounded:wght@700&amp;family=Bebas+Neue&amp;family=Monoton&amp;family=Rubik+Mono+One&amp;family=Josefin+Sans:wght@100&amp;family=UnifrakturMaguntia&amp;family=Orbitron:wght@900&amp;family=Archivo+Black&amp;family=Caveat:wght@700&amp;family=Poiret+One&amp;family=Limelight&amp;family=Yeseva+One&amp;family=Zilla+Slab:wght@700&amp;family=Righteous&amp;family=Lobster&amp;family=Shrikhand&amp;family=Rye&amp;family=Syncopate:wght@700&amp;family=Cormorant+Garamond:ital,wght@1,300&amp;family=IBM+Plex+Mono:wght@300&amp;family=Bungee&amp;family=Pirata+One&amp;family=Gloock&amp;text=MULVIUMmulvium&amp;display=block" rel="stylesheet" />
   <link rel="stylesheet" href="film.css" />
   <script type="importmap">
     { "imports": { "three": "https://unpkg.com/three@0.161.0/build/three.module.min.js" } }
@@ -16,14 +18,14 @@
 </head>
 <body>
   <!-- The film is drawn at 1920 × 1080 (?format=reel: 1080 × 1920) and scaled
-       to the window. Layers, bottom to top: the scene, the night's ideas, the
-       roads between them, the star's light, the callouts, the paper veil, the
-       blackout, the scrim under words, the captions, the closing hero, the
+       to the window. Layers, bottom to top: the scene, the network's edges,
+       the ideas' names, the star's light, the callouts, the paper veil, the
+       blackout, the scrim under words, the captions, the closing wordmark, the
        flash, then the lens (grain, vignette, letterbox). -->
   <div id="stage" aria-hidden="true">
     <canvas id="gl"></canvas>
+    <svg id="net"></svg>
     <div id="ideas"></div>
-    <svg id="roads"></svg>
     <div id="glow"></div>
     <div id="streak"></div>
     <svg id="leads"></svg>
@@ -33,9 +35,8 @@
     <div id="scrim"></div>
     <div id="halo"></div>
     <div id="captions"></div>
-    <div id="hero">
-      <div class="wordmark">Mulvium</div>
-      <p class="statement">Beautify the world around you through a new kind of institution</p>
+    <div id="brand">
+      <div class="mark"></div>
       <div class="cta"><span class="pill">Join the waitlist</span><span class="url">mulvium.org</span></div>
     </div>
     <div id="flash"></div>

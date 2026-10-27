@@ -1,7 +1,8 @@
 // film.js — Mulvium's launch film, drawn from the site's own pieces: the
 // landing page's porcelain cosmos and night sky (js/main.js), MulviumSOS's
 // sphere of words (js/fsos.js, with its own vocabulary and packing), the
-// Fiscal Sponsorship page's bowl (js/bowl.js), the hero's rising words, and
+// Fiscal Sponsorship page's bowl (js/bowl.js), the Contact Us page's network
+// (js/contact-mesh.js), the hero's rising words, the navbar's wordmark, and
 // lines from the site and the founder's letter.
 //
 // Every frame is a function of time alone: film.seek(t) draws the frame at t
@@ -10,12 +11,13 @@
 // times live in cues.json, which the score (score.py) is written to as well.
 // ?format=reel draws it at 1080 × 1920 for phones, from the same timeline.
 //
-// Five acts:
+// Six acts:
 //   I    0–15    Millions of ideas, as stars, met in flight
 //   II   15–27   The organization you have to build: a sphere of its work
-//   III  27–50   One light: the cosmos gathers, and the founder's letter
-//   IV   50–69   The organization beneath you: the bowl, then who brings what
-//   V    69–88   The expansion: every idea lit, then the landing page itself
+//   III  27–52   One light: the cosmos gathers; who brings what; it exists
+//   IV   52–65   Into the blue planet: the bowl, and the founder's letter
+//   V    65–78   The next great expansion: a network of institutions
+//   VI   78–88   The wordmark, through many faces to its own
 import * as THREE from "three";
 import CLOUD from "../../js/fsos-cloud.js";
 import { vocabulary, STYLES, slotSize, drawWord } from "../../js/fsos-words.js";
@@ -175,10 +177,8 @@ const orbits = ORBITS.map((def) => {
 });
 const orbitOf = (id) => orbits.find((o) => o.def.id === id);
 
-// The orbits' own clock: quick while the cosmos gathers itself, slow while
-// its spheres are named, quick again as it expands; integrated once
-const orbitSpeed = track([[0, 1], [28.5, 1], [31, 3.2], [33, 1.8], [37, 1], [57, 1], [58.6, 0.4], [64.5, 0.4],
-  [66.5, 1], [69, 1], [72, 1.4], [CUES.flash - 0.05, 1.4], [CUES.flash + 0.05, 1], [DURATION, 1]]);
+// The orbits' own clock, quick while the cosmos gathers itself; integrated once
+const orbitSpeed = track([[0, 1], [28.5, 1], [31, 3.2], [33, 1.8], [37, 1], [DURATION, 1]]);
 const CLOCK_DT = 1 / 240;
 const clockTable = new Float32Array(Math.ceil((DURATION + 1) / CLOCK_DT) + 1);
 for (let i = 1; i < clockTable.length; i++) clockTable[i] = clockTable[i - 1] + orbitSpeed(i * CLOCK_DT) * CLOCK_DT;
@@ -269,36 +269,6 @@ const deepField = new THREE.Points(starField(7000, 11, (r) => {
 }), deepMat);
 deepField.frustumCulled = false;
 scene.add(deepField);
-
-// Shooting stars over the closing night, as the landing page draws them
-const meteorTex = (() => {
-  const c = document.createElement("canvas");
-  c.width = 256; c.height = 16;
-  const g = c.getContext("2d");
-  const grad = g.createLinearGradient(0, 0, 256, 0);
-  grad.addColorStop(0.0, "rgba(255,255,255,0)");
-  grad.addColorStop(0.72, "rgba(255,255,255,0.55)");
-  grad.addColorStop(0.96, "rgba(255,255,255,0.95)");
-  grad.addColorStop(1.0, "rgba(255,255,255,0)");
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 256, 16);
-  return new THREE.CanvasTexture(c);
-})();
-const meteors = (() => {
-  const r = rng(23);
-  return [73.15, 75.65, 77.45, 78.85, 80.15, 81.05].map((at) => {
-    const mesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(3.4, 0.07),
-      new THREE.MeshBasicMaterial({ map: meteorTex, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthTest: false, depthWrite: false })
-    );
-    mesh.visible = false;
-    scene.add(mesh);
-    const phi = r() * Math.PI * 2, dur = 0.8 + r() * 0.7, speed = 9 + r() * 6;
-    const px = (r() - 0.5) * (REEL ? 12 : 22), pz = (r() - 0.5) * (REEL ? 22 : 12), back = speed * dur * 0.5;
-    return { mesh, at, dur, speed, dirX: Math.cos(phi), dirZ: -Math.sin(phi), phi,
-             x0: px - Math.cos(phi) * back, z0: pz + Math.sin(phi) * back };
-  });
-})();
 
 // ── Act II: the sphere of work, MulviumSOS's (js/fsos.js) ─────────────────────
 // Every word M.SOS's agents handle, placed as js/fsos-cloud.js packs them,
@@ -587,7 +557,7 @@ function bowlCam(t) {
   camera.fov = 32;
   camera.clearViewOffset();
   camera.up.set(0, 1, 0);
-  const dist = lerp(2.75, BOWL_DIST, k) * (1 - 0.04 * seg(t, enter + 2.4, CUES.back));
+  const dist = lerp(2.75, BOWL_DIST, k) * (1 - 0.04 * seg(t, enter + 2.4, CUES.network));
   camera.position.copy(BOWL_LOOK).addScaledVector(BOWL_DIR, dist);
   camera.position.x += Math.sin((t - enter) * 0.35) * 0.3 * k;
   camera.lookAt(BOWL_LOOK);
@@ -645,18 +615,21 @@ function orbitCam({ az, el, dist, fov = 42, roll = 0, target = null }) {
 const _origin = new THREE.Vector3();
 
 // Act III: overhead in the night, then down to the landing page's angle,
-// held at the centre while the letter is read around it
+// held at the centre while its words are set above and below it and its
+// spheres are named
 const G = {
-  az:   track([[27.75, 0], [33, 28], [35.6, 12], [38.6, -4], [CUES.dive[0], -16]]),
-  el:   track([[27.75, 89.9], [33, 89.9], [35.6, 46], [38.6, 13], [CUES.dive[0], 9.5]]),
-  dist: track([[27.75, 24], [33, 24], [35.6, 19], [38.6, 16.6], [CUES.dive[0], 16.0]]),
+  az:   track([[27.75, 0], [33, 28], [35.6, 12], [38.6, -4], [CUES.dive[0], -12]]),
+  el:   track([[27.75, 89.9], [33, 89.9], [35.6, 46], [38.6, 12], [CUES.dive[0], 10.5]]),
+  dist: track([[27.75, 24], [33, 24], [35.6, 19.5], [38.6, 18.8], [42.6, 18.8], [44, 17.8], [CUES.dive[0], 17.4]]),
   roll: track([[27.75, 0], [33, 0], [35.2, -5], [38.6, 0]]),
 };
 // ...then into the blue planet, which fills the picture as the bowl
 const _p = new THREE.Vector3(), _toCam = new THREE.Vector3(), _look = new THREE.Vector3(), _out = new THREE.Vector3();
 function genesisCam(t) {
-  // The reel stands back a little, to leave room for the letter above and below
-  orbitCam({ az: G.az(t), el: G.el(t), dist: G.dist(t) * (REEL ? lerp(1, 1.14, smooth(35, 38.6, t)) : 1), roll: G.roll(t) });
+  // The reel stands back while the spheres are named, to leave their callouts
+  // room above and below
+  const back = REEL ? 1 + 0.22 * smooth(...CUES.glide, t) * (1 - smooth(...CUES.release, t)) : 1;
+  orbitCam({ az: G.az(t), el: G.el(t), dist: G.dist(t) * back, roll: G.roll(t) });
   const [d0, d1] = CUES.dive;
   if (t <= d0) return;
   const k = seg(t, d0, d1);
@@ -676,45 +649,27 @@ function genesisCam(t) {
   camera.updateProjectionMatrix();
   camera.updateMatrixWorld();
 }
-// Act IV's cosmos, then up overhead as it expands
-const M = {
-  az:   track([[CUES.back, 30], [65, 8], [CUES.ascend, -6], [72, 0], [CUES.flash, 9]]),
-  el:   track([[CUES.back, 16], [65, 11], [CUES.ascend, 12], [72, 89.9]]),
-  dist: track([[CUES.back, 21], [60, 18.2], [CUES.exists, 17.6], [66.8, 19.2], [CUES.ascend, 17.5], [72, 24]]),
-};
-function middleCam(t) { orbitCam({ az: M.az(t), el: M.el(t), dist: M.dist(t) }); }
-// The close: the landing page's own view, arrived at
-const E = {
-  az:   track([[CUES.flash, 12], [DURATION, 0]]),
-  el:   track([[CUES.flash, 16], [DURATION, 10.15]]),
-  dist: track([[CUES.flash, 17.5], [DURATION, 14.73]]),
-};
-function heroCam(t) { orbitCam({ az: E.az(t), el: E.el(t), dist: E.dist(t) }); }
 
 // ── The cosmos's state through the film ──────────────────────────────────────
 // t2d: 0 is the landing page's 3D view, 1 its overhead orbit view
 // exp: the landing page's expansion, 0 at rest, 1 rings out and star radiant
 // night: paper (0) to night (1)
-const T2D_PATH = track([[27.75, 1], [33, 1], [38.5, 0], [CUES.ascend, 0], [72, 1], [CUES.flash - 0.01, 1]]);
-const T2D = (t) => (t >= CUES.flash ? 0 : T2D_PATH(t));
-const EXP = (t) => {
-  if (t < CUES.rise) return 1;
-  if (t < CUES.bloom) return 1 - easeInOut(seg(t, CUES.rise, CUES.bloom));
-  if (t < CUES.expand[0]) return 0;
-  if (t < CUES.flash) return easeInOut(seg(t, ...CUES.expand));
-  return 0;
-};
-const NIGHT = (t) => {
-  if (t < 32.95) return 1;
-  if (t < CUES.night[0]) return 1 - cubicInOut(seg(t, 32.95, 33.12));
-  if (t < CUES.flash) return cubicInOut(seg(t, ...CUES.night));
-  return 0;
-};
-function poseCosmos(t, t2d, exp) {
+const T2D = track([[27.75, 1], [33, 1], [38.5, 0]]);
+const EXP = (t) => (t < CUES.rise ? 1 : 1 - easeInOut(seg(t, CUES.rise, CUES.bloom)));
+const NIGHT = (t) => 1 - cubicInOut(seg(t, 32.95, 33.12));
+// While the spheres are named, each glides along its ring into a quadrant of
+// its own (planned in quadrantPlan, below), so no callout's leader crosses
+// the cosmos; then they go on their way
+const glideTo = new Map(); // orbit -> the angle it holds
+const wrapPi = (a) => Math.atan2(Math.sin(a), Math.cos(a));
+function poseCosmos(t, t2d, exp, glide = true) {
   const eased = easeInOut(t2d), pe = easeInOut(exp), clock = orbitClock(t);
+  const w = glide ? smooth(...CUES.glide, t) * (1 - smooth(...CUES.release, t)) : 0;
   for (const o of orbits) {
     const [rx, ry, rz] = o.def.tilt;
-    o.rotator.rotation.z = o.def.phase + o.def.speed * clock;
+    const free = o.def.phase + o.def.speed * clock;
+    const held = glideTo.get(o);
+    o.rotator.rotation.z = held === undefined ? free : free + wrapPi(held - free) * w;
     o.planet.rotation.y = 0.08 * t;
     o.pivot.rotation.set(lerp(rx, Math.PI / 2, eased), lerp(ry, 0, eased), lerp(rz, 0, eased));
     const s = lerp(1, o.def.radius2D / o.def.radius, eased) * (1 + pe * 10);
@@ -735,7 +690,7 @@ function poseCosmos(t, t2d, exp) {
 const $ = (id) => document.getElementById(id);
 const css = (el, prop, v) => { if (el.style[prop] !== v) el.style[prop] = v; };
 const show = (el, on) => css(el, "display", on ? "" : "none");
-for (const id of ["roads", "leads"]) {
+for (const id of ["net", "leads"]) {
   $(id).setAttribute("viewBox", `0 0 ${W} ${H}`);
   $(id).setAttribute("width", W);
   $(id).setAttribute("height", H);
@@ -787,38 +742,38 @@ const LINES = [
   { t: [18.6, CUES.cut], cls: "moon sm it", r: [CX, 1466, "before you can begin."], cut: true },
   { t: [25.5, 27.0],   cls: "moon it",    w: [CX, 503, "So most ideas never begin."], r: [CX, 860, "So most ideas"], fade: true },
   { t: [25.5, 27.0],   cls: "moon it",    r: [CX, 938, "never begin."], fade: true },
-  // III: the founder's letter, set around the cosmos
+  // III: the norm, framing the centred cosmos above and below
+  { t: [CUES.beneath, 42.6], cls: "ink sm",          w: [CX, 58, "At Mulvium, we change the norm"], r: [CX, 300, "At Mulvium, we change the norm"] },
+  { t: [CUES.beneath + 0.6, 42.6], cls: "ink sm it", w: [CX, 958, "and we build the organization beneath you."], r: [CX, 1380, "and we build the organization"] },
+  { t: [CUES.beneath + 0.85, 42.6], cls: "ink sm it", r: [CX, 1448, "beneath you."] },
+  { t: [CUES.exists, 52.0], cls: "ink it xl",         w: [CX, 842, "It exists."], r: [CX, 1420, "It exists."] },
+  // IV: the founder's letter, set around the bowl
   ...letter(),
-  // IV
-  { t: [CUES.beneath, 58.1], cls: "ink sm",    w: [CX, 92, "At Mulvium, we change the norm"], r: [CX, 440, "At Mulvium, we change the norm"] },
-  { t: [CUES.beneath + 0.35, 58.1], cls: "ink sm it", w: [CX, 160, "and we build the organization beneath you."], r: [CX, 508, "and we build the organization"] },
-  { t: [CUES.beneath + 0.6, 58.1], cls: "ink sm it", r: [CX, 576, "beneath you."] },
-  { t: [CUES.exists, 67.6], cls: "ink it xl",  w: [CX, 842, "It exists."], r: [CX, 1420, "It exists."] },
-  // V
-  { t: [72.75, 77.25], cls: "moon",       w: [CX, 462, "The next great expansion of human creativity"], r: [CX, 690, "The next great expansion"] },
-  { t: [73.0, 77.25],  cls: "moon",       r: [CX, 766, "of human creativity"] },
-  { t: [75.0, 77.25],  cls: "moon it",    w: [CX, 540, "won’t come from making it easier to create content."], r: [CX, 860, "won’t come from making it"] },
-  { t: [75.25, 77.25], cls: "moon it",    r: [CX, 936, "easier to create content."] },
-  { t: [78.0, 81.95],  cls: "moon",       w: [CX, 412, "It will come from making it easier to create"], r: [CX, 744, "It will come from making it"] },
-  { t: [78.25, 81.95], cls: "moon",       r: [CX, 820, "easier to create"] },
-  { t: [CUES.institutions, 81.95], cls: "gold it xl", w: [CX, 500, "institutions."], r: [CX, 912, "institutions."] },
+  // V: over the network
+  { t: [CUES.expansion[0], 72.5], cls: "ink",           w: [CX, 462, "The next great expansion of human creativity"], r: [CX, 690, "The next great expansion"] },
+  { t: [CUES.expansion[0] + 0.25, 72.5], cls: "ink",    r: [CX, 766, "of human creativity"] },
+  { t: [CUES.expansion[1], 72.5], cls: "ink it",        w: [CX, 540, "won’t come from making it easier to create content."], r: [CX, 860, "won’t come from making it"] },
+  { t: [CUES.expansion[1] + 0.25, 72.5], cls: "ink it", r: [CX, 936, "easier to create content."] },
+  { t: [CUES.will, CUES.wordsOut], cls: "ink",          w: [CX, 412, "It will come from making it easier to create"], r: [CX, 744, "It will come from making it"] },
+  { t: [CUES.will + 0.25, CUES.wordsOut], cls: "ink",   r: [CX, 820, "easier to create"] },
+  { t: [CUES.institutions, CUES.wordsOut], cls: "clay it xl", w: [CX, 500, "institutions."], r: [CX, 912, "institutions."] },
 ];
-// Four lines of the founder's letter round the centred cosmos: two columns
-// either side of it on the wide frame, above and below it on the reel
+// Four lines of the founder's letter round the bowl: in its four corners on
+// the wide frame, above and below it on the reel
 function letter() {
-  const [a, b, c, d] = CUES.letter, out = 48.3;
+  const [a, b, c, d] = CUES.letter, out = CUES.letterOut;
   const L = 47, rows = (t0, cls, x, y, lines, side) => lines.map((text, i) => {
     const line = { t: [t0 + i * 0.22, out], cls: cls + (i === lines.length - 1 ? " it" : "") };
     line[side] = [x, y + i * L, text];
     return line;
   });
   return [
-    { t: [a, out], cls: "ink lg l", w: [110, 176, "Institutions"] },
-    { t: [a + 0.3, out], cls: "ink sm it l", w: [114, 286, "change the world."] },
-    ...rows(b, "ink xs r", 1810, 196, ["Institutions can simply be", "one person with a vision", "to do something beautiful", "and something authentic."], "w"),
-    ...rows(c, "ink xs l", 114, 640, ["Changing the world", "starts with helping", "your neighbor."], "w"),
-    ...rows(d, "ink xs r", 1810, 640, ["All you need is", "an appetite for good,", "a vision, and the", "willingness to bring", "it to life."], "w"),
-    { t: [CUES.signature, out], cls: "mono", w: [CX, 992, "from the founder’s letter"] },
+    { t: [a, out], cls: "ink lg l", w: [110, 120, "Institutions"] },
+    { t: [a + 0.3, out], cls: "ink sm it l", w: [114, 230, "change the world."] },
+    ...rows(b, "ink xs r", 1810, 140, ["Institutions can simply be", "one person with a vision", "to do something beautiful", "and something authentic."], "w"),
+    ...rows(c, "ink xs l", 114, 760, ["Changing the world", "starts with helping", "your neighbor."], "w"),
+    ...rows(d, "ink xs r", 1810, 714, ["All you need is", "an appetite for good,", "a vision, and the", "willingness to bring", "it to life."], "w"),
+    { t: [CUES.signature, out], cls: "mono", w: [CX, 1000, "from the founder’s letter"] },
     // The reel
     { t: [a, out], cls: "ink lg", r: [CX, 236, "Institutions"] },
     { t: [a + 0.3, out], cls: "ink sm it", r: [CX, 344, "change the world."] },
@@ -878,17 +833,20 @@ function ideaEl(text, parent) {
 const flyIdeas = CUES.ideas.map((at, i) => {
   const r = rng(5 + i * 101);
   const fwd = new THREE.Vector3(), dir = new THREE.Vector3();
+  // Anywhere across the frame: a name on its right half reads leftward
   const clear = REEL
-    ? (x, y) => !(y > 680 && y < 1120) && y > 260 && y < 1640 && x > 60 && x < W - 380
-    : (x, y) => !(x > 420 && x < 1450 && y > 380 && y < 700) && y > 190 && y < 890 && x > 90 && x < 1560;
+    ? (x, y) => !(y > 680 && y < 1120) && y > 260 && y < 1640 && x > 70 && x < W - 70
+    : (x, y) => !(x > 420 && x < 1500 && y > 380 && y < 700) && y > 190 && y < 890 && x > 90 && x < W - 90;
   let x, y;
   do { x = r() * W; y = r() * H; } while (!clear(x, y));
+  const el = ideaEl(IDEAS[i], $("ideas"));
+  if (x > W * (REEL ? 0.5 : 0.58)) el.classList.add("flip");
   const depth = 15 + r() * 9;
   flyCam(at + 0.6, false);
   camera.getWorldDirection(fwd);
   dir.set((x / W) * 2 - 1, -(y / H) * 2 + 1, 0.5).unproject(camera).sub(camera.position).normalize();
   const pos = camera.position.clone().addScaledVector(dir, depth / dir.dot(fwd));
-  return { at, pos, el: ideaEl(IDEAS[i], $("ideas")) };
+  return { at, pos, el };
 });
 function drawFlyIdeas(t, on) {
   const fwd = new THREE.Vector3();
@@ -909,7 +867,7 @@ function drawFlyIdeas(t, on) {
   }
 }
 
-// ── Act IV: who brings what — a callout for each of the four spheres ─────────
+// ── Act III: who brings what — a callout for each of the four spheres ────────
 const TAGS = [
   { sphere: "ifo",       name: "you",       status: "bring the idea" },
   { sphere: "castles",   name: "patrons",   status: "bring the capital" },
@@ -928,30 +886,40 @@ const TAGS = [
   $("leads").append(line, dot);
   return { ...g, el, line, dot, at: CUES.tags[i], out: CUES.exists - 0.25 };
 });
-// The four places the callouts stand, and which sphere each takes: the
-// pairing that keeps every leader shortest while they are shown
-const ANCHORS = REEL
-  ? [[290, 300], [790, 300], [290, 1470], [790, 1470]]
-  : [[330, 190], [1590, 190], [330, 800], [1590, 800]];
+// The quadrants: top left, top right, bottom left, bottom right
+const QUADS = [[-1, -1], [1, -1], [-1, 1], [1, 1]];
 const _wp = new THREE.Vector3();
-function assignAnchors() {
-  const pts = TAGS.map((g) => {
-    let x = 0, y = 0;
-    for (const t of [CUES.tags[0], CUES.tags[3], CUES.exists]) {
-      poseCosmos(t, 0, 0);
+// For each sphere, the angle on its ring that carries it deepest into each
+// quadrant as the camera sees it while they are named; then the pairing of
+// spheres and quadrants that does best by all four together
+function quadrantPlan() {
+  const tRef = (CUES.tags[0] + CUES.exists) / 2;
+  poseCosmos(tRef, 0, 0, false);
+  genesisCam(tRef);
+  const half = Math.min(W, H) / 2;
+  const best = orbits.map((o) => {
+    const out = QUADS.map(() => ({ score: -Infinity, angle: 0 }));
+    for (let k = 0; k < 240; k++) {
+      const angle = (k / 240) * Math.PI * 2;
+      o.rotator.rotation.z = angle;
       cosmos.updateMatrixWorld(true);
-      middleCam(t);
-      orbitOf(g.sphere).planet.getWorldPosition(_wp);
+      o.planet.getWorldPosition(_wp);
       const p = toScreen(_wp);
-      x += p.x / 3; y += p.y / 3;
+      const sx = (p.x - W / 2) / half, sy = (p.y - H / 2) / half;
+      // Clear of the star, and of the frame's edges
+      if (Math.hypot(sx, sy) < 0.34 || p.x < 110 || p.x > W - 110 || p.y < 110 || p.y > H - 110) continue;
+      QUADS.forEach(([qx, qy], q) => {
+        const score = Math.min(sx * qx, sy * qy) + 0.35 * (sx * qx + sy * qy);
+        if (score > out[q].score) out[q] = { score, angle };
+      });
     }
-    return [x, y];
+    return out;
   });
-  let best = null, bestCost = Infinity;
+  let plan = null, top = -Infinity;
   const perm = (arr, k = 0) => {
     if (k === arr.length) {
-      const cost = arr.reduce((s, a, i) => s + Math.hypot(ANCHORS[a][0] - pts[i][0], ANCHORS[a][1] - pts[i][1]) ** 2, 0);
-      if (cost < bestCost) { bestCost = cost; best = arr.slice(); }
+      const sum = arr.reduce((acc, q, i) => acc + best[i][q].score, 0);
+      if (sum > top) { top = sum; plan = arr.slice(); }
       return;
     }
     for (let i = k; i < arr.length; i++) {
@@ -961,9 +929,20 @@ function assignAnchors() {
     }
   };
   perm([0, 1, 2, 3]);
-  TAGS.forEach((g, i) => { g.anchor = ANCHORS[best[i]]; });
+  // Each callout stands just beyond its sphere, further into its quadrant
+  orbits.forEach((o, i) => {
+    const [qx, qy] = QUADS[plan[i]];
+    glideTo.set(o, best[i][plan[i]].angle);
+    o.rotator.rotation.z = best[i][plan[i]].angle;
+    cosmos.updateMatrixWorld(true);
+    const p = toScreen(o.planet.getWorldPosition(_wp));
+    // (on the reel, above or below the cosmos, on its side)
+    const x = REEL ? (qx < 0 ? 280 : 800) : Math.max(280, Math.min(W - 280, p.x + qx * 230));
+    const y = REEL ? (qy < 0 ? 400 : 1420) : Math.max(50, Math.min(H - 170, qy < 0 ? p.y - 200 : p.y + 90));
+    TAGS.find((g) => g.sphere === o.def.id).anchor = [x, y];
+  });
 }
-assignAnchors();
+quadrantPlan();
 function drawTags(t) {
   for (const g of TAGS) {
     const on = t >= g.at && t < g.out + 0.6;
@@ -1003,77 +982,292 @@ function swell(t) {
   }
 }
 
-// ── Act V: the constellation — every idea lit, a road from each to the star ──
-const skyIdeas = (() => {
-  // The overhead camera's view of the sky plane, and where words will be
-  const hz = 23.4 * Math.tan((fovFor(42) * Math.PI) / 360), hx = hz * (W / H);
-  const band = REEL ? [-0.32, 0.12] : [-0.3, 0.3];  // the words, as a share of half the height
-  const label = 2 * 360 / W;                         // the widest name, as a share of half the width
-  const r = rng(31), pts = [];
+// ── Act V: the network, the Contact Us page's (js/contact-mesh.js) ───────────
+// The cosmos's five spheres and a shell of small vertices, every vertex tied
+// to its nearest neighbours. They appear gathered in the middle, then
+// separate, the edges stretching out between them; signals travel the edges,
+// ripples spread through the graph, and the ideas take their places in it.
+// At the close it all gathers back to the point the wordmark opens from.
+const netWorld = new THREE.Group();
+scene.add(netWorld);
+const NET_FOV = REEL ? 64 : 45, NET_Z = 11;
+const netHy = NET_Z * Math.tan((NET_FOV * Math.PI) / 360), netHx = netHy * (W / H);
+const EDGE_RGB = [168, 150, 106], FLASH_RGB = [143, 90, 66];
+const netSphere = new THREE.SphereGeometry(1, 32, 32);
+const nodes = [];
+function addNode(nx, ny, z, size, color, main) {
+  const mesh = new THREE.Mesh(netSphere, new THREE.MeshStandardMaterial({ color, roughness: 0.38, metalness: 0, emissive: color, emissiveIntensity: 0 }));
+  netWorld.add(mesh);
+  const n = { mesh, size, main, nx, ny, base: new THREE.Vector3(nx * netHx * 0.92, ny * netHy * 0.92, z),
+              from: new THREE.Vector3(), pos: new THREE.Vector3(), edges: [], hops: new Map(), bob: nodes.length * 1.7 };
+  nodes.push(n);
+  return n;
+}
+// The five spheres hold the corners and the crown, clear of the words
+const MAIN_AT = REEL
+  ? [["star", 0, 0.74], ["ifo", -0.6, 0.52], ["castles", 0.6, 0.52], ["education", -0.6, -0.48], ["zones", 0.6, -0.48]]
+  : [["star", 0, 0.7], ["ifo", -0.8, 0.46], ["castles", 0.8, 0.46], ["education", -0.8, -0.52], ["zones", 0.8, -0.52]];
+const netMain = {};
+for (const [id, nx, ny] of MAIN_AT) {
+  const color = id === "star" ? PASTEL_STAR : ORBITS.find((o) => o.id === id).planetColor;
+  netMain[id] = addNode(nx, ny, id === "star" ? -0.5 : 0, id === "star" ? 0.5 : 0.38, color, true);
+}
+// The band the words take, as a share of half the height
+const NET_BAND = REEL ? [-0.17, 0.36] : [-0.3, 0.32];
+const inBand = (n) => n.ny > NET_BAND[0] && n.ny < NET_BAND[1] && (REEL || Math.abs(n.nx) < 0.82);
+{
+  const r = rng(77), N = REEL ? 46 : 58, minPx = REEL ? 92 : 98;
   let tries = 0;
-  while (pts.length < IDEAS.length && tries++ < 20000) {
-    const nx = -0.95 + r() * (1.95 - label), nz = -0.9 + r() * 1.8;
-    if (nz > band[0] && nz < band[1]) continue;
-    const px = nx * W / 2, pz = nz * H / 2;
-    if (pts.some((p) => Math.hypot(p.px - px, (p.pz - pz) * 1.7) < 150)) continue;
-    pts.push({ px, pz, x: nx * hx, z: nz * hz });
+  while (nodes.length < N + 5 && tries++ < 40000) {
+    const c = { nx: -0.95 + r() * 1.9, ny: -0.9 + r() * 1.8 };
+    if (inBand({ nx: c.nx, ny: c.ny + 0.04 }) || inBand({ nx: c.nx, ny: c.ny - 0.04 })) continue;
+    const px = (c.nx * W) / 2, py = (c.ny * H) / 2;
+    if (nodes.some((n) => Math.hypot((n.nx * W) / 2 - px, (n.ny * H) / 2 - py) < (n.main ? minPx * 1.5 : minPx))) continue;
+    addNode(c.nx, c.ny, (r() - 0.5) * 2.2, 0.075 + r() * 0.05, 0xded5c2, false);
   }
-  // Lit from the star outward, so the light spreads like the expansion itself
-  pts.sort((a, b) => Math.hypot(a.px, a.pz) - Math.hypot(b.px, b.pz));
-  return pts.map((p, i) => {
-    const el = ideaEl(IDEAS[i], $("ideas"));
-    el.lastChild.style.fontSize = "24px";
+}
+// Edges: each vertex to its nearest neighbours, never across the words
+const netSvg = $("net");
+const edges = [], edgeKeys = new Set();
+const pxDist = (a, b) => Math.hypot(((a.nx - b.nx) * W) / 2, ((a.ny - b.ny) * H) / 2);
+const across = (a, b) => {
+  const mid = (NET_BAND[0] + NET_BAND[1]) / 2;
+  return (a.ny - mid) * (b.ny - mid) < 0 && (REEL || Math.abs(a.nx) < 0.82 || Math.abs(b.nx) < 0.82);
+};
+for (const n of nodes) {
+  nodes.filter((m) => m !== n && !across(n, m)).sort((p, q) => pxDist(n, p) - pxDist(n, q)).slice(0, n.main ? 4 : 3).forEach((m) => {
+    const ia = nodes.indexOf(n), ib = nodes.indexOf(m), key = Math.min(ia, ib) + "-" + Math.max(ia, ib);
+    if (edgeKeys.has(key)) return;
+    edgeKeys.add(key);
     const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    $("roads").appendChild(line);
-    return { pos: new THREE.Vector3(p.x, 0.6, p.z), at: CUES.constellation[i], el, line };
+    netSvg.appendChild(line);
+    const e = { a: n, b: m, line, drawAt: 0 };
+    edges.push(e);
+    n.edges.push(e); m.edges.push(e);
+  });
+}
+// How many edges each vertex is from each of the five spheres, for ripples
+for (const id of Object.keys(netMain)) {
+  const src = netMain[id];
+  src.hops.set(src, 0);
+  const queue = [src];
+  while (queue.length) {
+    const n = queue.shift(), h = src.hops.get(n);
+    for (const e of n.edges) {
+      const m = e.a === n ? e.b : e.a;
+      if (!src.hops.has(m)) { src.hops.set(m, h + 1); queue.push(m); }
+    }
+  }
+}
+// The entrance: gathered in the middle, then out to their places
+const NET_T0 = CUES.network;
+{
+  const r = rng(91), GOLDEN = Math.PI * (3 - Math.sqrt(5));
+  nodes.forEach((n, i) => {
+    const k = (i + 0.5) / nodes.length, y = 1 - 2 * k, rr = Math.sqrt(1 - y * y), th = GOLDEN * i;
+    const reach = n.main ? 0.3 : 0.6 + 0.6 * Math.cbrt(k);
+    n.from.set(Math.cos(th) * rr * reach, y * reach, Math.sin(th) * rr * reach);
+    n.scaleAt = NET_T0 + 0.15 + i * 0.008;
+    n.spreadAt = NET_T0 + 0.85 + (n.main ? 0 : r() * 0.3);
+  });
+  edges.forEach((e, i) => { e.drawAt = NET_T0 + 1.0 + i * 0.006; });
+}
+// Signals travelling the edges
+const SIGNALS = Array.from({ length: 16 }, (_, k) => {
+  const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  c.setAttribute("r", "4");
+  netSvg.appendChild(c);
+  return { el: c, dur: 1.1 + (k % 5) * 0.22, phase: k * 0.37 };
+});
+const hash = (n) => {
+  let x = Math.imul((n | 0) ^ 0x9e3779b9, 0x85ebca6b);
+  x ^= x >>> 13; x = Math.imul(x, 0xc2b2ae35); x ^= x >>> 16;
+  return (x >>> 0) / 4294967296;
+};
+// The ideas take their places on small vertices, clear of the frame's edges
+const netIdeas = (() => {
+  const r = rng(53);
+  // In a shuffled order, each far enough from the last ones that no two names touch
+  const spots = [];
+  nodes.filter((n) => !n.main && n.ny < 0.86 && n.ny > (REEL ? -0.64 : -0.86) && Math.abs(n.nx) < 0.93)
+    .map((n) => [r(), n]).sort((a, b) => a[0] - b[0]).forEach(([, n]) => {
+      // A name runs about 300px from its vertex, leftward on the right
+      const span = (m) => { const x = (m.nx * W) / 2; return m.nx > 0.1 ? [x - 310, x + 10] : [x - 10, x + 310]; };
+      const [a0, a1] = span(n), py = (-n.ny * H) / 2;
+      if (spots.some((m) => { const [b0, b1] = span(m); return a0 < b1 && b0 < a1 && Math.abs((-m.ny * H) / 2 - py) < 48; })) return;
+      spots.push(n);
+    });
+  return CUES.netIdeas.slice(0, spots.length).map((at, i) => {
+    const el = ideaEl(IDEAS[i], $("ideas"));
+    el.classList.add("ink");
+    if (spots[i].nx > 0.1) el.classList.add("flip");
+    return { at, node: spots[i], el };
   });
 })();
-function drawSkyIdeas(t, starPt) {
-  const on = t >= CUES.constellation[0] && t < CUES.flash;
-  const fadeAll = 1 - seg(t, CUES.flash - 0.6, CUES.flash);
-  for (const d of skyIdeas) {
-    const vis = on && t >= d.at;
-    show(d.el, vis);
-    css(d.line, "display", vis ? "" : "none");
-    if (!vis) continue;
-    const p = toScreen(d.pos);
-    const a = expoOut(seg(t, d.at, d.at + 0.6)) * fadeAll;
-    css(d.el, "transform", `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px)`);
+// Ripples spread from a sphere through the graph, a beat per edge
+const RIPPLE_FROM = { star: ["star"], sides: ["ifo", "castles"], low: ["education", "zones"] };
+const rippleShape = (x) => (x < 0 ? 0 : (1 - Math.exp(-x * 25)) * Math.exp(-x * 2.6));
+function netPulse(n, t) {
+  let p = 0;
+  for (const [at, from, strength] of CUES.ripples) {
+    for (const id of RIPPLE_FROM[from]) {
+      const hops = netMain[id].hops.get(n);
+      if (hops !== undefined) p += strength * rippleShape(t - at - hops * 0.12);
+    }
+  }
+  return Math.min(1.4, p);
+}
+// Where it all gathers: the wordmark's centre
+const MARK_Y = REEL ? 0.43 : 0.44;
+const GATHER = new THREE.Vector3(0, (1 - 2 * MARK_Y) * netHy, 0);
+function netCam(t) {
+  camera.fov = NET_FOV;
+  camera.clearViewOffset();
+  camera.up.set(0, 1, 0);
+  camera.position.set(Math.sin(t * 0.2) * 0.35, Math.cos(t * 0.17) * 0.22, lerp(NET_Z + 0.8, NET_Z - 0.4, seg(t, NET_T0, CUES.gather[1])));
+  camera.lookAt(0, 0, 0);
+  camera.updateProjectionMatrix();
+  camera.updateMatrixWorld();
+}
+function poseNet(t) {
+  netWorld.rotation.y = Math.sin((t - NET_T0) * 0.18) * 0.1;
+  netWorld.updateMatrixWorld(true);
+  const g = Math.pow(seg(t, ...CUES.gather), 3);
+  for (const n of nodes) {
+    const sc = easeOutBack(seg(t, n.scaleAt, n.scaleAt + 0.5));
+    const sp = 1 - Math.pow(1 - seg(t, n.spreadAt, n.spreadAt + 1.6), 3);
+    n.pos.lerpVectors(n.from, n.base, sp);
+    n.pos.x += Math.sin(t * 0.5 + n.bob) * 0.05 * sp;
+    n.pos.y += Math.cos(t * 0.43 + n.bob) * 0.05 * sp;
+    n.pos.lerp(GATHER, g);
+    n.pulse = netPulse(n, t);
+    n.mesh.position.copy(n.pos);
+    n.mesh.scale.setScalar(Math.max(0.0001, n.size * sc * (1 + 0.25 * Math.min(1, n.pulse)) * (1 - 0.9 * g)));
+    n.mesh.material.emissiveIntensity = 0.22 * n.pulse;
+  }
+}
+const mixRGB = (a, b, k) => `rgb(${a.map((v, i) => Math.round(lerp(v, b[i], k))).join(",")})`;
+function drawNet(t) {
+  const g = seg(t, ...CUES.gather);
+  for (const n of nodes) {
+    n.mesh.getWorldPosition(_wp);
+    const p = toScreen(_wp);
+    n.sx = p.x; n.sy = p.y; n.sr = screenRadius(_wp, n.mesh.scale.x);
+  }
+  for (const e of edges) {
+    const d = seg(t, e.drawAt, e.drawAt + 0.5);
+    if (d <= 0 || g >= 1) { css(e.line, "display", "none"); continue; }
+    css(e.line, "display", "");
+    const { a, b } = e, dx = b.sx - a.sx, dy = b.sy - a.sy, len = Math.hypot(dx, dy) || 1;
+    const ux = dx / len, uy = dy / len;
+    const x1 = a.sx + ux * a.sr, y1 = a.sy + uy * a.sr;
+    const x2 = lerp(x1, b.sx - ux * b.sr, d), y2 = lerp(y1, b.sy - uy * b.sr, d);
+    const flash = Math.min(1, (a.pulse + b.pulse) / 2);
+    e.line.setAttribute("x1", x1.toFixed(1)); e.line.setAttribute("y1", y1.toFixed(1));
+    e.line.setAttribute("x2", x2.toFixed(1)); e.line.setAttribute("y2", y2.toFixed(1));
+    e.line.setAttribute("stroke", mixRGB(EDGE_RGB, FLASH_RGB, flash));
+    e.line.setAttribute("stroke-width", (1.6 + 1.8 * flash).toFixed(2));
+    e.line.setAttribute("stroke-opacity", ((0.55 + 0.4 * flash) * (1 - g)).toFixed(3));
+  }
+  // Signals, once the graph is drawn and until it gathers
+  const live = seg(t, NET_T0 + 2.6, NET_T0 + 3.2) * (1 - seg(t, CUES.gather[0], CUES.gather[0] + 0.4));
+  for (const [k, s] of SIGNALS.entries()) {
+    const u = (t - NET_T0 + s.phase) / s.dur, cycle = Math.floor(u), f = u - cycle;
+    const e = edges[Math.floor(hash(k * 131 + cycle * 977) * edges.length)];
+    if (!e || live <= 0) { css(s.el, "display", "none"); continue; }
+    css(s.el, "display", "");
+    const back = hash(k * 17 + cycle) < 0.5;
+    const [p0, p1] = back ? [e.b, e.a] : [e.a, e.b];
+    s.el.setAttribute("cx", lerp(p0.sx, p1.sx, f).toFixed(1));
+    s.el.setAttribute("cy", lerp(p0.sy, p1.sy, f).toFixed(1));
+    s.el.setAttribute("opacity", (Math.sin(Math.PI * f) * 0.85 * live).toFixed(3));
+  }
+  // The ideas, each by its vertex
+  const fade = 1 - seg(t, CUES.gather[0], CUES.gather[0] + 0.6);
+  for (const d of netIdeas) {
+    const a = expoOut(seg(t, d.at, d.at + 0.6)) * fade;
+    show(d.el, a > 0.002);
+    if (a <= 0.002) continue;
+    const n = d.node, off = (n.sr + 10) * (d.el.classList.contains("flip") ? -1 : 1);
+    css(d.el, "transform", `translate(${(n.sx + off).toFixed(1)}px, ${n.sy.toFixed(1)}px)`);
     css(d.el, "opacity", a.toFixed(3));
-    css(d.el.firstChild, "transform", `scale(${(1 + 2 * (1 - expoOut(seg(t, d.at, d.at + 0.7)))).toFixed(3)})`);
-    const k = cubicInOut(seg(t, d.at - 0.25, d.at + 0.45));
-    d.line.setAttribute("x1", starPt.x.toFixed(1));
-    d.line.setAttribute("y1", starPt.y.toFixed(1));
-    d.line.setAttribute("x2", lerp(starPt.x, p.x, k).toFixed(1));
-    d.line.setAttribute("y2", lerp(starPt.y, p.y, k).toFixed(1));
-    d.line.setAttribute("stroke-width", "1.3");
-    d.line.setAttribute("stroke-opacity", (0.34 * fadeAll).toFixed(3));
   }
 }
 
-// ── The close: the landing page's hero ──────────────────────────────────────
-const hero = $("hero");
-const wordmark = hero.querySelector(".wordmark");
-const statement = hero.querySelector(".statement");
-const cta = hero.querySelector(".cta");
-const heroWords = maskWords(statement, statement.textContent.trim());
-function drawHero(t) {
-  const on = t >= CUES.flash;
-  show(hero, on);
+// ── Act VI: the wordmark — the navbar's many faces, many more, then its own ──
+const brand = $("brand"), mark = brand.querySelector(".mark"), brandCta = brand.querySelector(".cta");
+const MARK_PX = REEL ? 118 : 150;
+// The navbar's wordmark, each letter in its own face (css/style.css .bl-1 to .bl-7)
+const NAV_FACES = [
+  ["M", "Cinzel", 500], ["U", "Playfair Display", 500], ["L", "Cinzel", 400], ["V", "Italiana", 400, "normal", true],
+  ["i", "Inter", 900], ["u", "Cormorant SC", 500, "normal", false, 1.22], ["M", "Cinzel", 500],
+];
+// ...and the faces it passes through on the way to its own
+const FACES = [
+  ["Abril Fatface", 400], ["Bodoni Moda", 700], ["DM Serif Display", 400], ["DM Serif Display", 400, "italic"],
+  ["Fraunces", 300], ["Fraunces", 900], ["Space Mono", 700], ["Syne", 800], ["Unbounded", 700], ["Bebas Neue", 400],
+  ["Monoton", 400], ["Rubik Mono One", 400], ["Josefin Sans", 100], ["UnifrakturMaguntia", 400], ["Orbitron", 900],
+  ["Archivo Black", 400], ["Caveat", 700], ["Poiret One", 400], ["Limelight", 400], ["Yeseva One", 400],
+  ["Zilla Slab", 700], ["Righteous", 400], ["Lobster", 400], ["Shrikhand", 400], ["Rye", 400], ["Syncopate", 700],
+  ["Cormorant Garamond", 300, "italic"], ["IBM Plex Mono", 300], ["Bungee", 400], ["Pirata One", 400], ["Gloock", 400],
+  ["Playfair Display", 900], ["Playfair Display", 400, "italic"], ["Cinzel", 400], ["Italiana", 400], ["Inter", 900],
+  ["Cormorant SC", 500], ["Major Mono Display", 400],
+];
+const FINAL = "MULVIUM";
+const markLetters = [...FINAL].map((ch, j) => {
+  const el = document.createElement("span");
+  mark.appendChild(el);
+  return { el, j, key: "" };
+});
+// Each letter's cell is as wide as its own glyph in the final face, with the
+// hero's tracking, so every face before it is centred where it will land
+function sizeCells() {
+  const c = document.createElement("canvas").getContext("2d");
+  c.font = `400 ${MARK_PX}px Lora`;
+  for (const l of markLetters) l.el.style.width = (c.measureText(FINAL[l.j]).width + MARK_PX * 0.3).toFixed(1) + "px";
+  mark.style.top = (H * MARK_Y - MARK_PX * 0.5).toFixed(0) + "px";
+  brandCta.dataset.top = (H * MARK_Y + MARK_PX * 0.62 + 40).toFixed(0);
+}
+function setFace(l, key, ch, family, weight, style = "normal", outline = false, size = 1) {
+  if (l.key === key) return;
+  l.key = key;
+  l.el.textContent = ch;
+  l.el.style.fontFamily = `"${family}"`;
+  l.el.style.fontWeight = String(weight);
+  l.el.style.fontStyle = style;
+  l.el.style.fontSize = size === 1 ? "" : size + "em";
+  l.el.style.color = outline ? "transparent" : "";
+  l.el.style.webkitTextStroke = outline ? `${(MARK_PX * 0.012).toFixed(1)}px #1b1613` : "";
+}
+function drawBrand(t) {
+  const on = t >= CUES.wordmark;
+  show(brand, on);
   if (!on) return;
-  goo(wordmark, seg(t, CUES.wordmark, CUES.wordmark + 1.4));
-  // The wordmark's glint, the navbar's, passing once
-  css(wordmark, "backgroundPosition", `${lerp(100, 0, cubicInOut(seg(t, CUES.cta + 0.4, CUES.cta + 2.0))).toFixed(1)}% 0`);
-  riseWords(heroWords, t, CUES.statement);
-  const c = expoOut(seg(t, CUES.cta, CUES.cta + 0.9));
-  if (REEL) {
-    css(statement, "top", "1376px");
-    css(cta, "top", (1550 + (1 - c) * 24).toFixed(0) + "px");
-  } else {
-    css(statement, "top", (540 - statement.offsetHeight / 2).toFixed(0) + "px");
-    css(cta, "top", (540 - cta.offsetHeight / 2 + (1 - c) * 24).toFixed(0) + "px");
+  const [c0, c1] = CUES.cycle, [s0] = CUES.settle;
+  goo(mark, seg(t, CUES.wordmark, CUES.wordmark + 0.9), 40);
+  for (const l of markLetters) {
+    const j = l.j, start = c0 + j * 0.05, land = s0 + j * 0.14;
+    let pop = 1;
+    if (t < start) {
+      const [ch, fam, wt, st, outline, size] = NAV_FACES[j];
+      setFace(l, "nav", ch, fam, wt, st, outline, size);
+    } else if (t < land) {
+      // Faster and faster through the faces, then slowing as it nears its own
+      const dur = c1 - c0, u = clamp01((t - start) / dur);
+      const step = Math.floor(5 * (t - start) + (24 * dur / Math.PI) * (1 - Math.cos(Math.PI * u)));
+      const [fam, wt, st = "normal"] = FACES[Math.floor(hash(j * 977 + step * 31) * FACES.length)];
+      const ch = hash(j * 131 + step * 7) < 0.3 ? FINAL[j].toLowerCase() : FINAL[j];
+      setFace(l, `c${step}`, ch, fam, wt, st);
+    } else {
+      setFace(l, "final", FINAL[j], "Lora", 400);
+      pop = 1 + 0.1 * (1 - expoOut(seg(t, land, land + 0.45)));
+    }
+    css(l.el, "transform", pop === 1 ? "none" : `scale(${pop.toFixed(3)})`);
   }
-  css(cta, "opacity", c.toFixed(3));
+  css(mark, "transform", `scale(${lerp(0.72, 1, expoOut(seg(t, CUES.wordmark, CUES.wordmark + 1.2))).toFixed(4)})`);
+  const c = expoOut(seg(t, CUES.cta, CUES.cta + 0.9));
+  css(brandCta, "top", (Number(brandCta.dataset.top) + (1 - c) * 24).toFixed(0) + "px");
+  css(brandCta, "opacity", c.toFixed(3));
 }
 
 // ── The lens: grain, vignette, letterbox ────────────────────────────────────
@@ -1102,74 +1296,66 @@ const glow = $("glow"), streak = $("streak"), black = $("black"), flash = $("fla
 function seek(t) {
   t = Math.max(0, Math.min(DURATION, t));
   const fly = t < CUES.cut;
-  const inBowl = t >= CUES.dive[1] && t < CUES.back;
-  const cosmosOn = !fly && !inBowl && t >= CUES.spark - 0.3;
-  let nightness = 1;
+  const cosmosOn = !fly && t >= CUES.spark - 0.3 && t < CUES.dive[1];
+  const inBowl = t >= CUES.dive[1] && t < CUES.network;
+  const netOn = t >= CUES.network && t < CUES.gather[1] + 0.05;
+  let nightness = 0;
 
   deepField.visible = sphereGroup.visible = fly;
   cosmos.visible = sky.visible = cosmosOn;
   bowlWorld.visible = inBowl;
+  netWorld.visible = netOn;
   if (fly) {
+    nightness = 1;
     flyCam(t);
     bgColor.copy(NIGHT_COLOR);
     deepMat.uniforms.uTime.value = t;
     deepMat.uniforms.uOpacity.value = seg(t, 0.2, 3.2) * (1 - 0.5 * seg(t, 17, CUES.cut));
     drawSphere(t);
-  } else if (inBowl) {
-    nightness = 0;
-    bowlCam(t);
-    poseBowl(t);
-    bgColor.copy(PAPER_COLOR);
   } else if (cosmosOn) {
     // Posed first: the dive steers by where the blue planet is now
     poseCosmos(t, T2D(t), EXP(t));
     swell(t);
     cosmos.updateMatrixWorld(true);
-    if (t < CUES.dive[1]) genesisCam(t);
-    else if (t < CUES.flash) middleCam(t);
-    else heroCam(t);
-    const night = NIGHT(t);
-    nightness = night;
-    bgColor.copy(PAPER_COLOR).lerp(NIGHT_COLOR, night);
+    genesisCam(t);
+    nightness = NIGHT(t);
+    bgColor.copy(PAPER_COLOR).lerp(NIGHT_COLOR, nightness);
     skyMat.uniforms.uTime.value = t;
-    skyMat.uniforms.uOpacity.value = night * (t < 34 ? lerp(0.2, 1, seg(t, CUES.spark, 31)) : 1);
-    for (const m of meteors) {
-      const k = (t - m.at) / m.dur;
-      m.mesh.visible = k > 0 && k < 1 && night > 0.5;
-      if (!m.mesh.visible) continue;
-      m.mesh.position.set(m.x0 + m.dirX * m.speed * (t - m.at), 0.6, m.z0 + m.dirZ * m.speed * (t - m.at));
-      m.mesh.rotation.set(-Math.PI / 2, 0, m.phi);
-      m.mesh.material.opacity = Math.sin(Math.PI * k) * 0.85 * night;
-    }
+    skyMat.uniforms.uOpacity.value = nightness * lerp(0.2, 1, seg(t, CUES.spark, 31));
+  } else if (inBowl) {
+    bowlCam(t);
+    poseBowl(t);
+    bgColor.copy(PAPER_COLOR);
+  } else {
+    bgColor.copy(PAPER_COLOR);
+    if (netOn) { netCam(t); poseNet(t); }
   }
   const blackout = t < 1.2 ? 1 - seg(t, 0, 1.2) : t >= CUES.cut && t < CUES.spark ? 1 - seg(t, CUES.spark - 0.25, CUES.spark) : 0;
-  if ((fly || inBowl || cosmosOn) && blackout < 1) renderer.render(scene, camera);
+  if (blackout < 1) renderer.render(scene, camera);
   css(black, "opacity", blackout.toFixed(3));
   css(scrim, "opacity", (seg(t, 17.6, 18.2) * (t < CUES.cut ? 1 : 0)).toFixed(3));
 
-  // From the bowl back to the cosmos, through paper
-  const v = t >= CUES.back - 0.5 && t < CUES.back + 0.6 ? Math.min(seg(t, CUES.back - 0.5, CUES.back), 1 - seg(t, CUES.back, CUES.back + 0.6)) : 0;
+  // From the bowl to the network, through paper
+  const N0 = CUES.network;
+  const v = t >= N0 - 0.6 && t < N0 + 0.5 ? Math.min(seg(t, N0 - 0.6, N0), 1 - seg(t, N0, N0 + 0.5)) : 0;
   css(veil, "opacity", v.toFixed(3));
 
-  show($("ideas"), fly || (t >= CUES.constellation[0] && t < CUES.flash));
+  show($("ideas"), fly || netOn);
   drawFlyIdeas(t, fly);
 
-  // The star's light: a spark in the dark, the bloom, the radiant close
+  // The star's light: a spark in the dark, then the bloom
   let gA = 0, gS = 0.1;
   if (cosmosOn && t < 34.5) {
     gA = expoOut(seg(t, CUES.spark, CUES.spark + 0.35)) * (1 - seg(t, CUES.bloom + 0.2, 34.5));
     gS = lerp(0.07, 0.6, expoIn(seg(t, CUES.rise, CUES.bloom)));
-  } else if (cosmosOn && t >= CUES.expand[0] + 0.75 && t < CUES.flash + 0.2) {
-    gA = 0.75 * seg(t, CUES.expand[0] + 0.75, CUES.expand[1]) + 0.25 * seg(t, CUES.flash - 1.1, CUES.flash);
-    gS = lerp(0.2, 0.32, seg(t, 72, 81)) + 3 * expoIn(seg(t, CUES.flash - 1.1, CUES.flash));
   }
-  const starPt = cosmosOn ? toScreen(star.getWorldPosition(_wp)) : { x: W / 2, y: H / 2 };
   show(glow, gA > 0.001);
   show(streak, gA > 0.001);
   if (gA > 0.001) {
-    css(glow, "transform", `translate(${starPt.x.toFixed(1)}px, ${starPt.y.toFixed(1)}px) scale(${gS.toFixed(3)})`);
+    const sp = toScreen(star.getWorldPosition(_wp));
+    css(glow, "transform", `translate(${sp.x.toFixed(1)}px, ${sp.y.toFixed(1)}px) scale(${gS.toFixed(3)})`);
     css(glow, "opacity", gA.toFixed(3));
-    css(streak, "transform", `translate(${starPt.x.toFixed(1)}px, ${starPt.y.toFixed(1)}px) scale(${(0.35 + gS * 0.9).toFixed(3)}, ${(0.6 + gS * 0.6).toFixed(3)})`);
+    css(streak, "transform", `translate(${sp.x.toFixed(1)}px, ${sp.y.toFixed(1)}px) scale(${(0.35 + gS * 0.9).toFixed(3)}, ${(0.6 + gS * 0.6).toFixed(3)})`);
     css(streak, "opacity", (gA * 0.85).toFixed(3));
   }
 
@@ -1177,23 +1363,20 @@ function seek(t) {
   show($("tags"), tagsOn);
   show($("leads"), tagsOn);
   if (tagsOn) drawTags(t);
-  show($("roads"), t >= CUES.constellation[0] - 0.3 && t < CUES.flash);
-  drawSkyIdeas(t, starPt);
+  show(netSvg, netOn);
+  if (netOn) drawNet(t);
+  else for (const d of netIdeas) show(d.el, false);
 
   // Words
   drawCaptions(t);
-  const haloA = Math.max(seg(t, CUES.exists - 0.2, CUES.exists + 0.4) * (1 - seg(t, 67.4, 68.2)), t >= CUES.flash ? 1 : 0);
+  const haloA = seg(t, CUES.exists - 0.2, CUES.exists + 0.4) * (1 - seg(t, 51.8, 52.6));
   show(halo, haloA > 0.001);
-  if (t >= CUES.flash) css(halo, "transform", REEL ? "translate(540px, 340px) scale(0.85, 0.6)" : "translate(960px, 150px)");
-  else css(halo, "transform", REEL ? "translate(540px, 1490px) scale(0.85, 0.5)" : "translate(960px, 880px) scale(1.1, 0.55)");
+  css(halo, "transform", REEL ? "translate(540px, 1490px) scale(0.85, 0.5)" : "translate(960px, 880px) scale(1.1, 0.55)");
   css(halo, "opacity", haloA.toFixed(3));
-  drawHero(t);
+  drawBrand(t);
 
-  // The flash at the bloom and at the close
-  const fl = Math.max(
-    Math.pow(seg(t, CUES.bloom - 0.6, CUES.bloom), 2.0) * (1 - expoOut(seg(t, CUES.bloom, CUES.bloom + 1.6))) * 0.96,
-    expoIn(seg(t, CUES.flash - 0.8, CUES.flash)) * (1 - easeInOut(seg(t, CUES.flash, CUES.flash + 1.5)))
-  );
+  // The flash at the bloom
+  const fl = Math.pow(seg(t, CUES.bloom - 0.6, CUES.bloom), 2.0) * (1 - expoOut(seg(t, CUES.bloom, CUES.bloom + 1.6))) * 0.96;
   css(flash, "opacity", fl.toFixed(3));
 
   // The lens
@@ -1209,11 +1392,13 @@ function seek(t) {
 const fontsReady = Promise.all([
   "400 62px Lora", "italic 400 62px Lora", "500 62px Lora", "italic 500 62px Lora",
   "400 40px 'Major Mono Display'", "400 48px 'IBM Plex Sans'", "500 30px 'IBM Plex Sans'",
-].map((f) => document.fonts.load(f))).then(() => document.fonts.ready);
+  ...[...NAV_FACES.map(([, f, w, st]) => [f, w, st]), ...FACES].map(([f, w, st = "normal"]) => `${st} ${w} 100px "${f}"`),
+].map((f) => document.fonts.load(f, "MULVIUMmulvium"))).then(() => document.fonts.ready);
 const ready = Promise.all([fontsReady, picturesReady]).then(() => {
   buildSphere();
+  sizeCells();
   // Compile every material the film will need, before the first frame counts
-  for (const t of [20, 30, 52, 56, 62, 78, 0]) seek(t);
+  for (const t of [20, 30, 47, 58, 70, 81, 0]) seek(t);
 });
 window.film = { seek, ready, duration: DURATION, fps: CUES.fps, width: W, height: H };
 
