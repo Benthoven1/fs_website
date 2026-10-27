@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mulvium Launch Film</title>
+  <meta name="description" content="Mulvium's launch film: many roads, one meeting place." />
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Major+Mono+Display&display=block" rel="stylesheet" />
+  <link rel="stylesheet" href="film.css" />
+  <script type="importmap">
+    { "imports": { "three": "https://unpkg.com/three@0.161.0/build/three.module.min.js" } }
+  </script>
+</head>
+<body>
+  <!-- The film is drawn at 1920 × 1080 and scaled to the window. Layers,
+       bottom to top: the cosmos, the night's ideas, the roads between them,
+       the star's light, the spheres' tags, the loading screen's photographs,
+       the blackout, the captions, the closing hero, the flash, then the lens
+       (grain, vignette, letterbox). -->
+  <div id="stage" aria-hidden="true">
+    <canvas id="gl" width="1920" height="1080"></canvas>
+    <div id="ideas"></div>
+    <svg id="roads" viewBox="0 0 1920 1080" width="1920" height="1080"></svg>
+    <div id="glow"></div>
+    <div id="streak"></div>
+    <div id="tags"></div>
+    <div id="ls">
+      <div class="fr"><div class="ph" data-src="../../Musical.webp"></div><div class="seal"><span class="hi">the aesthetic</span><span class="gt">&gt;</span><span class="lo">the grotesque</span></div></div>
+      <div class="fr"><div class="ph" data-src="../../Luxor.webp"></div><div class="seal"><span class="hi">the sublime</span><span class="gt">&gt;</span><span class="lo">the spectacle</span></div></div>
+      <div class="fr"><div class="ph" data-src="../../Pictorial.webp"></div><div class="seal"><span class="hi">role models</span><span class="gt">&gt;</span><span class="lo">parasocial icons</span></div></div>
+      <div class="fr"><div class="ph" data-src="../../Batad.webp"></div><div class="seal"><span class="hi">myth &amp; epic</span><span class="gt">&gt;</span><span class="lo">conspiracy</span></div></div>
+      <div id="win-edge"></div>
+    </div>
+    <div id="black"></div>
+    <div id="halo"></div>
+    <div id="captions"></div>
+    <div id="hero">
+      <div class="wordmark">Mulvium</div>
+      <p class="statement">Beautify the world around you through a new kind of institution</p>
+      <div class="cta"><span class="pill">Join the waitlist</span><span class="url">mulvium.org</span></div>
+    </div>
+    <div id="flash"></div>
+    <canvas id="grain" width="960" height="540"></canvas>
+    <div id="vignette"></div>
+    <div id="bars"><i></i><i></i></div>
+  </div>
+
+  <button id="play" type="button" hidden>
+    <span class="play-mark" aria-hidden="true"></span>
+    <span class="play-label">Play the film</span>
+    <span class="play-note">Sound on</span>
+  </button>
+  <audio id="score" src="score.m4a" preload="none"></audio>
+
+  <script type="module" src="film.js"></script>
+</body>
+</html>

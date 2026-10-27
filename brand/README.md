@@ -1,6 +1,6 @@
 # Brand images
 
-Images of Mulvium's central sphere and the landing page's hero, for profile
+Mulvium's launch film, and images of Mulvium's central sphere and the landing page's hero, for profile
 icons, posts and banners. They are rendered from the site itself, not drawn:
 the sphere with the landing page's own material, lights and camera angle
 (`js/main.js`), and the hero captured from the live page after its entrance.
@@ -42,3 +42,49 @@ page as it orbits.
 - **The hero:** follow the steps at the top of `render/capture-hero.js` (a third
   argument such as `mulvium-wordmark` makes one set only), then
   scale each `@2x` capture to half size (Lanczos) for the exact sizes above.
+
+## The launch film
+
+`mulvium-launch-film-1920x1080.mp4`: ninety-two seconds at 30 fps, with its
+score, previewed from `thumbs/mulvium-launch-film-1920x1080.jpg`. It is the
+company and its vision, not any one product, told with the site's own pieces:
+the landing page's cosmos and night sky (`js/main.js`), the loading screen's
+photographs (`js/ls.js`), the hero's rising words, and lines from the site and
+the founder's letter.
+
+| Act | Seconds | |
+|---|---|---|
+| I | 0–15 | Millions of ideas, as stars met in flight |
+| II | 15–27 | The organization in their way: six jobs land on them, and they go out |
+| III | 27–42 | One light: the rings gather, night turns to paper, and the cosmos takes its shape |
+| IV | 42–60 | The four photographs and their values; many roads, one meeting place |
+| V | 60–73 | You, patrons and Mulvium: it exists |
+| VI | 73–92 | The expansion: every idea lit, a road from each to the star, then the landing page |
+
+`film/` holds its source:
+
+- `index.html`, `film.css`, `film.js` — the film as a page. Every frame is a
+  function of time alone: `film.seek(t)` draws the frame at `t` seconds.
+  Opened over HTTP (`brand/film/`), it plays itself with its score; `?t=60`
+  starts it at a minute in.
+- `cues.json` — the cue sheet the picture and the score share: when each
+  idea lights, each job lands, the bloom, each photograph, each tag.
+- `score.py` — the score, synthesised in numpy and scipy from the cue sheet
+  (D major, 80 bpm): it writes `score.wav`, which is kept out of the
+  repository; `score.m4a` is its AAC encoding, which the page plays.
+- `render.js` — renders the MP4 frame by frame with Playwright and ffmpeg,
+  in parallel parts.
+
+To make it again, from the repository root:
+
+```
+python3 -m http.server 8765 &
+python3 brand/film/score.py
+ffmpeg -i brand/film/score.wav -c:a aac -b:a 192k brand/film/score.m4a
+node brand/film/render.js brand/mulvium-launch-film-1920x1080.mp4 3
+ffmpeg -ss 91.5 -i brand/mulvium-launch-film-1920x1080.mp4 -frames:v 1 -vf scale=1280:-1 brand/thumbs/mulvium-launch-film-1920x1080.jpg
+```
+
+The render takes about half an hour with three parts on a machine without a
+GPU. A photograph replaced in the site's root (`Musical.webp` and the others)
+appears in the film the next time it is rendered.

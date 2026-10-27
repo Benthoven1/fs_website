@@ -122,10 +122,13 @@ be announced.
   values as inequalities, and the patron, maker and citizen as three spheres
   (`css/values.css`, `js/values.js`, pictures in `images/values/`).
 - `privacy/` — the privacy policy the waitlist links to.
-- `brand/` — the press kit (`mulvium.org/brand/`): the central sphere and the
-  hero as images for profile icons, posts and banners, rendered from the site
-  itself, previewed from `brand/thumbs/`; `brand/README.md` lists each size
-  and how to make them again.
+- `brand/` — the press kit (`mulvium.org/brand/`): the launch film, and the
+  central sphere and the hero as images for profile icons, posts and banners,
+  all rendered from the site itself, previewed from `brand/thumbs/`;
+  `brand/README.md` lists each size and how to make them again. The film's
+  source is `brand/film/`: a page that draws any frame of it on demand (and
+  plays it, with its score, in a browser), the cue sheet, the score's
+  generator and the renderer.
 - Every page's footer links to the waitlist (Offerings), the press kit
   (About Us) and the privacy policy (beside the copyright).
 - `images/` — stills of each company's animation, shown in the Offerings menu.

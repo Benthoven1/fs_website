@@ -1,0 +1,375 @@
+/* film.css — the launch film's stage. Every moving value is written per frame
+   by film.js; nothing here transitions or animates on its own, so any frame
+   can be drawn on demand. */
+:root {
+  --ink: #1b1613;
+  --paper: #eceae5;
+  --night: #060412;
+  --clay: #b87758;
+  --gold: #f3d9a8;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+}
+
+#stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background: var(--night);
+  transform-origin: 0 0;
+  font-family: "Lora", serif;
+  -webkit-font-smoothing: antialiased;
+}
+#stage > * { position: absolute; left: 0; top: 0; }
+#gl, #ideas, #roads, #tags, #ls, #black, #captions, #hero, #flash, #grain, #vignette, #bars {
+  width: 1920px;
+  height: 1080px;
+}
+
+/* ── The night's ideas: a spark and a name ─────────────────────────────── */
+.idea {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  transform-origin: 0 50%;
+  will-change: transform, opacity;
+}
+.idea i {
+  position: absolute;
+  left: -7px;
+  top: -7px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 22%, rgba(255, 240, 214, 0.75) 34%, rgba(255, 225, 180, 0) 70%);
+  box-shadow: 0 0 22px 6px rgba(255, 226, 184, 0.35);
+}
+.idea span {
+  position: absolute;
+  left: 18px;
+  top: -0.68em;
+  font-style: italic;
+  font-size: 28px;
+  letter-spacing: 0.02em;
+  color: rgba(255, 250, 242, 0.92);
+  text-shadow: 0 0 18px rgba(6, 4, 18, 0.9);
+}
+
+/* The six jobs between an idea and its opening */
+.job {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size: 52px;
+  letter-spacing: 0.06em;
+  color: #f4efe6;
+  white-space: nowrap;
+  transform-origin: 50% 50%;
+}
+
+#roads line { stroke: var(--gold); stroke-linecap: round; }
+
+/* ── The star's light ──────────────────────────────────────────────────── */
+#glow {
+  width: 1000px;
+  height: 1000px;
+  margin: -500px 0 0 -500px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 246, 228, 0.85) 4%,
+    rgba(255, 228, 188, 0.42) 12%,
+    rgba(244, 196, 150, 0.16) 30%,
+    rgba(240, 180, 140, 0) 62%);
+  mix-blend-mode: screen;
+  opacity: 0;
+}
+#streak {
+  width: 2400px;
+  height: 18px;
+  margin: -9px 0 0 -1200px;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 228, 190, 0.5) 18%,
+    rgba(255, 210, 160, 0.12) 52%,
+    rgba(255, 210, 160, 0) 100%);
+  mix-blend-mode: screen;
+  opacity: 0;
+}
+
+/* ── Tags: the landing page's sphere annotations ──────────────────────── */
+.tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 600px;
+  margin-left: -300px;
+  text-align: center;
+  color: var(--ink);
+}
+.tag b {
+  display: block;
+  font-family: "Major Mono Display", monospace;
+  font-weight: 400;
+  text-transform: lowercase;
+  font-size: 40px;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+.tag em {
+  display: block;
+  margin-top: 6px;
+  font-size: 30px;
+  letter-spacing: 0.04em;
+  color: rgba(59, 51, 47, 0.85);
+}
+.tag .lead {
+  display: block;
+  width: 2px;
+  height: 46px;
+  margin: 12px auto 0;
+  background: rgba(27, 22, 19, 0.5);
+  transform-origin: 50% 0;
+}
+.tag.flip { display: flex; flex-direction: column; align-items: center; }
+.tag.flip .dot { order: 0; margin: 0; }
+.tag.flip .lead { order: 1; margin: 6px auto 12px; transform-origin: 50% 0; }
+.tag.flip b { order: 2; }
+.tag.flip em { order: 3; }
+.tag .dot {
+  display: block;
+  width: 12px;
+  height: 12px;
+  margin: 6px auto 0;
+  border-radius: 50%;
+  background: rgba(27, 22, 19, 0.6);
+}
+
+/* ── The loading screen's photographs ─────────────────────────────────── */
+#ls { background: var(--paper); }
+.fr {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  background: #d9d3c6;
+}
+.ph {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background-size: cover;
+  background-position: 50% 50%;
+  will-change: transform;
+}
+.seal {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 250px;
+  height: 250px;
+  margin: -125px 0 0 -125px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  line-height: 1.12;
+  color: var(--ink);
+  background: rgba(240, 237, 231, 0.9);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 18px 50px rgba(27, 22, 19, 0.28);
+  opacity: 0;
+}
+.seal .hi { font-size: 25px; letter-spacing: 0.03em; }
+.seal .gt { margin: 0.1em 0 0.04em; font-size: 40px; }
+.seal .lo { font-size: 19px; letter-spacing: 0.04em; }
+#win-edge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  box-sizing: border-box;
+  border: 2px solid rgba(27, 22, 19, 0.85);
+  opacity: 0;
+}
+
+#black { background: #000; opacity: 0; }
+
+/* ── Captions: words rise into place, as the hero's statement does ────── */
+.cap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  line-height: 1.2;
+  font-size: 62px;
+  letter-spacing: 0.005em;
+  will-change: opacity, filter;
+}
+.cap.c { width: 1920px; margin-left: -960px; text-align: center; }
+.cap.l { text-align: left; }
+.cap.ink { color: var(--ink); }
+.cap.moon { color: #f7f2ea; text-shadow: 0 0 28px rgba(6, 4, 18, 0.85); }
+.cap.gold { color: var(--gold); text-shadow: 0 0 40px rgba(255, 210, 150, 0.55), 0 0 90px rgba(255, 190, 120, 0.3); }
+.cap.it { font-style: italic; }
+.cap.sm { font-size: 50px; }
+.cap.xl { font-size: 124px; letter-spacing: 0.01em; }
+.cap .hw {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0 0.12em 0.16em;
+  margin: 0 -0.12em -0.16em;
+}
+.cap .hw > span { display: inline-block; }
+
+#halo {
+  width: 1300px;
+  height: 900px;
+  margin: -450px 0 0 -650px;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%,
+    rgba(236, 234, 229, 0.96) 0%,
+    rgba(236, 234, 229, 0.62) 46%,
+    rgba(236, 234, 229, 0) 74%);
+  opacity: 0;
+}
+
+/* ── The closing hero: the landing page as it opens ───────────────────── */
+#hero { pointer-events: none; }
+#hero .wordmark {
+  position: absolute;
+  left: 0;
+  top: 96px;
+  width: 1920px;
+  text-align: center;
+  font-family: "Lora", serif;
+  font-weight: 400;
+  font-size: 92px;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0;
+  background: linear-gradient(100deg, var(--ink) 0%, var(--ink) 40%, #c0965a 50%, var(--ink) 60%, var(--ink) 100%);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+#hero .statement {
+  position: absolute;
+  left: 110px;
+  top: 0;
+  width: 420px;
+  margin: 0;
+  font-size: 44px;
+  line-height: 1.28;
+  color: var(--ink);
+}
+#hero .statement .hw {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0 0.12em 0.16em;
+  margin: 0 -0.12em -0.16em;
+}
+#hero .statement .hw > span { display: inline-block; }
+#hero .cta {
+  position: absolute;
+  right: 110px;
+  top: 0;
+  width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 26px;
+  opacity: 0;
+}
+#hero .pill {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 500;
+  font-size: 30px;
+  letter-spacing: 0.02em;
+  color: #fff;
+  background: var(--clay);
+  padding: 20px 40px 22px;
+  border-radius: 999px;
+  box-shadow: 0 14px 40px rgba(143, 90, 66, 0.28);
+}
+#hero .url {
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size: 34px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  padding-right: 6px;
+}
+
+#flash { background: #fffaf2; opacity: 0; }
+
+/* ── The lens ─────────────────────────────────────────────────────────── */
+#grain { mix-blend-mode: overlay; opacity: 0.07; }
+#vignette {
+  background: radial-gradient(ellipse 75% 70% at 50% 50%, rgba(20, 12, 6, 0) 55%, rgba(20, 12, 6, 0.55) 100%);
+  opacity: 0.4;
+}
+#bars i {
+  position: absolute;
+  left: 0;
+  width: 1920px;
+  height: 140px;
+  background: #000;
+}
+#bars i:first-child { top: 0; }
+#bars i:last-child { bottom: 0; top: auto; }
+#bars { pointer-events: none; }
+
+/* ── Playing in a browser ─────────────────────────────────────────────── */
+#play {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: rgba(6, 4, 18, 0.55);
+  color: #f7f2ea;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  cursor: pointer;
+  font-family: "Lora", serif;
+}
+#play[hidden] { display: none; }
+.play-mark {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 22px 0 22px 36px;
+  border-color: transparent transparent transparent #f7f2ea;
+  margin-left: 8px;
+}
+.play-label { font-size: 26px; font-style: italic; }
+.play-note {
+  font-family: "Major Mono Display", monospace;
+  text-transform: lowercase;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+}
