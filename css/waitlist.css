@@ -845,7 +845,11 @@ html.wl-js .wl-bubble.is-in .wl-cloud > * { opacity: 1; translate: none; }
 .pk-card--sq { max-width: 260px; }
 .pk-img { display: block; border: 1px solid var(--hairline); border-radius: 10px; overflow: hidden; background: #eceae5; }
 .pk-img img { display: block; width: 100%; height: auto; }
-.pk-video { width: 100%; max-width: 720px; height: auto; aspect-ratio: 16 / 9; padding: 0; }
+.pk-films { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 22px; }
+.pk-films .pk-card:first-child { flex: 1 1 420px; max-width: 720px; }
+.pk-films .pk-card:last-child { flex: 0 1 240px; }
+.pk-video { width: 100%; height: auto; aspect-ratio: 16 / 9; padding: 0; }
+.pk-video--tall { aspect-ratio: 9 / 16; }
 .pk-card figcaption { margin-top: 8px; font-size: 16px; line-height: 1.4; color: var(--ink-soft); }
 .pk-card strong { color: var(--ink); font-weight: 600; margin-right: 6px; }
 .pk-dl { display: block; font-size: 15px; }

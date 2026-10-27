@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mulvium Launch Film</title>
-  <meta name="description" content="Mulvium's launch film: many roads, one meeting place." />
+  <meta name="description" content="Mulvium's launch film: a new kind of institution." />
   <meta name="robots" content="noindex" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,26 +15,22 @@
   </script>
 </head>
 <body>
-  <!-- The film is drawn at 1920 × 1080 and scaled to the window. Layers,
-       bottom to top: the cosmos, the night's ideas, the roads between them,
-       the star's light, the spheres' tags, the loading screen's photographs,
-       the blackout, the captions, the closing hero, the flash, then the lens
-       (grain, vignette, letterbox). -->
+  <!-- The film is drawn at 1920 × 1080 (?format=reel: 1080 × 1920) and scaled
+       to the window. Layers, bottom to top: the scene, the night's ideas, the
+       roads between them, the star's light, the callouts, the paper veil, the
+       blackout, the scrim under words, the captions, the closing hero, the
+       flash, then the lens (grain, vignette, letterbox). -->
   <div id="stage" aria-hidden="true">
-    <canvas id="gl" width="1920" height="1080"></canvas>
+    <canvas id="gl"></canvas>
     <div id="ideas"></div>
-    <svg id="roads" viewBox="0 0 1920 1080" width="1920" height="1080"></svg>
+    <svg id="roads"></svg>
     <div id="glow"></div>
     <div id="streak"></div>
+    <svg id="leads"></svg>
     <div id="tags"></div>
-    <div id="ls">
-      <div class="fr"><div class="ph" data-src="../../Musical.webp"></div><div class="seal"><span class="hi">the aesthetic</span><span class="gt">&gt;</span><span class="lo">the grotesque</span></div></div>
-      <div class="fr"><div class="ph" data-src="../../Luxor.webp"></div><div class="seal"><span class="hi">the sublime</span><span class="gt">&gt;</span><span class="lo">the spectacle</span></div></div>
-      <div class="fr"><div class="ph" data-src="../../Pictorial.webp"></div><div class="seal"><span class="hi">role models</span><span class="gt">&gt;</span><span class="lo">parasocial icons</span></div></div>
-      <div class="fr"><div class="ph" data-src="../../Batad.webp"></div><div class="seal"><span class="hi">myth &amp; epic</span><span class="gt">&gt;</span><span class="lo">conspiracy</span></div></div>
-      <div id="win-edge"></div>
-    </div>
+    <div id="veil"></div>
     <div id="black"></div>
+    <div id="scrim"></div>
     <div id="halo"></div>
     <div id="captions"></div>
     <div id="hero">
@@ -43,7 +39,7 @@
       <div class="cta"><span class="pill">Join the waitlist</span><span class="url">mulvium.org</span></div>
     </div>
     <div id="flash"></div>
-    <canvas id="grain" width="960" height="540"></canvas>
+    <canvas id="grain"></canvas>
     <div id="vignette"></div>
     <div id="bars"><i></i><i></i></div>
   </div>

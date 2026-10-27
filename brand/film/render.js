@@ -7,15 +7,19 @@
 //   python3 -m http.server 8765 &
 //   python3 brand/film/score.py    # optional: score.m4a is used otherwise
 //   node brand/film/render.js brand/mulvium-launch-film-1920x1080.mp4 [workers] [from-s] [to-s]
+//   node brand/film/render.js brand/mulvium-launch-film-1080x1920.mp4 --reel   # for phones
 const { chromium } = require("playwright");
 const { spawn } = require("child_process");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
 
-const OUT = process.argv[2] || "mulvium-launch-film.mp4";
-const WORKERS = parseInt(process.argv[3] || "3", 10);
-const URL = "http://localhost:8765/brand/film/index.html?render";
+const REEL = process.argv.includes("--reel");
+const ARGS = process.argv.slice(2).filter((a) => a !== "--reel");
+const OUT = ARGS[0] || "mulvium-launch-film.mp4";
+const WORKERS = parseInt(ARGS[1] || "3", 10);
+const URL = "http://localhost:8765/brand/film/index.html?render" + (REEL ? "&format=reel" : "");
+const VIEW = REEL ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 };
 // The score as score.py writes it, or as the page plays it
 const SCORE = ["score.wav", "score.m4a"].map((f) => path.join(__dirname, f)).find((f) => fs.existsSync(f)) || "";
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), "mulvium-film-"));
@@ -27,7 +31,7 @@ function ffmpeg(args) {
 }
 
 async function part(browser, i, from, to, fps) {
-  const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
+  const page = await browser.newPage({ viewport: VIEW });
   page.on("pageerror", (e) => console.error("page:", e.message));
   await page.goto(URL, { waitUntil: "load" });
   await page.waitForFunction(() => window.film, null, { timeout: 120000 });
@@ -56,8 +60,8 @@ async function part(browser, i, from, to, fps) {
   await probe.waitForFunction(() => window.film, null, { timeout: 120000 });
   const { duration, fps } = await probe.evaluate(() => ({ duration: window.film.duration, fps: window.film.fps }));
   await probe.close();
-  const first = Math.round(parseFloat(process.argv[4] || "0") * fps);
-  const last = Math.round(parseFloat(process.argv[5] || String(duration)) * fps);
+  const first = Math.round(parseFloat(ARGS[2] || "0") * fps);
+  const last = Math.round(parseFloat(ARGS[3] || String(duration)) * fps);
   const per = Math.ceil((last - first) / WORKERS);
   const ranges = [];
   for (let i = 0; i < WORKERS; i++) {

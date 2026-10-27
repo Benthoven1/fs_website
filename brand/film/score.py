@@ -1,15 +1,14 @@
 """score.py — the launch film's score, synthesised from nothing but numpy.
 
-Written to the same cue sheet as the picture (cues.json), so every blow,
+Written to the same cue sheet as the picture (cues.json), so every stamp,
 bloom and chime lands on its frame. In D major at 80 bpm, one bar every
 three seconds:
 
   I    0–15    a pad and a celesta: one note for every idea that lights
-  II   15–25   the pulse tightens; six stamps; a hit, and silence
-  III  27–42   one note; a long rise; the bloom; the piano begins
-  IV   42–60   a string line over the piano, a chime for each photograph
-  V    60–73   a light pulse beneath; a chime for each sphere named
-  VI   73–92   the climb, the cadence home (I–V–vi–IV–V–I), the ring-out
+  II   15–25   Bm, G, Em, A held open; the clock quickens; six stamps; silence
+  III  27–50   one note; a rise; the bloom; the piano under the founder's letter
+  IV   50–69   a chime as each project settles in the bowl, and each sphere named
+  V    69–88   the climb, the cadence home (I–V–vi–IV–V–I), the ring-out
 
   python3 brand/film/score.py        # writes brand/film/score.wav
 """
@@ -195,15 +194,6 @@ def tick(t, gain=0.05, p=0.0):
     add(t, pan(v, p), gain, 0.15)
 
 
-def swell(t0, t1, gain=0.2, lo=4000):
-    """A cymbal played backwards, gathering into t1."""
-    n = int((t1 - t0) * SR)
-    x = np.linspace(0, 1, n)
-    v = highpass(rng.standard_normal((2, n)), lo) * (x ** 3)[None]
-    v[:, -int(0.01 * SR):] *= np.linspace(1, 0, int(0.01 * SR))[None]
-    add(t0, v, gain, 0.5)
-
-
 def cymbal(t, gain=0.12, length=4.0):
     n = int(length * SR)
     tt = np.arange(n) / SR
@@ -224,7 +214,7 @@ def riser(t0, t1, gain=0.18):
         out += np.stack([bandpass(noise[0], lo, hi), bandpass(noise[1], lo, hi)]) * w[None]
     f = 110 * 2 ** (x * 3)  # three octaves
     tone = np.sin(2 * np.pi * np.cumsum(f) / SR) * 0.35
-    out += np.stack([tone, tone])
+    out = out * 0.45 + np.stack([tone, tone])
     out *= (x ** 2.2)[None]
     add(t0, out, gain, 0.45)
 
@@ -241,6 +231,7 @@ Em   = [40, 52, 55, 59, 62, 66]
 Asus = [33, 45, 52, 57, 62, 64]
 A    = [33, 45, 52, 57, 61, 64, 69]
 Gmaj7 = [31, 43, 50, 55, 59, 62, 66]
+C = CUES
 
 # Act I — the night of ideas
 pad(0.0, 9.0, [50, 57, 64, 66, 73], gain=0.05, cutoff=1300, attack=4.0, release=3.0)
@@ -248,39 +239,39 @@ pad(9.0, 12.0, [47, 54, 62, 66, 69], gain=0.05, cutoff=1400, attack=2.5, release
 pad(12.0, 15.0, [43, 50, 59, 66, 69], gain=0.055, cutoff=1600, attack=2.0, release=2.5)
 boom(0.4, gain=0.18, f1=60, f2=34, length=5)
 IDEA_NOTES = [74, 81, 78, 86, 76, 83, 81, 88, 78, 86, 83, 90, 81, 88, 86, 93, 83, 90, 88, 95, 90, 93]
-for i, t in enumerate(CUES["ideas"]):
+for i, t in enumerate(C["ideas"]):
     bell(t, IDEA_NOTES[i % len(IDEA_NOTES)], gain=0.11 - 0.0025 * i, p=float(rng.uniform(-0.7, 0.7)))
 
-# Act II — the organization in the way
-pad(15.0, 18.0, [35, 47, 54, 62, 66], gain=0.06, cutoff=1100, attack=1.2, release=1.8)
-pad(18.0, 21.0, [31, 43, 50, 59, 61], gain=0.065, cutoff=1000, attack=1.0, release=1.5)
-pad(21.0, CUES["cut"], [28, 40, 47, 55, 58, 62], gain=0.075, cutoff=900, attack=0.8, release=0.06)
+# Act II — the organization in the way: B minor, held open over a drone,
+# moving to G, E minor and an unresolved A, cut off before it can resolve
+pad(15.0, 18.0, [35, 47, 54, 59, 62, 66], gain=0.06, cutoff=1100, attack=1.2, release=1.8)
+pad(18.0, 21.0, [31, 43, 50, 55, 59, 62], gain=0.065, cutoff=1000, attack=1.0, release=1.5)
+pad(21.0, 24.0, [28, 40, 47, 52, 55, 59, 62], gain=0.072, cutoff=950, attack=0.8, release=0.8)
+pad(24.0, C["cut"], [33, 45, 52, 57, 62, 64], gain=0.078, cutoff=900, attack=0.3, release=0.06)
+pad(15.0, C["cut"], [23, 35], gain=0.05, cutoff=300, attack=3.0, release=0.06)  # the drone, low B
 t = 18.0
-while t < CUES["cut"] - 0.01:  # the clock, quickening into sixteenths
-    k = (t - 18.0) / (CUES["cut"] - 18.0)
+while t < C["cut"] - 0.01:  # the clock, quickening into sixteenths
+    k = (t - 18.0) / (C["cut"] - 18.0)
     tick(t, gain=0.03 + 0.06 * k, p=0.4 if int(t / (BEAT / 2)) % 2 else -0.4)
     t += BEAT / 2 if t < 21.0 else BEAT / 4
-for i, h in enumerate(CUES["hits"]):
+for i, h in enumerate(C["hits"]):
     boom(h, gain=0.26 + 0.025 * i, f1=90, f2=36, length=2.2)
     stamp(h, gain=0.2, p=(-0.5, 0.5, 0.0, -0.4, 0.4, 0.0)[i])
-swell(CUES["hits"][-1] - 0.75, CUES["cut"], gain=0.12)
-boom(CUES["cut"], gain=0.5, f1=110, f2=30, length=4.5, send=0.6)
-cymbal(CUES["cut"], gain=0.1, length=3)
+boom(C["cut"], gain=0.5, f1=110, f2=30, length=4.5, send=0.6)
 
-# Act III — one light, the long rise, the bloom
-piano(CUES["spark"], 81, vel=0.45, length=6, send=0.7)
-piano(CUES["spark"] + 0.02, 86, vel=0.3, length=6, send=0.7)
-pad(CUES["rise"], CUES["bloom"], [33, 45, 52, 57, 62, 64, 69], gain=0.06, cutoff=900, attack=3.5, release=0.3)
-riser(CUES["rise"], CUES["bloom"], gain=0.16)
-swell(CUES["bloom"] - 2.2, CUES["bloom"], gain=0.2, lo=3000)
-B = CUES["bloom"]
+# Act III — one light, the rise, the bloom, the letter
+piano(C["spark"], 81, vel=0.45, length=6, send=0.7)
+piano(C["spark"] + 0.02, 86, vel=0.3, length=6, send=0.7)
+pad(C["rise"], C["bloom"], [33, 45, 52, 57, 62, 64, 69], gain=0.06, cutoff=900, attack=3.5, release=0.3)
+riser(C["rise"], C["bloom"], gain=0.09)
+B = C["bloom"]
 boom(B, gain=0.7, f1=80, f2=32, length=5, send=0.5)
-cymbal(B, gain=0.13, length=5)
+cymbal(B, gain=0.05, length=4)
 pad(B, 36.0, D_hi, gain=0.11, cutoff=3200, attack=0.05, release=3.0)
 for m, p in ((86, -0.4), (90, 0.4), (93, 0.0)):
     bell(B, m, gain=0.07, length=5, p=p)
-pad(36.0, 39.0, A_C, gain=0.07, cutoff=2200, attack=1.5, release=2.5)
-pad(39.0, 42.0, Bm, gain=0.07, cutoff=2200, attack=1.5, release=2.5)
+for (t0, t1, ch) in ((36, 39, A_C), (39, 42, Bm), (42, 45, G), (45, 48, D_F), (48, C["dive"][1], Em)):
+    pad(t0, t1, ch, gain=0.07, cutoff=2200, attack=1.5, release=2.5)
 
 
 def ostinato(t0, t1, chords, vel=0.35, sixteenths=False, send=0.3):
@@ -289,8 +280,7 @@ def ostinato(t0, t1, chords, vel=0.35, sixteenths=False, send=0.3):
     shape = [0, 2, 1, 3, 2, 4, 3, 2]
     t, i = t0, 0
     while t < t1 - 1e-6:
-        bar = int(t // 3.0)
-        chord = chords.get(bar)
+        chord = chords.get(int(t // 3.0))
         if chord:
             tones = sorted(m for m in chord if 60 <= m + 12 <= 84)
             tones = [m + 12 if m < 60 else m for m in tones][:5]
@@ -302,90 +292,72 @@ def ostinato(t0, t1, chords, vel=0.35, sixteenths=False, send=0.3):
 
 
 BARS = {
-    11: D, 12: A_C, 13: Bm,                         # Act III
-    14: G, 15: D_F, 16: Em, 17: A, 18: Bm, 19: G,   # Act IV
-    20: D, 21: A, 22: Bm, 23: G,                    # Act V
-    24: G, 25: Em, 26: G, 27: Asus,                 # Act VI
+    11: D, 12: A_C, 13: Bm, 14: G, 15: D_F, 16: Em,     # the letter
+    19: D, 20: A, 21: Bm, 22: G,                        # the spheres named
+    23: G, 24: Em, 25: Gmaj7, 26: Asus,                 # the climb
 }
-ostinato(34.5, 42.0, BARS, vel=0.36)
+ostinato(34.5, C["dive"][0], BARS, vel=0.34)
+lead(C["letter"][0], [(0, 74, 3), (3, 76, 1), (4, 78, 4), (8, 79, 2), (10, 78, 1), (11, 76, 1), (12, 74, 4)], gain=0.04)
+# The dive: the piano climbs into the planet
+for i, m in enumerate((62, 66, 69, 74, 78, 81)):
+    piano(C["dive"][0] + i * BEAT / 4 * 1.6, m, vel=0.28 + 0.04 * i, length=3, send=0.5)
 
-# Act IV — four photographs, many roads
-for (t0, t1, ch) in ((42, 45, G), (45, 48, D_F), (48, 51, Em), (51, 54, A), (54, 57, Bm), (57, 60, G)):
-    pad(t0, t1, ch, gain=0.075, cutoff=2400, attack=1.2, release=2.2)
-ostinato(42.0, CUES["push"][0], BARS, vel=0.36)
-lead(42.0, [
-    (0, 74, 3), (3, 76, 1),
-    (4, 78, 3), (7, 76, 1),
-    (8, 79, 2), (10, 78, 1), (11, 76, 1),
-    (12, 76, 2), (14, 73, 1), (15, 69, 1),
-    (16, 74, 3), (19, 78, 1),
-    (20, 83, 2), (22, 81, 2),
-], gain=0.05)
-for t, m in zip(CUES["frames"], (86, 81, 83, 85)):
+# Act IV — the bowl, then who brings what
+E_ = C["dive"][1]
+pad(E_, C["lid"], [31, 43, 50, 55, 59, 62], gain=0.06, cutoff=1800, attack=0.6, release=2.0)
+pad(C["lid"], 55.5, [42, 54, 57, 62, 66, 69], gain=0.065, cutoff=2000, attack=1.2, release=2.0)
+pad(55.5, C["back"], [40, 52, 55, 59, 62, 67], gain=0.065, cutoff=2000, attack=1.2, release=1.5)
+piano(C["lid"], 74, vel=0.32, length=4, send=0.6)
+for d, m in zip(C["drops"], (81, 85, 88, 93)):  # a chime as each project settles
+    bell(d + 0.62, m, gain=0.08, length=4)
+lead(C["beneath"], [(0, 78, 2), (2, 76, 2), (4, 74, 4)], gain=0.035)
+pad(C["back"], 61.5, D, gain=0.075, cutoff=2400, attack=0.6, release=2.2)
+pad(61.5, 64.5, A, gain=0.075, cutoff=2400, attack=0.8, release=2.2)
+pad(64.5, C["ascend"], Bm, gain=0.075, cutoff=2400, attack=0.8, release=2.2)
+ostinato(C["back"] + 0.75, C["ascend"], BARS, vel=0.38)
+for t, m in zip(C["tags"], (78, 81, 85, 86)):
     bell(t, m, gain=0.09, length=4)
-    swell(t - 0.5, t, gain=0.04, lo=5000)
-bell(CUES["window"], 86, gain=0.08, length=4)
-riser(CUES["push"][0] - 0.5, CUES["push"][1], gain=0.12)
-swell(CUES["push"][0], CUES["push"][1], gain=0.15)
-
-# Act V — you, patrons, Mulvium: it exists
-P = CUES["push"][1]
-boom(P, gain=0.5, f1=80, f2=34, length=4)
-cymbal(P, gain=0.1, length=4)
-for (t0, t1, ch) in ((60, 63, D), (63, 66, A), (66, 69, Bm), (69, 72, G), (72, 75, G)):
-    pad(t0, t1, ch, gain=0.08, cutoff=2600, attack=0.8, release=2.2)
-lead(60.0, [(0, 81, 4), (4, 76, 4), (8, 78, 2), (10, 74, 2), (12, 71, 4)], gain=0.04)
-ostinato(60.0, 72.75, BARS, vel=0.4)
-for b in range(int(60 / BEAT), int(72 / BEAT)):
-    t = b * BEAT
-    if b % 2 == 0:
-        kick(t, gain=0.2)
-for t, m in zip(CUES["tags"], (81, 85, 88)):
-    bell(t, m, gain=0.1, length=4)
-E = CUES["exists"]
-swell(E - 1.5, E, gain=0.1)
-boom(E, gain=0.45, f1=85, f2=36, length=4)
+X = C["exists"]
+boom(X, gain=0.38, f1=85, f2=36, length=4)
 for m in (74, 78, 81, 86):
-    bell(E, m, gain=0.05, length=5)
+    bell(X, m, gain=0.05, length=5)
 
-# Act VI — the expansion, the cadence home
-pad(72.75, 75.0, G, gain=0.08, cutoff=2400, attack=0.8, release=2.0)
-pad(75.0, 78.0, Em + [71], gain=0.1, cutoff=1800, attack=1.0, release=2.0)
-pad(78.0, 81.0, Gmaj7[:2] + [50, 59, 66, 69, 74], gain=0.115, cutoff=2600, attack=1.0, release=2.0)
-pad(81.0, 83.25, Asus + [69], gain=0.13, cutoff=3000, attack=0.8, release=0.4)
-ostinato(72.75, 78.0, BARS, vel=0.4)
-ostinato(78.0, 83.25, BARS, vel=0.48, sixteenths=True)
-lead(75.0, [(0, 79, 4), (4, 78, 2), (6, 76, 2), (8, 74, 4)], gain=0.045)
-for b in range(int(78 / BEAT), int(83.25 / BEAT)):
+# Act V — the expansion, the cadence home
+pad(C["ascend"], 72.0, G, gain=0.08, cutoff=2400, attack=0.8, release=2.0)
+pad(72.0, 75.0, Em + [71], gain=0.1, cutoff=1800, attack=1.0, release=2.0)
+pad(75.0, 78.0, Gmaj7[:2] + [50, 59, 66, 69, 74], gain=0.115, cutoff=2600, attack=1.0, release=2.0)
+pad(78.0, C["institutions"], Asus + [69], gain=0.13, cutoff=3000, attack=0.8, release=0.4)
+ostinato(C["ascend"], 75.0, BARS, vel=0.4)
+ostinato(75.0, C["institutions"], BARS, vel=0.48, sixteenths=True)
+lead(72.0, [(0, 79, 4), (4, 78, 2), (6, 76, 2), (8, 74, 4)], gain=0.045)
+for b in range(int(75 / BEAT), int(C["institutions"] / BEAT)):
     kick(b * BEAT, gain=0.22)
-t = 81.0
-while t < CUES["institutions"] - 1e-6:  # toms gathering into the word
-    k = (t - 81.0) / (CUES["institutions"] - 81.0)
+t = 77.25
+while t < C["institutions"] - 1e-6:  # toms gathering into the word
+    k = (t - 77.25) / (C["institutions"] - 77.25)
     tom(t, gain=0.08 + 0.18 * k, f0=150 - 60 * k, p=0.3 * np.sin(t * 9))
     t += BEAT / 4
-swell(81.75, CUES["institutions"], gain=0.15)
-I = CUES["institutions"]
+I = C["institutions"]
 boom(I, gain=0.6, f1=90, f2=30, length=5, send=0.5)
-cymbal(I, gain=0.12, length=4)
-pad(I, 84.75, [35, 47, 54, 59, 62, 66, 71, 74, 78], gain=0.12, cutoff=3400, attack=0.05, release=1.2)
-pad(84.75, 85.5, [31, 43, 50, 59, 62, 67, 71, 74], gain=0.11, cutoff=3200, attack=0.2, release=0.5)
-pad(85.5, CUES["flash"], [33, 45, 52, 57, 61, 64, 67, 69, 73], gain=0.11, cutoff=3600, attack=0.2, release=0.08)
-for i, t in enumerate(CUES["constellation"]):
+cymbal(I, gain=0.06, length=3)
+pad(I, 81.0, [35, 47, 54, 59, 62, 66, 71, 74, 78], gain=0.12, cutoff=3400, attack=0.05, release=1.2)
+pad(81.0, 81.75, [31, 43, 50, 59, 62, 67, 71, 74], gain=0.11, cutoff=3200, attack=0.2, release=0.5)
+pad(81.75, C["flash"], [33, 45, 52, 57, 61, 64, 67, 69, 73], gain=0.11, cutoff=3600, attack=0.2, release=0.08)
+for i, t in enumerate(C["constellation"]):
     bell(t, [86, 90, 93, 98, 95, 88][i % 6], gain=0.035, length=3, p=float(rng.uniform(-0.9, 0.9)))
-riser(85.0, CUES["flash"], gain=0.13)
-swell(84.75, CUES["flash"], gain=0.2, lo=3000)
-F = CUES["flash"]
+riser(C["flash"] - 1.5, C["flash"], gain=0.07)
+F = C["flash"]
 boom(F, gain=0.8, f1=85, f2=30, length=6, send=0.55)
-cymbal(F, gain=0.14, length=6)
-pad(F, 90.5, D_hi + [86], gain=0.13, cutoff=3400, attack=0.04, release=1.5)
+cymbal(F, gain=0.07, length=5)
+pad(F, DUR - 1.5, D_hi + [86], gain=0.13, cutoff=3400, attack=0.04, release=1.5)
 for m, p in ((74, -0.3), (78, 0.3), (81, -0.1), (86, 0.1)):
     bell(F, m, gain=0.07, length=6, p=p)
 for i, m in enumerate((78, 76, 74, 69)):  # under the statement's words
-    piano(87.75 + i * BEAT, m, vel=0.38, length=5, send=0.5)
-piano(87.75 + 4 * BEAT, 62, vel=0.3, length=5, send=0.5)
-piano(87.75 + 4 * BEAT, 74, vel=0.3, length=5, send=0.5)
-bell(CUES["cta"], 86, gain=0.08, length=4)
-bell(CUES["cta"] + 0.01, 93, gain=0.04, length=4)
+    piano(C["statement"] + i * BEAT, m, vel=0.38, length=5, send=0.5)
+piano(C["statement"] + 4 * BEAT, 62, vel=0.3, length=5, send=0.5)
+piano(C["statement"] + 4 * BEAT, 74, vel=0.3, length=5, send=0.5)
+bell(C["cta"], 86, gain=0.08, length=4)
+bell(C["cta"] + 0.01, 93, gain=0.04, length=4)
 
 # ── Reverb, master ───────────────────────────────────────────────────────────
 ir_len = int(3.6 * SR)
