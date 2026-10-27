@@ -78,7 +78,7 @@ export default {
 
       // ── 1895: the neighborhood, mapped ──
       paper("#f3ecdb", 0, 5560, 700, 760, { rot: -2, at: 17.7, lines: "rgba(86,96,107,0.3)" }),
-      ransom("1895", 80, 5180, 150, { at: 18.2 }),
+      ransom("1895", 20, 5180, 150, { at: 18.2 }),
       paper(MUSTARD, -200, 5440, 170, 130, { edges: "cccc", rot: -2, at: 18.6, enter: "grow" }),
       paper(BRICK, -30, 5430, 150, 150, { edges: "cccc", rot: -2, at: 18.75, enter: "grow" }),
       paper(SAGE, 130, 5450, 150, 120, { edges: "cccc", rot: -2, at: 18.9, enter: "grow" }),
