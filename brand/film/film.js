@@ -821,28 +821,55 @@ function ideaEl(text, parent) {
 }
 // Each idea is placed where it should first be seen, just after it lights,
 // clear of the words; the flight then carries it past and out of the frame
-const flyIdeas = CUES.ideas.map((at, i) => {
+const flyIdeas = [];
+CUES.ideas.forEach((at, i) => {
   const r = rng(5 + i * 101);
   const fwd = new THREE.Vector3(), dir = new THREE.Vector3();
   // Anywhere across the frame: a name on its right half reads leftward
   const clear = REEL
     ? (x, y) => !(y > 680 && y < 1120) && y > 260 && y < 1640 && x > 70 && x < W - 70
     : (x, y) => !(x > 420 && x < 1500 && y > 380 && y < 700) && y > 190 && y < 890 && x > 90 && x < W - 90;
-  let x, y;
-  // Left and right in turn, so both halves of the frame hold as many
-  const right = i % 2 === 1;
-  do { x = (right ? 0.5 + 0.5 * r() : 0.5 * r()) * W; y = r() * H; } while (!clear(x, y));
-  // A name reads away from the middle, so its words stay in its own half,
+  // Left and right in turn, so both halves of the frame hold as many; a
+  // name reads away from the middle, so its words stay in its own half,
   // unless that would run it off the frame's edge
+  const right = i % 2 === 1, LABEL = 320;
+  const flipAt = (x) => (right ? x > W - LABEL - 20 : x > W / 2 - LABEL / 2);
+  // A name's box on screen, as drawFlyIdeas will set it
+  const box = (pos, text, flip) => {
+    const p = toScreen(pos), depth = _v.copy(pos).sub(camera.position).dot(fwd);
+    if (depth <= 1.5) return null;
+    const sc = Math.max(0.62, Math.min(1.6, 19 / depth)), w = (18 + text.length * 14) * sc, h = 42 * sc;
+    return flip ? [p.x - w, p.y - h / 2, p.x, p.y + h / 2] : [p.x, p.y - h / 2, p.x + w, p.y + h / 2];
+  };
+  // Of the places tried, the first whose name meets no other name in flight
+  // over the seconds after it lights
+  const LOOK = Array.from({ length: 12 }, (_, k) => 0.05 + k * 0.35);
+  let best = null;
+  for (let tries = 0; tries < 300 && !(best && best.hits === 0); tries++) {
+    let x, y;
+    do { x = (right ? 0.5 + 0.5 * r() : 0.5 * r()) * W; y = r() * H; } while (!clear(x, y));
+    const depth = 15 + r() * 9;
+    flyCam(at + 0.6, false);
+    camera.getWorldDirection(fwd);
+    dir.set((x / W) * 2 - 1, -(y / H) * 2 + 1, 0.5).unproject(camera).sub(camera.position).normalize();
+    const pos = camera.position.clone().addScaledVector(dir, depth / dir.dot(fwd));
+    let hits = 0;
+    for (const dt of LOOK) {
+      flyCam(at + dt, false);
+      camera.getWorldDirection(fwd);
+      const a = box(pos, IDEAS[i], flipAt(x));
+      if (!a) continue;
+      for (const o of flyIdeas) {
+        if (o.at < at - 4) continue;
+        const b = box(o.pos, IDEAS[o.i], o.flip);
+        if (b && a[0] < b[2] + 18 && b[0] < a[2] + 18 && a[1] < b[3] + 12 && b[1] < a[3] + 12) hits++;
+      }
+    }
+    if (!best || hits < best.hits) best = { pos, flip: flipAt(x), hits };
+  }
   const el = ideaEl(IDEAS[i], $("ideas"));
-  const LABEL = 320;
-  if (right ? x > W - LABEL - 20 : x > W / 2 - LABEL / 2) el.classList.add("flip");
-  const depth = 15 + r() * 9;
-  flyCam(at + 0.6, false);
-  camera.getWorldDirection(fwd);
-  dir.set((x / W) * 2 - 1, -(y / H) * 2 + 1, 0.5).unproject(camera).sub(camera.position).normalize();
-  const pos = camera.position.clone().addScaledVector(dir, depth / dir.dot(fwd));
-  return { at, pos, el };
+  if (best.flip) el.classList.add("flip");
+  flyIdeas.push({ at, i, pos: best.pos, flip: best.flip, el });
 });
 function drawFlyIdeas(t, on) {
   const fwd = new THREE.Vector3();
