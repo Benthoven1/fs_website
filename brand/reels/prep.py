@@ -31,6 +31,9 @@ CACHE = os.path.join(HERE, ".cache")
 UA = "MulviumReels/1.0 (https://github.com/Benthoven1/fs_website)"
 
 # name: (Commons file, crop as fractions (left, top, right, bottom), treatment, width)
+# width is the size fetched: one of Commons's standard thumbnail widths (500 or
+# 960, smaller than the original), which it serves freely; other sizes and
+# originals are rate-limited hard
 ASSETS = json.load(open(os.path.join(HERE, "assets.json")))
 
 
@@ -54,7 +57,7 @@ def fetch(file, width):
         url = "https://commons.wikimedia.org/wiki/Special:FilePath/" + urllib.parse.quote(file) + f"?width={width}"
         data = get(url)
         open(path, "wb").write(data)
-        time.sleep(3)
+        time.sleep(20)
     return Image.open(path)
 
 
@@ -151,12 +154,10 @@ def main():
         out = os.path.join(OUT, name + ".jpg")
         if os.path.exists(out) and not force:
             continue
-        im = fetch(file, max(width, 1200) if width < 1200 else width)
+        im = fetch(file, width)
         w, h = im.size
         l, t, r, b = crop
         im = im.crop((int(l * w), int(t * h), int(r * w), int(b * h)))
-        if im.width > width:
-            im = im.resize((width, round(im.height * width / im.width)), Image.LANCZOS)
         treat(im, how).save(out, quality=86, optimize=True, progressive=True)
         print("wrote", os.path.relpath(out), im.size, flush=True)
     credits()
