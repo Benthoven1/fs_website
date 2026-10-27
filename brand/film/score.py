@@ -6,7 +6,7 @@ bloom and chime lands on its frame. In D major at 80 bpm:
   I    0–15    a pad and a celesta: one note for every idea that lights
   II   15–25   Bm, G, Em, A held open; the clock quickens; six stamps; silence
   III  27–52   one note; a rise; the bloom; the piano; a chime for each sphere named
-  IV   52–65   into the bowl: a chime as each project settles, under the letter
+  IV   52–65   the bowl: a chime as each project settles, one for each line of the letter
   V    65–78   the network: the climb, and the cadence home (I–V–vi–IV–V–I)
   VI   78–88   the wordmark: a flurry through its faces, a chime as each letter lands
 
@@ -237,7 +237,7 @@ C = CUES
 # piano both follow it
 CHANGES = [
     (C["bloom"], D), (36.0, A_C), (39.0, Bm), (42.0, G), (45.0, D_F), (48.0, Asus), (C["exists"], D),
-    (C["dive"][1], G), (C["lid"], D_F), (59.0, Em), (62.0, Asus), (64.5, A),
+    (C["toBowl"][1], G), (C["lid"], D_F), (59.0, Em), (62.0, Asus), (64.5, A),
     (C["network"], D), (C["expansion"][0], A), (C["expansion"][1], Bm), (72.5, Gmaj7), (C["will"], Asus),
     (C["institutions"], Bm), (76.0, G), (77.25, A), (C["wordmark"], D_hi),
 ]
@@ -320,7 +320,7 @@ def ostinato(t0, t1, vel=0.35, sixteenths=False, send=0.3):
         i += 1
 
 
-ostinato(34.5, C["dive"][0], vel=0.34)
+ostinato(34.5, C["toBowl"][0], vel=0.34)
 lead(C["beneath"], [(0, 74, 3), (3, 76, 1), (4, 78, 4), (8, 79, 2), (10, 78, 1), (11, 76, 1), (12, 74, 4)], gain=0.04)
 for t, m in zip(C["tags"], (78, 81, 85, 86)):
     bell(t, m, gain=0.09, length=4)
@@ -328,13 +328,14 @@ X = C["exists"]
 boom(X, gain=0.38, f1=85, f2=36, length=4)
 for m in (74, 78, 81, 86):
     bell(X, m, gain=0.05, length=5)
-# The dive: the piano climbs into the planet
-for i, m in enumerate((62, 66, 69, 74, 78, 81)):
-    piano(C["dive"][0] + i * BEAT / 4 * 1.6, m, vel=0.28 + 0.04 * i, length=3, send=0.5)
+# Through paper to the bowl: one soft chord as the cosmos fades
+for m in (62, 69, 74):
+    piano(C["toBowl"][0], m, vel=0.26, length=5, send=0.6)
+bell(C["toBowl"][1] + 0.3, 81, gain=0.06, length=4)
 
 # Act IV — the bowl, under the founder's letter
 piano(C["lid"], 74, vel=0.32, length=4, send=0.6)
-for d, m in zip(C["drops"], (81, 85, 88, 93)):  # a chime as each project settles
+for d, m in zip(C["drops"], (81, 85, 88, 93)):  # a chime as each project settles, one for each line of the letter
     bell(d + 0.62, m, gain=0.08, length=4)
 ostinato(57.0, C["network"] - 0.5, vel=0.26)
 lead(C["letter"][1], [(0, 78, 2), (2, 76, 2), (4, 74, 4), (8, 76, 2), (10, 74, 2), (12, 73, 4)], gain=0.035)
@@ -371,7 +372,7 @@ PENT = [86, 88, 90, 93, 95, 98, 100]
 while t < c1:  # faster and faster, then slowing, as the faces turn
     u = (t - c0) / (c1 - c0)
     bell(t, PENT[int(rng.integers(len(PENT)))], gain=0.022, length=1.6, p=float(rng.uniform(-0.8, 0.8)))
-    t += 1 / (5 + 24 * np.sin(np.pi * u))
+    t += 1 / (3 + 9 * np.sin(np.pi * u))
 for j, m in enumerate((74, 76, 78, 79, 81, 83, 86)):
     bell(C["settle"][0] + j * 0.14, m, gain=0.07, length=4, p=-0.6 + j * 0.2)
 piano(C["settle"][0] + 7 * 0.14, 62, vel=0.3, length=6, send=0.6)

@@ -15,7 +15,7 @@
 //   I    0–15    Millions of ideas, as stars, met in flight
 //   II   15–27   The organization you have to build: a sphere of its work
 //   III  27–52   One light: the cosmos gathers; who brings what; it exists
-//   IV   52–65   Into the blue planet: the bowl, and the founder's letter
+//   IV   52–65   The bowl, a project for each line of the founder's letter
 //   V    65–78   The next great expansion: a network of institutions
 //   VI   78–88   The wordmark, through many faces to its own
 import * as THREE from "three";
@@ -514,8 +514,11 @@ const picturesReady = Promise.all(projects.map((p) => new Promise((res) => {
 })));
 const easeOutBack = (x) => { const c = 1.4; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
 function poseBowl(t) {
-  const [, enter] = CUES.dive;
-  bowlRing.scale.setScalar(lerp(3.2, 1, easeInOut(seg(t, enter + 0.2, enter + 2.2))));
+  // It arrives as on its own page: the planet swells into place and its ring
+  // closes in around it
+  const enter = CUES.toBowl[1];
+  vessel.scale.setScalar(Math.max(0.0001, easeOutBack(seg(t, enter + 0.15, enter + 1.25))));
+  bowlRing.scale.setScalar(lerp(3.2, 1, easeInOut(seg(t, enter + 0.2, enter + 2.1))));
   const o = seg(t, CUES.lid, CUES.lid + 1.6), lift = easeInOut(o);
   lidPivot.position.y = BR + lift * 1.1;
   lidPivot.rotation.x = -0.35 * lift;
@@ -551,13 +554,13 @@ const BOWL_LOOK = new THREE.Vector3(0, 1.55, 0);
 const BOWL_DIR = new THREE.Vector3(0, 4.85, 7.6).normalize();
 const BOWL_DIST = Math.max(10.6, 3.1 / (Math.tan((16 * Math.PI) / 180) * (W / H)));
 function bowlCam(t) {
-  const [, enter] = CUES.dive;
-  // From inside the planet's glaze, back out to the bowl's view
-  const k = expoOut(seg(t, enter, enter + 2.4));
+  const enter = CUES.toBowl[1];
+  // A slow settle onto the bowl's view, then a slow drift in
+  const k = expoOut(seg(t, enter, enter + 3));
   camera.fov = 32;
   camera.clearViewOffset();
   camera.up.set(0, 1, 0);
-  const dist = lerp(2.75, BOWL_DIST, k) * (1 - 0.04 * seg(t, enter + 2.4, CUES.network));
+  const dist = lerp(BOWL_DIST * 1.1, BOWL_DIST, k) * (1 - 0.05 * seg(t, enter + 3, CUES.network));
   camera.position.copy(BOWL_LOOK).addScaledVector(BOWL_DIR, dist);
   camera.position.x += Math.sin((t - enter) * 0.35) * 0.3 * k;
   camera.lookAt(BOWL_LOOK);
@@ -618,36 +621,16 @@ const _origin = new THREE.Vector3();
 // held at the centre while its words are set above and below it and its
 // spheres are named
 const G = {
-  az:   track([[27.75, 0], [33, 28], [35.6, 12], [38.6, -4], [CUES.dive[0], -12]]),
-  el:   track([[27.75, 89.9], [33, 89.9], [35.6, 46], [38.6, 12], [CUES.dive[0], 10.5]]),
-  dist: track([[27.75, 24], [33, 24], [35.6, 19.5], [38.6, 18.8], [42.6, 18.8], [44, 17.8], [CUES.dive[0], 17.4]]),
+  az:   track([[27.75, 0], [33, 28], [35.6, 12], [38.6, -4], [CUES.toBowl[1], -12]]),
+  el:   track([[27.75, 89.9], [33, 89.9], [35.6, 46], [38.6, 12], [CUES.toBowl[1], 10.5]]),
+  dist: track([[27.75, 24], [33, 24], [35.6, 19.5], [38.6, 18.8], [41, 18.8], [44, 17.8], [CUES.toBowl[1], 17.2]]),
   roll: track([[27.75, 0], [33, 0], [35.2, -5], [38.6, 0]]),
 };
-// ...then into the blue planet, which fills the picture as the bowl
-const _p = new THREE.Vector3(), _toCam = new THREE.Vector3(), _look = new THREE.Vector3(), _out = new THREE.Vector3();
 function genesisCam(t) {
   // The reel stands back while the spheres are named, to leave their callouts
   // room above and below
   const back = REEL ? 1 + 0.22 * smooth(...CUES.glide, t) * (1 - smooth(...CUES.release, t)) : 1;
   orbitCam({ az: G.az(t), el: G.el(t), dist: G.dist(t) * back, roll: G.roll(t) });
-  const [d0, d1] = CUES.dive;
-  if (t <= d0) return;
-  const k = seg(t, d0, d1);
-  orbitOf("castles").planet.getWorldPosition(_p);
-  // The camera swings round the planet to its outer side, away from the
-  // star, while closing in, so its path never passes through the star
-  _toCam.copy(camera.position).sub(_p);
-  const far = _toCam.length();
-  _toCam.normalize();
-  _out.copy(_p).normalize().addScaledVector(_toCam, 0.7).normalize();
-  _toCam.lerp(_out, smooth(0, 0.6, k)).normalize();
-  const reach = Math.pow(k, 2.2);
-  camera.position.copy(_p).addScaledVector(_toCam, lerp(far, 0.55, reach));
-  _look.copy(_origin).lerp(_p, smooth(0, 0.55, k));
-  camera.lookAt(_look);
-  camera.fov = fovFor(lerp(42, 36, reach));
-  camera.updateProjectionMatrix();
-  camera.updateMatrixWorld();
 }
 
 // ── The cosmos's state through the film ──────────────────────────────────────
@@ -659,17 +642,26 @@ const EXP = (t) => (t < CUES.rise ? 1 : 1 - easeInOut(seg(t, CUES.rise, CUES.blo
 const NIGHT = (t) => 1 - cubicInOut(seg(t, 32.95, 33.12));
 // While the spheres are named, each glides along its ring into a quadrant of
 // its own (planned in quadrantPlan, below), so no callout's leader crosses
-// the cosmos; then they go on their way
+// the cosmos; they hold there, drifting, until the cosmos has faded
 const glideTo = new Map(); // orbit -> the angle it holds
-const wrapPi = (a) => Math.atan2(Math.sin(a), Math.cos(a));
+// Each held angle is taken in the turn of the ring nearest to where its sphere
+// would be midway through gliding in (and midway through letting go), so the
+// sphere eases there along the shorter way and never jumps a turn
+const nearestTurn = (angle, near) => angle + 2 * Math.PI * Math.round((near - angle) / (2 * Math.PI));
 function poseCosmos(t, t2d, exp, glide = true) {
   const eased = easeInOut(t2d), pe = easeInOut(exp), clock = orbitClock(t);
-  const w = glide ? smooth(...CUES.glide, t) * (1 - smooth(...CUES.release, t)) : 0;
+  const letGo = t > (CUES.glide[1] + CUES.release[0]) / 2;
+  const w = glide ? (letGo ? 1 - smooth(...CUES.release, t) : smooth(...CUES.glide, t)) : 0;
+  const settled = orbitClock((CUES.glide[0] + CUES.glide[1]) / 2);
+  const ref = letGo ? orbitClock((CUES.release[0] + CUES.release[1]) / 2) : settled;
   for (const o of orbits) {
     const [rx, ry, rz] = o.def.tilt;
     const free = o.def.phase + o.def.speed * clock;
     const held = glideTo.get(o);
-    o.rotator.rotation.z = held === undefined ? free : free + wrapPi(held - free) * w;
+    // Held, a sphere still drifts on at a tenth of its pace, so nothing stops dead
+    const hold = held === undefined ? free
+      : nearestTurn(held, o.def.phase + o.def.speed * ref) + 0.1 * o.def.speed * (clock - settled);
+    o.rotator.rotation.z = lerp(free, hold, w);
     o.planet.rotation.y = 0.08 * t;
     o.pivot.rotation.set(lerp(rx, Math.PI / 2, eased), lerp(ry, 0, eased), lerp(rz, 0, eased));
     const s = lerp(1, o.def.radius2D / o.def.radius, eased) * (1 + pe * 10);
@@ -773,7 +765,6 @@ function letter() {
     ...rows(b, "ink xs r", 1810, 140, ["Institutions can simply be", "one person with a vision", "to do something beautiful", "and something authentic."], "w"),
     ...rows(c, "ink xs l", 114, 760, ["Changing the world", "starts with helping", "your neighbor."], "w"),
     ...rows(d, "ink xs r", 1810, 714, ["All you need is", "an appetite for good,", "a vision, and the", "willingness to bring", "it to life."], "w"),
-    { t: [CUES.signature, out], cls: "mono", w: [CX, 1000, "from the founder’s letter"] },
     // The reel
     { t: [a, out], cls: "ink lg", r: [CX, 236, "Institutions"] },
     { t: [a + 0.3, out], cls: "ink sm it", r: [CX, 344, "change the world."] },
@@ -838,9 +829,14 @@ const flyIdeas = CUES.ideas.map((at, i) => {
     ? (x, y) => !(y > 680 && y < 1120) && y > 260 && y < 1640 && x > 70 && x < W - 70
     : (x, y) => !(x > 420 && x < 1500 && y > 380 && y < 700) && y > 190 && y < 890 && x > 90 && x < W - 90;
   let x, y;
-  do { x = r() * W; y = r() * H; } while (!clear(x, y));
+  // Left and right in turn, so both halves of the frame hold as many
+  const right = i % 2 === 1;
+  do { x = (right ? 0.5 + 0.5 * r() : 0.5 * r()) * W; y = r() * H; } while (!clear(x, y));
+  // A name reads away from the middle, so its words stay in its own half,
+  // unless that would run it off the frame's edge
   const el = ideaEl(IDEAS[i], $("ideas"));
-  if (x > W * (REEL ? 0.5 : 0.58)) el.classList.add("flip");
+  const LABEL = 320;
+  if (right ? x > W - LABEL - 20 : x > W / 2 - LABEL / 2) el.classList.add("flip");
   const depth = 15 + r() * 9;
   flyCam(at + 0.6, false);
   camera.getWorldDirection(fwd);
@@ -898,6 +894,7 @@ function quadrantPlan() {
   genesisCam(tRef);
   const half = Math.min(W, H) / 2;
   const best = orbits.map((o) => {
+    const from = o.def.phase + o.def.speed * orbitClock((CUES.glide[0] + CUES.glide[1]) / 2);
     const out = QUADS.map(() => ({ score: -Infinity, angle: 0 }));
     for (let k = 0; k < 240; k++) {
       const angle = (k / 240) * Math.PI * 2;
@@ -908,8 +905,10 @@ function quadrantPlan() {
       const sx = (p.x - W / 2) / half, sy = (p.y - H / 2) / half;
       // Clear of the star, and of the frame's edges
       if (Math.hypot(sx, sy) < 0.34 || p.x < 110 || p.x > W - 110 || p.y < 110 || p.y > H - 110) continue;
+      // ...and as little travel as will do
+      const travel = Math.abs(Math.atan2(Math.sin(angle - from), Math.cos(angle - from)));
       QUADS.forEach(([qx, qy], q) => {
-        const score = Math.min(sx * qx, sy * qy) + 0.35 * (sx * qx + sy * qy);
+        const score = Math.min(sx * qx, sy * qy) + 0.35 * (sx * qx + sy * qy) - 0.12 * travel;
         if (score > out[q].score) out[q] = { score, angle };
       });
     }
@@ -1254,7 +1253,7 @@ function drawBrand(t) {
     } else if (t < land) {
       // Faster and faster through the faces, then slowing as it nears its own
       const dur = c1 - c0, u = clamp01((t - start) / dur);
-      const step = Math.floor(5 * (t - start) + (24 * dur / Math.PI) * (1 - Math.cos(Math.PI * u)));
+      const step = Math.floor(3 * (t - start) + (9 * dur / Math.PI) * (1 - Math.cos(Math.PI * u)));
       const [fam, wt, st = "normal"] = FACES[Math.floor(hash(j * 977 + step * 31) * FACES.length)];
       const ch = hash(j * 131 + step * 7) < 0.3 ? FINAL[j].toLowerCase() : FINAL[j];
       setFace(l, `c${step}`, ch, fam, wt, st);
@@ -1296,8 +1295,8 @@ const glow = $("glow"), streak = $("streak"), black = $("black"), flash = $("fla
 function seek(t) {
   t = Math.max(0, Math.min(DURATION, t));
   const fly = t < CUES.cut;
-  const cosmosOn = !fly && t >= CUES.spark - 0.3 && t < CUES.dive[1];
-  const inBowl = t >= CUES.dive[1] && t < CUES.network;
+  const cosmosOn = !fly && t >= CUES.spark - 0.3 && t < CUES.toBowl[1];
+  const inBowl = t >= CUES.toBowl[1] && t < CUES.network;
   const netOn = t >= CUES.network && t < CUES.gather[1] + 0.05;
   let nightness = 0;
 
@@ -1313,7 +1312,6 @@ function seek(t) {
     deepMat.uniforms.uOpacity.value = seg(t, 0.2, 3.2) * (1 - 0.5 * seg(t, 17, CUES.cut));
     drawSphere(t);
   } else if (cosmosOn) {
-    // Posed first: the dive steers by where the blue planet is now
     poseCosmos(t, T2D(t), EXP(t));
     swell(t);
     cosmos.updateMatrixWorld(true);
@@ -1335,9 +1333,10 @@ function seek(t) {
   css(black, "opacity", blackout.toFixed(3));
   css(scrim, "opacity", (seg(t, 17.6, 18.2) * (t < CUES.cut ? 1 : 0)).toFixed(3));
 
-  // From the bowl to the network, through paper
-  const N0 = CUES.network;
-  const v = t >= N0 - 0.6 && t < N0 + 0.5 ? Math.min(seg(t, N0 - 0.6, N0), 1 - seg(t, N0, N0 + 0.5)) : 0;
+  // From the cosmos to the bowl, and the bowl to the network, through paper
+  const N0 = CUES.network, [b0, b1, b2] = CUES.toBowl;
+  const v = t >= N0 - 0.6 && t < N0 + 0.5 ? Math.min(seg(t, N0 - 0.6, N0), 1 - seg(t, N0, N0 + 0.5))
+    : t >= b0 && t < b2 ? Math.min(seg(t, b0, b1), 1 - seg(t, b1, b2)) : 0;
   css(veil, "opacity", v.toFixed(3));
 
   show($("ideas"), fly || netOn);
