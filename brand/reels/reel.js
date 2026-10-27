@@ -166,14 +166,18 @@ function heroTargets() {
 }
 
 // ── The collage: paper, picture, ink ─────────────────────────────────────────
-const board = $("collage"), ctx = board.getContext("2d");
+// The collage is drawn on the CPU: its scraps are baked once, and blurring and
+// compositing them there is far quicker than on an emulated GPU
+const CPU = { willReadFrequently: true };
+const board = $("collage"), ctx = board.getContext("2d", CPU);
 board.width = W; board.height = H;
 const offA = new OffscreenCanvas(W, H), offB = new OffscreenCanvas(W, H);
+const offCtx = [offA.getContext("2d", { willReadFrequently: true }), offB.getContext("2d", { willReadFrequently: true })];
 const mk = (w, h) => { const c = document.createElement("canvas"); c.width = Math.ceil(w); c.height = Math.ceil(h); return c; };
 
 // Paper's grain: a tile of fibres and specks, multiplied into every scrap
 const GRAIN = (() => {
-  const c = mk(256, 256), g = c.getContext("2d"), r = rng(5), img = g.createImageData(256, 256);
+  const c = mk(256, 256), g = c.getContext("2d", CPU), r = rng(5), img = g.createImageData(256, 256);
   for (let i = 0; i < img.data.length; i += 4) {
     const v = 236 + (r() + r() - 1) * 26;
     img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 255;
@@ -257,10 +261,10 @@ function circlePts(rad, seed) {
 // A sprite: the scrap itself, and its shadow, a blurred silhouette (ink and
 // handwriting, on the board itself, cast none; tape a faint one)
 function sprite(w, h, m, paint, silhouette, shadow = 1) {
-  const cv = mk(w + 2 * m, h + 2 * m), g = cv.getContext("2d");
+  const cv = mk(w + 2 * m, h + 2 * m), g = cv.getContext("2d", CPU);
   paint(g, m);
   if (!shadow) return { cv, sh: null, ax: w / 2 + m, ay: h / 2 + m, w, h };
-  const sh = mk(w + 2 * m + 60, h + 2 * m + 60), s = sh.getContext("2d");
+  const sh = mk(w + 2 * m + 60, h + 2 * m + 60), s = sh.getContext("2d", CPU);
   s.filter = "blur(7px)";
   s.fillStyle = "#1a1007";
   s.translate(30, 30);
@@ -421,7 +425,7 @@ function bake(p) {
   }
   if (p.kind === "label") {
     const font = `${p.italic ? "italic " : ""}${p.weight || 400} ${p.size}px "${p.font}"`;
-    const c = mk(10, 10).getContext("2d");
+    const c = mk(10, 10).getContext("2d", CPU);
     c.font = font;
     const tw = c.measureText(p.text).width, padX = p.padX ?? p.size * 0.5;
     const w = tw + padX * 2, h = p.size * (p.tall || 1.5);
@@ -441,7 +445,7 @@ function bake(p) {
   }
   if (p.kind === "hand") {
     const font = `${p.weight || 600} ${p.size}px "Caveat"`;
-    const c = mk(10, 10).getContext("2d");
+    const c = mk(10, 10).getContext("2d", CPU);
     c.font = font;
     const w = c.measureText(p.text).width + 20, h = p.size * 1.4;
     return sprite(w, h, 4, (g, m) => {
@@ -451,7 +455,7 @@ function bake(p) {
   }
   if (p.kind === "stamp") {
     const font = `400 ${p.size}px "Special Elite"`;
-    const c = mk(10, 10).getContext("2d");
+    const c = mk(10, 10).getContext("2d", CPU);
     c.font = font;
     const lines = p.text.split("\n");
     const tw = Math.max(...lines.map((l) => c.measureText(l).width));
@@ -502,7 +506,7 @@ function bake(p) {
     // Each letter on its own scrap, in its own face
     const chars = [...p.text], parts = [];
     let x = 0;
-    const c = mk(10, 10).getContext("2d");
+    const c = mk(10, 10).getContext("2d", CPU);
     chars.forEach((ch, i) => {
       if (ch === " ") { x += p.size * 0.35; return; }
       const [fam, wt] = p.faces ? p.faces[i % p.faces.length] : CUT_FACES[Math.floor(r() * CUT_FACES.length)];
@@ -532,7 +536,7 @@ function mixHex(a, b, k) {
 
 // ── Scenes: the past, and the present beneath it ────────────────────────────
 function boardTile(color, seed) {
-  const c = mk(512, 512), g = c.getContext("2d"), r = rng(seed);
+  const c = mk(512, 512), g = c.getContext("2d", CPU), r = rng(seed);
   g.fillStyle = color; g.fillRect(0, 0, 512, 512);
   g.globalCompositeOperation = "multiply";
   g.globalAlpha = 0.5;
@@ -545,7 +549,24 @@ function boardTile(color, seed) {
   }
   return c;
 }
+// The board between the stations is never bare: scraps already pasted down,
+// toward the edges and a little behind, so the camera crosses texture
+const BED = ["#c9a77a", "#efe3c8", "#b9a48a", "#9aa7b8", "#d8c7a4", "#a98c6c"];
+function bed(def, seed) {
+  const r = rng(seed), out = [];
+  const ys = def.camera.map((k) => k[2]), y0 = Math.min(...ys) - 900, y1 = Math.max(...ys) + 900;
+  for (let y = y0, i = 0; y < y1; y += 210 + r() * 120, i++) {
+    const side = i % 2 ? 1 : -1, color = BED[Math.floor(r() * BED.length)];
+    out.push({ kind: "paper", x: side * (420 + r() * 230), y, w: 240 + r() * 260, h: 180 + r() * 360, rot: (r() - 0.5) * 24,
+      color, edges: r() < 0.5 ? "tttt" : "tctc", enter: "none", at: 0, d: 0.9, seed: 9000 + i, z: -100 + i * 0.01,
+      lines: r() < 0.25 ? "rgba(79,96,124,0.28)" : undefined, dots: r() < 0.25 ? "rgba(27,22,19,0.1)" : undefined });
+    if (r() < 0.35) out.push({ kind: "tape", x: side * (420 + r() * 200), y: y - 120, w: 130 + r() * 60, h: 46, rot: (r() - 0.5) * 70,
+      enter: "none", at: 0, d: 0.9, seed: 9500 + i, z: -99 + i * 0.01 });
+  }
+  return out;
+}
 function makeScene(def, name) {
+  if (name === "past") def = { ...def, pieces: [...bed(def, 77), ...def.pieces] };
   const keys = def.camera;
   const cam = ["x", "y", "z", "r"].map((_, j) => track(keys.map((k) => [k[0], k[j + 1]])));
   // Words, stamps and tape lie on top of the pictures they mark
@@ -614,6 +635,9 @@ function preroll(p) {
 // Draw a sprite at (x, y) on the frame, turned and scaled, with its shadow
 function put(g, sp, x, y, rot, sx, sy, lift, a, reveal = 1) {
   if (a <= 0.002) return;
+  // Off the frame, it is not drawn at all
+  const R = Math.hypot(sp.cv.width, sp.cv.height) * 0.5 * Math.max(Math.abs(sx), Math.abs(sy)) + 70;
+  if (x + R < 0 || x - R > W || y + R < 0 || y - R > H) return;
   g.save();
   g.translate(x, y);
   g.rotate((rot * Math.PI) / 180);
@@ -876,7 +900,7 @@ const markLetters = [...FINAL].map((ch, j) => {
   return { el, j, key: "" };
 });
 function sizeCells() {
-  const c = mk(10, 10).getContext("2d");
+  const c = mk(10, 10).getContext("2d", CPU);
   c.font = `400 ${MARK_PX}px Lora`;
   for (const l of markLetters) l.el.style.width = (c.measureText(FINAL[l.j]).width + MARK_PX * 0.3).toFixed(1) + "px";
   mark.style.top = (H * MARK_Y - MARK_PX * 0.5).toFixed(0) + "px";
@@ -941,7 +965,7 @@ function drawBrand(t) {
 }
 
 // ── The lens: grain and vignette ─────────────────────────────────────────────
-const grain = $("grain"), gctx = grain.getContext("2d");
+const grain = $("grain"), gctx = grain.getContext("2d", CPU);
 grain.width = W / 2; grain.height = H / 2;
 const grainFrames = (() => {
   const r = rng(99), out = [];
@@ -975,7 +999,7 @@ function seek(t) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     if (t < TEAR) drawScene(ctx, PAST, t);
     else if (t < TEAR + TEAR_DUR) {
-      const a = offA.getContext("2d"), b = offB.getContext("2d");
+      const [a, b] = offCtx;
       drawScene(a, PAST, t);
       drawScene(b, NOW, t);
       ctx.clearRect(0, 0, W, H);
