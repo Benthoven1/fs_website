@@ -1,10 +1,9 @@
 # Brand images
 
-Mulvium's launch film and polymath reels, and images of Mulvium's central
-sphere and the landing page's hero, for profile icons, posts and banners.
-They are rendered from the site itself, not drawn: the sphere with the
-landing page's own material, lights and camera angle (`js/main.js`), and the
-hero captured from the live page after its entrance.
+Mulvium's launch film, and images of Mulvium's central sphere and the landing page's hero, for profile
+icons, posts and banners. They are rendered from the site itself, not drawn:
+the sphere with the landing page's own material, lights and camera angle
+(`js/main.js`), and the hero captured from the live page after its entrance.
 
 **The sphere**
 
@@ -99,56 +98,3 @@ Each render takes about half an hour with three parts on a machine without a
 GPU. A picture replaced in the site's root (`Musical.webp` and the others), or
 a word changed in MulviumSOS's vocabulary, appears in the film the next time
 it is rendered.
-
-## The Polymath Founder
-
-Four reels for phones (1080 × 1920, a minute each at 30 fps, each with a score
-of its own), on the founders Mulvium is for: polymaths who built institutions
-across public life, and what fiscal sponsorship could do for each of them
-today.
-
-| No. | File | Built | Score |
-|---|---|---|---|
-| 1 | `mulvium-polymath-01-franklin-1080x1920.mp4` | A subscription library (1731), a fire company (1736), a hospital on a matching grant (1751), the academy that became Penn | A harpsichord in D |
-| 2 | `mulvium-polymath-02-addams-1080x1920.mp4` | Hull House (1889): a kindergarten, classes, a gallery, a music school; research behind Illinois's factory laws; the Nobel Peace Prize (1931) | A parlour waltz in F |
-| 3 | `mulvium-polymath-03-nightingale-1080x1920.mp4` | Scutari (1854); the rose diagram (1858); the Nightingale Fund and the Nightingale Training School (1860) | A music box and a hymn, E minor to major |
-| 4 | `mulvium-polymath-04-schweitzer-1080x1920.mp4` | Medicine at thirty; Lambaréné (1913), paid for with organ recitals; the Nobel Peace Prize (1952) | An organ chorale in D minor |
-
-Each is a collage: archival pictures (public domain or CC0, from Wikimedia
-Commons; `reels/CREDITS.md`) torn and taped to a board with cut paper, stamps,
-handwriting and pencil, the dates cut letter by letter from many faces. A
-camera crosses the board through four dated beats; at thirty seconds the past
-is torn in two to show the present beneath, where the founder's four programs,
-as four circles, gather on one fiscal sponsorship agreement and its work is
-stamped. Then the scraps fly: the circles become the landing page's planets
-and the founder's portrait its star, the hero's words ask "Who starts a
-single-person institution? A polymath.", and the wordmark turns through its
-faces, each cut on its own scrap, to its own, above "Join the waitlist".
-
-`reels/` holds their source:
-
-- `index.html`, `reels.css`, `reel.js` — the reels as a page (`?p=franklin`,
-  `addams`, `nightingale`, `schweitzer`); as with the film, `reel.seek(t)`
-  draws any frame, and opened over HTTP it plays itself with its score.
-- `kit.js` and `stories/` — each reel's script, every scrap and caption with
-  its place and moment, as data.
-- `score.py` — the four scores (`python3 brand/reels/score.py franklin`
-  writes `score-franklin.wav`), with the collage's own sounds read from the
-  story (`dump.mjs`): each scrap set down, each stamp, tape, pencil and the
-  tear. `score-*.m4a` are the AAC encodings the page plays.
-- `prep.py`, `assets.json` — fetch each picture from Commons, crop it and
-  print it (sepia, halftone, duotone or aged colour) into `assets/`, and write
-  `CREDITS.md`.
-
-To make them again, from the repository root:
-
-```
-python3 -m http.server 8765 &
-python3 brand/reels/prep.py      # only if assets/ is missing a picture
-python3 brand/reels/score.py franklin
-ffmpeg -i brand/reels/score-franklin.wav -c:a aac -b:a 192k brand/reels/score-franklin.m4a
-node brand/film/render.js brand/mulvium-polymath-01-franklin-1080x1920.mp4 4 --page=brand/reels/index.html?p=franklin --score=brand/reels/score-franklin.wav
-ffmpeg -ss 3.6 -i brand/mulvium-polymath-01-franklin-1080x1920.mp4 -frames:v 1 -vf scale=720:-1 brand/thumbs/mulvium-polymath-01-franklin-1080x1920.jpg
-```
-
-and likewise for the other three.
