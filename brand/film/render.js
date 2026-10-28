@@ -11,8 +11,8 @@
 //
 // Any other page that keeps the same promise (window.film or window.essay,
 // with seek, ready, duration, fps, width and height) renders the same way,
-// e.g. the Franklin essay:
-//   node brand/film/render.js brand/franklin.mp4 4 --page=brand/franklin/index.html --score=brand/franklin/soundtrack.wav
+// e.g. the film itself without its words (the close the Franklin essay uses):
+//   node brand/film/render.js plate.mp4 1 64.6 86 "--page=brand/film/index.html?clean&format=reel"
 const { chromium } = require("playwright");
 const { spawn } = require("child_process");
 const fs = require("fs");

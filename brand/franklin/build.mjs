@@ -65,6 +65,9 @@ class Scene {
   sound(name, t, vol = 0.5) { this.sfx.push({ name, t: r3(t), vol }); return this; }
   // A type "kiss": the words are pressed onto the paper, not faded
   press(sel, t, { stagger = 0.1, dur = 0.14 } = {}) {
+    // pressing a container's words shows the container too
+    const parent = sel.split(",").map((x) => x.trim()).filter((x) => / \.w$/.test(x)).map((x) => x.replace(/ \.w$/, ""));
+    if (parent.length) this.set(parent.join(", "), { opacity: 1 }, t);
     return this.fromTo(sel, { opacity: 0, scale: 1.035, filter: "blur(3px)" },
       { opacity: 1, scale: 1, filter: "blur(0px)", duration: dur, ease: "power4.out", stagger }, t);
   }
@@ -73,7 +76,7 @@ class Scene {
     return this.fromTo(sel, { strokeDashoffset: 110 }, { strokeDashoffset: 0, duration: dur, ease: "power2.inOut" }, t);
   }
   // A loose sheet laid onto the table
-  lay(sel, t, { x = 0, y = 1500, rot = 4, end = 0, dur = 0.85 } = {}) {
+  lay(sel, t, { x = 0, y = 2000, rot = 4, end = 0, dur = 0.85 } = {}) {
     return this.fromTo(sel, { x, y, rotation: rot }, { x: 0, y: 0, rotation: end, duration: dur, ease: "expo.out" }, t);
   }
   out(sel, t, dur = 0.2) {
@@ -186,6 +189,7 @@ function scrawl(w) {
 }
 
 const scenes = [];
+let HALL_END; // where the library scene leaves its camera, for the fire to burn
 const SECTION = (id) => T.lines.filter((l) => l.id.startsWith(id));
 const start = (id) => SECTION(id)[0].t0;
 
@@ -215,7 +219,7 @@ const start = (id) => SECTION(id)[0].t0;
   sheet += `</div>`;
   s.add(sheet).add(`<div id="sig" class="abs" style="left:300px;top:1000px;width:620px;height:250px;clip-path:inset(0 100% 0 0)"><img src="assets/img/signature.png" alt="" style="width:100%;height:100%;object-fit:contain"></div>`);
   s.style(`#sheet { transform-origin: 50% 0; }`);
-  s.lay("#sheet", at("hook1", "had") - 0.3, { y: 1500, rot: -5, end: -0.8 });
+  s.lay("#sheet", at("hook1", "had") - 0.3, { y: 2000, rot: -5, end: -0.8 });
   s.sound("whoosh-short", at("hook1", "had") - 0.28, 0.25);
   s.press("#it0, #it1, #it2, #it3", at("hook1", "had") - 0.1, { stagger: 0.07 });
   [["hook1", "library"], ["hook2", "company"], ["hook2", "hospital"], ["hook2", "college"]].forEach(([id, w], i) =>
@@ -266,22 +270,22 @@ const start = (id) => SECTION(id)[0].t0;
   // His own signature on both: the Declaration, then the Constitution
   // (the engrossed Declaration is too faded to point at one name: the camera
   // reads its heading; on the Constitution it finds "B Franklin")
-  const docs = [["declaration", "signed", 0.5, 0.052, 2.2, null], ["constitution4", "constitution", 0.88, 0.853, 3.2, [250, 92]]];
-  docs.forEach(([img, w, fx, fy, z, rr], i) => {
-    const t = at("who2", w) - 0.25, sz = SIZES[img], sw = 980 / sz.w;
+  const docs = [["declaration", ["signed", 1], 0.5, 0.052, 2.2, null], ["constitution4", ["and", 2], 0.88, 0.853, 3.2, [250, 92]]];
+  docs.forEach(([img, [w, nth], fx, fy, z, rr], i) => {
+    const t = at("who2", w, nth) - 0.2, sz = SIZES[img], sw = 980 / sz.w;
     s.add(`<div id="d${i}" class="full" style="opacity:0;background:${C.paper} url(assets/paper.jpg) center/cover"><div id="dc${i}" class="abs" style="left:0;top:0;width:${W}px;height:${H}px;transform-origin:0 0">
       <div class="sheet" style="left:0;top:0;width:${r3(sz.w * sw)}px;height:${r3(sz.h * sw)}px;background:none"><img src="assets/img/${img}.jpg" alt="" style="width:100%;height:100%;display:block"></div></div>
       ${rr ? ring(`ring${i}`, 540, 700, rr[0], rr[1]) : ""}</div>`);
     // the sheet lands, then the camera finds what it is looking for
     const land = { x: 50, y: 300, scale: 1 }, near = { x: 540 - fx * sz.w * sw * z, y: 700 - fy * sz.h * sw * z, scale: z };
     s.set(`#d${i}`, { opacity: 1 }, t);
-    s.fromTo(`#dc${i}`, { x: 50 + (i ? 1200 : 0), y: i ? 300 : 1900, scale: 1, rotation: i ? 6 : -4 }, { ...land, rotation: 0, duration: 0.6, ease: "expo.out" }, t);
-    s.to(`#dc${i}`, { ...near, duration: 0.95, ease: "power2.inOut" }, t + 0.6);
-    if (rr) s.pen(`#ring${i} path`, t + 1.5, 0.45);
+    s.fromTo(`#dc${i}`, { x: 50 + (i ? 1200 : 0), y: i ? 300 : 1900, scale: 1, rotation: i ? 6 : -4 }, { ...land, rotation: 0, duration: 0.45, ease: "expo.out" }, t);
+    s.to(`#dc${i}`, { ...near, duration: 0.7, ease: "power2.inOut" }, t + 0.45);
+    if (rr) s.pen(`#ring${i} path`, t + 1.1, 0.4);
     s.sound("whoosh-short", t, 0.18);
   });
   // A polymath, pointed at the public good
-  const tP = at("who3") - 0.15;
+  const tP = at("who3") - 0.02;
   s.add(`<div id="poly" class="full" style="opacity:0;background:${C.paper} url(assets/paper.jpg) center/cover">
       <div id="pm" class="fell ink abs" style="left:84px;top:330px;font-size:150px">${words("A polymath,")}</div>
       ${stroke("arrow", 150, 520, 520, 330, "M20,10 C40,170 180,280 470,300 M440,270 L475,300 L436,322", C.red, 8)}
@@ -314,18 +318,18 @@ const start = (id) => SECTION(id)[0].t0;
   // The subscription list: fifty names, written in as the voice counts them
   const tS = at("lib2", "then") - 0.15;
   s.out("#books", tS - 0.05, 0.15);
-  let list = `<div id="list" class="sheet" style="left:60px;top:210px;width:960px;height:960px;${deckle(960, 960)}">
+  let list = `<div id="list" class="sheet" style="left:60px;top:190px;width:960px;height:880px;${deckle(960, 880)}">
     <div class="sc ink abs" style="left:0;top:34px;width:960px;text-align:center;font-size:40px;letter-spacing:0.14em">The Subscribers</div>
     <div id="l1731" class="fell red abs" style="left:0;top:80px;width:960px;text-align:center;font-size:64px">1731</div>`;
   for (let i = 0; i < 50; i++) {
     const col = i % 2, row = Math.floor(i / 2), w = 250 + rnd() * 130;
-    list += `<div class="abs caslon" style="left:${70 + col * 450}px;top:${178 + row * 29.5}px;font-size:22px;width:36px;text-align:right;color:#5a5048">${i + 1}.</div>`;
-    list += stroke(`n${i}`, 116 + col * 450, 168 + row * 29.5, w, 26, scrawl(w), "#2a241f", 2.2);
+    list += `<div class="abs caslon" style="left:${70 + col * 450}px;top:${178 + row * 27}px;font-size:21px;width:36px;text-align:right;color:#5a5048">${i + 1}.</div>`;
+    list += stroke(`n${i}`, 116 + col * 450, 168 + row * 27, w, 26, scrawl(w), "#2a241f", 2.2);
   }
   list += `</div>`;
-  s.add(list).add(`<div id="count" class="fell ink abs" style="left:640px;top:1000px;width:360px;text-align:right;font-size:120px;opacity:0">50</div>`)
-    .add(`<div id="fee" class="sc ink abs" style="left:84px;top:1030px;font-size:72px;opacity:0">40s. each</div>`);
-  s.lay("#list", tS, { y: 1500, rot: 3, end: 0.6 }).sound("whoosh-short", tS, 0.2);
+  s.add(list).add(`<div id="count" class="fell ink abs" style="left:640px;top:1066px;width:360px;text-align:right;font-size:96px;opacity:0">50</div>`)
+    .add(`<div id="fee" class="sc ink abs" style="left:84px;top:1090px;font-size:64px;opacity:0">40s. each</div>`);
+  s.lay("#list", tS, { y: 2000, rot: 3, end: 0.6 }).sound("whoosh-short", tS, 0.2);
   s.press("#l1731", at("lib2", "1731"));
   const n0 = at("lib2", "fifty") - 0.1, n1 = at("lib2", "pay");
   s.pen("#list svg[id] path", n0, 0.16).tl.pop();
@@ -338,17 +342,17 @@ const start = (id) => SECTION(id)[0].t0;
       <div class="sheet" style="left:40px;top:330px;width:1000px;height:${r3(lz.h * lw)}px;background:none"><img src="assets/img/${lh}.jpg" alt="" style="width:100%;height:100%;display:block"></div></div></div>`)
     .add(`<div id="lc" class="sc ink abs" style="left:0;top:180px;width:${W}px;text-align:center;font-size:54px;letter-spacing:0.08em;line-height:1.2;opacity:0">The Library Company<br>of Philadelphia</div>`);
   s.set("#hall", { opacity: 1 }, tL).set("#list, #count, #fee", { opacity: 0 }, tL + 0.02);
-  // the camera walks up Fifth Street to the statue in its niche
-  const lk = 1.55, lfx = 0.345, lfy = 0.40;
-  s.fromTo("#hc", { x: 0, y: 0, scale: 1 }, { x: 540 - (40 + lfx * 1000) * lk, y: 760 - (330 + lfy * lz.h * lw) * lk, scale: lk, duration: at("lib3", "still") - tL + 0.1, ease: "power2.inOut" }, tL + 0.3);
+  // the camera walks up Fifth Street to the statue in its niche, and is
+  // still walking when the page catches fire
+  const lk = 2.1, lfx = 0.345, lfy = 0.40, hEnd = start("fire") - 0.1;
+  HALL_END = { x: 540 - (40 + lfx * 1000) * lk, y: 560 - (330 + lfy * lz.h * lw) * lk, scale: lk, w: 1000, h: lz.h * lw };
+  s.fromTo("#hc", { x: 0, y: 0, scale: 1 }, { x: HALL_END.x, y: HALL_END.y, scale: lk, duration: hEnd - tL - 0.3, ease: "power1.inOut" }, tL + 0.3);
   s.set("#lc", { opacity: 1 }, tL + 0.25).press("#lc", tL + 0.25);
+  s.out("#lc", at("lib3", "still") - 0.2, 0.2);
   s.sound("whoosh-short", tL - 0.02, 0.2);
-  const tT = at("lib3", "still") - 0.1, lt = "lib-statue", ltf = fill(lt);
-  s.add(`<div id="today" class="full" style="opacity:0">${pic("tp", lt)}</div>`)
-    .add(`<div id="since" class="slip" style="top:860px;height:300px;opacity:0"><div class="sc red abs" style="left:84px;top:34px;font-size:52px;letter-spacing:0.12em">${words("Open since 1731")}</div>
+  const tT = at("lib3", "still") - 0.1;
+  s.add(`<div id="since" class="slip" style="top:860px;height:300px;opacity:0"><div class="sc red abs" style="left:84px;top:34px;font-size:52px;letter-spacing:0.12em">${words("Open since 1731")}</div>
       <div class="fell ink abs" style="left:84px;top:110px;width:920px;font-size:74px;line-height:1.08">${words("America’s oldest cultural institution.")}</div></div>`);
-  s.set("#today", { opacity: 1 }, tT).set("#hall, #lc", { opacity: 0 }, tT + 0.02);
-  s.cam("#tp", frame(lt, 0.5, 0.42, ltf * 1.12), frame(lt, 0.5, 0.36, ltf * 1.02), tT, 2.6, "expo.out");
   s.set("#since", { opacity: 1 }, tT + 0.3).press("#since .sc .w", tT + 0.3, { stagger: 0.08 });
   s.press("#since .fell .w", at("lib3", "america’s") - 0.05, { stagger: 0.09 });
   scenes.push(s);
@@ -357,24 +361,24 @@ const start = (id) => SECTION(id)[0].t0;
 // ── 4. FIRE: the page burns; an ounce of prevention; leather buckets ───────
 {
   const s = new Scene("fire", start("fire") - 0.1, start("hosp") - 0.15, 4);
-  const lt = "lib-statue", ltf = fill(lt), last = frame(lt, 0.5, 0.36, ltf * 1.02);
+  const hk = HALL_END.scale, hx = HALL_END.x + 40 * hk, hy = HALL_END.y + 330 * hk;
   // The last picture of the library, burning from its lower edge
   s.add(`<svg class="full" style="position:absolute" width="${W}" height="${H}">
       <defs><filter id="rough" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="3" seed="17"/><feDisplacementMap in="SourceGraphic" scale="150"/></filter>
-      <mask id="hole" maskUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="#fff"/><circle id="burn" cx="610" cy="1560" r="0" fill="#000" filter="url(#fire-rough)"/></mask>
-      <mask id="char" maskUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="#fff"/><circle id="burn2" cx="610" cy="1560" r="0" fill="#000" filter="url(#fire-rough)"/></mask></defs>
+      <mask id="hole" maskUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="#fff"/><circle id="burn" cx="560" cy="560" r="0" fill="#000" filter="url(#fire-rough)"/></mask>
+      <mask id="char" maskUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="#fff"/><circle id="burn2" cx="560" cy="560" r="0" fill="#000" filter="url(#fire-rough)"/></mask></defs>
       <g mask="url(#fire-char)"><rect width="${W}" height="${H}" fill="#2a170b"/></g>
-      <g mask="url(#fire-hole)"><image href="assets/img/${lt}.jpg" x="${last.x}" y="${last.y}" width="${SIZES[lt].w * last.scale}" height="${SIZES[lt].h * last.scale}" preserveAspectRatio="none"/>
-      <rect width="${W}" height="${H}" fill="rgba(237,227,203,0.94)" y="860" height="300"/></g></svg>`);
+      <g mask="url(#fire-hole)"><image href="assets/paper.jpg" width="${W}" height="${H}" preserveAspectRatio="none"/><image href="assets/img/library-hall.jpg" x="${r3(hx)}" y="${r3(hy)}" width="${r3(HALL_END.w * hk)}" height="${r3(HALL_END.h * hk)}" preserveAspectRatio="none"/>
+      <rect width="${W}" fill="rgba(237,227,203,0.94)" y="860" height="300"/></g></svg>`);
   // the slip of words over the picture, as the library scene left it
   s.add(`<div id="slipcopy" class="slip" style="top:860px;height:300px"><div class="sc red abs" style="left:84px;top:34px;font-size:52px;letter-spacing:0.12em">Open since 1731</div>
       <div class="fell ink abs" style="left:84px;top:110px;width:920px;font-size:74px;line-height:1.08">America’s oldest cultural institution.</div></div>`);
   const tF = at("fire1") - 0.05;
-  s.fromTo("#burn", { attr: { r: 0 } }, { attr: { r: 2300 }, duration: 2.4, ease: "power2.in" }, tF);
-  s.fromTo("#burn2", { attr: { r: 0 } }, { attr: { r: 2280 }, duration: 2.4, ease: "power2.in" }, tF + 0.12);
+  s.fromTo("#burn", { attr: { r: 0 } }, { attr: { r: 2300 }, duration: 2.2, ease: "power1.in" }, tF);
+  s.fromTo("#burn2", { attr: { r: 0 } }, { attr: { r: 2280 }, duration: 2.2, ease: "power1.in" }, tF + 0.12);
   s.to("#slipcopy", { opacity: 0, duration: 0.3 }, tF + 1.2);
-  s.add(`<div id="fire" class="fell red abs" style="left:84px;top:330px;font-size:230px;opacity:0">Fire.</div>`);
-  s.press("#fire", at("fire1", "fire") + 0.05, { dur: 0.16 });
+  s.add(`<div id="fire" class="fell red abs" style="left:84px;top:420px;font-size:230px;opacity:0">Fire.</div>`);
+  s.press("#fire", at("fire1", "next") - 0.05, { dur: 0.16 });
   // the proverb, as a broadside: the pound outweighs the ounce
   const tO = at("fire2") - 0.2;
   s.out("#fire", tO - 0.1, 0.18);
@@ -387,7 +391,7 @@ const start = (id) => SECTION(id)[0].t0;
       <div id="pv5" class="sc ink" style="font-size:40px;margin-top:34px;letter-spacing:0.14em;color:#5a5048">Pennsylvania Gazette, 1735</div></div>`);
   [["ounce", 0], ["prevention", 1], ["worth", 2], ["pound", 3], ["cure", 4]].forEach(([w, i]) => s.press(`#pv${i}`, at("fire2", w) - 0.08, { dur: i === 3 ? 0.16 : 0.13 }));
   s.sound("impact-bass-2", at("fire2", "pound") - 0.05, 0.2);
-  s.press("#pv5", at("fire2", "cure") + 0.3);
+  s.press("#pv5", at("fire2", "pound") + 0.2);
   // the Union Fire Company, and its buckets
   const tU = at("fire2", "he") - 0.15;
   s.to("#prov", { y: -1400, duration: 0.5, ease: "power3.in" }, tU);
@@ -409,7 +413,7 @@ const start = (id) => SECTION(id)[0].t0;
   const bz = SIZES.bond, bw = 640 / bz.w;
   s.add(`<div id="bond" class="sheet" style="left:220px;top:250px;width:640px;height:${r3(bz.h * bw)}px;background:none"><img src="assets/img/bond.jpg" alt="" style="width:100%;height:100%;display:block"></div>`)
     .add(`<div id="bn" class="sc ink abs" style="left:0;top:${290 + bz.h * bw}px;width:${W}px;text-align:center;font-size:56px;letter-spacing:0.1em;opacity:0">Dr Thomas Bond</div>`);
-  s.lay("#bond", at("hosp1") - 0.1, { y: 1600, rot: -6, end: -1.2 }).press("#bn", at("hosp1", "thomas"));
+  s.lay("#bond", at("hosp1") - 0.1, { y: 2000, rot: -6, end: -1.2 }).press("#bn", at("hosp1", "dr") + 0.05);
   s.sound("whoosh-short", at("hosp1") - 0.1, 0.2);
   const hz = SIZES.hospital, hw = 700 / hz.w, tH = at("hosp1", "hospital") - 0.15;
   s.add(`<div id="hosp" class="sheet" style="left:190px;top:230px;width:700px;height:${r3(hz.h * hw)}px;background:none"><img src="assets/img/hospital.jpg" alt="" style="width:100%;height:100%;display:block"></div>`)
@@ -420,7 +424,7 @@ const start = (id) => SECTION(id)[0].t0;
   const tG = at("hosp2") - 0.25;
   s.to("#bond, #hosp, #hn", { x: -1300, rotation: -4, duration: 0.45, ease: "power3.in" }, tG - 0.15);
   s.add(`<div id="ledger" class="abs" style="left:0;top:220px;width:${W}px;height:900px;opacity:0">
-      <div class="rule" style="left:540px;top:0;width:3px;height:860px"></div>
+      <div class="rule" style="left:540px;top:0;width:3px;height:520px"></div>
       <div class="rule" style="left:60px;top:150px;width:960px;height:3px"></div>
       <div class="sc ink abs" style="left:60px;top:40px;width:460px;text-align:center;font-size:50px;letter-spacing:0.08em;line-height:1.1">The<br>Assembly</div>
       <div class="sc ink abs" style="left:560px;top:40px;width:460px;text-align:center;font-size:50px;letter-spacing:0.08em;line-height:1.1">Private<br>donors</div>
@@ -428,18 +432,15 @@ const start = (id) => SECTION(id)[0].t0;
       <div id="paid" class="fell ink abs" style="left:60px;top:250px;width:460px;text-align:center;font-size:136px;opacity:0">£2,000</div>
       <div id="tally" class="fell ink abs" style="left:560px;top:250px;width:460px;text-align:center;font-size:136px;opacity:0">£0</div>
       <div id="only" class="fell ink abs" style="left:60px;top:440px;width:460px;text-align:center;font-size:52px;opacity:0">only if …</div>
-      <div id="bar" class="abs" style="left:740px;top:440px;width:60px;height:380px;border:3px solid ${C.ink};opacity:0"><div id="fillbar" class="abs" style="left:0;bottom:0;width:100%;height:100%;background:${C.ink};transform-origin:50% 100%"></div></div>
       ${stroke("brace", 120, 590, 840, 120, "M10,10 C10,70 400,40 420,110 C440,40 830,70 830,10", C.red, 7)}
       <div id="match" class="sc ink abs" style="left:0;top:740px;width:${W}px;text-align:center;font-size:72px;letter-spacing:0.08em;opacity:0">${words("A matching grant")}</div></div>`);
   s.set("#ledger", { opacity: 1 }, tG).press("#ledger > .sc", tG, { stagger: 0.12 });
   s.press("#ghost", at("hosp2", "two") - 0.05).press("#only", at("hosp2", "only") - 0.05);
   const d0 = at("hosp2", "private") - 0.05, d1 = after("hosp2", "first");
-  s.set("#tally", { opacity: 1 }, d0).set("#bar", { opacity: 1 }, d0);
-  s.fromTo("#fillbar", { scaleY: 0 }, { scaleY: 1, duration: d1 - d0 - 0.1, ease: "power1.inOut" }, d0);
+  s.set("#tally", { opacity: 1 }, d0);
   s.tl.push(`{ const o = { v: 0 }; tl.fromTo(o, { v: 0 }, { v: 2000, duration: ${r3(d1 - d0 - 0.1)}, ease: "power1.inOut", onUpdate: () => { document.getElementById("hosp-tally").textContent = "£" + (Math.round(o.v / 50) * 50).toLocaleString("en-GB"); } }, ${s.local(d0)}); }`);
   s.set("#paid", { opacity: 1 }, d1 + 0.05).set("#ghost, #only", { opacity: 0 }, d1 + 0.05).fromTo("#paid", { scale: 1.12 }, { scale: 1, duration: 0.25, ease: "expo.out" }, d1 + 0.05);
   s.sound("impact-bass-1", d1 + 0.07, 0.24);
-  s.out("#bar", at("hosp3") - 0.2, 0.2);
   s.pen("#brace path", at("hosp3", "matching") - 0.35, 0.45).press("#match .w", at("hosp3", "matching") - 0.05, { stagger: 0.1 });
   scenes.push(s);
 }
@@ -453,7 +454,7 @@ const start = (id) => SECTION(id)[0].t0;
     .add(`<div id="pn" class="full" style="opacity:0">${pic("pp", pn)}</div>`)
     .add(`<div id="lab2" class="slip sc ink" style="top:1010px;height:96px;padding:12px 0 0 84px;font-size:62px;letter-spacing:0.1em;opacity:0">${words("University of Pennsylvania")}</div>`);
   const tU = at("acad1", "university") - 0.1;
-  s.cam("#cp", frame(ch, 0.3, 0.2, cf * 1.5), frame(ch, 0.62, 0.55, cf * 1.25), 0, tU - s.t0);
+  s.cam("#cp", frame(ch, 0.3, 0.2, cf * 1.5), frame(ch, 0.6, 0.36, cf * 1.25), 0, tU - s.t0);
   s.press("#lab .w", at("acad1", "academy") - 0.05, { stagger: 0.1 });
   s.set("#pn, #lab2", { opacity: 1 }, tU).set("#ch, #lab", { opacity: 0 }, tU + 0.02);
   s.cam("#pp", frame(pn, 0.5, 0.5, pf * 1.15), frame(pn, 0.5, 0.45, pf * 1.03), tU, 1.6, "expo.out");
@@ -493,10 +494,16 @@ const start = (id) => SECTION(id)[0].t0;
   s.press("#four .w", at("turn3", "four") - 0.05, { stagger: 0.14 });
   const side = [["printing", "press", 0.5, 0.45, "a printing business"], ["almanac", "almanac", 0.5, 0.3, "an almanac"], ["lightning", "kite", 0.62, 0.22, "experiments with lightning"]];
   side.forEach(([w, img, fx, fy, label], i) => {
-    const t = at("turn3", w) - 0.08, f = fill(img);
-    s.add(`<div id="sd${i}" class="full" style="opacity:0">${pic(`sp${i}`, img)}</div>`)
+    const t = at("turn3", w) - 0.08, f = fill(img), sz = SIZES[img];
+    // a small picture is a plate laid on the paper, not blown up to the frame
+    const plate = sz.w < 900;
+    s.add(plate
+      ? `<div id="sd${i}" class="full" style="opacity:0;background:${C.paper} url(assets/paper.jpg) center/cover"><div id="sp${i}" class="sheet" style="left:${(W - sz.w * 1.3) / 2}px;top:230px;width:${sz.w * 1.3}px;height:${sz.h * 1.3}px;background:none"><img src="assets/img/${img}.jpg" alt="" style="width:100%;height:100%;display:block"></div></div>`
+      : `<div id="sd${i}" class="full" style="opacity:0">${pic(`sp${i}`, img)}</div>`)
       .add(`<div id="sl${i}" class="slip sc ink" style="top:1010px;height:96px;padding:12px 0 0 84px;font-size:56px;letter-spacing:0.1em;opacity:0">${label}</div>`);
-    s.set(`#sd${i}, #sl${i}`, { opacity: 1 }, t).cam(`#sp${i}`, frame(img, fx, fy, f * 1.2), frame(img, fx, fy, f * 1.05), t, 0.9, "expo.out");
+    s.set(`#sd${i}, #sl${i}`, { opacity: 1 }, t);
+    if (plate) s.fromTo(`#sp${i}`, { y: 1600, rotation: 5 }, { y: 0, rotation: -1.5, duration: 0.5, ease: "expo.out" }, t);
+    else s.cam(`#sp${i}`, frame(img, fx, fy, f * 1.2), frame(img, fx, fy, f * 1.05), t, 0.9, "expo.out");
     if (i) s.set(`#sd${i - 1}, #sl${i - 1}`, { opacity: 0 }, t + 0.02);
   });
   // the lightning: two white frames on the word

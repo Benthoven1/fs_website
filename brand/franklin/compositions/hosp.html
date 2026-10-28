@@ -28,12 +28,12 @@
 
   </style>
   <div id="root" data-composition-id="hosp" data-width="1080" data-height="1920">
-<div id="hosp-bond" class="sheet" style="left:220px;top:250px;width:640px;height:853.333px;background:none"><img src="assets/img/bond.jpg" alt="" style="width:100%;height:100%;display:block"></div>
-<div id="hosp-bn" class="sc ink abs" style="left:0;top:1143.3333333333335px;width:1080px;text-align:center;font-size:56px;letter-spacing:0.1em;opacity:0">Dr Thomas Bond</div>
-<div id="hosp-hosp" class="sheet" style="left:40px;top:420px;width:1000px;height:1333.333px;background:none"><img src="assets/img/hospital.jpg" alt="" style="width:100%;height:100%;display:block"></div>
-<div id="hosp-hn" class="sc ink abs" style="left:40px;top:1783.3333333333335px;width:1000px;font-size:50px;letter-spacing:0.1em;opacity:0"><span class="w">A </span><span class="w">hospital </span><span class="w">for </span><span class="w">the </span><span class="w">sick </span><span class="w">poor </span></div>
+<div id="hosp-bond" class="sheet" style="left:220px;top:250px;width:640px;height:758.268px;background:none"><img src="assets/img/bond.jpg" alt="" style="width:100%;height:100%;display:block"></div>
+<div id="hosp-bn" class="sc ink abs" style="left:0;top:1048.2675649663138px;width:1080px;text-align:center;font-size:56px;letter-spacing:0.1em;opacity:0">Dr Thomas Bond</div>
+<div id="hosp-hosp" class="sheet" style="left:190px;top:230px;width:700px;height:726.055px;background:none"><img src="assets/img/hospital.jpg" alt="" style="width:100%;height:100%;display:block"></div>
+<div id="hosp-hn" class="sc ink abs" style="left:190px;top:988.0545905707196px;width:760px;font-size:50px;letter-spacing:0.1em;opacity:0"><span class="w">A </span><span class="w">hospital </span><span class="w">for </span><span class="w">the </span><span class="w">sick </span><span class="w">poor </span></div>
 <div id="hosp-ledger" class="abs" style="left:0;top:220px;width:1080px;height:900px;opacity:0">
-      <div class="rule" style="left:540px;top:0;width:3px;height:860px"></div>
+      <div class="rule" style="left:540px;top:0;width:3px;height:520px"></div>
       <div class="rule" style="left:60px;top:150px;width:960px;height:3px"></div>
       <div class="sc ink abs" style="left:60px;top:40px;width:460px;text-align:center;font-size:50px;letter-spacing:0.08em;line-height:1.1">The<br>Assembly</div>
       <div class="sc ink abs" style="left:560px;top:40px;width:460px;text-align:center;font-size:50px;letter-spacing:0.08em;line-height:1.1">Private<br>donors</div>
@@ -41,32 +41,30 @@
       <div id="hosp-paid" class="fell ink abs" style="left:60px;top:250px;width:460px;text-align:center;font-size:136px;opacity:0">£2,000</div>
       <div id="hosp-tally" class="fell ink abs" style="left:560px;top:250px;width:460px;text-align:center;font-size:136px;opacity:0">£0</div>
       <div id="hosp-only" class="fell ink abs" style="left:60px;top:440px;width:460px;text-align:center;font-size:52px;opacity:0">only if …</div>
-      <div id="hosp-bar" class="abs" style="left:740px;top:440px;width:60px;height:380px;border:3px solid #1B1915;opacity:0"><div id="hosp-fillbar" class="abs" style="left:0;bottom:0;width:100%;height:100%;background:#1B1915;transform-origin:50% 100%"></div></div>
       <svg id="hosp-brace" class="ink-line" style="left:120px;top:590px;width:840px;height:120px;" viewBox="0 0 840 120"><path d="M10,10 C10,70 400,40 420,110 C440,40 830,70 830,10" pathLength="100" stroke="#A8261B" stroke-width="7"/></svg>
       <div id="hosp-match" class="sc ink abs" style="left:0;top:740px;width:1080px;text-align:center;font-size:72px;letter-spacing:0.08em;opacity:0"><span class="w">A </span><span class="w">matching </span><span class="w">grant </span></div></div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo("#hosp-bond", {"x":0,"y":1600,"rotation":-6}, {"x":0,"y":0,"rotation":-1.2,"duration":0.85,"ease":"expo.out"}, 0.05);
-    tl.fromTo("#hosp-bn", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 0.8);
-    tl.fromTo("#hosp-hosp", {"x":1300,"y":80,"rotation":5}, {"x":0,"y":0,"rotation":0.8,"duration":0.85,"ease":"expo.out"}, 2.225);
-    tl.to("#hosp-bn", {"opacity":0,"filter":"blur(8px)","duration":0.15,"ease":"power2.in"}, 2.225);
-    tl.fromTo("#hosp-hn .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.08}, 3.525);
-    tl.to("#hosp-bond, #hosp-hosp, #hosp-hn", {"x":-1300,"rotation":-4,"duration":0.45,"ease":"power3.in"}, 7.65);
-    tl.set("#hosp-ledger", {"opacity":1}, 7.8);
-    tl.fromTo("#hosp-ledger > .sc", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.12}, 7.8);
-    tl.fromTo("#hosp-ghost", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 9.74);
-    tl.fromTo("#hosp-only", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 11.66);
-    tl.set("#hosp-tally", {"opacity":1}, 12.31);
-    tl.set("#hosp-bar", {"opacity":1}, 12.31);
-    tl.fromTo("#hosp-fillbar", {"scaleY":0}, {"scaleY":1,"duration":3.015,"ease":"power1.inOut"}, 12.31);
-    { const o = { v: 0 }; tl.fromTo(o, { v: 0 }, { v: 2000, duration: 3.015, ease: "power1.inOut", onUpdate: () => { document.getElementById("hosp-tally").textContent = "£" + (Math.round(o.v / 50) * 50).toLocaleString("en-GB"); } }, 12.31); }
-    tl.set("#hosp-paid", {"opacity":1}, 15.475);
-    tl.set("#hosp-ghost, #hosp-only", {"opacity":0}, 15.475);
-    tl.fromTo("#hosp-paid", {"scale":1.12}, {"scale":1,"duration":0.25,"ease":"expo.out"}, 15.475);
-    tl.to("#hosp-bar", {"opacity":0,"filter":"blur(8px)","duration":0.2,"ease":"power2.in"}, 15.545);
-    tl.fromTo("#hosp-brace path", {"strokeDashoffset":110}, {"strokeDashoffset":0,"duration":0.45,"ease":"power2.inOut"}, 17.62);
-    tl.fromTo("#hosp-match .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 17.92);
+    tl.fromTo("#hosp-bond", {"x":0,"y":2000,"rotation":-6}, {"x":0,"y":0,"rotation":-1.2,"duration":0.85,"ease":"expo.out"}, 0.05);
+    tl.fromTo("#hosp-bn", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 0.42);
+    tl.fromTo("#hosp-hosp", {"x":1300,"y":80,"rotation":5}, {"x":0,"y":0,"rotation":0.8,"duration":0.85,"ease":"expo.out"}, 2.08);
+    tl.to("#hosp-bn", {"opacity":0,"filter":"blur(8px)","duration":0.15,"ease":"power2.in"}, 2.08);
+    tl.set("#hosp-hn", {"opacity":1}, 2.93);
+    tl.fromTo("#hosp-hn .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.08}, 2.93);
+    tl.to("#hosp-bond, #hosp-hosp, #hosp-hn", {"x":-1300,"rotation":-4,"duration":0.45,"ease":"power3.in"}, 6.772);
+    tl.set("#hosp-ledger", {"opacity":1}, 6.922);
+    tl.fromTo("#hosp-ledger > .sc", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.12}, 6.922);
+    tl.fromTo("#hosp-ghost", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 8.262);
+    tl.fromTo("#hosp-only", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 9.942);
+    tl.set("#hosp-tally", {"opacity":1}, 10.442);
+    { const o = { v: 0 }; tl.fromTo(o, { v: 0 }, { v: 2000, duration: 2.21, ease: "power1.inOut", onUpdate: () => { document.getElementById("hosp-tally").textContent = "£" + (Math.round(o.v / 50) * 50).toLocaleString("en-GB"); } }, 10.442); }
+    tl.set("#hosp-paid", {"opacity":1}, 12.802);
+    tl.set("#hosp-ghost, #hosp-only", {"opacity":0}, 12.802);
+    tl.fromTo("#hosp-paid", {"scale":1.12}, {"scale":1,"duration":0.25,"ease":"expo.out"}, 12.802);
+    tl.fromTo("#hosp-brace path", {"strokeDashoffset":110}, {"strokeDashoffset":0,"duration":0.45,"ease":"power2.inOut"}, 14.669);
+    tl.set("#hosp-match", {"opacity":1}, 14.969);
+    tl.fromTo("#hosp-match .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 14.969);
     window.__timelines["hosp"] = tl;
   </script>
 </template>

@@ -1,156 +1,156 @@
 {
- "duration": 161.955,
- "voiceEnd": 154.16,
+ "duration": 140.631,
+ "voiceEnd": 130.931,
  "sections": {
   "hook": 0,
-  "who": 16.38,
-  "lib": 33.06,
-  "fire": 61.145,
-  "hosp": 77.125,
-  "acad": 96.965,
-  "turn": 102.92,
-  "now": 121.93,
-  "end": 140.555
+  "who": 15.671,
+  "lib": 30.244,
+  "fire": 56.873,
+  "hosp": 68.849,
+  "acad": 85.884,
+  "turn": 90.498,
+  "now": 105.782,
+  "end": 120.673
  },
  "sfx": [
   {
    "name": "impact-bass-1",
-   "t": 1.5,
+   "t": 1.39,
    "vol": 0.22
   },
   {
    "name": "whoosh-short",
-   "t": 2.57,
+   "t": 3.12,
    "vol": 0.25
   },
   {
    "name": "whoosh",
-   "t": 15.93,
+   "t": 15.221,
    "vol": 0.3
   },
   {
    "name": "whoosh-short",
-   "t": 21.22,
+   "t": 21.301,
    "vol": 0.2
   },
   {
    "name": "whoosh-short",
-   "t": 24.055,
+   "t": 23.501,
    "vol": 0.18
   },
   {
    "name": "whoosh-short",
-   "t": 27.755,
+   "t": 25.421,
    "vol": 0.18
   },
   {
    "name": "key-press",
-   "t": 34.32,
+   "t": 30.974,
    "vol": 0.3
   },
   {
    "name": "key-press",
-   "t": 34.49,
+   "t": 31.144,
    "vol": 0.3
   },
   {
    "name": "key-press",
-   "t": 34.66,
+   "t": 31.314,
    "vol": 0.3
   },
   {
    "name": "whoosh-short",
-   "t": 45.23,
+   "t": 41.717,
    "vol": 0.2
   },
   {
    "name": "typing",
-   "t": 47.925,
+   "t": 44.807,
    "vol": 0.18
   },
   {
    "name": "whoosh-short",
-   "t": 53.385,
+   "t": 49.817,
    "vol": 0.2
   },
   {
    "name": "impact-bass-2",
-   "t": 67.615,
+   "t": 61.483,
    "vol": 0.2
   },
   {
    "name": "whoosh-short",
-   "t": 75.135,
+   "t": 67.213,
    "vol": 0.2
   },
   {
    "name": "whoosh-short",
-   "t": 77.175,
+   "t": 68.899,
    "vol": 0.2
   },
   {
    "name": "whoosh-short",
-   "t": 79.35,
+   "t": 70.929,
    "vol": 0.2
   },
   {
    "name": "impact-bass-1",
-   "t": 92.62,
+   "t": 81.671,
    "vol": 0.24
   },
   {
    "name": "whoosh-short",
-   "t": 100.27,
+   "t": 88.374,
    "vol": 0.2
   },
   {
    "name": "impact-bass-1",
-   "t": 108.99,
+   "t": 95.859,
    "vol": 0.13
   },
   {
    "name": "impact-bass-2",
-   "t": 110.205,
+   "t": 96.839,
    "vol": 0.13
   },
   {
    "name": "impact-bass-1",
-   "t": 111.585,
+   "t": 98.079,
    "vol": 0.13
   },
   {
    "name": "impact-bass-2",
-   "t": 112.855,
+   "t": 99.279,
    "vol": 0.13
   },
   {
    "name": "impact-bass-2",
-   "t": 120.745,
+   "t": 104.927,
    "vol": 0.18
   },
   {
    "name": "impact-bass-1",
-   "t": 131.84,
+   "t": 113.428,
    "vol": 0.24
   },
   {
    "name": "click-soft",
-   "t": 132.75,
+   "t": 114.198,
    "vol": 0.4
   },
   {
    "name": "click-soft",
-   "t": 133.075,
+   "t": 114.438,
    "vol": 0.4
   },
   {
    "name": "whoosh-short",
-   "t": 137.465,
+   "t": 118.188,
    "vol": 0.2
   },
   {
    "name": "riser",
-   "t": 151.56,
+   "t": 128.331,
    "vol": 0.2
   }
  ]

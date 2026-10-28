@@ -27,7 +27,7 @@ LONG = 2600  # no picture needs more on its long side
 LONG_FOR = {"prospect": 5801, "declaration": 4300, "constitution4": 4300}
 
 NAMES = ["prospect", "statehouse", "portrait", "press", "martin", "kite", "stove", "trumbull", "declaration", "constitution4",
-         "library-hall", "lib-statue", "bucket", "bond", "hospital", "charter", "penn", "almanac"]
+         "library-hall", "bucket", "bond", "hospital", "charter", "penn", "almanac"]
 # where a name's file comes from, when it isn't <name>.jpg
 ALIAS = {"kite": ["kite-hi", "kite"], "penn": ["college-hall", "penn-quad"]}
 # the hospital is one half of a stereograph card
@@ -47,7 +47,7 @@ def save(name, im):
 
 def source(name):
     for n in ALIAS.get(name, [name]):
-        for d in (SRC, os.path.join(HERE, "assets")):
+        for d in (SRC,):
             p = os.path.join(d, n + ".jpg")
             if os.path.exists(p) and os.path.getsize(p) > 1000:
                 return p

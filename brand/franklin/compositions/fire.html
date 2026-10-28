@@ -30,14 +30,14 @@
   <div id="root" data-composition-id="fire" data-width="1080" data-height="1920">
 <svg class="full" style="position:absolute" width="1080" height="1920">
       <defs><filter id="fire-rough" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="3" seed="17"/><feDisplacementMap in="SourceGraphic" scale="150"/></filter>
-      <mask id="fire-hole" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1920"><rect width="1080" height="1920" fill="#fff"/><circle id="fire-burn" cx="610" cy="1560" r="0" fill="#000" filter="url(#fire-rough)"/></mask>
-      <mask id="fire-char" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1920"><rect width="1080" height="1920" fill="#fff"/><circle id="fire-burn2" cx="610" cy="1560" r="0" fill="#000" filter="url(#fire-rough)"/></mask></defs>
+      <mask id="fire-hole" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1920"><rect width="1080" height="1920" fill="#fff"/><circle id="fire-burn" cx="560" cy="560" r="0" fill="#000" filter="url(#fire-rough)"/></mask>
+      <mask id="fire-char" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1920"><rect width="1080" height="1920" fill="#fff"/><circle id="fire-burn2" cx="560" cy="560" r="0" fill="#000" filter="url(#fire-rough)"/></mask></defs>
       <g mask="url(#fire-char)"><rect width="1080" height="1920" fill="#2a170b"/></g>
-      <g mask="url(#fire-hole)"><image href="assets/img/lib-statue.jpg" x="-194.4" y="0" width="1468.8" height="1958.3999999999999" preserveAspectRatio="none"/>
-      <rect width="1080" height="1920" fill="rgba(237,227,203,0.94)" y="860" height="300"/></g></svg>
+      <g mask="url(#fire-hole)"><image href="assets/paper.jpg" width="1080" height="1920" preserveAspectRatio="none"/><image href="assets/img/library-hall.jpg" x="-184.5" y="-124.22" width="2100" height="1710.55" preserveAspectRatio="none"/>
+      <rect width="1080" fill="rgba(237,227,203,0.94)" y="860" height="300"/></g></svg>
 <div id="fire-slipcopy" class="slip" style="top:860px;height:300px"><div class="sc red abs" style="left:84px;top:34px;font-size:52px;letter-spacing:0.12em">Open since 1731</div>
       <div class="fell ink abs" style="left:84px;top:110px;width:920px;font-size:74px;line-height:1.08">America’s oldest cultural institution.</div></div>
-<div id="fire-fire" class="fell red abs" style="left:84px;top:330px;font-size:230px;opacity:0">Fire.</div>
+<div id="fire-fire" class="fell red abs" style="left:84px;top:420px;font-size:230px;opacity:0">Fire.</div>
 <div id="fire-prov" class="abs" style="left:84px;top:250px;width:912px">
       <div id="fire-pv0" class="sc ink" style="font-size:64px;letter-spacing:0.1em">An ounce</div>
       <div id="fire-pv1" class="fell ink" style="font-size:96px;margin-top:6px">of prevention</div>
@@ -52,23 +52,25 @@
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo("#fire-burn", {"attr":{"r":0}}, {"attr":{"r":2300},"duration":2.4,"ease":"power2.in"}, 0.05);
-    tl.fromTo("#fire-burn2", {"attr":{"r":0}}, {"attr":{"r":2280},"duration":2.4,"ease":"power2.in"}, 0.17);
+    tl.fromTo("#fire-burn", {"attr":{"r":0}}, {"attr":{"r":2300},"duration":2.2,"ease":"power1.in"}, 0.05);
+    tl.fromTo("#fire-burn2", {"attr":{"r":0}}, {"attr":{"r":2280},"duration":2.2,"ease":"power1.in"}, 0.17);
     tl.to("#fire-slipcopy", {"opacity":0,"duration":0.3}, 1.25);
-    tl.fromTo("#fire-fire", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.16,"ease":"power4.out","stagger":0.1}, 0.15);
-    tl.to("#fire-fire", {"opacity":0,"filter":"blur(8px)","duration":0.18,"ease":"power2.in"}, 2.255);
-    tl.fromTo("#fire-pv0", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.13,"ease":"power4.out","stagger":0.1}, 4.105);
-    tl.fromTo("#fire-pv1", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.13,"ease":"power4.out","stagger":0.1}, 4.81);
-    tl.fromTo("#fire-pv2", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.13,"ease":"power4.out","stagger":0.1}, 5.79);
-    tl.fromTo("#fire-pv3", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.16,"ease":"power4.out","stagger":0.1}, 6.44);
-    tl.fromTo("#fire-pv4", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.13,"ease":"power4.out","stagger":0.1}, 7.145);
-    tl.fromTo("#fire-pv5", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 7.525);
-    tl.to("#fire-prov", {"y":-1400,"duration":0.5,"ease":"power3.in"}, 7.635);
-    tl.fromTo("#fire-union .sc:first-child .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.12}, 8.985);
-    tl.fromTo("#fire-union .red", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 10.05);
-    tl.fromTo("#fire-union .fell .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.295}, 10.525);
-    tl.set("#fire-bucket", {"opacity":1}, 14.01);
-    tl.fromTo("#fire-bp", {"x":-355.789,"y":-59.52,"scale":0.933}, {"x":-249.509,"y":0,"scale":0.822,"duration":1.4,"ease":"expo.out"}, 14.01);
+    tl.fromTo("#fire-fire", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.16,"ease":"power4.out","stagger":0.1}, 0.93);
+    tl.to("#fire-fire", {"opacity":0,"filter":"blur(8px)","duration":0.18,"ease":"power2.in"}, 1.88);
+    tl.fromTo("#fire-pv0", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.13,"ease":"power4.out","stagger":0.1}, 3.24);
+    tl.fromTo("#fire-pv1", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.13,"ease":"power4.out","stagger":0.1}, 3.64);
+    tl.fromTo("#fire-pv2", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.13,"ease":"power4.out","stagger":0.1}, 4.22);
+    tl.fromTo("#fire-pv3", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.16,"ease":"power4.out","stagger":0.1}, 4.58);
+    tl.fromTo("#fire-pv4", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.13,"ease":"power4.out","stagger":0.1}, 4.92);
+    tl.fromTo("#fire-pv5", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 4.86);
+    tl.to("#fire-prov", {"y":-1400,"duration":0.5,"ease":"power3.in"}, 5.83);
+    tl.set("#fire-union .sc:first-child", {"opacity":1}, 6.63);
+    tl.fromTo("#fire-union .sc:first-child .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.12}, 6.63);
+    tl.fromTo("#fire-union .red", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 7.42);
+    tl.set("#fire-union .fell", {"opacity":1}, 8.25);
+    tl.fromTo("#fire-union .fell .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.18}, 8.25);
+    tl.set("#fire-bucket", {"opacity":1}, 10.36);
+    tl.fromTo("#fire-bp", {"x":-355.789,"y":-59.52,"scale":0.933}, {"x":-249.509,"y":0,"scale":0.822,"duration":1.4,"ease":"expo.out"}, 10.36);
     window.__timelines["fire"] = tl;
   </script>
 </template>

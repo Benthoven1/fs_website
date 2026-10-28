@@ -39,9 +39,9 @@ svg.ink-line path { stroke-dashoffset: 0; } #turn-pl1 svg.ink-line path, #turn-p
 <div id="turn-pl3" class="sheet" style="left:216px;top:548px;width:700px;height:580px;overflow:hidden;background:none;"><img src="assets/img/almanac.jpg" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div>
 <div id="turn-pt3" class="slip sc ink" style="top:1080px;height:84px;padding:10px 0 0 84px;font-size:56px;letter-spacing:0.12em;opacity:0">books</div>
 <div id="turn-four" class="fell red abs" style="left:84px;top:250px;font-size:150px"><span class="w">Four </span><span class="w">times, </span></div>
-<div id="turn-sd0" class="full" style="opacity:0"><div id="turn-sp0" class="pic" style="width:500px;height:501px;"><img src="assets/img/press.jpg" alt=""></div></div>
+<div id="turn-sd0" class="full" style="opacity:0;background:#EDE3CB url(assets/paper.jpg) center/cover"><div id="turn-sp0" class="sheet" style="left:215px;top:230px;width:650px;height:651.3000000000001px;background:none"><img src="assets/img/press.jpg" alt="" style="width:100%;height:100%;display:block"></div></div>
 <div id="turn-sl0" class="slip sc ink" style="top:1010px;height:96px;padding:12px 0 0 84px;font-size:56px;letter-spacing:0.1em;opacity:0">a printing business</div>
-<div id="turn-sd1" class="full" style="opacity:0"><div id="turn-sp1" class="pic" style="width:628px;height:1033px;"><img src="assets/img/almanac.jpg" alt=""></div></div>
+<div id="turn-sd1" class="full" style="opacity:0;background:#EDE3CB url(assets/paper.jpg) center/cover"><div id="turn-sp1" class="sheet" style="left:131.8px;top:230px;width:816.4px;height:1342.9px;background:none"><img src="assets/img/almanac.jpg" alt="" style="width:100%;height:100%;display:block"></div></div>
 <div id="turn-sl1" class="slip sc ink" style="top:1010px;height:96px;padding:12px 0 0 84px;font-size:56px;letter-spacing:0.1em;opacity:0">an almanac</div>
 <div id="turn-sd2" class="full" style="opacity:0"><div id="turn-sp2" class="pic" style="width:1920px;height:2573px;"><img src="assets/img/kite.jpg" alt=""></div></div>
 <div id="turn-sl2" class="slip sc ink" style="top:1010px;height:96px;padding:12px 0 0 84px;font-size:56px;letter-spacing:0.1em;opacity:0">experiments with lightning</div>
@@ -49,34 +49,37 @@ svg.ink-line path { stroke-dashoffset: 0; } #turn-pl1 svg.ink-line path, #turn-p
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo("#turn-thing .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.383}, 0.2);
-    tl.to("#turn-thing", {"opacity":0,"filter":"blur(8px)","duration":0.18,"ease":"power2.in"}, 2.335);
-    tl.fromTo("#turn-scratch .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.14}, 4.42);
-    tl.fromTo("#turn-pl0", {"x":-300,"y":1700,"rotation":-15}, {"x":0,"y":0,"rotation":-5,"duration":0.55,"ease":"expo.out"}, 5.75);
-    tl.set("#turn-pt0", {"opacity":1}, 5.85);
-    tl.fromTo("#turn-pl1", {"x":300,"y":1700,"rotation":12}, {"x":0,"y":0,"rotation":4,"duration":0.55,"ease":"expo.out"}, 6.965);
-    tl.set("#turn-pt1", {"opacity":1}, 7.065);
-    tl.set("#turn-pt0", {"opacity":0}, 7.065);
-    tl.fromTo("#turn-pl2", {"x":-300,"y":1700,"rotation":-6}, {"x":0,"y":0,"rotation":-2,"duration":0.55,"ease":"expo.out"}, 8.345);
-    tl.set("#turn-pt2", {"opacity":1}, 8.445);
-    tl.set("#turn-pt1", {"opacity":0}, 8.445);
-    tl.fromTo("#turn-pl3", {"x":300,"y":1700,"rotation":18}, {"x":0,"y":0,"rotation":6,"duration":0.55,"ease":"expo.out"}, 9.615);
-    tl.set("#turn-pt3", {"opacity":1}, 9.715);
-    tl.set("#turn-pt2", {"opacity":0}, 9.715);
-    tl.to("#turn-pt3, #turn-scratch", {"opacity":0,"filter":"blur(8px)","duration":0.15,"ease":"power2.in"}, 10.57);
-    tl.fromTo("#turn-four .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.14}, 11.815);
-    tl.set("#turn-sd0, #turn-sl0", {"opacity":1}, 13.65);
-    tl.fromTo("#turn-sp0", {"x":-609.701,"y":-76.8,"scale":4.599}, {"x":-465.988,"y":0,"scale":4.024,"duration":0.9,"ease":"expo.out"}, 13.65);
-    tl.set("#turn-sd1, #turn-sl1", {"opacity":1}, 15.3);
-    tl.fromTo("#turn-sp1", {"x":-160.345,"y":0,"scale":2.23}, {"x":-72.802,"y":0,"scale":1.952,"duration":0.9,"ease":"expo.out"}, 15.3);
-    tl.set("#turn-sd0, #turn-sl0", {"opacity":0}, 15.32);
-    tl.set("#turn-sd2, #turn-sl2", {"opacity":1}, 17.495);
-    tl.fromTo("#turn-sp2", {"x":-525.947,"y":0,"scale":0.895}, {"x":-392.704,"y":0,"scale":0.784,"duration":0.9,"ease":"expo.out"}, 17.495);
-    tl.set("#turn-sd1, #turn-sl1", {"opacity":0}, 17.515);
-    tl.set("#turn-flash", {"opacity":0.85}, 17.825);
-    tl.set("#turn-flash", {"opacity":0}, 17.892);
-    tl.set("#turn-flash", {"opacity":0.6}, 17.958);
-    tl.set("#turn-flash", {"opacity":0}, 17.992);
+    tl.set("#turn-thing", {"opacity":1}, 0.2);
+    tl.fromTo("#turn-thing .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.36}, 0.2);
+    tl.to("#turn-thing", {"opacity":0,"filter":"blur(8px)","duration":0.18,"ease":"power2.in"}, 2.221);
+    tl.set("#turn-scratch", {"opacity":1}, 3.461);
+    tl.fromTo("#turn-scratch .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.14}, 3.461);
+    tl.fromTo("#turn-pl0", {"x":-300,"y":1700,"rotation":-15}, {"x":0,"y":0,"rotation":-5,"duration":0.55,"ease":"expo.out"}, 5.041);
+    tl.set("#turn-pt0", {"opacity":1}, 5.141);
+    tl.fromTo("#turn-pl1", {"x":300,"y":1700,"rotation":12}, {"x":0,"y":0,"rotation":4,"duration":0.55,"ease":"expo.out"}, 6.021);
+    tl.set("#turn-pt1", {"opacity":1}, 6.121);
+    tl.set("#turn-pt0", {"opacity":0}, 6.121);
+    tl.fromTo("#turn-pl2", {"x":-300,"y":1700,"rotation":-6}, {"x":0,"y":0,"rotation":-2,"duration":0.55,"ease":"expo.out"}, 7.261);
+    tl.set("#turn-pt2", {"opacity":1}, 7.361);
+    tl.set("#turn-pt1", {"opacity":0}, 7.361);
+    tl.fromTo("#turn-pl3", {"x":300,"y":1700,"rotation":18}, {"x":0,"y":0,"rotation":6,"duration":0.55,"ease":"expo.out"}, 8.461);
+    tl.set("#turn-pt3", {"opacity":1}, 8.561);
+    tl.set("#turn-pt2", {"opacity":0}, 8.561);
+    tl.to("#turn-pt3, #turn-scratch", {"opacity":0,"filter":"blur(8px)","duration":0.15,"ease":"power2.in"}, 9.319);
+    tl.set("#turn-four", {"opacity":1}, 10.089);
+    tl.fromTo("#turn-four .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.14}, 10.089);
+    tl.set("#turn-sd0, #turn-sl0", {"opacity":1}, 11.479);
+    tl.fromTo("#turn-sp0", {"y":1600,"rotation":5}, {"y":0,"rotation":-1.5,"duration":0.5,"ease":"expo.out"}, 11.479);
+    tl.set("#turn-sd1, #turn-sl1", {"opacity":1}, 12.579);
+    tl.fromTo("#turn-sp1", {"y":1600,"rotation":5}, {"y":0,"rotation":-1.5,"duration":0.5,"ease":"expo.out"}, 12.579);
+    tl.set("#turn-sd0, #turn-sl0", {"opacity":0}, 12.599);
+    tl.set("#turn-sd2, #turn-sl2", {"opacity":1}, 14.099);
+    tl.fromTo("#turn-sp2", {"x":-525.947,"y":0,"scale":0.895}, {"x":-392.704,"y":0,"scale":0.784,"duration":0.9,"ease":"expo.out"}, 14.099);
+    tl.set("#turn-sd1, #turn-sl1", {"opacity":0}, 14.119);
+    tl.set("#turn-flash", {"opacity":0.85}, 14.429);
+    tl.set("#turn-flash", {"opacity":0}, 14.496);
+    tl.set("#turn-flash", {"opacity":0.6}, 14.562);
+    tl.set("#turn-flash", {"opacity":0}, 14.596);
     window.__timelines["turn"] = tl;
   </script>
 </template>

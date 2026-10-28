@@ -29,8 +29,9 @@
   </style>
   <div id="root" data-composition-id="who" data-width="1080" data-height="1920">
 <div id="who-face" class="full"><div id="who-p0" class="pic" style="width:1920px;height:2364px;"><img src="assets/img/portrait.jpg" alt=""></div></div>
-<div id="who-name" class="sc on-dark abs" style="left:0;top:236px;width:1080px;text-align:center;font-size:84px;letter-spacing:0.08em"><span class="w">Benjamin </span><span class="w">Franklin </span></div>
-<div id="who-m0" class="full" style="opacity:0"><div id="who-mp0" class="pic" style="width:500px;height:501px;"><img src="assets/img/press.jpg" alt=""></div></div>
+<div id="who-nslip" class="slip" style="top:196px;height:132px;opacity:0"></div>
+<div id="who-name" class="sc ink abs" style="left:0;top:218px;width:1080px;text-align:center;font-size:84px;letter-spacing:0.08em"><span class="w">Benjamin </span><span class="w">Franklin </span></div>
+<div id="who-m0" class="full" style="opacity:0"><div id="who-mp0" class="pic" style="width:628px;height:1033px;"><img src="assets/img/almanac.jpg" alt=""></div></div>
 <div id="who-lab0" class="slip sc ink" style="top:1010px;height:96px;padding:12px 0 0 84px;font-size:62px;letter-spacing:0.1em;opacity:0">printer</div>
 <div id="who-m1" class="full" style="opacity:0"><div id="who-mp1" class="pic" style="width:1920px;height:2396px;"><img src="assets/img/martin.jpg" alt=""></div></div>
 <div id="who-lab1" class="slip sc ink" style="top:1010px;height:96px;padding:12px 0 0 84px;font-size:62px;letter-spacing:0.1em;opacity:0">writer</div>
@@ -53,40 +54,46 @@
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo("#who-p0", {"x":-411.228,"y":0,"scale":0.991}, {"x":-286.477,"y":0,"scale":0.861,"duration":0.9,"ease":"expo.out"}, 0);
-    tl.to("#who-p0", {"x":-333.259,"y":0,"scale":0.91,"duration":0.73,"ease":"power1.inOut"}, 0.9);
+    tl.fromTo("#who-p0", {"x":-468.302,"y":0,"scale":0.991}, {"x":-336.066,"y":0,"scale":0.861,"duration":0.9,"ease":"expo.out"}, 0);
+    tl.to("#who-p0", {"x":-385.654,"y":0,"scale":0.91,"duration":1.29,"ease":"power1.inOut"}, 0.9);
+    tl.set("#who-nslip", {"opacity":1}, 0.2);
+    tl.set("#who-name", {"opacity":1}, 0.25);
     tl.fromTo("#who-name .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.16}, 0.25);
-    tl.set("#who-m0", {"opacity":1}, 1.56);
-    tl.set("#who-lab0", {"opacity":1}, 1.56);
-    tl.fromTo("#who-mp0", {"x":-571.377,"y":-42.24,"scale":4.446}, {"x":-456.407,"y":0,"scale":3.986,"duration":0.75,"ease":"expo.out"}, 1.56);
-    tl.set("#who-m1", {"opacity":1}, 2.285);
-    tl.set("#who-lab1", {"opacity":1}, 2.285);
-    tl.fromTo("#who-mp1", {"x":-209.589,"y":0,"scale":0.93}, {"x":-132.045,"y":0,"scale":0.833,"duration":0.75,"ease":"expo.out"}, 2.285);
-    tl.set("#who-m0, #who-lab0", {"opacity":0}, 2.305);
-    tl.set("#who-m2", {"opacity":1}, 2.955);
-    tl.set("#who-lab2", {"opacity":1}, 2.955);
-    tl.fromTo("#who-mp2", {"x":-374.078,"y":0,"scale":0.866}, {"x":-279.518,"y":0,"scale":0.776,"duration":0.75,"ease":"expo.out"}, 2.955);
-    tl.set("#who-m1, #who-lab1", {"opacity":0}, 2.975);
-    tl.set("#who-m3", {"opacity":1}, 3.79);
-    tl.set("#who-lab3", {"opacity":1}, 3.79);
-    tl.fromTo("#who-mp3", {"x":-553.104,"y":-42.24,"scale":1.708}, {"x":-440.025,"y":0,"scale":1.531,"duration":0.75,"ease":"expo.out"}, 3.79);
-    tl.set("#who-m2, #who-lab2", {"opacity":0}, 3.81);
-    tl.set("#who-tw", {"opacity":1}, 4.86);
-    tl.set("#who-m3, #who-lab3", {"opacity":0}, 4.88);
-    tl.fromTo("#who-tp", {"x":-328.751,"y":0,"scale":1.508}, {"x":-1289.59,"y":-153.6,"scale":1.629,"duration":2.84,"ease":"power2.inOut"}, 4.86);
-    tl.set("#who-ff", {"opacity":1}, 6.28);
-    tl.fromTo("#who-ff .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.12}, 6.28);
-    tl.set("#who-d0", {"opacity":1}, 7.675);
-    tl.fromTo("#who-dc0", {"x":50,"y":1900,"scale":1,"rotation":-4}, {"x":50,"y":300,"scale":1,"rotation":0,"duration":0.6,"ease":"expo.out"}, 7.675);
-    tl.to("#who-dc0", {"x":-538,"y":563.433,"scale":2.2,"duration":0.95,"ease":"power2.inOut"}, 8.275);
-    tl.set("#who-d1", {"opacity":1}, 11.375);
-    tl.fromTo("#who-dc1", {"x":1250,"y":300,"scale":1,"rotation":6}, {"x":50,"y":300,"scale":1,"rotation":0,"duration":0.6,"ease":"expo.out"}, 11.375);
-    tl.to("#who-dc1", {"x":-2219.68,"y":-2542.891,"scale":3.2,"duration":0.95,"ease":"power2.inOut"}, 11.975);
-    tl.fromTo("#who-ring1 path", {"strokeDashoffset":110}, {"strokeDashoffset":0,"duration":0.45,"ease":"power2.inOut"}, 12.875);
-    tl.set("#who-poly", {"opacity":1}, 12.795);
-    tl.fromTo("#who-pm .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.14}, 12.945);
-    tl.fromTo("#who-arrow path", {"strokeDashoffset":110}, {"strokeDashoffset":0,"duration":0.55,"ease":"power2.inOut"}, 13.94);
-    tl.fromTo("#who-pg .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 15.03);
+    tl.set("#who-m0", {"opacity":1}, 2.12);
+    tl.set("#who-lab0", {"opacity":1}, 2.12);
+    tl.fromTo("#who-mp0", {"x":-137,"y":0,"scale":2.156}, {"x":-66.965,"y":0,"scale":1.933,"duration":0.75,"ease":"expo.out"}, 2.12);
+    tl.set("#who-nslip, #who-name", {"opacity":0}, 2.14);
+    tl.set("#who-m1", {"opacity":1}, 2.88);
+    tl.set("#who-lab1", {"opacity":1}, 2.88);
+    tl.fromTo("#who-mp1", {"x":-263.131,"y":0,"scale":0.93}, {"x":-180.048,"y":0,"scale":0.833,"duration":0.75,"ease":"expo.out"}, 2.88);
+    tl.set("#who-m0, #who-lab0", {"opacity":0}, 2.9);
+    tl.set("#who-m2", {"opacity":1}, 3.62);
+    tl.set("#who-lab2", {"opacity":1}, 3.62);
+    tl.fromTo("#who-mp2", {"x":-374.078,"y":0,"scale":0.866}, {"x":-279.518,"y":0,"scale":0.776,"duration":0.75,"ease":"expo.out"}, 3.62);
+    tl.set("#who-m1, #who-lab1", {"opacity":0}, 3.64);
+    tl.set("#who-m3", {"opacity":1}, 4.62);
+    tl.set("#who-lab3", {"opacity":1}, 4.62);
+    tl.fromTo("#who-mp3", {"x":0,"y":-307.2,"scale":1.708}, {"x":0,"y":-76.8,"scale":1.531,"duration":0.75,"ease":"expo.out"}, 4.62);
+    tl.set("#who-m2, #who-lab2", {"opacity":0}, 4.64);
+    tl.set("#who-tw", {"opacity":1}, 5.65);
+    tl.set("#who-m3, #who-lab3", {"opacity":0}, 5.67);
+    tl.fromTo("#who-tp", {"x":-328.751,"y":0,"scale":1.508}, {"x":-1289.59,"y":-153.6,"scale":1.629,"duration":2.06,"ease":"power2.inOut"}, 5.65);
+    tl.set("#who-ff", {"opacity":1}, 6.68);
+    tl.set("#who-ff", {"opacity":1}, 6.68);
+    tl.fromTo("#who-ff .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.12}, 6.68);
+    tl.set("#who-d0", {"opacity":1}, 7.83);
+    tl.fromTo("#who-dc0", {"x":50,"y":1900,"scale":1,"rotation":-4}, {"x":50,"y":300,"scale":1,"rotation":0,"duration":0.45,"ease":"expo.out"}, 7.83);
+    tl.to("#who-dc0", {"x":-538,"y":563.433,"scale":2.2,"duration":0.7,"ease":"power2.inOut"}, 8.28);
+    tl.set("#who-d1", {"opacity":1}, 9.75);
+    tl.fromTo("#who-dc1", {"x":1250,"y":300,"scale":1,"rotation":6}, {"x":50,"y":300,"scale":1,"rotation":0,"duration":0.45,"ease":"expo.out"}, 9.75);
+    tl.to("#who-dc1", {"x":-2219.68,"y":-2542.891,"scale":3.2,"duration":0.7,"ease":"power2.inOut"}, 10.2);
+    tl.fromTo("#who-ring1 path", {"strokeDashoffset":110}, {"strokeDashoffset":0,"duration":0.4,"ease":"power2.inOut"}, 10.85);
+    tl.set("#who-poly", {"opacity":1}, 11.48);
+    tl.set("#who-pm", {"opacity":1}, 11.5);
+    tl.fromTo("#who-pm .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.14}, 11.5);
+    tl.fromTo("#who-arrow path", {"strokeDashoffset":110}, {"strokeDashoffset":0,"duration":0.55,"ease":"power2.inOut"}, 12.3);
+    tl.set("#who-pg", {"opacity":1}, 13.21);
+    tl.fromTo("#who-pg .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 13.21);
     window.__timelines["who"] = tl;
   </script>
 </template>

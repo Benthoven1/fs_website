@@ -92,7 +92,7 @@ def build(cache):
             t += gap
         # Quicken without changing pitch, and level the voice
         raw = subprocess.run(["ffmpeg", "-v", "error", "-i", os.path.join(cache, line["id"] + ".wav"),
-                              "-af", f"atempo={tempo},highpass=f=80", "-ac", "1", "-ar", str(sr),
+                              "-af", f"atempo={line.get('tempo', tempo)},highpass=f=80", "-ac", "1", "-ar", str(sr),
                               "-f", "f32le", "-"], capture_output=True, check=True).stdout
         audio = np.frombuffer(raw, np.float32)
         # Trim the silence the voice leaves at either end

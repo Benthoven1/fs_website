@@ -88,7 +88,8 @@
       "id": "now1",
       "text": "Today, a founder like Franklin would not have to start from zero.",
       "style": "natural documentary narration with normal English intonation, slow and deliberate, weighty, a short pause at each comma, statement falling at the end",
-      "seed": 31
+      "seed": 31,
+      "tempo": 0.86
     },
     {
       "id": "now2",
@@ -98,7 +99,8 @@
       "id": "end1",
       "text": "That is what Mulvium is building: a home for the next Franklin.",
       "style": "natural documentary narration with normal English intonation, slow and deliberate, weighty, a short pause at each comma, statement falling at the end",
-      "seed": 31
+      "seed": 31,
+      "tempo": 0.86
     },
     {
       "id": "end2",
