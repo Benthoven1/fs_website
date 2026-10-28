@@ -205,28 +205,25 @@ const start = (id) => SECTION(id)[0].t0;
   s.cam("#pan", { x: 0, y: 0, scale: pk }, { x: -(PW - W) * 0.55, y: 0, scale: pk }, 0, at("hook3") + 1.2, "power1.inOut");
   s.press("#year", at("hook1", "1731"), { dur: 0.12 });
   s.sound("impact-bass-1", at("hook1", "1731") + 0.03, 0.22);
-  // The broadside: what the city wanted
-  const items = ["A Lending Library", "A Fire Company", "A Hospital", "A College"];
+  // The broadside: what the city lacked, each line printed as it is said
+  const items = ["lending library.", "fire company.", "hospital.", "college."];
   const years = ["1731", "1736", "1751", "1751"];
-  let sheet = `<div id="sheet" class="sheet" style="left:70px;top:440px;width:940px;height:720px;${deckle(940, 720)}">
-    <div class="sc ink abs" style="left:0;top:44px;width:940px;text-align:center;font-size:44px;letter-spacing:0.16em">Wanted in this City</div>
-    <div class="rule" style="left:110px;top:118px;width:720px;height:2px"></div>`;
+  let sheet = `<div id="sheet" class="sheet" style="left:70px;top:440px;width:940px;height:720px;${deckle(940, 720)}">`;
   items.forEach((it, i) => {
-    sheet += `<div id="it${i}" class="fell ink abs" style="left:84px;top:${168 + i * 128}px;font-size:76px"><span style="position:relative;display:inline-block">${it}
-      ${stroke(`strike${i}`, -14, 34, 0, 0, "", C.red, 7, "width:calc(100% + 28px);height:30px").replace(/viewBox="[^"]*"/, 'viewBox="0 0 100 30" preserveAspectRatio="none"').replace(/d=""/, `d="M0,${18 + i % 2 * 4} C30,${10 + i * 2} 70,${24 - i * 2} 100,${12 + i}" vector-effect="non-scaling-stroke"`)}</span></div>
-      <div id="yr${i}" class="fell ink abs" style="left:740px;top:${178 + i * 128}px;width:150px;text-align:right;font-size:58px;opacity:0">${years[i]}</div>`;
+    sheet += `<div id="it${i}" class="fell ink abs" style="left:84px;top:${52 + i * 120}px;font-size:76px;opacity:0"><span style="position:relative;display:inline-block">No<span id="strike${i}" class="strike"></span></span> ${it}</div>
+      <div id="yr${i}" class="fell ink abs" style="left:740px;top:${66 + i * 120}px;width:150px;text-align:right;font-size:58px;opacity:0">${years[i]}</div>`;
   });
   sheet += `</div>`;
-  s.add(sheet).add(`<div id="sig" class="abs" style="left:300px;top:1000px;width:620px;height:250px;clip-path:inset(0 100% 0 0)"><img src="assets/img/signature.png" alt="" style="width:100%;height:100%;object-fit:contain"></div>`);
-  s.style(`#sheet { transform-origin: 50% 0; }`);
+  s.add(sheet).add(`<div id="sig" class="abs" style="left:420px;top:1000px;width:480px;height:140px;clip-path:inset(0 100% 0 0)"><img src="assets/img/signature.png" alt="" style="width:100%;height:100%;object-fit:contain"></div>`);
+  s.style(`#sheet { transform-origin: 50% 0; }
+    .strike { position: absolute; left: -8px; top: 50%; width: calc(100% + 16px); height: 7px; margin-top: -2px; background: ${C.red}; border-radius: 4px; transform-origin: 0 50%; opacity: 0; }`);
   s.lay("#sheet", at("hook1", "had") - 0.3, { y: 2000, rot: -5, end: -0.8 });
   s.sound("whoosh-short", at("hook1", "had") - 0.28, 0.25);
-  s.press("#it0, #it1, #it2, #it3", at("hook1", "had") - 0.1, { stagger: 0.07 });
-  [["hook1", "library"], ["hook2", "company"], ["hook2", "hospital"], ["hook2", "college"]].forEach(([id, w], i) =>
-    s.pen(`#strike${i} path`, at(id, w) + 0.08, 0.3));
-  // Twenty years later: the strikes lift, each line gets its year
+  // "No lending library. No fire company. No hospital. No college."
+  [["hook1", 1], ["hook2", 1], ["hook2", 2], ["hook2", 3]].forEach(([id, n], i) => s.press(`#it${i}`, at(id, "no", n) - 0.04));
+  // Twenty years later: every "No" struck out in red, and each gets its year
   const later = at("hook3", "twenty");
-  s.to("#strike0, #strike1, #strike2, #strike3", { opacity: 0, y: -14, duration: 0.3, ease: "power2.in", stagger: 0.05 }, later);
+  [0, 1, 2, 3].forEach((i) => s.fromTo(`#strike${i}`, { scaleX: 0, rotation: -5, opacity: 1 }, { scaleX: 1, rotation: -5, opacity: 1, duration: 0.22, ease: "power2.out" }, later + i * 0.14));
   s.press("#yr0, #yr1, #yr2, #yr3", at("hook3", "four") - 0.35, { stagger: 0.09 });
   // One man: his own hand, written left to right
   s.fromTo("#sig", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 1.1, ease: "power1.inOut" }, at("hook3", "one") - 0.1);
@@ -575,11 +572,21 @@ const PLATE = { file: "cosmos-close.mp4", from: 64.6, gather: 77.0, settle: 84.4
 }
 
 // ── Captions: the voice, four to six words at a time ───────────────────────
+// A subtitle never repeats words the page is already printing: where the
+// scene sets the line in type, the line gets no subtitle. Each entry is the
+// first word index from which the line is subtitled (Infinity: never).
+const NO = Infinity;
+const CAPTION_FROM = {
+  hook1: NO, hook2: NO, hook3: 0, who1: NO, who2: 6, who3: NO, lib1: NO, lib2: NO, lib3: NO,
+  fire1: NO, fire2: NO, hosp1: 11, hosp2: NO, hosp3: NO, acad1: NO, turn1: NO, turn2: NO, turn3: NO,
+  now1: NO, now2: NO, end1: NO, end2: NO,
+};
 const groups = [];
 for (const l of T.lines) {
-  if (l.id.startsWith("end")) continue; // over the close the words are set large
+  const from = CAPTION_FROM[l.id] ?? 0;
   let g = [];
   l.words.forEach((w, i) => {
+    if (i < from) return;
     g.push(w);
     const next = l.words[i + 1], len = g.map((x) => x[0]).join(" ").length;
     if (!next || /[.:;]$/.test(w[0]) || (/,$/.test(w[0]) && g.length >= 3) || g.length >= 6 || len > 34 || next[1] - w[2] > 0.15) { groups.push(g); g = []; }

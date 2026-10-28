@@ -20,11 +20,15 @@ documents of his city (`CREDITS.md`). `SPEC.md` is the director's brief;
   (VoxCPM2, Apache-2.0, a designed voice saved as a profile), years read as
   years ("seventeen thirty-one"); then lays the lines end to end in
   `assets/narration.wav` and transcribes every word's time into `timing.json`.
+- `denoise.py` — clears the hiss the designed voice carries (DeepFilterNet3,
+  at most 28 dB of reduction, so soft consonants survive).
 - `prep.py` — readies the archival pictures in `assets/img/` (no grade, no
   filter) and records their sizes.
 - `build.mjs` — writes the film: `index.html` (scene hosts, captions, voice,
   music, sound) and one composition per section in `compositions/`, every
-  move timed to the word that names it in `timing.json`.
+  move timed to the word that names it in `timing.json`. Where a scene sets
+  a line in type, that line has no subtitle (`CAPTION_FROM`), so no words
+  are ever on screen twice.
 - `mix.py` — the music bed: Bach's Prelude in C major (Kimiko Ishizaka, CC0),
   ducked under the voice.
 - `assets/cosmos-close.mp4` — the launch film's own close (cosmos and
@@ -36,7 +40,8 @@ To make it again, from this folder:
 # the voice: VoiceStudio's backend with the VoxCPM2 engine on :3900, and a
 # clone profile named in script.json ("voice")
 python3 narrate.py speak <cache-dir>
-python3 narrate.py build <cache-dir>          # needs faster-whisper
+python3 denoise.py <dfn3-weights> <cache-dir> <clean-dir>
+python3 narrate.py build <clean-dir>          # needs faster-whisper
 python3 prep.py <download-dir>                # the pictures, as named in CREDITS.md
 node build.mjs
 python3 mix.py <prelude.ogg>
