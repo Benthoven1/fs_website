@@ -30,6 +30,8 @@ NAMES = ["prospect", "statehouse", "portrait", "press", "martin", "kite", "stove
          "library-hall", "lib-statue", "bucket", "bond", "hospital", "charter", "penn", "almanac"]
 # where a name's file comes from, when it isn't <name>.jpg
 ALIAS = {"kite": ["kite-hi", "kite"], "penn": ["college-hall", "penn-quad"]}
+# the hospital is one half of a stereograph card
+CROP = {"hospital": (0.075, 0.12, 0.495, 0.86)}
 sizes = {}
 
 
@@ -54,7 +56,11 @@ def source(name):
 for name in NAMES:
     p = source(name)
     if p:
-        save(name, Image.open(p))
+        im = Image.open(p)
+        if name in CROP:  # (left, top, right, bottom) as fractions
+            l, t, r, b = CROP[name]
+            im = im.crop((round(l * im.width), round(t * im.height), round(r * im.width), round(b * im.height)))
+        save(name, im)
     else:
         print("placeholder:", name)
         im = Image.new("RGB", (1200, 1600), (200, 190, 168))
@@ -64,7 +70,10 @@ for name in NAMES:
 # The signature: ink kept, paper made transparent
 sig = os.path.join(SRC, "signature.jpg")
 if os.path.exists(sig):
-    g = np.asarray(Image.open(sig).convert("L"), float)
+    im = Image.open(sig).convert("RGBA")  # rendered from an SVG: ink on transparency
+    flat = Image.new("RGBA", im.size, "white")
+    flat.alpha_composite(im)
+    g = np.asarray(flat.convert("L"), float)
     alpha = np.clip((200 - g) * 2.2, 0, 255).astype("uint8")
     ink = np.zeros((*g.shape, 4), "uint8")
     ink[..., 0], ink[..., 1], ink[..., 2], ink[..., 3] = 27, 25, 21, alpha

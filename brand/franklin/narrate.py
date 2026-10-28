@@ -13,7 +13,7 @@ the voice its sound; "style" in script.json directs its delivery (with a
 control, VoxCPM2 clones the timbre without copying the clip's intonation). Years are read as
 years: the voice gets "seventeen thirty-one" where the captions keep "1731".
 
-`build` writes narration.wav (48 kHz mono) and timing.json (each line's start
+`build` writes assets/narration.wav (48 kHz mono) and timing.json (each line's start
 and end, in seconds, and every word's time, transcribed from the voice itself
 by faster-whisper), which the picture and the score are both cut to.
 """
@@ -67,8 +67,10 @@ def speak(cache):
         path = os.path.join(cache, line["id"] + ".wav")
         if os.path.exists(path):
             continue
-        body = json.dumps({"model": "tts-1", "voice": SCRIPT["voice"], "input": f'({SCRIPT["style"]}){spoken(line["text"])}' if SCRIPT.get("style") else spoken(line["text"]),
-                           "seed": SCRIPT.get("seed", 11), "response_format": "wav"}).encode()
+        # a line may carry its own direction (a slower, weightier beat)
+        style = line.get("style", SCRIPT.get("style"))
+        body = json.dumps({"model": "tts-1", "voice": SCRIPT["voice"], "input": f"({style}){spoken(line['text'])}" if style else spoken(line["text"]),
+                           "seed": line.get("seed", SCRIPT.get("seed", 11)), "response_format": "wav"}).encode()
         req = urllib.request.Request(API + "/v1/audio/speech", body, {"Content-Type": "application/json"})
         audio = urllib.request.urlopen(req, timeout=3600).read()
         open(path + ".part", "wb").write(audio)
@@ -100,6 +102,10 @@ def build(cache):
         # Each word's time, from the voice: whisper's words matched to the caption's
         segs, _ = whisper.transcribe(audio[::3].copy(), word_timestamps=True, language="en")
         heard = [w for s in segs for w in s.words]
+        # The voice can trail off into noise after its last word: end the line there
+        if heard and heard[-1].end + 0.4 < dur:
+            audio = audio[: int((heard[-1].end + 0.4) * sr)]
+            dur = len(audio) / sr
         words = line["text"].split()
         a = [norm(w) for w in words]
         b = [norm(spoken(w.word.strip())) for w in heard]
@@ -126,7 +132,7 @@ def build(cache):
         print(f'{line["id"]:6} {timing[-1]["t0"]:6.2f} – {timing[-1]["t1"]:6.2f}  {line["text"][:60]}')
     wav = np.concatenate(out)
     wav *= 0.89 / np.abs(wav).max()
-    sf.write(os.path.join(HERE, "narration.wav"), wav, sr)
+    sf.write(os.path.join(HERE, "assets", "narration.wav"), wav, sr)
     json.dump({"duration": round(t, 3), "lines": timing}, open(os.path.join(HERE, "timing.json"), "w"), indent=1)
     print("narration", round(t, 2), "s")
 

@@ -14,7 +14,9 @@
     },
     {
       "id": "hook3",
-      "text": "Twenty years later, it had all four, and one man had helped to start every one of them."
+      "text": "Twenty years later, it had all four, and one man had helped to start every one of them.",
+      "style": "natural documentary narration with normal English intonation, slow and deliberate, weighty, a short pause at each comma, statement falling at the end",
+      "seed": 31
     },
     {
       "id": "who1",
@@ -42,7 +44,9 @@
     },
     {
       "id": "fire1",
-      "text": "Fire was the next problem."
+      "text": "Fire was the next problem.",
+      "style": "natural documentary narration with normal English intonation, slow and deliberate, weighty, a short pause at each comma, statement falling at the end",
+      "seed": 31
     },
     {
       "id": "fire2",
@@ -50,7 +54,9 @@
     },
     {
       "id": "hosp1",
-      "text": "When Dr Thomas Bond wanted a hospital for the sick poor, Franklin found a clever way to fund it."
+      "text": "When Dr Thomas Bond wanted a hospital for the sick poor, Franklin found a clever way to fund it.",
+      "style": "natural documentary narration with normal English intonation, slow and deliberate, weighty, a short pause at each comma, statement falling at the end",
+      "seed": 31
     },
     {
       "id": "hosp2",
@@ -66,7 +72,9 @@
     },
     {
       "id": "turn1",
-      "text": "But here is the thing."
+      "text": "But here is the thing.",
+      "style": "natural documentary narration with normal English intonation, slow and deliberate, weighty, a short pause at each comma, statement falling at the end",
+      "seed": 31
     },
     {
       "id": "turn2",
@@ -78,7 +86,9 @@
     },
     {
       "id": "now1",
-      "text": "Today, a founder like Franklin would not have to start from zero."
+      "text": "Today, a founder like Franklin would not have to start from zero.",
+      "style": "natural documentary narration with normal English intonation, slow and deliberate, weighty, a short pause at each comma, statement falling at the end",
+      "seed": 31
     },
     {
       "id": "now2",
@@ -86,7 +96,9 @@
     },
     {
       "id": "end1",
-      "text": "That is what Mulvium is building: a home for the next Franklin."
+      "text": "That is what Mulvium is building: a home for the next Franklin.",
+      "style": "natural documentary narration with normal English intonation, slow and deliberate, weighty, a short pause at each comma, statement falling at the end",
+      "seed": 31
     },
     {
       "id": "end2",

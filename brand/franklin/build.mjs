@@ -411,9 +411,9 @@ const start = (id) => SECTION(id)[0].t0;
     .add(`<div id="bn" class="sc ink abs" style="left:0;top:${290 + bz.h * bw}px;width:${W}px;text-align:center;font-size:56px;letter-spacing:0.1em;opacity:0">Dr Thomas Bond</div>`);
   s.lay("#bond", at("hosp1") - 0.1, { y: 1600, rot: -6, end: -1.2 }).press("#bn", at("hosp1", "thomas"));
   s.sound("whoosh-short", at("hosp1") - 0.1, 0.2);
-  const hz = SIZES.hospital, hw = 1000 / hz.w, tH = at("hosp1", "hospital") - 0.15;
-  s.add(`<div id="hosp" class="sheet" style="left:40px;top:420px;width:1000px;height:${r3(hz.h * hw)}px;background:none"><img src="assets/img/hospital.jpg" alt="" style="width:100%;height:100%;display:block"></div>`)
-    .add(`<div id="hn" class="sc ink abs" style="left:40px;top:${450 + hz.h * hw}px;width:1000px;font-size:50px;letter-spacing:0.1em;opacity:0">${words("A hospital for the sick poor")}</div>`);
+  const hz = SIZES.hospital, hw = 700 / hz.w, tH = at("hosp1", "hospital") - 0.15;
+  s.add(`<div id="hosp" class="sheet" style="left:190px;top:230px;width:700px;height:${r3(hz.h * hw)}px;background:none"><img src="assets/img/hospital.jpg" alt="" style="width:100%;height:100%;display:block"></div>`)
+    .add(`<div id="hn" class="sc ink abs" style="left:190px;top:${262 + hz.h * hw}px;width:760px;font-size:50px;letter-spacing:0.1em;opacity:0">${words("A hospital for the sick poor")}</div>`);
   s.lay("#hosp", tH, { x: 1300, y: 80, rot: 5, end: 0.8 }).out("#bn", tH, 0.15);
   s.press("#hn .w", at("hosp1", "sick") - 0.1, { stagger: 0.08 }).sound("whoosh-short", tH, 0.2);
   // The ledger: the Assembly's £2,000 waits on the donors' £2,000
