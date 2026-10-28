@@ -1,0 +1,94 @@
+{
+  "voice": "bf_emma",
+  "speed": 1.05,
+  "lines": [
+    {
+      "id": "hook1",
+      "text": "In 1731, Philadelphia had no lending library."
+    },
+    {
+      "id": "hook2",
+      "text": "No fire company. No hospital. No college."
+    },
+    {
+      "id": "hook3",
+      "text": "Twenty years later, it had all four, and one man had helped to start every one of them."
+    },
+    {
+      "id": "who1",
+      "text": "Benjamin Franklin was a printer by trade."
+    },
+    {
+      "id": "who2",
+      "text": "He was also a writer, a scientist, an inventor, and later, a diplomat."
+    },
+    {
+      "id": "who3",
+      "text": "A polymath: excellent across disciplines, and pointed at the public good."
+    },
+    {
+      "id": "lib1",
+      "text": "His first institution solved a simple problem: in the colonies, books were rare and expensive."
+    },
+    {
+      "id": "lib2",
+      "text": "So in 1731, he persuaded fifty subscribers to pay forty shillings each, and buy books together."
+    },
+    {
+      "id": "lib3",
+      "text": "The Library Company of Philadelphia is still open today."
+    },
+    {
+      "id": "fire1",
+      "text": "Fire was the next problem."
+    },
+    {
+      "id": "fire2",
+      "text": "After warning readers that an ounce of prevention is worth a pound of cure, he organised the Union Fire Company: volunteers who pledged their own leather buckets to every blaze."
+    },
+    {
+      "id": "hosp1",
+      "text": "When the physician Thomas Bond wanted a hospital for the sick poor, Franklin found a clever way to pay for it."
+    },
+    {
+      "id": "hosp2",
+      "text": "He asked the Pennsylvania Assembly to promise two thousand pounds, but only if private donors raised two thousand of their own."
+    },
+    {
+      "id": "hosp3",
+      "text": "It was one of America's first matching grants."
+    },
+    {
+      "id": "acad1",
+      "text": "Then came an academy, which grew into the University of Pennsylvania."
+    },
+    {
+      "id": "turn1",
+      "text": "But here is the thing."
+    },
+    {
+      "id": "turn2",
+      "text": "Each one had to be built from scratch: the agreements, the subscriptions, the fundraising, the books."
+    },
+    {
+      "id": "turn3",
+      "text": "Franklin did it four times, alongside a printing business, an almanac, and experiments with lightning."
+    },
+    {
+      "id": "now1",
+      "text": "Today, a founder like Franklin would not have to start from zero."
+    },
+    {
+      "id": "now2",
+      "text": "A fiscal sponsor can give a new project a legal and financial home from day one, so it can accept gifts, win grants and sign contracts, while the founder gets on with the work."
+    },
+    {
+      "id": "end1",
+      "text": "That is what Mulvium is building: a home for the next Franklin."
+    },
+    {
+      "id": "end2",
+      "text": "Because the next great expansion of human creativity will come from making it easier to create institutions."
+    }
+  ]
+}

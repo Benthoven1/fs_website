@@ -1,0 +1,49 @@
+/* essay.css — the Franklin essay's stage. Every moving value is written per
+   frame by essay.js; nothing here transitions on its own. */
+:root { --ink: #1b1613; --paper: #eceae5; --clay: #b87758; }
+html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+#stage {
+  position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden;
+  background: var(--paper); transform-origin: 0 0; font-family: "Lora", serif; -webkit-font-smoothing: antialiased;
+}
+#stage > * { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+#veil { background: var(--paper); opacity: 0; }
+#black { background: #000; opacity: 0; }
+#grain { mix-blend-mode: overlay; opacity: 0.05; pointer-events: none; }
+
+/* The narration, a phrase at a time, under the picture */
+#caption {
+  top: 1488px; left: 90px; width: 900px; height: auto;
+  text-align: center; font-family: "Inter", sans-serif; font-weight: 700; font-size: 44px; line-height: 1.25;
+  color: #fff; text-shadow: 0 2px 14px rgba(10, 6, 30, 0.75), 0 0 2px rgba(10, 6, 30, 0.6);
+}
+#caption.on-light { color: #1b1633; text-shadow: 0 2px 14px rgba(255, 255, 255, 0.85), 0 0 2px rgba(255, 255, 255, 0.8); }
+
+/* Words over the cosmos: each rises in its mask, as the hero's do */
+.cap { position: absolute; white-space: nowrap; line-height: 1.2; font-size: 62px; will-change: opacity, filter; }
+.cap.c { width: 2000px; margin-left: -1000px; text-align: center; }
+.cap.ink { color: var(--ink); }
+.cap.clay { color: var(--clay); }
+.cap.it { font-style: italic; }
+.cap.sm { font-size: 58px; }
+.cap.xs { font-size: 44px; }
+.cap.xl { font-size: 112px; letter-spacing: 0.01em; }
+.cap .hw { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 0.12em 0.16em; margin: 0 -0.12em -0.16em; }
+.cap .hw > span { display: inline-block; }
+
+/* The wordmark, as the launch film closes */
+#brand { pointer-events: none; }
+#brand .mark { position: absolute; left: 0; top: 0; width: 100%; height: auto; text-align: center; white-space: nowrap; font-size: 118px; line-height: 1; color: var(--ink); }
+#brand .mark > span { display: inline-block; text-align: center; vertical-align: baseline; }
+#brand .cta { position: absolute; left: 0; top: 0; width: 100%; height: auto; display: flex; flex-direction: column; align-items: center; gap: 22px; opacity: 0; }
+#brand .pill { font-family: "IBM Plex Sans", sans-serif; font-weight: 500; font-size: 30px; letter-spacing: 0.02em; color: #fff; background: var(--clay); padding: 20px 40px 22px; border-radius: 999px; box-shadow: 0 14px 40px rgba(143, 90, 66, 0.28); }
+#brand .url { font-family: "Major Mono Display", monospace; text-transform: lowercase; font-size: 34px; letter-spacing: 0.06em; color: var(--ink); padding-right: 6px; }
+
+#play {
+  position: fixed; inset: 0; width: 100%; height: 100%; border: 0; background: rgba(15, 12, 46, 0.55); color: #f7f2ea;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; cursor: pointer; font-family: "Lora", serif;
+}
+#play[hidden] { display: none; }
+.play-mark { width: 0; height: 0; border-style: solid; border-width: 22px 0 22px 36px; border-color: transparent transparent transparent #f7f2ea; margin-left: 8px; }
+.play-label { font-size: 26px; font-style: italic; }
+.play-note { font-family: "Major Mono Display", monospace; text-transform: lowercase; font-size: 13px; letter-spacing: 0.08em; opacity: 0.7; }

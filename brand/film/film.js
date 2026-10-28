@@ -29,6 +29,9 @@ const REEL = PARAMS.get("format") === "reel";
 const W = REEL ? 1080 : 1920, H = REEL ? 1920 : 1080;
 const DURATION = CUES.duration;
 document.documentElement.dataset.format = REEL ? "reel" : "wide";
+// ?clean draws the picture alone, without its words or the letterbox (for
+// stills and loops cut from the film, such as the launch email's)
+if (PARAMS.has("clean")) document.documentElement.dataset.clean = "";
 // The reel sees the same scenes through a taller window: each field of view
 // is widened so that as much of each scene fits across its narrow width
 const fovFor = (f) => (REEL ? (360 / Math.PI) * Math.atan(Math.tan((f * Math.PI) / 360) * 1.75) : f);

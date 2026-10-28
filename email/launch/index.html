@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="x-apple-disable-message-reformatting">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light only">
+<title>Mulvium: a new kind of institution</title>
+<!--
+  The launch email: the launch film (brand/film), told again for the inbox.
+  Pictures are GIFs cut from the film itself, without its words (made by
+  make.sh). Apple Mail and iOS Mail play the film inline; every other client
+  shows its animated stand-in, which links to the film's page. Every
+  colour and size is inline, as mail clients want; the <style> below only
+  adds what some clients can use (the inline video, small screens).
+  Before sending, fill {{unsubscribe_url}} and the postal address in the
+  footer through your sending service.
+-->
+<!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&amp;family=Major+Mono+Display&amp;display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; padding: 0; background: #eceae5; -webkit-text-size-adjust: 100%; }
+  img { border: 0; line-height: 100%; outline: none; text-decoration: none; }
+  a { color: #8f5a42; }
+  /* The film plays inline only where mail can play it: Apple Mail on the
+     desktop, and iOS Mail (the @supports test, which webmail does not parse).
+     Everywhere else its moving still shows, and links to the film. */
+  .video-wrapper { display: none; }
+  @media (-webkit-min-device-pixel-ratio: 0) and (min-device-width: 1024px) {
+    .video-wrapper { display: block !important; max-height: none !important; }
+    .video-fallback { display: none !important; max-height: 0 !important; overflow: hidden !important; }
+  }
+  @supports (-webkit-overflow-scrolling: touch) and (color: #ffffffff) {
+    div[class^=video-wrapper] { display: block !important; max-height: none !important; }
+    div[class^=video-fallback] { display: none !important; max-height: 0 !important; overflow: hidden !important; }
+  }
+  /* Samsung Mail on Android claims WebKit, but plays no video */
+  #MessageViewBody .video-wrapper { display: none !important; }
+  #MessageViewBody .video-fallback { display: block !important; max-height: none !important; }
+  @media screen and (max-width: 620px) {
+    .pad { padding-left: 24px !important; padding-right: 24px !important; }
+    .h1 { font-size: 30px !important; }
+    .h2 { font-size: 24px !important; }
+    .half { display: block !important; width: 100% !important; }
+  }
+</style>
+</head>
+<body style="margin:0;padding:0;background:#eceae5;">
+<!-- The line a mailbox shows beside the subject -->
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#eceae5;">Millions of people have ideas for things that should exist. Watch the film.&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#eceae5;">
+<tr><td align="center" style="padding:28px 12px 40px;">
+
+  <!-- View in a browser -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;">
+  <tr><td align="right" style="padding:0 6px 12px;font-family:Lora,Georgia,'Times New Roman',serif;font-size:13px;color:#7a706a;">
+    <a href="https://mulvium.org/email/launch/" style="color:#7a706a;">View in your browser</a>
+  </td></tr>
+  </table>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;background:#f7f5f1;border:1px solid #ddd8d0;border-radius:18px;overflow:hidden;">
+
+  <!-- The cosmos's five colours, as a band across the top -->
+  <tr><td style="height:6px;line-height:6px;font-size:0;background:#f0d5bb;background-image:linear-gradient(90deg,#f0d5bb,#c4ddb8,#b8ddd8,#b8cae0,#e0b8c8);">&nbsp;</td></tr>
+
+  <!-- The wordmark, through its many faces to its own -->
+  <tr><td align="center" style="padding:26px 0 0;">
+    <a href="https://mulvium.org/" style="text-decoration:none;"><img src="https://mulvium.org/email/launch/mark.gif" width="600" alt="MULVIUM" style="display:block;width:100%;max-width:600px;height:auto;font-family:Georgia,serif;font-size:40px;letter-spacing:0.3em;color:#1b1613;"></a>
+  </td></tr>
+
+  <!-- The question -->
+  <tr><td class="pad" align="center" style="padding:8px 48px 0;">
+    <p style="margin:0 0 14px;font-family:'Major Mono Display','Courier New',monospace;font-size:13px;letter-spacing:0.12em;color:#8f5a42;">a new kind of institution</p>
+    <h1 class="h1" style="margin:0;font-family:Lora,Georgia,'Times New Roman',serif;font-weight:400;font-size:36px;line-height:1.22;color:#1b1613;">Millions of people have ideas<br><em style="font-style:italic;">for things that should exist.</em></h1>
+  </td></tr>
+
+  <!-- The film: inline where it can play, its moving still everywhere else -->
+  <tr><td style="padding:30px 0 0;">
+    <div class="video-wrapper" style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
+      <video width="600" controls playsinline preload="none" poster="https://mulvium.org/email/launch/poster.jpg" style="display:block;width:100%;height:auto;background:#eceae5;">
+        <source src="https://mulvium.org/brand/mulvium-launch-film-1920x1080.mp4" type="video/mp4">
+        <a href="https://mulvium.org/brand/film/"><img src="https://mulvium.org/email/launch/hero.gif" width="600" alt="Watch the Mulvium launch film" style="display:block;width:100%;height:auto;"></a>
+      </video>
+    </div>
+    <div class="video-fallback">
+      <a href="https://mulvium.org/brand/film/" style="text-decoration:none;"><img src="https://mulvium.org/email/launch/hero.gif" width="600" alt="Watch the Mulvium launch film: Mulvium's cosmos, a star and four spheres turning on their rings" style="display:block;width:100%;max-width:600px;height:auto;"></a>
+    </div>
+  </td></tr>
+  <tr><td align="center" style="padding:12px 24px 0;font-family:Lora,Georgia,'Times New Roman',serif;font-size:15px;color:#7a706a;">
+    <a href="https://mulvium.org/brand/film/" style="color:#8f5a42;text-decoration:none;">&#9654;&nbsp; Watch the launch film</a> &nbsp;&middot;&nbsp; 1 min 28 s, with sound
+  </td></tr>
+
+  <!-- The problem -->
+  <tr><td class="pad" style="padding:40px 48px 0;font-family:Lora,Georgia,'Times New Roman',serif;">
+    <h2 class="h2" style="margin:0 0 14px;font-weight:400;font-size:27px;line-height:1.28;color:#1b1613;">The problem isn&rsquo;t a lack of ideas.</h2>
+    <p style="margin:0;font-size:18px;line-height:1.6;color:#3b332f;">It&rsquo;s the organization you have to build before you can begin: the bylaws and budgets, the permits and payroll, the grant reports and the insurance. So most ideas never begin.</p>
+  </td></tr>
+  <tr><td style="padding:26px 0 0;">
+    <img src="https://mulvium.org/email/launch/work.gif" width="600" alt="A sphere of the organization's work, turning in the dark: governance, marketing, payroll, form 990s, recruiting and more" style="display:block;width:100%;max-width:600px;height:auto;background:#0b0817;">
+  </td></tr>
+
+  <!-- What Mulvium does -->
+  <tr><td class="pad" style="padding:40px 48px 0;font-family:Lora,Georgia,'Times New Roman',serif;">
+    <p style="margin:0 0 12px;font-family:'Major Mono Display','Courier New',monospace;font-size:13px;letter-spacing:0.12em;color:#8f5a42;">fiscal sponsorship</p>
+    <h2 class="h2" style="margin:0 0 14px;font-weight:400;font-size:27px;line-height:1.28;color:#1b1613;">At Mulvium, we change the norm: <em>we build the organization beneath you.</em></h2>
+    <p style="margin:0;font-size:18px;line-height:1.6;color:#3b332f;">Mulvium lends your project its nonprofit home, so it can raise money, sign contracts and grow, long before it is an organization of its own.</p>
+  </td></tr>
+  <tr><td align="center" style="padding:22px 0 0;">
+    <img src="https://mulvium.org/email/launch/bowl.gif" width="600" alt="The Fiscal Sponsorship bowl: four projects settle into it, one by one" style="display:block;width:100%;max-width:600px;height:auto;">
+  </td></tr>
+  <tr><td class="pad" style="padding:8px 48px 0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="font-family:Lora,Georgia,'Times New Roman',serif;">
+      <tr>
+        <td width="34" valign="top" style="padding:16px 0 0;font-family:'Major Mono Display','Courier New',monospace;font-size:15px;color:#b87758;">01</td>
+        <td valign="top" style="padding:14px 0 14px;border-bottom:1px solid #e4dfd7;font-size:17px;line-height:1.55;color:#3b332f;"><strong style="font-weight:500;color:#1b1613;">Begin now.</strong> Start as soon as the sponsorship agreement is signed, not after months of forming a nonprofit.</td>
+      </tr>
+      <tr>
+        <td width="34" valign="top" style="padding:16px 0 0;font-family:'Major Mono Display','Courier New',monospace;font-size:15px;color:#b87758;">02</td>
+        <td valign="top" style="padding:14px 0 14px;border-bottom:1px solid #e4dfd7;font-size:17px;line-height:1.55;color:#3b332f;"><strong style="font-weight:500;color:#1b1613;">A fund of its own.</strong> Gifts and grants for your project are receipted and held for it alone.</td>
+      </tr>
+      <tr>
+        <td width="34" valign="top" style="padding:16px 0 0;font-family:'Major Mono Display','Courier New',monospace;font-size:15px;color:#b87758;">03</td>
+        <td valign="top" style="padding:14px 0 14px;font-size:17px;line-height:1.55;color:#3b332f;"><strong style="font-weight:500;color:#1b1613;">The work beneath you.</strong> Mulvium signs the contracts, arranges the insurance and keeps the books. You lead the work.</td>
+      </tr>
+    </table>
+  </td></tr>
+
+  <!-- Who makes an institution exist -->
+  <tr><td style="padding:36px 0 0;">
+    <img src="https://mulvium.org/email/launch/cosmos.gif" width="600" alt="Mulvium's cosmos tilting up from above: a star, and four spheres on their rings" style="display:block;width:100%;max-width:600px;height:auto;">
+  </td></tr>
+  <tr><td class="pad" align="center" style="padding:6px 36px 0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="font-family:Lora,Georgia,'Times New Roman',serif;">
+      <tr>
+        <td class="half" width="50%" valign="top" style="padding:10px 8px;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td valign="middle" style="padding-right:12px;"><img src="https://mulvium.org/email/launch/sphere-you.png" width="34" height="34" alt="" style="display:block;"></td>
+            <td valign="middle" style="font-size:16px;line-height:1.35;color:#3b332f;"><span style="font-family:'Major Mono Display','Courier New',monospace;font-size:14px;color:#1b1613;">you</span><br>bring the idea</td>
+          </tr></table>
+        </td>
+        <td class="half" width="50%" valign="top" style="padding:10px 8px;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td valign="middle" style="padding-right:12px;"><img src="https://mulvium.org/email/launch/sphere-patrons.png" width="34" height="34" alt="" style="display:block;"></td>
+            <td valign="middle" style="font-size:16px;line-height:1.35;color:#3b332f;"><span style="font-family:'Major Mono Display','Courier New',monospace;font-size:14px;color:#1b1613;">patrons</span><br>bring the capital</td>
+          </tr></table>
+        </td>
+      </tr>
+      <tr>
+        <td class="half" width="50%" valign="top" style="padding:10px 8px;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td valign="middle" style="padding-right:12px;"><img src="https://mulvium.org/email/launch/sphere-mulvium.png" width="34" height="34" alt="" style="display:block;"></td>
+            <td valign="middle" style="font-size:16px;line-height:1.35;color:#3b332f;"><span style="font-family:'Major Mono Display','Courier New',monospace;font-size:14px;color:#1b1613;">mulvium</span><br>brings the institution</td>
+          </tr></table>
+        </td>
+        <td class="half" width="50%" valign="top" style="padding:10px 8px;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td valign="middle" style="padding-right:12px;"><img src="https://mulvium.org/email/launch/sphere-neighbors.png" width="34" height="34" alt="" style="display:block;"></td>
+            <td valign="middle" style="font-size:16px;line-height:1.35;color:#3b332f;"><span style="font-family:'Major Mono Display','Courier New',monospace;font-size:14px;color:#1b1613;">neighbors</span><br>share in its beauty</td>
+          </tr></table>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+
+  <!-- From the founder's letter -->
+  <tr><td class="pad" style="padding:40px 48px 0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#efe9df;border-radius:14px;">
+      <tr><td style="padding:30px 32px 26px;font-family:Lora,Georgia,'Times New Roman',serif;">
+        <p style="margin:0 0 16px;font-size:22px;line-height:1.45;font-style:italic;color:#1b1613;">&ldquo;Institutions can simply be one person with a vision to do something beautiful and something authentic.&rdquo;</p>
+        <p style="margin:0 0 6px;font-size:17px;line-height:1.55;color:#3b332f;">Changing the world starts with helping your neighbor. All you need is an appetite for good, a vision, and the willingness to bring it to life.</p>
+        <img src="https://mulvium.org/email/launch/signature.png" width="190" alt="Benjamin" style="display:block;width:190px;height:auto;margin:8px 0 0 -38px;">
+        <p style="margin:0;font-size:16px;color:#1b1613;">Benjamin, Founder</p>
+      </td></tr>
+    </table>
+  </td></tr>
+
+  <!-- The expansion -->
+  <tr><td style="padding:36px 0 0;">
+    <img src="https://mulvium.org/email/launch/net.gif" width="600" alt="A network of institutions spreading out, each named: a community garden, a scholarship fund, a jazz series, a film festival" style="display:block;width:100%;max-width:600px;height:auto;">
+  </td></tr>
+  <tr><td class="pad" align="center" style="padding:10px 48px 0;font-family:Lora,Georgia,'Times New Roman',serif;">
+    <p style="margin:0 0 10px;font-size:20px;line-height:1.5;color:#3b332f;">The next great expansion of human creativity won&rsquo;t come from making it easier to create content.</p>
+    <p class="h2" style="margin:0;font-size:27px;line-height:1.3;color:#1b1613;">It will come from making it easier to create <em style="color:#b87758;">institutions.</em></p>
+  </td></tr>
+
+  <!-- The waitlist -->
+  <tr><td align="center" style="padding:34px 24px 0;">
+    <!--[if mso]>
+    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://mulvium.org/#waitlist" style="height:56px;v-text-anchor:middle;width:260px;" arcsize="50%" stroke="f" fillcolor="#b87758">
+      <center style="color:#ffffff;font-family:Georgia,serif;font-size:18px;">Join the waitlist</center>
+    </v:roundrect>
+    <![endif]-->
+    <!--[if !mso]><!-->
+    <a href="https://mulvium.org/#waitlist" style="display:inline-block;background:#b87758;border-radius:999px;padding:17px 40px 18px;font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;font-size:18px;font-weight:500;letter-spacing:0.02em;color:#ffffff;text-decoration:none;box-shadow:0 10px 28px rgba(143,90,66,0.25);">Join the waitlist</a>
+    <!--<![endif]-->
+  </td></tr>
+  <tr><td align="center" style="padding:14px 24px 40px;font-family:Lora,Georgia,'Times New Roman',serif;font-size:14px;color:#7a706a;">
+    Free. No commitment. Not open yet. US-based projects, for now.
+  </td></tr>
+
+  <!-- Footer -->
+  <tr><td class="pad" align="center" style="padding:18px 40px 24px;border-top:1px solid #e4dfd7;font-family:Lora,Georgia,'Times New Roman',serif;font-size:13px;line-height:1.7;color:#7a706a;">
+    <p style="margin:0 0 6px;font-family:'Major Mono Display','Courier New',monospace;font-size:13px;letter-spacing:0.08em;color:#8f5a42;">mulvium</p>
+    <a href="https://mulvium.org" style="color:#8f5a42;text-decoration:none;">mulvium.org</a> &nbsp;&middot;&nbsp;
+    <a href="https://mulvium.org/brand/" style="color:#8f5a42;text-decoration:none;">Press kit</a> &nbsp;&middot;&nbsp;
+    <a href="https://mulvium.org/privacy/" style="color:#8f5a42;text-decoration:none;">Privacy</a> &nbsp;&middot;&nbsp;
+    <a href="mailto:hello@mulvium.org" style="color:#8f5a42;text-decoration:none;">hello@mulvium.org</a><br>
+    You are receiving this because you asked to hear from Mulvium. <a href="{{unsubscribe_url}}" style="color:#7a706a;">Unsubscribe</a>.<br>
+    {{postal_address}}
+  </td></tr>
+
+  </table>
+</td></tr>
+</table>
+</body>
+</html>

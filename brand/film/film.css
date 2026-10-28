@@ -268,6 +268,10 @@ html, body {
 #bars i:last-child { bottom: 0; top: auto; }
 #bars { pointer-events: none; }
 
+/* ?clean: the picture alone */
+:root[data-clean] #captions, :root[data-clean] #tags, :root[data-clean] #leads, :root[data-clean] #halo,
+:root[data-clean] #scrim, :root[data-clean] #bars, :root[data-clean] #brand .cta { display: none !important; }
+
 /* ── Playing in a browser ─────────────────────────────────────────────── */
 #play {
   position: fixed;
