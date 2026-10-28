@@ -1,0 +1,443 @@
+{
+ "duration": 119.619,
+ "cues": {
+  "cosmos": 101,
+  "wordmark": 111.319,
+  "cycle": [
+   111.919,
+   115.319
+  ],
+  "settle": [
+   115.319,
+   116.319
+  ],
+  "cta": 116.819
+ },
+ "sfx": [
+  {
+   "t": 1.531,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 4.051,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 6.285,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 7.347,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 8.134,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 10.335,
+   "kind": "chime",
+   "gain": 0.8
+  },
+  {
+   "t": 10.555,
+   "kind": "chime",
+   "gain": 0.8
+  },
+  {
+   "t": 10.775,
+   "kind": "chime",
+   "gain": 0.8
+  },
+  {
+   "t": 10.995,
+   "kind": "chime",
+   "gain": 0.8
+  },
+  {
+   "t": 11.002,
+   "kind": "whoosh",
+   "gain": 1
+  },
+  {
+   "t": 14.03,
+   "kind": "whoosh",
+   "gain": 1
+  },
+  {
+   "t": 15.483,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 17.647,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 18.186,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 18.936,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 20.172,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 21.223,
+   "kind": "whoosh",
+   "gain": 1
+  },
+  {
+   "t": 24.142,
+   "kind": "chime",
+   "gain": 0.7
+  },
+  {
+   "t": 27.241,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 29.5,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 29.998,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 31.464,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 34.708,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 34.857,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 35.005,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 35.154,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 35.302,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 35.451,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 35.599,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 35.748,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 35.897,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 36.045,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 36.194,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 36.342,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 36.592,
+   "kind": "chime",
+   "gain": 1
+  },
+  {
+   "t": 38.54,
+   "kind": "whoosh",
+   "gain": 1
+  },
+  {
+   "t": 41.245,
+   "kind": "chime",
+   "gain": 0.8
+  },
+  {
+   "t": 42.365,
+   "kind": "whoosh",
+   "gain": 1
+  },
+  {
+   "t": 45.463,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 49.04,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 55.241,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 57.108,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 58.434,
+   "kind": "chime",
+   "gain": 1
+  },
+  {
+   "t": 61.528,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 63.841,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 64.283,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 64.534,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 64.786,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 65.037,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 65.288,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 65.54,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 65.791,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 66.042,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 66.293,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 66.545,
+   "kind": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 66.922,
+   "kind": "chime",
+   "gain": 1
+  },
+  {
+   "t": 68.766,
+   "kind": "stamp",
+   "gain": 1
+  },
+  {
+   "t": 71.039,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 72.596,
+   "kind": "chime",
+   "gain": 1
+  },
+  {
+   "t": 74.859,
+   "kind": "whoosh",
+   "gain": 1
+  },
+  {
+   "t": 78.494,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 79.211,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 80.061,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 80.822,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 82.402,
+   "kind": "stamp",
+   "gain": 1
+  },
+  {
+   "t": 83.602,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 84.68,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 86.164,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 87.523,
+   "kind": "whoosh",
+   "gain": 1
+  },
+  {
+   "t": 90.439,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 91.21,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 92.594,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 95.925,
+   "kind": "chime",
+   "gain": 0.6
+  },
+  {
+   "t": 96.602,
+   "kind": "chime",
+   "gain": 0.6
+  },
+  {
+   "t": 97.404,
+   "kind": "chime",
+   "gain": 0.6
+  },
+  {
+   "t": 98.712,
+   "kind": "pop",
+   "gain": 1
+  },
+  {
+   "t": 101,
+   "kind": "whoosh",
+   "gain": 1
+  },
+  {
+   "t": 102.4,
+   "kind": "chime",
+   "gain": 1
+  },
+  {
+   "t": 115.319,
+   "kind": "settle",
+   "gain": 0.6
+  },
+  {
+   "t": 115.459,
+   "kind": "settle",
+   "gain": 0.6
+  },
+  {
+   "t": 115.599,
+   "kind": "settle",
+   "gain": 0.6
+  },
+  {
+   "t": 115.739,
+   "kind": "settle",
+   "gain": 0.6
+  },
+  {
+   "t": 115.879,
+   "kind": "settle",
+   "gain": 0.6
+  },
+  {
+   "t": 116.019,
+   "kind": "settle",
+   "gain": 0.6
+  },
+  {
+   "t": 116.159,
+   "kind": "settle",
+   "gain": 0.6
+  }
+ ]
+}
