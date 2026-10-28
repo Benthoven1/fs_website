@@ -1,0 +1,238 @@
+<template>
+  <style>
+    @font-face { font-family: "IM Fell English"; src: url(assets/fonts/IMFellEnglish-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "IM Fell English"; src: url(assets/fonts/IMFellEnglish-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+    @font-face { font-family: "IM Fell English SC"; src: url(assets/fonts/IMFellEnglishSC-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-700.woff2) format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
+    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #EDE3CB url(assets/paper.jpg) center / cover; }
+
+    .abs { position: absolute; }
+    .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .fell { font-family: "IM Fell English", serif; font-weight: 400; color: #1B1915; line-height: 1.02; }
+    .sc { font-family: "IM Fell English SC", serif; font-weight: 400; color: #1B1915; letter-spacing: 0.04em; line-height: 1.1; }
+    .caslon { font-family: "Libre Caslon Text", serif; color: #1B1915; }
+    .red { color: #A8261B; }
+    .on-dark { color: #EDE3CB; }
+    .ink { text-shadow: 0 0 0.6px rgba(27, 25, 21, 0.85); }
+    .w { display: inline-block; white-space: pre; }
+    .pic { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+    .pic img { display: block; width: 100%; height: 100%; }
+    .sheet { position: absolute; background: #EDE3CB url(assets/paper.jpg) center / cover; box-shadow: 0 18px 44px rgba(40, 24, 8, 0.30), 0 2px 6px rgba(40, 24, 8, 0.18); }
+    .slip { position: absolute; left: 0; width: 1080px; background: rgba(237, 227, 203, 0.94); }
+    .rule { position: absolute; height: 3px; background: #1B1915; }
+    svg.ink-line { position: absolute; overflow: visible; }
+    svg.ink-line path { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 100 120; stroke-dashoffset: 110; }
+
+
+    #root { background: none; }
+    .cap { position: absolute; left: 0; top: 1186px; width: 1080px; height: 140px; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; }
+    .cap span { max-width: 900px; text-align: center; font-family: "Libre Caslon Text", serif; font-size: 48px; line-height: 1.22; color: #1B1915;
+      background: rgba(237, 227, 203, 0.94); padding: 8px 22px 12px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  </style>
+  <div id="root" data-composition-id="captions" data-width="1080" data-height="1920">
+<div id="captions-g0" class="cap"><span>In 1731, Philadelphia had no lending</span></div>
+<div id="captions-g1" class="cap"><span>library.</span></div>
+<div id="captions-g2" class="cap"><span>No fire company.</span></div>
+<div id="captions-g3" class="cap"><span>No hospital.</span></div>
+<div id="captions-g4" class="cap"><span>No college.</span></div>
+<div id="captions-g5" class="cap"><span>Twenty years later,</span></div>
+<div id="captions-g6" class="cap"><span>it had all four,</span></div>
+<div id="captions-g7" class="cap"><span>and one man had helped to</span></div>
+<div id="captions-g8" class="cap"><span>start every one of them.</span></div>
+<div id="captions-g9" class="cap"><span>Benjamin Franklin:</span></div>
+<div id="captions-g10" class="cap"><span>printer, writer, scientist,</span></div>
+<div id="captions-g11" class="cap"><span>inventor.</span></div>
+<div id="captions-g12" class="cap"><span>And in time,</span></div>
+<div id="captions-g13" class="cap"><span>a Founding Father,</span></div>
+<div id="captions-g14" class="cap"><span>who signed both the Declaration of</span></div>
+<div id="captions-g15" class="cap"><span>Independence and the Constitution.</span></div>
+<div id="captions-g16" class="cap"><span>A polymath, pointed at the public</span></div>
+<div id="captions-g17" class="cap"><span>good.</span></div>
+<div id="captions-g18" class="cap"><span>It began with the Junto:</span></div>
+<div id="captions-g19" class="cap"><span>a club of young tradesmen he</span></div>
+<div id="captions-g20" class="cap"><span>gathered in 1727,</span></div>
+<div id="captions-g21" class="cap"><span>to read, debate,</span></div>
+<div id="captions-g22" class="cap"><span>and improve themselves.</span></div>
+<div id="captions-g23" class="cap"><span>First, they pooled their own books.</span></div>
+<div id="captions-g24" class="cap"><span>Then, in 1731,</span></div>
+<div id="captions-g25" class="cap"><span>Franklin persuaded fifty subscribers</span></div>
+<div id="captions-g26" class="cap"><span>to pay forty shillings each,</span></div>
+<div id="captions-g27" class="cap"><span>and buy books together.</span></div>
+<div id="captions-g28" class="cap"><span>The Library Company of Philadelphia</span></div>
+<div id="captions-g29" class="cap"><span>is still open today:</span></div>
+<div id="captions-g30" class="cap"><span>America's oldest cultural institution.</span></div>
+<div id="captions-g31" class="cap"><span>Fire was the next problem.</span></div>
+<div id="captions-g32" class="cap"><span>After warning that an ounce of</span></div>
+<div id="captions-g33" class="cap"><span>prevention is worth a pound of</span></div>
+<div id="captions-g34" class="cap"><span>cure, he organised the Union Fire</span></div>
+<div id="captions-g35" class="cap"><span>Company:</span></div>
+<div id="captions-g36" class="cap"><span>volunteers pledged to fight fires with</span></div>
+<div id="captions-g37" class="cap"><span>their own leather buckets.</span></div>
+<div id="captions-g38" class="cap"><span>When Dr Thomas Bond wanted a</span></div>
+<div id="captions-g39" class="cap"><span>hospital for the sick poor,</span></div>
+<div id="captions-g40" class="cap"><span>Franklin found a clever way to</span></div>
+<div id="captions-g41" class="cap"><span>fund it.</span></div>
+<div id="captions-g42" class="cap"><span>The Assembly would give two thousand</span></div>
+<div id="captions-g43" class="cap"><span>pounds, but only if private donors</span></div>
+<div id="captions-g44" class="cap"><span>raised two thousand first.</span></div>
+<div id="captions-g45" class="cap"><span>It was one of America's first</span></div>
+<div id="captions-g46" class="cap"><span>matching grants.</span></div>
+<div id="captions-g47" class="cap"><span>Then came an academy,</span></div>
+<div id="captions-g48" class="cap"><span>which grew into the University of</span></div>
+<div id="captions-g49" class="cap"><span>Pennsylvania.</span></div>
+<div id="captions-g50" class="cap"><span>But here is the thing.</span></div>
+<div id="captions-g51" class="cap"><span>Each one had to be built</span></div>
+<div id="captions-g52" class="cap"><span>from scratch:</span></div>
+<div id="captions-g53" class="cap"><span>the agreements, the subscriptions,</span></div>
+<div id="captions-g54" class="cap"><span>the fundraising, the books.</span></div>
+<div id="captions-g55" class="cap"><span>Franklin did it four times,</span></div>
+<div id="captions-g56" class="cap"><span>alongside a printing business,</span></div>
+<div id="captions-g57" class="cap"><span>an almanac, and experiments with lightning.</span></div>
+<div id="captions-g58" class="cap"><span>Today, a founder like Franklin would</span></div>
+<div id="captions-g59" class="cap"><span>not have to start from zero.</span></div>
+<div id="captions-g60" class="cap"><span>A fiscal sponsor gives a new</span></div>
+<div id="captions-g61" class="cap"><span>project a legal and financial home</span></div>
+<div id="captions-g62" class="cap"><span>from day one:</span></div>
+<div id="captions-g63" class="cap"><span>it can accept gifts,</span></div>
+<div id="captions-g64" class="cap"><span>win grants and sign contracts,</span></div>
+<div id="captions-g65" class="cap"><span>while the founder does the work.</span></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.set("#captions-g0", {"opacity":1,"visibility":"visible"}, 1.15);
+    tl.set("#captions-g0", {"opacity":0,"visibility":"hidden"}, 3.93);
+    tl.set("#captions-g1", {"opacity":1,"visibility":"visible"}, 3.94);
+    tl.set("#captions-g1", {"opacity":0,"visibility":"hidden"}, 4.965);
+    tl.set("#captions-g2", {"opacity":1,"visibility":"visible"}, 4.985);
+    tl.set("#captions-g2", {"opacity":0,"visibility":"hidden"}, 6.35);
+    tl.set("#captions-g3", {"opacity":1,"visibility":"visible"}, 6.36);
+    tl.set("#captions-g3", {"opacity":0,"visibility":"hidden"}, 7.4);
+    tl.set("#captions-g4", {"opacity":1,"visibility":"visible"}, 7.41);
+    tl.set("#captions-g4", {"opacity":0,"visibility":"hidden"}, 8.705);
+    tl.set("#captions-g5", {"opacity":1,"visibility":"visible"}, 8.725);
+    tl.set("#captions-g5", {"opacity":0,"visibility":"hidden"}, 10.255);
+    tl.set("#captions-g6", {"opacity":1,"visibility":"visible"}, 10.265);
+    tl.set("#captions-g6", {"opacity":0,"visibility":"hidden"}, 11.735);
+    tl.set("#captions-g7", {"opacity":1,"visibility":"visible"}, 11.745);
+    tl.set("#captions-g7", {"opacity":0,"visibility":"hidden"}, 13.795);
+    tl.set("#captions-g8", {"opacity":1,"visibility":"visible"}, 13.805);
+    tl.set("#captions-g8", {"opacity":0,"visibility":"hidden"}, 16.13);
+    tl.set("#captions-g9", {"opacity":1,"visibility":"visible"}, 16.58);
+    tl.set("#captions-g9", {"opacity":0,"visibility":"hidden"}, 17.95);
+    tl.set("#captions-g10", {"opacity":1,"visibility":"visible"}, 17.96);
+    tl.set("#captions-g10", {"opacity":0,"visibility":"hidden"}, 20.18);
+    tl.set("#captions-g11", {"opacity":1,"visibility":"visible"}, 20.19);
+    tl.set("#captions-g11", {"opacity":0,"visibility":"hidden"}, 21.27);
+    tl.set("#captions-g12", {"opacity":1,"visibility":"visible"}, 21.29);
+    tl.set("#captions-g12", {"opacity":0,"visibility":"hidden"}, 22.435);
+    tl.set("#captions-g13", {"opacity":1,"visibility":"visible"}, 22.445);
+    tl.set("#captions-g13", {"opacity":0,"visibility":"hidden"}, 23.92);
+    tl.set("#captions-g14", {"opacity":1,"visibility":"visible"}, 23.93);
+    tl.set("#captions-g14", {"opacity":0,"visibility":"hidden"}, 26.475);
+    tl.set("#captions-g15", {"opacity":1,"visibility":"visible"}, 26.485);
+    tl.set("#captions-g15", {"opacity":0,"visibility":"hidden"}, 29.255);
+    tl.set("#captions-g16", {"opacity":1,"visibility":"visible"}, 29.275);
+    tl.set("#captions-g16", {"opacity":0,"visibility":"hidden"}, 31.89);
+    tl.set("#captions-g17", {"opacity":1,"visibility":"visible"}, 31.9);
+    tl.set("#captions-g17", {"opacity":0,"visibility":"hidden"}, 32.76);
+    tl.set("#captions-g18", {"opacity":1,"visibility":"visible"}, 33.21);
+    tl.set("#captions-g18", {"opacity":0,"visibility":"hidden"}, 35.225);
+    tl.set("#captions-g19", {"opacity":1,"visibility":"visible"}, 35.235);
+    tl.set("#captions-g19", {"opacity":0,"visibility":"hidden"}, 37.45);
+    tl.set("#captions-g20", {"opacity":1,"visibility":"visible"}, 37.46);
+    tl.set("#captions-g20", {"opacity":0,"visibility":"hidden"}, 38.88);
+    tl.set("#captions-g21", {"opacity":1,"visibility":"visible"}, 38.89);
+    tl.set("#captions-g21", {"opacity":0,"visibility":"hidden"}, 40.38);
+    tl.set("#captions-g22", {"opacity":1,"visibility":"visible"}, 40.39);
+    tl.set("#captions-g22", {"opacity":0,"visibility":"hidden"}, 42.45);
+    tl.set("#captions-g23", {"opacity":1,"visibility":"visible"}, 42.47);
+    tl.set("#captions-g23", {"opacity":0,"visibility":"hidden"}, 45.32);
+    tl.set("#captions-g24", {"opacity":1,"visibility":"visible"}, 45.33);
+    tl.set("#captions-g24", {"opacity":0,"visibility":"hidden"}, 46.71);
+    tl.set("#captions-g25", {"opacity":1,"visibility":"visible"}, 46.72);
+    tl.set("#captions-g25", {"opacity":0,"visibility":"hidden"}, 49.165);
+    tl.set("#captions-g26", {"opacity":1,"visibility":"visible"}, 49.175);
+    tl.set("#captions-g26", {"opacity":0,"visibility":"hidden"}, 51.41);
+    tl.set("#captions-g27", {"opacity":1,"visibility":"visible"}, 51.42);
+    tl.set("#captions-g27", {"opacity":0,"visibility":"hidden"}, 53.585);
+    tl.set("#captions-g28", {"opacity":1,"visibility":"visible"}, 53.605);
+    tl.set("#captions-g28", {"opacity":0,"visibility":"hidden"}, 56.1);
+    tl.set("#captions-g29", {"opacity":1,"visibility":"visible"}, 56.11);
+    tl.set("#captions-g29", {"opacity":0,"visibility":"hidden"}, 57.8);
+    tl.set("#captions-g30", {"opacity":1,"visibility":"visible"}, 57.81);
+    tl.set("#captions-g30", {"opacity":0,"visibility":"hidden"}, 60.745);
+    tl.set("#captions-g31", {"opacity":1,"visibility":"visible"}, 61.195);
+    tl.set("#captions-g31", {"opacity":0,"visibility":"hidden"}, 63.63);
+    tl.set("#captions-g32", {"opacity":1,"visibility":"visible"}, 63.65);
+    tl.set("#captions-g32", {"opacity":0,"visibility":"hidden"}, 65.975);
+    tl.set("#captions-g33", {"opacity":1,"visibility":"visible"}, 65.985);
+    tl.set("#captions-g33", {"opacity":0,"visibility":"hidden"}, 68.31);
+    tl.set("#captions-g34", {"opacity":1,"visibility":"visible"}, 68.32);
+    tl.set("#captions-g34", {"opacity":0,"visibility":"hidden"}, 70.935);
+    tl.set("#captions-g35", {"opacity":1,"visibility":"visible"}, 70.945);
+    tl.set("#captions-g35", {"opacity":0,"visibility":"hidden"}, 71.66);
+    tl.set("#captions-g36", {"opacity":1,"visibility":"visible"}, 71.67);
+    tl.set("#captions-g36", {"opacity":0,"visibility":"hidden"}, 74.435);
+    tl.set("#captions-g37", {"opacity":1,"visibility":"visible"}, 74.445);
+    tl.set("#captions-g37", {"opacity":0,"visibility":"hidden"}, 76.775);
+    tl.set("#captions-g38", {"opacity":1,"visibility":"visible"}, 77.225);
+    tl.set("#captions-g38", {"opacity":0,"visibility":"hidden"}, 79.44);
+    tl.set("#captions-g39", {"opacity":1,"visibility":"visible"}, 79.45);
+    tl.set("#captions-g39", {"opacity":0,"visibility":"hidden"}, 81.63);
+    tl.set("#captions-g40", {"opacity":1,"visibility":"visible"}, 81.64);
+    tl.set("#captions-g40", {"opacity":0,"visibility":"hidden"}, 83.965);
+    tl.set("#captions-g41", {"opacity":1,"visibility":"visible"}, 83.975);
+    tl.set("#captions-g41", {"opacity":0,"visibility":"hidden"}, 85.105);
+    tl.set("#captions-g42", {"opacity":1,"visibility":"visible"}, 85.125);
+    tl.set("#captions-g42", {"opacity":0,"visibility":"hidden"}, 87.78);
+    tl.set("#captions-g43", {"opacity":1,"visibility":"visible"}, 87.79);
+    tl.set("#captions-g43", {"opacity":0,"visibility":"hidden"}, 90.46);
+    tl.set("#captions-g44", {"opacity":1,"visibility":"visible"}, 90.47);
+    tl.set("#captions-g44", {"opacity":0,"visibility":"hidden"}, 92.8);
+    tl.set("#captions-g45", {"opacity":1,"visibility":"visible"}, 92.82);
+    tl.set("#captions-g45", {"opacity":0,"visibility":"hidden"}, 95.035);
+    tl.set("#captions-g46", {"opacity":1,"visibility":"visible"}, 95.045);
+    tl.set("#captions-g46", {"opacity":0,"visibility":"hidden"}, 96.615);
+    tl.set("#captions-g47", {"opacity":1,"visibility":"visible"}, 97.065);
+    tl.set("#captions-g47", {"opacity":0,"visibility":"hidden"}, 98.81);
+    tl.set("#captions-g48", {"opacity":1,"visibility":"visible"}, 98.82);
+    tl.set("#captions-g48", {"opacity":0,"visibility":"hidden"}, 101.31);
+    tl.set("#captions-g49", {"opacity":1,"visibility":"visible"}, 101.32);
+    tl.set("#captions-g49", {"opacity":0,"visibility":"hidden"}, 102.62);
+    tl.set("#captions-g50", {"opacity":1,"visibility":"visible"}, 103.07);
+    tl.set("#captions-g50", {"opacity":0,"visibility":"hidden"}, 105.285);
+    tl.set("#captions-g51", {"opacity":1,"visibility":"visible"}, 105.305);
+    tl.set("#captions-g51", {"opacity":0,"visibility":"hidden"}, 107.3);
+    tl.set("#captions-g52", {"opacity":1,"visibility":"visible"}, 107.31);
+    tl.set("#captions-g52", {"opacity":0,"visibility":"hidden"}, 108.405);
+    tl.set("#captions-g53", {"opacity":1,"visibility":"visible"}, 108.415);
+    tl.set("#captions-g53", {"opacity":0,"visibility":"hidden"}, 111);
+    tl.set("#captions-g54", {"opacity":1,"visibility":"visible"}, 111.01);
+    tl.set("#captions-g54", {"opacity":0,"visibility":"hidden"}, 113.52);
+    tl.set("#captions-g55", {"opacity":1,"visibility":"visible"}, 113.54);
+    tl.set("#captions-g55", {"opacity":0,"visibility":"hidden"}, 115.72);
+    tl.set("#captions-g56", {"opacity":1,"visibility":"visible"}, 115.73);
+    tl.set("#captions-g56", {"opacity":0,"visibility":"hidden"}, 117.97);
+    tl.set("#captions-g57", {"opacity":1,"visibility":"visible"}, 117.98);
+    tl.set("#captions-g57", {"opacity":0,"visibility":"hidden"}, 121.58);
+    tl.set("#captions-g58", {"opacity":1,"visibility":"visible"}, 122.03);
+    tl.set("#captions-g58", {"opacity":0,"visibility":"hidden"}, 124.81);
+    tl.set("#captions-g59", {"opacity":1,"visibility":"visible"}, 124.82);
+    tl.set("#captions-g59", {"opacity":0,"visibility":"hidden"}, 127.47);
+    tl.set("#captions-g60", {"opacity":1,"visibility":"visible"}, 127.49);
+    tl.set("#captions-g60", {"opacity":0,"visibility":"hidden"}, 129.705);
+    tl.set("#captions-g61", {"opacity":1,"visibility":"visible"}, 129.715);
+    tl.set("#captions-g61", {"opacity":0,"visibility":"hidden"}, 132.26);
+    tl.set("#captions-g62", {"opacity":1,"visibility":"visible"}, 132.27);
+    tl.set("#captions-g62", {"opacity":0,"visibility":"hidden"}, 133.47);
+    tl.set("#captions-g63", {"opacity":1,"visibility":"visible"}, 133.48);
+    tl.set("#captions-g63", {"opacity":0,"visibility":"hidden"}, 135.17);
+    tl.set("#captions-g64", {"opacity":1,"visibility":"visible"}, 135.18);
+    tl.set("#captions-g64", {"opacity":0,"visibility":"hidden"}, 137.525);
+    tl.set("#captions-g65", {"opacity":1,"visibility":"visible"}, 137.535);
+    tl.set("#captions-g65", {"opacity":0,"visibility":"hidden"}, 140.405);
+    window.__timelines["captions"] = tl;
+  </script>
+</template>

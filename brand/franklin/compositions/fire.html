@@ -1,0 +1,74 @@
+<template>
+  <style>
+    @font-face { font-family: "IM Fell English"; src: url(assets/fonts/IMFellEnglish-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "IM Fell English"; src: url(assets/fonts/IMFellEnglish-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+    @font-face { font-family: "IM Fell English SC"; src: url(assets/fonts/IMFellEnglishSC-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-700.woff2) format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
+    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #EDE3CB url(assets/paper.jpg) center / cover; }
+
+    .abs { position: absolute; }
+    .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .fell { font-family: "IM Fell English", serif; font-weight: 400; color: #1B1915; line-height: 1.02; }
+    .sc { font-family: "IM Fell English SC", serif; font-weight: 400; color: #1B1915; letter-spacing: 0.04em; line-height: 1.1; }
+    .caslon { font-family: "Libre Caslon Text", serif; color: #1B1915; }
+    .red { color: #A8261B; }
+    .on-dark { color: #EDE3CB; }
+    .ink { text-shadow: 0 0 0.6px rgba(27, 25, 21, 0.85); }
+    .w { display: inline-block; white-space: pre; }
+    .pic { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+    .pic img { display: block; width: 100%; height: 100%; }
+    .sheet { position: absolute; background: #EDE3CB url(assets/paper.jpg) center / cover; box-shadow: 0 18px 44px rgba(40, 24, 8, 0.30), 0 2px 6px rgba(40, 24, 8, 0.18); }
+    .slip { position: absolute; left: 0; width: 1080px; background: rgba(237, 227, 203, 0.94); }
+    .rule { position: absolute; height: 3px; background: #1B1915; }
+    svg.ink-line { position: absolute; overflow: visible; }
+    svg.ink-line path { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 100 120; stroke-dashoffset: 110; }
+
+
+  </style>
+  <div id="root" data-composition-id="fire" data-width="1080" data-height="1920">
+<svg class="full" style="position:absolute" width="1080" height="1920">
+      <defs><filter id="fire-rough" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="3" seed="17"/><feDisplacementMap in="SourceGraphic" scale="150"/></filter>
+      <mask id="fire-hole" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1920"><rect width="1080" height="1920" fill="#fff"/><circle id="fire-burn" cx="610" cy="1560" r="0" fill="#000" filter="url(#fire-rough)"/></mask>
+      <mask id="fire-char" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1920"><rect width="1080" height="1920" fill="#fff"/><circle id="fire-burn2" cx="610" cy="1560" r="0" fill="#000" filter="url(#fire-rough)"/></mask></defs>
+      <g mask="url(#fire-char)"><rect width="1080" height="1920" fill="#2a170b"/></g>
+      <g mask="url(#fire-hole)"><image href="assets/img/lib-statue.jpg" x="-194.4" y="0" width="1468.8" height="1958.3999999999999" preserveAspectRatio="none"/>
+      <rect width="1080" height="1920" fill="rgba(237,227,203,0.94)" y="860" height="300"/></g></svg>
+<div id="fire-slipcopy" class="slip" style="top:860px;height:300px"><div class="sc red abs" style="left:84px;top:34px;font-size:52px;letter-spacing:0.12em">Open since 1731</div>
+      <div class="fell ink abs" style="left:84px;top:110px;width:920px;font-size:74px;line-height:1.08">America’s oldest cultural institution.</div></div>
+<div id="fire-fire" class="fell red abs" style="left:84px;top:330px;font-size:230px;opacity:0">Fire.</div>
+<div id="fire-prov" class="abs" style="left:84px;top:250px;width:912px">
+      <div id="fire-pv0" class="sc ink" style="font-size:64px;letter-spacing:0.1em">An ounce</div>
+      <div id="fire-pv1" class="fell ink" style="font-size:96px;margin-top:6px">of prevention</div>
+      <div id="fire-pv2" class="fell ink" style="font-size:60px;margin-top:20px">is worth</div>
+      <div id="fire-pv3" class="sc ink" style="font-size:230px;line-height:0.95;letter-spacing:0.01em">a Pound</div>
+      <div id="fire-pv4" class="fell ink" style="font-size:96px">of cure.</div>
+      <div id="fire-pv5" class="sc ink" style="font-size:40px;margin-top:34px;letter-spacing:0.14em;color:#5a5048">Pennsylvania Gazette, 1735</div></div>
+<div id="fire-union" class="abs" style="left:84px;top:300px;width:920px"><div class="sc ink" style="font-size:96px;line-height:1.06"><span class="w">The </span><span class="w">Union </span><span class="w">Fire </span><span class="w">Company </span></div>
+      <div class="sc red" style="font-size:52px;letter-spacing:0.14em;margin-top:22px">1736</div>
+      <div class="fell ink" style="font-size:66px;margin-top:40px;line-height:1.15"><span class="w">Thirty </span><span class="w">volunteers, </span><span class="w">pledged </span><span class="w">to </span><span class="w">come </span><span class="w">to </span><span class="w">any </span><span class="w">fire </span><span class="w">with </span><span class="w">their </span><span class="w">own </span><span class="w">leather </span><span class="w">buckets. </span></div></div>
+<div id="fire-bucket" class="full" style="opacity:0"><div id="fire-bp" class="pic" style="width:1920px;height:2428px;"><img src="assets/img/bucket.jpg" alt=""></div></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#fire-burn", {"attr":{"r":0}}, {"attr":{"r":2300},"duration":2.4,"ease":"power2.in"}, 0.05);
+    tl.fromTo("#fire-burn2", {"attr":{"r":0}}, {"attr":{"r":2280},"duration":2.4,"ease":"power2.in"}, 0.17);
+    tl.to("#fire-slipcopy", {"opacity":0,"duration":0.3}, 1.25);
+    tl.fromTo("#fire-fire", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.16,"ease":"power4.out","stagger":0.1}, 0.15);
+    tl.to("#fire-fire", {"opacity":0,"filter":"blur(8px)","duration":0.18,"ease":"power2.in"}, 2.255);
+    tl.fromTo("#fire-pv0", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.13,"ease":"power4.out","stagger":0.1}, 4.105);
+    tl.fromTo("#fire-pv1", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.13,"ease":"power4.out","stagger":0.1}, 4.81);
+    tl.fromTo("#fire-pv2", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.13,"ease":"power4.out","stagger":0.1}, 5.79);
+    tl.fromTo("#fire-pv3", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.16,"ease":"power4.out","stagger":0.1}, 6.44);
+    tl.fromTo("#fire-pv4", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.13,"ease":"power4.out","stagger":0.1}, 7.145);
+    tl.fromTo("#fire-pv5", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 7.525);
+    tl.to("#fire-prov", {"y":-1400,"duration":0.5,"ease":"power3.in"}, 7.635);
+    tl.fromTo("#fire-union .sc:first-child .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.12}, 8.985);
+    tl.fromTo("#fire-union .red", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 10.05);
+    tl.fromTo("#fire-union .fell .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.295}, 10.525);
+    tl.set("#fire-bucket", {"opacity":1}, 14.01);
+    tl.fromTo("#fire-bp", {"x":-355.789,"y":-59.52,"scale":0.933}, {"x":-249.509,"y":0,"scale":0.822,"duration":1.4,"ease":"expo.out"}, 14.01);
+    window.__timelines["fire"] = tl;
+  </script>
+</template>
