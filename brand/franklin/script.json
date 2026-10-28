@@ -1,6 +1,7 @@
 {
-  "voice": "franklin-storyteller",
-  "seed": 11,
+  "voice": "franklin-statesman",
+  "style": "natural documentary narration with normal English intonation, clear stress on key words, statements falling at the end, steady medium pace",
+  "seed": 7,
   "tempo": 1.0,
   "lines": [
     {

@@ -8,7 +8,9 @@ time, and the timing of every word.
 `speak` needs VoiceStudio's backend running with the VoxCPM2 engine
 (OMNIVOICE_TTS_BACKEND=voxcpm2) and a clone profile named in script.json
 ("voice"), made from the chosen audition clip. Lines already in the cache are
-skipped, so an interrupted run picks up where it stopped. Years are read as
+skipped, so an interrupted run picks up where it stopped. The profile gives
+the voice its sound; "style" in script.json directs its delivery (with a
+control, VoxCPM2 clones the timbre without copying the clip's intonation). Years are read as
 years: the voice gets "seventeen thirty-one" where the captions keep "1731".
 
 `build` writes narration.wav (48 kHz mono) and timing.json (each line's start
@@ -65,7 +67,7 @@ def speak(cache):
         path = os.path.join(cache, line["id"] + ".wav")
         if os.path.exists(path):
             continue
-        body = json.dumps({"model": "tts-1", "voice": SCRIPT["voice"], "input": spoken(line["text"]),
+        body = json.dumps({"model": "tts-1", "voice": SCRIPT["voice"], "input": f'({SCRIPT["style"]}){spoken(line["text"])}' if SCRIPT.get("style") else spoken(line["text"]),
                            "seed": SCRIPT.get("seed", 11), "response_format": "wav"}).encode()
         req = urllib.request.Request(API + "/v1/audio/speech", body, {"Content-Type": "application/json"})
         audio = urllib.request.urlopen(req, timeout=3600).read()
