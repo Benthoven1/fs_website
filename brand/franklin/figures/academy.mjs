@@ -5,12 +5,12 @@
 // an entablature with the Academy's green frieze and a row of dentils, a
 // pediment with an oculus, a slate roof and a cupola.
 import { k, writeFigure, writeParts, recorder } from "./common.mjs";
-import { plinth, foundation } from "./parts.mjs";
+import { plinth, foundation, trusteesBench, subscriptionBox } from "./parts.mjs";
 
 const W = 1000, H = 760;
 const P = k.fitProjection(k.boxCorners({ x: -115, y: -110, w: 230, d: 220 }, -19, 130), W, H, { pad: 40, azimuth: 45 });
 const R = recorder(P);
-const body = [plinth(R), foundation(R, { doc: "charter" })];
+const body = [plinth(R), foundation(R, { doc: "charter", members: trusteesBench, money: subscriptionBox })];
 
 const CY = 34, BW = 120, BD = 52, Z0 = 9, BH = 48;
 const FY = CY + BD / 2 - 14, SX = BW / 2; // the hall's front face (behind the portico) and its right side

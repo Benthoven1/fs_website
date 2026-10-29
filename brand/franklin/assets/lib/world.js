@@ -158,7 +158,9 @@ export async function createWorld(canvas, labelLayer, S) {
       const g = new THREE.Group();
       for (const s of d.solids) {
         if (s.kind === "doc") {
-          const geo = new THREE.PlaneGeometry(s.w, s.d);
+          // the page keeps its own proportions inside the desk's area
+          const img = docs[s.name].image, a = img.width / img.height;
+          const geo = a > s.w / s.d ? new THREE.PlaneGeometry(s.w, s.w / a) : new THREE.PlaneGeometry(s.d * a, s.d);
           geo.rotateX(-Math.PI / 2);
           const c = V(s.x, s.y, s.z);
           geo.translate(c.x, c.y, c.z);
@@ -200,7 +202,8 @@ export async function createWorld(canvas, labelLayer, S) {
   // marks for "rules, members, money" on all four plots at once
   const rings = [];
   for (const plot of ["library", "fire", "hospital", "academy"]) for (const what of ["rules", "members", "money"]) {
-    const a = anchors[`${plot}.${what}`];
+    // the hospital's money is its grant machine: the ring goes round the donors' column
+    const a = anchors[`${plot}.${what}`] || anchors[{ "hospital.money": "hospital.donorCol" }[`${plot}.${what}`]];
     const r = new THREE.Mesh(new THREE.TorusGeometry(31, 1.8, 8, 64), new THREE.MeshStandardMaterial({ color: "#C27A55", roughness: 0.4, emissive: "#C27A55", emissiveIntensity: 0.35 }));
     r.rotation.x = -Math.PI / 2; r.position.set(a.x, LIFT + 0.4, a.z); r.visible = false; scene.add(r);
     rings.push({ obj: r, what });

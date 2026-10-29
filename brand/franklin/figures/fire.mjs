@@ -4,12 +4,12 @@
 // volunteers, thirty buckets), each with its rolled rim, two bands, a painted
 // crest and an iron bail; beside it the alarm bell on its own post and yoke.
 import { k, writeFigure, writeParts, recorder } from "./common.mjs";
-import { plinth, foundation } from "./parts.mjs";
+import { plinth, foundation, rollBoard, finesBox } from "./parts.mjs";
 
 const W = 1000, H = 760;
 const P = k.fitProjection(k.boxCorners({ x: -115, y: -110, w: 230, d: 220 }, -19, 140), W, H, { pad: 40, azimuth: 45 });
 const R = recorder(P);
-const body = [plinth(R), foundation(R, { doc: "stove" })];
+const body = [plinth(R), foundation(R, { doc: "stove", members: rollBoard, money: finesBox })];
 
 const RY = 40, PX = 86, BARS = [38, 68, 98], TOP = 108;
 body.push(R.part("rack", { build: 4, from: "down" }, () => {

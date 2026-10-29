@@ -142,13 +142,130 @@ export function strongbox(R, cx, cy, { s = 1, build = 3, name = "money", hopper 
   });
 }
 
+// ── what each institution had in place of a generic cabinet and chest ──────
+
+// Fire company, members: the roll board, a peg and a name tag for each of
+// the thirty, under a brass header
+export function rollBoard(R, cx, cy, { build = 2, name = "members", rows = 3, cols = 10 } = {}) {
+  return R.part(name, { build, from: "back" }, () => {
+    const W = 56, H = 46, Z = 6;
+    let o = "";
+    for (const sx of [-1, 1]) {
+      o += R.box({ x: cx + sx * (W / 2 - 6) - 3, y: cy - 8, w: 6, d: 16, r: 0.6 }, 0, 3, "walnut", { bevel: 0.4 });
+      o += R.box({ x: cx + sx * (W / 2 - 6) - 1.6, y: cy - 1.6, w: 3.2, d: 3.2, r: 0.4 }, 3, Z - 3, "walnut", { bevel: 0.2 });
+    }
+    o += R.box({ x: cx - W / 2, y: cy - 1.6, w: W, d: 3.2, r: 0.6 }, Z, H, "walnutLight", { bevel: 0.5 });
+    o += R.box({ x: cx - W / 2 - 1.2, y: cy - 2.2, w: W + 2.4, d: 4.4, r: 0.6 }, Z + H, 2.4, "walnut", { bevel: 0.5 });
+    o += R.box({ x: cx - 14, y: cy + 1.6, w: 28, d: 0.5, r: 0.3 }, Z + H - 6.4, 4.4, "brass", { bevel: 0.15 });
+    o += R.line([[cx - 10, cy + 2.12, Z + H - 4.2], [cx + 10, cy + 2.12, Z + H - 4.2]], "mid");
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const x = cx - W / 2 + 5 + c * ((W - 10) / (cols - 1)), z = Z + 7 + r * 11.4;
+      o += R.rod([x, cy + 1.6, z + 6.2], "y", 1.8, 0.4, "brass", { seg: 8 });
+      o += R.box({ x: x - 1.7, y: cy + 1.7, w: 3.4, d: 0.3, r: 0.1 }, z, 5.6, (r * cols + c) % 7 === 3 ? "crest" : "paper", { bevel: 0.05 });
+      o += R.line([[x - 1.1, cy + 2.02, z + 3.6], [x + 1.1, cy + 2.02, z + 3.6]], "lo");
+    }
+    return o;
+  });
+}
+
+// Fire company, money: the fines box (members who missed a meeting, or came
+// without their buckets, paid into it), on a turned stand, padlocked
+export function finesBox(R, cx, cy, { build = 3, name = "money" } = {}) {
+  return R.part(name, { build, from: "right" }, () => {
+    let o = "";
+    o += R.cyl(cx, cy, 11, 0, 2.4, "walnut", { seg: 32 });
+    o += R.cyl(cx, cy, 7.5, 2.4, 2, "walnutLight", { seg: 28 });
+    o += R.cyl(cx, cy, 3.2, 4.4, 22, "walnut", { r2: 2.6, seg: 20 });
+    for (const z of [8, 22]) o += R.cyl(cx, cy, 4.2, z, 1.6, "walnutLight", { seg: 20 });
+    o += R.box({ x: cx - 11, y: cy - 9, w: 22, d: 18, r: 0.6 }, 26.4, 2, "walnut", { bevel: 0.5 });
+    o += R.box({ x: cx - 10, y: cy - 8, w: 20, d: 16, r: 0.8 }, 28.4, 13, "oak", { bevel: 0.5 });
+    for (const [x, y] of k.corners({ x: cx - 10, y: cy - 8, w: 20, d: 16 }, 0)) o += R.box({ x: x - 1.3, y: y - 1.3, w: 2.6, d: 2.6, r: 0.3 }, 28.4, 13, "brass", { bevel: 0.15 });
+    o += R.box({ x: cx - 10.8, y: cy - 8.8, w: 21.6, d: 17.6, r: 1 }, 41.4, 3.2, "oak", { bevel: 0.6 });
+    o += R.box({ x: cx - 6, y: cy - 3.5, w: 12, d: 7, r: 0.6 }, 44.6, 0.6, "brass", { bevel: 0.2 });
+    o += R.box({ x: cx - 4, y: cy - 0.6, w: 8, d: 1.2, r: 0.3 }, 45.2, 0.2, "ink", { bevel: 0.05 });
+    o += R.dots(k.corners({ x: cx - 6, y: cy - 3.5, w: 12, d: 7 }, 1.2).map(([a, b]) => [a, b, 45.2]), "iron", { size: 0.4 });
+    o += R.box({ x: cx - 1.6, y: cy + 8.8, w: 3.2, d: 0.8, r: 0.3 }, 36, 8.6, "iron", { bevel: 0.2 });
+    o += R.box({ x: cx - 2.6, y: cy + 9.6, w: 5.2, d: 2.4, r: 0.6 }, 32, 4.8, "brass", { bevel: 0.4 });
+    o += R.torus(cx, cy + 10.8, 37, 1.9, 0.45, "iron", { arc: Math.PI, axis: "y" });
+    o += R.box({ x: cx - 5, y: cy + 8, w: 10, d: 0.5, r: 0.2 }, 31, 3, "brass", { bevel: 0.1 });
+    return o;
+  });
+}
+
+// Hospital, members: the contributors' book open on a sloped rest, with a
+// ribbon, an inkwell and a quill
+export function contributorsBook(R, cx, cy, { build = 2, name = "members" } = {}) {
+  return R.part(name, { build, from: "back" }, () => {
+    let o = "";
+    for (const sx of [-1, 1]) o += R.box({ x: cx + sx * 16 - 2, y: cy - 10, w: 4, d: 20, r: 0.6 }, 0, 18, "oak", { bevel: 0.4 });
+    o += R.box({ x: cx - 18, y: cy - 2, w: 36, d: 3, r: 0.4 }, 4, 3, "oakLight", { bevel: 0.3 });
+    const dz = 18, tilt = { axis: "x", deg: -14, at: [cx, cy, dz] };
+    o += R.box({ x: cx - 21, y: cy - 13, w: 42, d: 26, r: 0.8 }, dz, 2.4, "oak", { rot: tilt, bevel: 0.5 });
+    o += R.box({ x: cx - 21, y: cy + 11, w: 42, d: 2, r: 0.4 }, dz + 2.4, 2.6, "oakLight", { rot: tilt });
+    // the book: two boards, two page blocks bowed a little to the spine, a ribbon
+    for (const sx of [-1, 1]) {
+      o += R.box({ x: sx < 0 ? cx - 18.6 : cx + 0.2, y: cy - 10.6, w: 18.4, d: 21.2, r: 0.5 }, dz + 2.4, 0.8, "leather", { rot: tilt, bevel: 0.2 });
+      o += R.box({ x: sx < 0 ? cx - 17.8 : cx + 0.6, y: cy - 10, w: 17.2, d: 20, r: 0.3 }, dz + 3.2, 2.2, "paper", { rot: tilt, bevel: 0.4 });
+      for (let n = 0; n < 6; n++) o += R.line([[sx < 0 ? cx - 16 : cx + 2.4, cy - 7 + n * 2.6, dz + 5.45], [sx < 0 ? cx - 2.4 : cx + 16 - (n % 3) * 3, cy - 7 + n * 2.6, dz + 5.45]], "lo");
+    }
+    o += R.box({ x: cx - 0.7, y: cy + 9.6, w: 1.4, d: 6, r: 0.1 }, dz + 1.2, 0.3, "acc", { rot: tilt, bevel: 0.05 });
+    // inkwell and quill on the rest's ledge
+    o += R.cyl(cx + 24, cy + 4, 2.6, 4, 3.4, "glass", { seg: 20 });
+    o += R.cyl(cx + 24, cy + 4, 1.4, 7.4, 1, "brass", { seg: 16 });
+    o += R.box({ x: cx + 23.6, y: cy + 3.6, w: 0.8, d: 0.8, r: 0.2 }, 7, 14, "paper", { rot: { axis: "y", deg: 22, at: [cx + 24, cy + 4, 7] }, bevel: 0.1 });
+    return o;
+  });
+}
+
+// Academy, members: the trustees' bench, spindle-backed, with a cushion
+export function trusteesBench(R, cx, cy, { build = 2, name = "members" } = {}) {
+  return R.part(name, { build, from: "back" }, () => {
+    const L = 64, D = 16, SZ = 13;
+    let o = "";
+    for (const [x, y] of k.corners({ x: cx - L / 2, y: cy - D / 2, w: L, d: D }, 2)) o += R.box({ x: x - 1.5, y: y - 1.5, w: 3, d: 3, r: 0.4 }, 0, SZ, "walnut", { bevel: 0.3 });
+    o += R.box({ x: cx - L / 2 + 2, y: cy - 1, w: L - 4, d: 2, r: 0.3 }, 4, 2, "walnutLight", { bevel: 0.2 });
+    o += R.box({ x: cx - L / 2 - 1, y: cy - D / 2 - 1, w: L + 2, d: D + 2, r: 0.8 }, SZ, 2.2, "walnut", { bevel: 0.6 });
+    o += R.box({ x: cx - L / 2 + 2, y: cy - D / 2 + 1, w: L - 4, d: D - 2, r: 1.4 }, SZ + 2.2, 2.6, "acc", { bevel: 1 });
+    for (const sx of [-1, 1]) {
+      o += R.box({ x: cx + sx * (L / 2 - 1) - 1.5, y: cy - D / 2, w: 3, d: 3, r: 0.4 }, SZ + 2.2, 20, "walnut", { bevel: 0.3 });
+      o += R.box({ x: cx + sx * (L / 2 - 1) - 1.6, y: cy - D / 2, w: 3.2, d: D, r: 0.5 }, SZ + 10, 2, "walnut", { bevel: 0.4 });
+      o += R.box({ x: cx + sx * (L / 2 - 1) - 1.5, y: cy + D / 2 - 3, w: 3, d: 3, r: 0.4 }, SZ + 2.2, 7.8, "walnut", { bevel: 0.3 });
+    }
+    o += R.box({ x: cx - L / 2 - 1, y: cy - D / 2 - 0.5, w: L + 2, d: 3.4, r: 0.8 }, SZ + 22.2, 2.6, "walnut", { bevel: 0.6 });
+    for (let i = 0; i < 14; i++) o += R.cyl(cx - L / 2 + 4 + i * ((L - 8) / 13), cy - D / 2 + 1.2, 0.7, SZ + 2.2, 20, "walnutLight", { seg: 10 });
+    o += R.box({ x: cx - 7, y: cy - D / 2 + 3, w: 14, d: 0.4, r: 0.2 }, SZ + 17, 3.6, "brass", { bevel: 0.1 });
+    return o;
+  });
+}
+
+// Academy, money: the subscription box on a pedestal
+export function subscriptionBox(R, cx, cy, { build = 3, name = "money" } = {}) {
+  return R.part(name, { build, from: "right" }, () => {
+    let o = "";
+    o += R.box({ x: cx - 11, y: cy - 11, w: 22, d: 22, r: 0.8 }, 0, 3, "walnut", { bevel: 0.5 });
+    o += R.box({ x: cx - 7, y: cy - 7, w: 14, d: 14, r: 0.6 }, 3, 20, "walnutLight", { bevel: 0.4 });
+    for (const z of [6, 19]) o += R.box({ x: cx - 8, y: cy - 8, w: 16, d: 16, r: 0.6 }, z, 1.6, "walnut", { bevel: 0.3 });
+    o += R.box({ x: cx - 12, y: cy - 12, w: 24, d: 24, r: 0.8 }, 23, 2.2, "walnut", { bevel: 0.5 });
+    o += R.box({ x: cx - 10, y: cy - 10, w: 20, d: 20, r: 0.6 }, 25.2, 12, "oak", { bevel: 0.5 });
+    o += R.box({ x: cx - 11, y: cy - 11, w: 22, d: 22, r: 1 }, 37.2, 2.6, "walnut", { bevel: 0.6 });
+    o += R.box({ x: cx - 7, y: cy - 3, w: 14, d: 6, r: 0.5 }, 39.8, 0.6, "brass", { bevel: 0.2 });
+    o += R.box({ x: cx - 5, y: cy - 0.5, w: 10, d: 1, r: 0.3 }, 40.4, 0.2, "ink", { bevel: 0.05 });
+    o += R.box({ x: cx - 6, y: cy + 10, w: 12, d: 0.5, r: 0.2 }, 28, 5.4, "brass", { bevel: 0.1 });
+    o += R.line([[cx - 4, cy + 10.52, 31.6], [cx + 4, cy + 10.52, 31.6]], "mid");
+    o += R.dots([[cx - 5, cy + 10.5, 30.7], [cx + 5, cy + 10.5, 30.7]], "iron", { size: 0.35, normal: "y" });
+    return o;
+  });
+}
+
 // The foundation along a plot's back: rules, members, money
-export function foundation(R, { w = 230, d = 220, s = 1, doc, hopper = false } = {}) {
-  const by = -d / 2 + 38 * s;
+// (the generic cabinet and chest unless a plot brings its own members and money;
+// money: false where the plot's own machine is the money)
+export function foundation(R, { w = 230, d = 220, s = 1, doc, hopper = false, members, money } = {}) {
+  const by = -d / 2 + 38 * s, mx = w / 2 - 40 * s;
   return [
     lectern(R, -w / 2 + 40 * s, by, { s, doc }),
-    cabinet(R, 0, by, { s }),
-    strongbox(R, w / 2 - 40 * s, by, { s, hopper }),
+    members ? members(R, 0, by) : cabinet(R, 0, by, { s }),
+    money === false ? "" : money ? money(R, mx, by) : strongbox(R, mx, by, { s, hopper }),
   ].join("");
 }
 // where the hopper's mouth is (the library's coins drop in here)

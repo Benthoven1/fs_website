@@ -27,9 +27,9 @@ LONG = 2600  # no picture needs more on its long side
 LONG_FOR = {"prospect": 5801, "declaration": 4300, "constitution4": 4300}
 
 NAMES = ["prospect", "statehouse", "portrait", "press", "martin", "kite", "stove", "trumbull", "declaration", "constitution4",
-         "library-hall", "bucket", "bond", "hospital", "charter", "penn", "almanac"]
+         "library-hall", "bucket", "bond", "hospital", "charter", "penn", "almanac", "hospital-act"]
 # where a name's file comes from, when it isn't <name>.jpg
-ALIAS = {"kite": ["kite-hi", "kite"], "penn": ["college-hall", "penn-quad"]}
+ALIAS = {"kite": ["kite-hi", "kite"], "penn": ["college-hall", "penn-quad"], "hospital-act": ["hospital-act-src"]}
 # the hospital is one half of a stereograph card
 CROP = {"hospital": (0.075, 0.12, 0.495, 0.86)}
 sizes = {}

@@ -6,12 +6,12 @@
 // Assembly's £2,000 up on a hanger. Coins of £100, milled on the edge, twenty
 // a side. The donors' coins, the paddle and the held stack move in the film.
 import { k, writeFigure, writeParts, recorder } from "./common.mjs";
-import { plinth, foundation } from "./parts.mjs";
+import { plinth, foundation, contributorsBook } from "./parts.mjs";
 
 const W = 1000, H = 760;
 const P = k.fitProjection(k.boxCorners({ x: -115, y: -110, w: 230, d: 220 }, -19, 140), W, H, { pad: 40, azimuth: 45 });
 const R = recorder(P);
-const body = [plinth(R), foundation(R, { doc: "declaration" })];
+const body = [plinth(R), foundation(R, { doc: "hospital-act", members: contributorsBook, money: false })];
 
 const COIN = 3.8, N = 20, CR = 15, PT = 4.6, MARK = PT + N * COIN, BAR = MARK + 46, HELD = 34;
 const AX = -50, DX = 50, Y = 36, PY = Y - CR - 9;

@@ -25,6 +25,7 @@ the licence named here. The pixels of the archival pictures are unaltered
 | `hospital` | Pennsylvania Hospital, Pine Street (one half of a stereograph) | Robert N. Dennis collection | 19th c. | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Penn%27s_Hospital,_8th_Pine_Street,_Philadelphia,_from_Robert_N._Dennis_collection_of_stereoscopic_views.jpg), public domain |
 | `charter` | Charter of the College of Philadelphia | Thomas and Richard Penn | 1755 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Charter_of_the_College_of_Philadelphia_(University_of_Pennsylvania)_1755.jpg), public domain |
 | `penn` | College Hall, University of Pennsylvania | see the file page | 2011 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:College_Hall,_University_of_Pennsylvania.jpg), CC BY-SA 2.0 |
+| `hospital-act` | *An Act to encourage the Establishing of an Hospital…* (1751), page 5 of *Some Account of the Pennsylvania Hospital* | printed by B. Franklin and D. Hall; Wellcome Collection | 1754 | [Internet Archive b30784207](https://archive.org/details/b30784207), Public Domain Mark |
 | `signature` | Benjamin Franklin's signature | — | 18th c. | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Benjamin_Franklin_Signature.svg), public domain |
 
 ## Sound
