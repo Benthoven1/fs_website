@@ -483,11 +483,7 @@ const WORLD = (() => {
   s.add(kt("q", words("An ounce of prevention is worth a pound of cure."), { y: 420, size: TS.head, extra: "font-style:italic;font-weight:500" }));
   s.set("#q", { opacity: 1 }, at("fire1", "an") - 0.1);
   s.fromTo("#q .w", { opacity: 0, y: 20, filter: "blur(6px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.25, ease: "power2.out", stagger: (at("fire1", "cure") - at("fire1", "an")) / 10 }, at("fire1", "an") - 0.1);
-  // what the proverb's prevention meant in the letter: care taken before a fire
-  s.add(`<div id="pc" class="kt white abs" style="left:72px;top:1180px;width:936px;font-size:${TS.body}px;font-weight:500;line-height:1.3">
-    <div><span class="kk white" style="position:relative;opacity:1">prevention</span> <i>care before a fire starts</i></div></div>`);
-  land(s, "#pc", after("fire1", "cure") - 0.05, { dy: 20 });
-  s.to("#gz, #q, #pc", { opacity: 0, duration: 0.3 }, start("fire2") - 0.45);
+  s.to("#gz, #q", { opacity: 0, duration: 0.3 }, start("fire2") - 0.45);
   s.sound("whoosh", start("fire2") - 0.45, 0.16);
   // on the model: the count of volunteers, then of buckets
   s.add(kt("v30", `<span id="n30">0</span> <i style="font-size:0.42em;opacity:0.8">volunteers</i>`, { y: LOW - 20, size: TS.display }));
