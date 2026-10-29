@@ -42,6 +42,7 @@
     <div class="kicker">private donors</div><div id="hosp-dn" class="disp" style="font-size:88px;color:#B87758">£0</div></div>
     <div id="hosp-cnt2" class="abs" style="left:556px;top:1420px;width:440px;text-align:right;opacity:0">
     <div class="kicker">the assembly</div><div id="hosp-an" class="disp" style="font-size:88px;color:#5C544E">£2,000</div></div>
+<div id="hosp-mg" class="tag" style="left:84px;top:1610px;opacity:0;color:#357F77">£2,000 + £2,000 = £4,000</div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
@@ -54,6 +55,7 @@
     tl.fromTo("#hosp-cnt2", {"opacity":0,"filter":"blur(6px)","x":120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.45,"ease":"expo.out","stagger":0}, 12.529);
     { const o = { v: 0 }, el = document.querySelector("#hosp-dn"); tl.fromTo(o, { v: 0 }, { v: 2000, duration: 3.831, ease: "power2.out", onUpdate: () => { const v = o.v; el.textContent = '£' + (Math.round(v / 100) * 100).toLocaleString('en-GB'); } }, 12.679); }
     tl.fromTo("#hosp-an", {"color":"#5C544E"}, {"color":"#357F77","duration":0.3}, 16.98);
+    tl.fromTo("#hosp-mg", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.4,"ease":"expo.out","stagger":0}, 17.61);
     window.__timelines["hosp"] = tl;
   </script>
 

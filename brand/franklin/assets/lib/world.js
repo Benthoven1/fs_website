@@ -210,7 +210,7 @@ export async function createWorld(canvas, labelLayer, S) {
         g.add(q.kind === "box" ? at(box(q.w, q.h, q.d, m, { r: Math.min(1.2, q.w / 3, q.d / 3) }), q.x + q.w / 2, SLAB + q.z, q.y + q.d / 2)
           : at(cyl(q.r, q.r, q.h, m, { seg: 24 }), q.x, SLAB + q.z, q.y));
       }
-      part(P, g, { order: d.build, from: d.from, dist: d.from === "up" ? 300 : undefined, name: d.name });
+      part(P, g, { order: d.build, from: d.from, dist: d.from === "up" ? 170 : undefined, name: d.name });
     }
   }
 

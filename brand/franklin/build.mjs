@@ -172,7 +172,7 @@ const LOW = 1420; // readouts over the world: on the open ground under the model
 const WORLD = (() => {
   const plotBuild = {
     library: [after("lib1") + 0.15, at("lib2", "fifty") - 0.25],
-    fire: [after("fire1") + 0.15, after("fire2", "buckets") + 0.2],
+    fire: [after("fire1") + 0.7, after("fire2", "buckets") + 0.2],
     hospital: [after("hosp1") + 0.15, at("hosp2", "only") + 0.2],
     academy: [at("acad1") - 0.85, at("acad1", "opened") + 0.6],
     shared: [at("now1") - 1.2, after("now1") + 0.2],
@@ -201,6 +201,7 @@ const WORLD = (() => {
     { t: start("hosp") - 0.2, dur: 2.0, shot: "all4" },
     { t: after("hosp1") - 0.4, dur: 1.8, shot: "plot:hospital" },
     { t: d0 - 0.2, dur: 1.2, shot: "mid:hospital" },
+    { t: d1 + 0.9, dur: 4.5, shot: "plot:hospital" },
     { t: at("acad1") - 1.2, dur: 1.6, shot: "plot:academy" },
     { t: at("turn1") - 0.9, dur: 1.9, shot: "all4" },
     { t: at("now1") - 1.4, dur: 2.2, shot: "plot:shared" },
@@ -217,14 +218,13 @@ const WORLD = (() => {
     { text: "members", anchor: "library.members", t0: arrive("library", 2) + 0.3, t1: at("lib2", "fifty") - 0.2 },
     { text: "money", anchor: "library.money", t0: arrive("library", 3) + 0.3, t1: at("lib2", "fifty") - 0.2 },
     { text: "the collection", anchor: "library.case", t0: after("lib2", "each") + 0.6, t1: start("lib3") - 0.2 },
-    { text: "union fire company", anchor: "fire.posts", t0: arrive("fire", 4.2) + 0.5, t1: start("hosp") - 0.3 },
     { text: "the academy", anchor: "academy.cupola", t0: at("acad1", "opened") + 0.7, t1: start("turn") - 0.3 },
     { text: "shared services", anchor: "shared.members", t0: at("now2", "existing") - 0.1, t1: start("end") - 0.5 },
     { text: "new project", anchor: "shared.new", t0: at("now2", "new") + 0.2, t1: start("end") - 0.5 },
   ];
   // when the archive's cards are up, a veil lifts them off the model
   const veils = [
-    [start("who") - 0.45, after("lib1") + 0.05], [start("lib3") - 0.25, after("fire1") + 0.05],
+    [start("who") - 0.45, after("lib1") + 0.05], [start("lib3") - 0.25, after("fire1") + 0.9],
     [start("hosp") - 0.15, after("hosp1") + 0.05],
   ];
   // the backdrop's tint: porcelain, leaning to each institution's colour in its part of the story
@@ -363,7 +363,8 @@ const WORLD = (() => {
       <div class="small abs" style="left:34px;top:44px;font-size:36px;font-weight:500;color:${C.clay}">0${i + 1}</div>
       <div class="disp abs" style="left:128px;top:40px;font-size:44px;font-weight:600">${label}</div></div>`);
     if (i) s.add(`<div id="ln${i}" class="bar" style="left:136px;top:${y - 40}px;width:4px;height:40px;background:${C.rule};transform-origin:50% 0;opacity:0"></div>`);
-    const t = at("who3", w) - 0.1 + (i === 3 ? 0.45 : 0);
+    // the first step comes up as the method is named; the last as the members are
+    const t = i === 0 ? at("who3", "method") : i === 3 ? at("who3", "many") + 0.55 : at("who3", w) - 0.1;
     if (i) s.fromTo(`#ln${i}`, { opacity: 1, scaleY: 0 }, { opacity: 1, scaleY: 1, duration: 0.2, ease: "power2.out" }, t - 0.15);
     s.enter(`#st${i}`, t, { from: "left", dur: 0.45 });
   });
@@ -408,12 +409,14 @@ const WORLD = (() => {
 {
   const s = new Scene("fire", start("fire") - 0.15, start("hosp") - 0.15, 4);
   s.add(`<div id="q" class="card" style="left:60px;top:${TOPY}px;width:960px;height:560px;opacity:0">
-    <div class="bar" style="left:44px;top:56px;width:8px;height:300px;background:${A.fire}"></div>
+    <div id="qbar" class="bar" style="left:44px;top:56px;width:8px;height:300px;background:${A.fire};transform-origin:50% 0"></div>
     <div id="qt" class="serif abs" style="left:84px;top:44px;width:820px;font-size:68px;line-height:1.18;font-style:italic">${words("An ounce of prevention is worth a pound of cure.")}</div>
     <div class="kicker abs" style="left:84px;top:430px">pennsylvania gazette · 4 feb 1735</div></div>`);
   s.enter("#q", at("fire1") - 0.1, { from: "zoom" });
+  // the rule draws down while the letter is introduced, then the proverb sets
+  s.fromTo("#qbar", { scaleY: 0 }, { scaleY: 1, duration: at("fire1", "ounce") - at("fire1", "newspaper"), ease: "power1.inOut" }, at("fire1", "newspaper"));
   s.words("#qt .w", at("fire1", "ounce") - 0.1, { stagger: (at("fire1", "cure") - at("fire1", "ounce")) / 10 });
-  s.leave("#q", after("fire1") - 0.1, 0.25);
+  s.leave("#q", after("fire1") + 0.85, 0.25);
   s.sound("whoosh", after("fire1") + 0.1, 0.16);
   // under the model: the company, and one of its buckets as it survives
   s.add(`<div id="uf" class="abs" style="left:84px;top:${LOW}px;width:560px;opacity:0">
@@ -446,6 +449,8 @@ const WORLD = (() => {
   s.count("#dn", d0, d1 - d0 + 0.1, 0, 2000, "'£' + (Math.round(v / 100) * 100).toLocaleString('en-GB')");
   s.fromTo("#an", { color: C.muted }, { color: A.hospital, duration: 0.3 }, tT + 0.45);
   s.sound("impact-bass-1", tT + 0.47, 0.22);
+  s.add(`<div id="mg" class="tag" style="left:84px;top:${LOW + 190}px;opacity:0;color:${A.hospital}">£2,000 + £2,000 = £4,000</div>`);
+  s.enter("#mg", at("hosp3", "pennsylvania") - 0.1, { from: "up", dur: 0.4 });
   scenes.push(s);
 }
 
@@ -493,7 +498,7 @@ const WORLD = (() => {
   s.sound("click-soft", at("now2", "structure") + 0.15, 0.4);
   s.add(`<div id="fs" class="abs" style="left:84px;top:${LOW - 10}px;width:912px;opacity:0">
     <div class="kicker">fiscal sponsorship</div><div class="disp" style="font-size:60px;margin-top:6px">From day one:</div></div>`);
-  s.enter("#fs", at("now2", "day") - 0.2, { from: "left", dur: 0.45 });
+  s.enter("#fs", at("now2", "sponsor") - 0.1, { from: "left", dur: 0.45 });
   const CAN = [["tax-deductible", "gifts"], ["grants", "grants"], ["contracts", "contracts"]];
   CAN.forEach(([w, label], i) => {
     s.add(`<div id="cv${i}" class="tag" style="left:${84 + i * 280}px;top:${LOW + 120}px;opacity:0;color:${A.mulvium}">✓ ${label}</div>`);
