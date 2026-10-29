@@ -341,15 +341,19 @@ const WORLD = (() => {
   // the built town it served
   const MAP = "philadelphia-1762", MW = SIZES[MAP].w, MH = SIZES[MAP].h, inv = 1 / (W / MW); // labels keep their size inside the scaled picture
   const SITES = [
-    ["library", "library company", [0.3947, 0.5548], "#4E73A3", 0.35, "right"], ["fire", "union fire company", [0.8316, 0.463], "#B4583A", 0.75, "glow"],
-    ["hospital", "pennsylvania hospital", [0.0632, 0.8034], "#3F8A80", 1.15, "right"], ["academy", "academy", [0.5342, 0.3771], "#5E8A4E", 1.55, "right"],
+    // each ring on the building itself, as the plan draws it: the State House's
+    // west wing (the Library Company's rooms, 1740-73), the Pine Building, the
+    // Academy's hall on Fourth Street
+    ["library", "library company", [0.3726, 0.5521], "#4E73A3", 0.35, "right"], ["fire", "union fire company", [0.8316, 0.463], "#B4583A", 0.75, "glow"],
+    ["hospital", "pennsylvania hospital", [0.0763, 0.8034], "#3F8A80", 1.15, "right"], ["academy", "academy", [0.5358, 0.3774], "#5E8A4E", 1.55, "right"],
   ];
   const lights = SITES.map(([id, name, [fx, fy], c, , kind]) => {
     const x = fx * MW, y = fy * MH;
     const mark = kind === "glow"
       ? `<div id="lg-${id}" class="abs" style="left:${x - 360}px;top:${y - 280}px;width:720px;height:560px;border-radius:50%;opacity:0;background:radial-gradient(closest-side, rgba(214,104,50,0.72), rgba(214,104,50,0.32) 60%, rgba(214,104,50,0) 100%)"></div>`
       : `<div id="lr-${id}" class="abs" style="left:${x - 44}px;top:${y - 44}px;width:88px;height:88px;border-radius:44px;border:${4 * inv}px solid ${c};opacity:0"></div>
-         <div id="ld-${id}" class="abs" style="left:${x - 22}px;top:${y - 22}px;width:44px;height:44px;border-radius:22px;background:${c};box-shadow:0 0 0 ${5 * inv}px #F6EEDF,0 3px 12px rgba(0,0,0,0.35);opacity:0"></div>`;
+         <div id="ld-${id}" class="abs" style="left:${x - 30}px;top:${y - 30}px;width:60px;height:60px;border-radius:30px;border:${6 * inv}px solid ${c};box-sizing:border-box;box-shadow:0 0 0 ${3 * inv}px #F6EEDF, inset 0 0 0 ${3 * inv}px #F6EEDF;opacity:0">
+           <div style="position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:5px;background:${c}"></div></div>`;
     // a paper tag beside the light: to its right, its left, or under the glow
     const pos = kind === "glow" ? `left:${x + 170}px;top:${y - 30}px;transform:translateX(-100%)` : kind === "left" ? `left:${x - 40}px;top:${y - 30}px;transform:translateX(-100%)` : `left:${x + 40}px;top:${y - 30}px`;
     return `${mark}<div class="abs" style="${pos}"><div id="ll-${id}" class="maplab" style="font-size:${TS.kick * inv}px;opacity:0">${name}</div></div>`;
