@@ -1,0 +1,98 @@
+<template>
+  <style>
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-600.woff2) format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-700.woff2) format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Mono"; src: url(assets/fonts/IBMPlexMono-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Mono"; src: url(assets/fonts/IBMPlexMono-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500i.woff2) format("woff2"); font-weight: 500; font-style: italic; font-display: block; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse 120% 75% at 50% 30%, #F5F3EF 0%, #ECEAE5 58%, #E3DFD8 100%); }
+
+    .abs { position: absolute; }
+    .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .sans { font-family: "IBM Plex Sans", sans-serif; color: #1B1613; }
+    .mono { font-family: "IBM Plex Mono", monospace; color: #5C544E; letter-spacing: 0.02em; }
+    .serif { font-family: "Lora", serif; color: #1B1613; }
+    .kicker { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 28px; letter-spacing: 0.14em; text-transform: uppercase; color: #5C544E; }
+    .w { display: inline-block; white-space: pre; }
+    .card { position: absolute; background: #F9F8F5; border: 1px solid #D9D4CA; border-radius: 28px; overflow: hidden;
+      box-shadow: inset 0 1px 0 #FFFFFF, 0 2px 4px rgba(27,22,19,0.04), 0 18px 48px rgba(27,22,19,0.10); }
+    .card .cap { position: absolute; left: 0; bottom: 0; width: 100%; height: 64px; overflow: hidden; padding: 0 28px; display: flex; align-items: center; gap: 18px;
+      background: #F9F8F5; border-top: 1px solid #D9D4CA; font-family: "IBM Plex Mono", monospace; font-size: 28px; color: #5C544E; white-space: nowrap; }
+    .card .cap b { font-weight: 500; color: #1B1613; }
+    .pic { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+    .pic img { display: block; width: 100%; height: 100%; }
+    .tag { position: absolute; padding: 10px 18px 11px; border-radius: 10px; background: #F9F8F5; border: 1px solid #D9D4CA;
+      font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 26px; letter-spacing: 0.08em; text-transform: uppercase; color: #1B1613; white-space: nowrap; }
+    .bar { position: absolute; border-radius: 4px; }
+
+#root { background: none; }
+    .chap { position: absolute; left: 84px; top: 256px; width: 912px; opacity: 0; }
+    .chap .kicker { margin-bottom: 8px; }
+    .chap .t { font-family: "IBM Plex Sans", sans-serif; font-weight: 600; font-size: 54px; letter-spacing: -0.01em; color: #1B1613; }
+
+  </style>
+  <div id="root" data-composition-id="chrome" data-width="1080" data-height="1920">
+<div id="chrome-c0" class="chap"><div class="kicker">Prologue</div><div class="t"><span class="w">Philadelphia, </span><span class="w">1731 </span></div></div>
+<div id="chrome-c1" class="chap"><div class="kicker">Chapter 1</div><div class="t"><span class="w">The </span><span class="w">founder </span></div></div>
+<div id="chrome-c2" class="chap"><div class="kicker">Chapter 2</div><div class="t"><span class="w">The </span><span class="w">Library </span><span class="w">Company </span></div></div>
+<div id="chrome-c3" class="chap"><div class="kicker">Chapter 3</div><div class="t"><span class="w">The </span><span class="w">Union </span><span class="w">Fire </span><span class="w">Company </span></div></div>
+<div id="chrome-c4" class="chap"><div class="kicker">Chapter 4</div><div class="t"><span class="w">The </span><span class="w">Pennsylvania </span><span class="w">Hospital </span></div></div>
+<div id="chrome-c5" class="chap"><div class="kicker">Chapter 5</div><div class="t"><span class="w">The </span><span class="w">Academy </span></div></div>
+<div id="chrome-c6" class="chap"><div class="kicker">Chapter 6</div><div class="t"><span class="w">Four </span><span class="w">foundations </span></div></div>
+<div id="chrome-c7" class="chap"><div class="kicker">Chapter 7</div><div class="t"><span class="w">A </span><span class="w">shared </span><span class="w">foundation </span></div></div>
+<div id="chrome-line" class="abs" style="left:0;top:0;width:1080px;height:500px;opacity:0">
+    <div class="bar" style="left:84px;top:420px;width:912px;height:3px;background:#D9D4CA"></div><div class="bar" style="left:83px;top:410px;width:2px;height:14px;background:#D9D4CA"></div><div class="bar" style="left:235px;top:410px;width:2px;height:22px;background:#D9D4CA"></div><div class="mono abs" style="left:186px;top:438px;width:100px;text-align:center;font-size:28px">1730</div><div class="bar" style="left:387px;top:410px;width:2px;height:14px;background:#D9D4CA"></div><div class="bar" style="left:539px;top:410px;width:2px;height:22px;background:#D9D4CA"></div><div class="mono abs" style="left:490px;top:438px;width:100px;text-align:center;font-size:28px">1740</div><div class="bar" style="left:691px;top:410px;width:2px;height:14px;background:#D9D4CA"></div><div class="bar" style="left:843px;top:410px;width:2px;height:22px;background:#D9D4CA"></div><div class="mono abs" style="left:794px;top:438px;width:100px;text-align:center;font-size:28px">1750</div><div class="bar" style="left:995px;top:410px;width:2px;height:14px;background:#D9D4CA"></div><div id="chrome-m-junto" class="abs" style="left:133.8px;top:410px;width:22px;height:22px;border-radius:11px;background:#8A8178;border:3px solid #F9F8F5;box-shadow:0 2px 6px rgba(27,22,19,.18);opacity:0"></div><div id="chrome-m-library" class="abs" style="left:255.4px;top:410px;width:22px;height:22px;border-radius:11px;background:#4d6d96;border:3px solid #F9F8F5;box-shadow:0 2px 6px rgba(27,22,19,.18);opacity:0"></div><div id="chrome-m-fire" class="abs" style="left:407.4px;top:410px;width:22px;height:22px;border-radius:11px;background:#a8603f;border:3px solid #F9F8F5;box-shadow:0 2px 6px rgba(27,22,19,.18);opacity:0"></div><div id="chrome-m-hospital" class="abs" style="left:863.4px;top:410px;width:22px;height:22px;border-radius:11px;background:#357f77;border:3px solid #F9F8F5;box-shadow:0 2px 6px rgba(27,22,19,.18);opacity:0"></div><div id="chrome-m-academy" class="abs" style="left:863.4px;top:380px;width:22px;height:22px;border-radius:11px;background:#55804a;border:3px solid #F9F8F5;box-shadow:0 2px 6px rgba(27,22,19,.18);opacity:0"></div><div id="chrome-needle" class="abs" style="left:264.9px;top:386px;width:3px;height:44px;background:#1B1613;border-radius:2px"></div></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.set("#chrome-c0", {"opacity":1}, 0.9);
+    tl.fromTo("#chrome-c0 .kicker", {"opacity":0}, {"opacity":1,"duration":0.3}, 0.9);
+    tl.fromTo("#chrome-c0 .w", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.16,"ease":"power2.out","stagger":0.06}, 0.9);
+    tl.to("#chrome-c0", {"opacity":0,"filter":"blur(8px)","duration":0.2,"ease":"power2.in"}, 15.285);
+    tl.set("#chrome-c1", {"opacity":1}, 15.435);
+    tl.fromTo("#chrome-c1 .kicker", {"opacity":0}, {"opacity":1,"duration":0.3}, 15.435);
+    tl.fromTo("#chrome-c1 .w", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.16,"ease":"power2.out","stagger":0.06}, 15.435);
+    tl.to("#chrome-c1", {"opacity":0,"filter":"blur(8px)","duration":0.2,"ease":"power2.in"}, 38.285);
+    tl.set("#chrome-c2", {"opacity":1}, 38.435);
+    tl.fromTo("#chrome-c2 .kicker", {"opacity":0}, {"opacity":1,"duration":0.3}, 38.435);
+    tl.fromTo("#chrome-c2 .w", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.16,"ease":"power2.out","stagger":0.06}, 38.435);
+    tl.to("#chrome-c2", {"opacity":0,"filter":"blur(8px)","duration":0.2,"ease":"power2.in"}, 67.08);
+    tl.set("#chrome-c3", {"opacity":1}, 67.23);
+    tl.fromTo("#chrome-c3 .kicker", {"opacity":0}, {"opacity":1,"duration":0.3}, 67.23);
+    tl.fromTo("#chrome-c3 .w", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.16,"ease":"power2.out","stagger":0.06}, 67.23);
+    tl.to("#chrome-c3", {"opacity":0,"filter":"blur(8px)","duration":0.2,"ease":"power2.in"}, 87.965);
+    tl.set("#chrome-c4", {"opacity":1}, 88.115);
+    tl.fromTo("#chrome-c4 .kicker", {"opacity":0}, {"opacity":1,"duration":0.3}, 88.115);
+    tl.fromTo("#chrome-c4 .w", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.16,"ease":"power2.out","stagger":0.06}, 88.115);
+    tl.to("#chrome-c4", {"opacity":0,"filter":"blur(8px)","duration":0.2,"ease":"power2.in"}, 113.87);
+    tl.set("#chrome-c5", {"opacity":1}, 114.02);
+    tl.fromTo("#chrome-c5 .kicker", {"opacity":0}, {"opacity":1,"duration":0.3}, 114.02);
+    tl.fromTo("#chrome-c5 .w", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.16,"ease":"power2.out","stagger":0.06}, 114.02);
+    tl.to("#chrome-c5", {"opacity":0,"filter":"blur(8px)","duration":0.2,"ease":"power2.in"}, 121.255);
+    tl.set("#chrome-c6", {"opacity":1}, 121.405);
+    tl.fromTo("#chrome-c6 .kicker", {"opacity":0}, {"opacity":1,"duration":0.3}, 121.405);
+    tl.fromTo("#chrome-c6 .w", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.16,"ease":"power2.out","stagger":0.06}, 121.405);
+    tl.to("#chrome-c6", {"opacity":0,"filter":"blur(8px)","duration":0.2,"ease":"power2.in"}, 140.31);
+    tl.set("#chrome-c7", {"opacity":1}, 140.46);
+    tl.fromTo("#chrome-c7 .kicker", {"opacity":0}, {"opacity":1,"duration":0.3}, 140.46);
+    tl.fromTo("#chrome-c7 .w", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.16,"ease":"power2.out","stagger":0.06}, 140.46);
+    tl.fromTo("#chrome-line", {"opacity":0}, {"opacity":1,"duration":0.4}, 0.15);
+    tl.to("#chrome-needle", {"x":608,"duration":0.6,"ease":"power3.inOut"}, 8.77);
+    tl.to("#chrome-needle", {"x":-121.6,"duration":0.6,"ease":"power3.inOut"}, 45.45);
+    tl.to("#chrome-needle", {"x":0,"duration":0.6,"ease":"power3.inOut"}, 48.285);
+    tl.to("#chrome-needle", {"x":121.6,"duration":0.6,"ease":"power3.inOut"}, 67.7);
+    tl.to("#chrome-needle", {"x":152,"duration":0.6,"ease":"power3.inOut"}, 78.18);
+    tl.to("#chrome-needle", {"x":608,"duration":0.6,"ease":"power3.inOut"}, 88.585);
+    tl.fromTo("#chrome-m-junto", {"opacity":0,"scale":0.4}, {"opacity":1,"scale":1,"duration":0.35,"ease":"back.out(2)"}, 45.95);
+    tl.fromTo("#chrome-m-library", {"opacity":0,"scale":0.4}, {"opacity":1,"scale":1,"duration":0.35,"ease":"back.out(2)"}, 48.785);
+    tl.fromTo("#chrome-m-fire", {"opacity":0,"scale":0.4}, {"opacity":1,"scale":1,"duration":0.35,"ease":"back.out(2)"}, 80.29);
+    tl.fromTo("#chrome-m-hospital", {"opacity":0,"scale":0.4}, {"opacity":1,"scale":1,"duration":0.35,"ease":"back.out(2)"}, 91.42);
+    tl.fromTo("#chrome-m-academy", {"opacity":0,"scale":0.4}, {"opacity":1,"scale":1,"duration":0.35,"ease":"back.out(2)"}, 116.24);
+    tl.to("#chrome-line", {"opacity":0,"filter":"blur(8px)","duration":0.3,"ease":"power2.in"}, 121.255);
+    window.__timelines["chrome"] = tl;
+  </script>
+</template>

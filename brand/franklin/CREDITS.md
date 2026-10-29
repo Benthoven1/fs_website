@@ -39,9 +39,14 @@ the licence named here. The pixels of the archival pictures are unaltered
 
 ## Type
 
-IM Fell English and IM Fell English SC (Igino Marini's revivals of the Fell
-types) and Libre Caslon Text (Impallari Type), all under the SIL Open Font
-License, from Google Fonts.
+IBM Plex Sans and IBM Plex Mono (IBM) and Lora (Cyreal), under the SIL Open
+Font License, from Google Fonts.
+
+## Isometric figures
+
+The four machines (`figures/`, written to `assets/fig/`) are drawn with the
+[Anatomy](https://github.com/wheresryan22/anatomy) kit by Ryan, MIT licence,
+vendored in `figures/kit/` with its licence.
 
 ## The close
 

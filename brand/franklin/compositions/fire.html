@@ -1,76 +1,60 @@
 <template>
   <style>
-    @font-face { font-family: "IM Fell English"; src: url(assets/fonts/IMFellEnglish-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
-    @font-face { font-family: "IM Fell English"; src: url(assets/fonts/IMFellEnglish-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
-    @font-face { font-family: "IM Fell English SC"; src: url(assets/fonts/IMFellEnglishSC-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
-    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
-    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-700.woff2) format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
-    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
-    #root { position: absolute; inset: 0; overflow: hidden; background: #EDE3CB url(assets/paper.jpg) center / cover; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-600.woff2) format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-700.woff2) format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Mono"; src: url(assets/fonts/IBMPlexMono-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Mono"; src: url(assets/fonts/IBMPlexMono-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500i.woff2) format("woff2"); font-weight: 500; font-style: italic; font-display: block; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse 120% 75% at 50% 30%, #F5F3EF 0%, #ECEAE5 58%, #E3DFD8 100%); }
 
     .abs { position: absolute; }
     .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
-    .fell { font-family: "IM Fell English", serif; font-weight: 400; color: #1B1915; line-height: 1.02; }
-    .sc { font-family: "IM Fell English SC", serif; font-weight: 400; color: #1B1915; letter-spacing: 0.04em; line-height: 1.1; }
-    .caslon { font-family: "Libre Caslon Text", serif; color: #1B1915; }
-    .red { color: #A8261B; }
-    .on-dark { color: #EDE3CB; }
-    .ink { text-shadow: 0 0 0.6px rgba(27, 25, 21, 0.85); }
+    .sans { font-family: "IBM Plex Sans", sans-serif; color: #1B1613; }
+    .mono { font-family: "IBM Plex Mono", monospace; color: #5C544E; letter-spacing: 0.02em; }
+    .serif { font-family: "Lora", serif; color: #1B1613; }
+    .kicker { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 28px; letter-spacing: 0.14em; text-transform: uppercase; color: #5C544E; }
     .w { display: inline-block; white-space: pre; }
+    .card { position: absolute; background: #F9F8F5; border: 1px solid #D9D4CA; border-radius: 28px; overflow: hidden;
+      box-shadow: inset 0 1px 0 #FFFFFF, 0 2px 4px rgba(27,22,19,0.04), 0 18px 48px rgba(27,22,19,0.10); }
+    .card .cap { position: absolute; left: 0; bottom: 0; width: 100%; height: 64px; overflow: hidden; padding: 0 28px; display: flex; align-items: center; gap: 18px;
+      background: #F9F8F5; border-top: 1px solid #D9D4CA; font-family: "IBM Plex Mono", monospace; font-size: 28px; color: #5C544E; white-space: nowrap; }
+    .card .cap b { font-weight: 500; color: #1B1613; }
     .pic { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
     .pic img { display: block; width: 100%; height: 100%; }
-    .sheet { position: absolute; background: #EDE3CB url(assets/paper.jpg) center / cover; box-shadow: 0 18px 44px rgba(40, 24, 8, 0.30), 0 2px 6px rgba(40, 24, 8, 0.18); }
-    .slip { position: absolute; left: 0; width: 1080px; background: rgba(237, 227, 203, 0.94); }
-    .rule { position: absolute; height: 3px; background: #1B1915; }
-    svg.ink-line { position: absolute; overflow: visible; }
-    svg.ink-line path { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 100 120; stroke-dashoffset: 110; }
+    .tag { position: absolute; padding: 10px 18px 11px; border-radius: 10px; background: #F9F8F5; border: 1px solid #D9D4CA;
+      font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 26px; letter-spacing: 0.08em; text-transform: uppercase; color: #1B1613; white-space: nowrap; }
+    .bar { position: absolute; border-radius: 4px; }
+
 
 
   </style>
   <div id="root" data-composition-id="fire" data-width="1080" data-height="1920">
-<svg class="full" style="position:absolute" width="1080" height="1920">
-      <defs><filter id="fire-rough" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="3" seed="17"/><feDisplacementMap in="SourceGraphic" scale="150"/></filter>
-      <mask id="fire-hole" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1920"><rect width="1080" height="1920" fill="#fff"/><circle id="fire-burn" cx="560" cy="560" r="0" fill="#000" filter="url(#fire-rough)"/></mask>
-      <mask id="fire-char" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1920"><rect width="1080" height="1920" fill="#fff"/><circle id="fire-burn2" cx="560" cy="560" r="0" fill="#000" filter="url(#fire-rough)"/></mask></defs>
-      <g mask="url(#fire-char)"><rect width="1080" height="1920" fill="#2a170b"/></g>
-      <g mask="url(#fire-hole)"><image href="assets/paper.jpg" width="1080" height="1920" preserveAspectRatio="none"/><image href="assets/img/library-hall.jpg" x="-184.5" y="-124.22" width="2100" height="1710.55" preserveAspectRatio="none"/>
-      <rect width="1080" fill="rgba(237,227,203,0.94)" y="860" height="300"/></g></svg>
-<div id="fire-slipcopy" class="slip" style="top:860px;height:300px"><div class="sc red abs" style="left:84px;top:34px;font-size:52px;letter-spacing:0.12em">Open since 1731</div>
-      <div class="fell ink abs" style="left:84px;top:110px;width:920px;font-size:74px;line-height:1.08">America’s oldest cultural institution.</div></div>
-<div id="fire-fire" class="fell red abs" style="left:84px;top:420px;font-size:230px;opacity:0">Fire.</div>
-<div id="fire-prov" class="abs" style="left:84px;top:250px;width:912px">
-      <div id="fire-pv0" class="sc ink" style="font-size:64px;letter-spacing:0.1em">An ounce</div>
-      <div id="fire-pv1" class="fell ink" style="font-size:96px;margin-top:6px">of prevention</div>
-      <div id="fire-pv2" class="fell ink" style="font-size:60px;margin-top:20px">is worth</div>
-      <div id="fire-pv3" class="sc ink" style="font-size:230px;line-height:0.95;letter-spacing:0.01em">a Pound</div>
-      <div id="fire-pv4" class="fell ink" style="font-size:96px">of cure.</div>
-      <div id="fire-pv5" class="sc ink" style="font-size:40px;margin-top:34px;letter-spacing:0.14em;color:#5a5048">Pennsylvania Gazette, 1735</div></div>
-<div id="fire-union" class="abs" style="left:84px;top:300px;width:920px"><div class="sc ink" style="font-size:96px;line-height:1.06"><span class="w">The </span><span class="w">Union </span><span class="w">Fire </span><span class="w">Company </span></div>
-      <div class="sc red" style="font-size:52px;letter-spacing:0.14em;margin-top:22px">1736</div>
-      <div class="fell ink" style="font-size:66px;margin-top:40px;line-height:1.15"><span class="w">Thirty </span><span class="w">volunteers, </span><span class="w">pledged </span><span class="w">to </span><span class="w">come </span><span class="w">to </span><span class="w">any </span><span class="w">fire </span><span class="w">with </span><span class="w">their </span><span class="w">own </span><span class="w">leather </span><span class="w">buckets. </span></div></div>
-<div id="fire-bucket" class="full" style="opacity:0"><div id="fire-bp" class="pic" style="width:1920px;height:2428px;"><img src="assets/img/bucket.jpg" alt=""></div></div>
+<div id="fire-q" class="card" style="left:60px;top:500px;width:960px;height:560px;opacity:0">
+    <div class="bar" style="left:44px;top:56px;width:8px;height:300px;background:#a8603f"></div>
+    <div id="fire-qt" class="serif abs" style="left:84px;top:44px;width:820px;font-size:68px;line-height:1.18;font-style:italic"><span class="w">An </span><span class="w">ounce </span><span class="w">of </span><span class="w">prevention </span><span class="w">is </span><span class="w">worth </span><span class="w">a </span><span class="w">pound </span><span class="w">of </span><span class="w">cure. </span></div>
+    <div class="mono abs" style="left:84px;top:430px;font-size:26px">PENNSYLVANIA GAZETTE · 4 FEB 1735</div></div>
+<div id="fire-buck" class="card" style="left:60px;top:500px;width:560px;height:680px;opacity:0">
+    <div class="abs" style="left:0;top:0;width:560px;height:616px;overflow:hidden"><div id="fire-buck-pic" class="pic" style="width:1920px;height:2428px"><img src="assets/img/bucket.jpg" alt=""></div></div>
+    <div class="cap"><b>FIG. 3.1</b><span>Leather fire bucket</span></div></div>
+<div id="fire-uf" class="abs" style="left:650px;top:520px;width:380px;opacity:0">
+    <div class="kicker">Est. 1736</div>
+    <div class="sans" style="font-size:44px;font-weight:600;line-height:1.1;margin-top:10px">Union Fire Company</div>
+    <div style="margin-top:26px;width:80px;height:6px;border-radius:3px;background:#a8603f"></div>
+    <div class="mono" style="font-size:26px;margin-top:22px;line-height:1.5">Volunteer brigade<br>Members only</div></div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo("#fire-burn", {"attr":{"r":0}}, {"attr":{"r":2300},"duration":2.2,"ease":"power1.in"}, 0.05);
-    tl.fromTo("#fire-burn2", {"attr":{"r":0}}, {"attr":{"r":2280},"duration":2.2,"ease":"power1.in"}, 0.17);
-    tl.to("#fire-slipcopy", {"opacity":0,"duration":0.3}, 1.25);
-    tl.fromTo("#fire-fire", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.16,"ease":"power4.out","stagger":0.1}, 0.93);
-    tl.to("#fire-fire", {"opacity":0,"filter":"blur(8px)","duration":0.18,"ease":"power2.in"}, 1.791);
-    tl.fromTo("#fire-pv0", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.13,"ease":"power4.out","stagger":0.1}, 3.151);
-    tl.fromTo("#fire-pv1", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.13,"ease":"power4.out","stagger":0.1}, 3.551);
-    tl.fromTo("#fire-pv2", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.13,"ease":"power4.out","stagger":0.1}, 4.131);
-    tl.fromTo("#fire-pv3", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.16,"ease":"power4.out","stagger":0.1}, 4.491);
-    tl.fromTo("#fire-pv4", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.13,"ease":"power4.out","stagger":0.1}, 4.831);
-    tl.fromTo("#fire-pv5", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 4.771);
-    tl.to("#fire-prov", {"y":-1400,"duration":0.5,"ease":"power3.in"}, 5.761);
-    tl.set("#fire-union .sc:first-child", {"opacity":1}, 6.521);
-    tl.fromTo("#fire-union .sc:first-child .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.12}, 6.521);
-    tl.fromTo("#fire-union .red", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 7.331);
-    tl.set("#fire-union .fell", {"opacity":1}, 8.481);
-    tl.fromTo("#fire-union .fell .w", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.153}, 8.481);
-    tl.set("#fire-bucket", {"opacity":1}, 10.271);
-    tl.fromTo("#fire-bp", {"x":-355.789,"y":-59.52,"scale":0.933}, {"x":-249.509,"y":0,"scale":0.822,"duration":1.4,"ease":"expo.out"}, 10.271);
+    tl.fromTo("#fire-q", {"opacity":0,"filter":"blur(6px)","scale":0.94}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.6,"ease":"expo.out","stagger":0}, 0.05);
+    tl.set("#fire-qt", {"opacity":1}, 6.555);
+    tl.fromTo("#fire-qt .w", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.16,"ease":"power2.out","stagger":0.304}, 6.555);
+    tl.to("#fire-q", {"opacity":0,"filter":"blur(8px)","duration":0.22,"ease":"power2.in"}, 10.175);
+    tl.fromTo("#fire-buck", {"opacity":0,"filter":"blur(6px)","x":-120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.6,"ease":"expo.out","stagger":0}, 10.375);
+    tl.fromTo("#fire-buck-pic", {"x":-28,"y":-65.912,"scale":0.321}, {"x":-61.6,"y":-72.144,"scale":0.356,"duration":10.66,"ease":"power2.inOut"}, 10.375);
+    tl.fromTo("#fire-uf", {"opacity":0,"filter":"blur(6px)","x":120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 12.71);
     window.__timelines["fire"] = tl;
   </script>
 </template>

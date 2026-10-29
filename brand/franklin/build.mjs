@@ -6,16 +6,25 @@
 //
 //   node build.mjs            # then: npx hyperframes check / snapshot / render
 //
-// Pictures are read from assets/img/ with their sizes in assets/img/sizes.json
-// (prep.py writes both). The look and the shots are SPEC.md's.
+// The look is the Mulvium site's porcelain, set like a textbook: chapters,
+// a running timeline, numbered figures with their sources, key figures. The
+// archival pictures come from assets/img/ (prep.py); the isometric machines
+// from assets/fig/ (figures/*.mjs, built with the Anatomy kit), and each
+// machine is put together on screen, part by part, before it runs.
 import fs from "fs";
 import path from "path";
+import { scopedKitCss, themeCss, ACCENTS } from "./figures/common.mjs";
 
 const HERE = path.dirname(new URL(import.meta.url).pathname);
-const W = 1080, H = 1920, FPS = 30;
-const C = { paper: "#EDE3CB", ink: "#1B1915", red: "#A8261B", clay: "#B5694A", iron: "#2E2C29", wood: "#C7A06B" };
+const W = 1080, H = 1920;
+const C = { paper: "#ECEAE5", surface: "#F9F8F5", ink: "#1B1613", soft: "#3B332F", muted: "#5C544E", rule: "#D9D4CA", clay: "#B87758" };
+const A = Object.fromEntries(Object.entries(ACCENTS).map(([k, v]) => [k, v.line]));
 const SIZES = JSON.parse(fs.readFileSync(path.join(HERE, "assets/img/sizes.json"), "utf8"));
 const SCRIPT = JSON.parse(fs.readFileSync(path.join(HERE, "script.json"), "utf8"));
+const FIG = (name) => ({
+  svg: fs.readFileSync(path.join(HERE, "assets/fig", `${name}.svg`), "utf8"),
+  ...JSON.parse(fs.readFileSync(path.join(HERE, "assets/fig", `${name}.json`), "utf8")),
+});
 
 // ── The clock: every word of the narration ─────────────────────────────────
 let T = JSON.parse(fs.readFileSync(path.join(HERE, "timing.json"), "utf8"));
@@ -38,7 +47,7 @@ if (SCRIPT.lines.some((l, i) => !T.lines[i] || T.lines[i].text !== l.text)) {
 }
 const norm = (w) => w.toLowerCase().replace(/[^a-z0-9£]/g, "");
 const L = (id) => T.lines.find((l) => l.id === id) || (() => { throw new Error("no line " + id); })();
-// The time a word starts (or ends): at("hook1", "library"), at("hosp2", "thousand", 2)
+// The time a word starts (or ends): at("hook1", "library"), at("who2", "and", 2)
 function word(id, w, nth = 1) {
   const l = L(id);
   if (typeof w === "number") return l.words[w];
@@ -53,46 +62,58 @@ const VOICE_END = T.lines[T.lines.length - 1].t1;
 // ── Scenes ──────────────────────────────────────────────────────────────────
 const r3 = (x) => Math.round(x * 1000) / 1000;
 const js = (o) => JSON.stringify(o, (k, v) => (typeof v === "number" ? r3(v) : v));
+const isHex = (s) => /^[0-9a-f]{3,8}$/i.test(s);
 class Scene {
-  constructor(id, t0, t1, z) { Object.assign(this, { id, t0, t1, z, html: [], css: [], tl: [], sfx: [] }); }
+  constructor(id, t0, t1, z) { Object.assign(this, { id, t0, t1, z, html: [], css: [], raw: [], tl: [], sfx: [] }); }
   local(t) { return r3(Math.max(0, t - this.t0)); }
-  $(sel) { return sel.replace(/#([a-z])/g, `#${this.id}-$1`); }
+  $(sel) { return sel.replace(/#([a-z][\w-]*)/g, (m, s) => (isHex(s) ? m : `#${this.id}-${s}`)); }
   fromTo(sel, a, b, t) { this.tl.push(`tl.fromTo(${js(this.$(sel))}, ${js(a)}, ${js(b)}, ${this.local(t)});`); return this; }
   to(sel, b, t) { this.tl.push(`tl.to(${js(this.$(sel))}, ${js(b)}, ${this.local(t)});`); return this; }
   set(sel, b, t) { this.tl.push(`tl.set(${js(this.$(sel))}, ${js(b)}, ${this.local(t)});`); return this; }
   add(html) { this.html.push(html.replace(/id="([a-z])/g, `id="${this.id}-$1`)); return this; }
-  style(css) { this.css.push(css.replace(/#([a-z][\w-]*)/g, (m, s) => (s === "root" ? m : `#${this.id}-${s}`))); return this; }
+  style(css) { this.css.push(css.replace(/#([a-z][\w-]*)/g, (m, s) => (s === "root" || isHex(s) ? m : `#${this.id}-${s}`))); return this; }
   sound(name, t, vol = 0.5) { this.sfx.push({ name, t: r3(t), vol }); return this; }
-  // A type "kiss": the words are pressed onto the paper, not faded
-  press(sel, t, { stagger = 0.1, dur = 0.14 } = {}) {
-    // pressing a container's words shows the container too
-    const parent = sel.split(",").map((x) => x.trim()).filter((x) => / \.w$/.test(x)).map((x) => x.replace(/ \.w$/, ""));
-    if (parent.length) this.set(parent.join(", "), { opacity: 1 }, t);
-    return this.fromTo(sel, { opacity: 0, scale: 1.035, filter: "blur(3px)" },
-      { opacity: 1, scale: 1, filter: "blur(0px)", duration: dur, ease: "power4.out", stagger }, t);
+  // A card arrives: up from below, from a side, or out of a slight zoom
+  enter(sel, t, { from = "up", dur = 0.6, stagger = 0 } = {}) {
+    const a = { opacity: 0, filter: "blur(6px)", ...(from === "up" ? { y: 70 } : from === "right" ? { x: 120 } : from === "left" ? { x: -120 } : { scale: 0.94 }) };
+    const b = { opacity: 1, filter: "blur(0px)", x: 0, y: 0, scale: 1, duration: dur, ease: "expo.out", stagger };
+    return this.fromTo(sel, a, b, t);
   }
-  // A pen stroke drawn along its path (pathLength 100)
-  pen(sel, t, dur = 0.35) {
-    return this.fromTo(sel, { strokeDashoffset: 110 }, { strokeDashoffset: 0, duration: dur, ease: "power2.inOut" }, t);
-  }
-  // A loose sheet laid onto the table
-  lay(sel, t, { x = 0, y = 2000, rot = 4, end = 0, dur = 0.85 } = {}) {
-    return this.fromTo(sel, { x, y, rotation: rot }, { x: 0, y: 0, rotation: end, duration: dur, ease: "expo.out" }, t);
-  }
-  out(sel, t, dur = 0.2) {
+  leave(sel, t, dur = 0.25) {
     return this.to(sel, { opacity: 0, filter: "blur(8px)", duration: dur, ease: "power2.in" }, t);
   }
-  // Move a picture's camera to a framing (see frame()) over [t, t + dur]
+  // Words blur in one by one (motion.md's per-word entrance)
+  words(sel, t, { stagger = 0.067, dur = 0.16 } = {}) {
+    const parent = sel.replace(/ \.w$/, "");
+    if (parent !== sel) this.set(parent, { opacity: 1 }, t);
+    return this.fromTo(sel, { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: dur, ease: "power2.out", stagger }, t);
+  }
+  // A number counting to its value; fmt is a JS expression of v
+  count(sel, t, dur, from, to, fmt = "Math.round(v)") {
+    this.tl.push(`{ const o = { v: ${from} }, el = document.querySelector(${js(this.$(sel))}); tl.fromTo(o, { v: ${from} }, { v: ${to}, duration: ${r3(dur)}, ease: "power2.out", onUpdate: () => { const v = o.v; el.textContent = ${fmt}; } }, ${this.local(t)}); }`);
+    return this;
+  }
+  // Move a picture's camera over [t, t + dur]
   cam(sel, from, to, t, dur, ease = "power2.inOut") {
     return this.fromTo(sel, from, { ...to, duration: dur, ease }, t);
+  }
+  // Put a machine together: every [data-build] part lowers into place, in order
+  assemble(figSel, fig, t, span) {
+    const builds = [...new Set([...fig.svg.matchAll(/data-build="([\d.]+)"/g)].map((m) => +m[1]))].sort((a, b) => a - b);
+    const dt = span / (builds[builds.length - 1] + 1);
+    builds.forEach((n) =>
+      this.fromTo(`${figSel} [data-build="${n}"]`, { x: fig.moves.lift.x, y: fig.moves.lift.y, opacity: 0 },
+        { x: 0, y: 0, opacity: 1, duration: 0.5, ease: "expo.out" }, t + n * dt));
+    return this;
   }
   file() {
     return `<template>
   <style>
 ${FONTS}
-    #root { position: absolute; inset: 0; overflow: hidden; background: ${C.paper} url(assets/paper.jpg) center / cover; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: ${GROUND}; }
 ${BASE}
 ${this.css.join("\n")}
+${this.raw.join("\n")}
   </style>
   <div id="root" data-composition-id="${this.id}" data-width="${W}" data-height="${H}">
 ${this.html.join("\n")}
@@ -108,444 +129,365 @@ ${this.html.join("\n")}
 }
 
 const FONTS = [
-  ["IM Fell English", "IMFellEnglish-400", 400, "normal"], ["IM Fell English", "IMFellEnglish-400i", 400, "italic"],
-  ["IM Fell English SC", "IMFellEnglishSC-400", 400, "normal"], ["Libre Caslon Text", "LibreCaslonText-400", 400, "normal"],
-  ["Libre Caslon Text", "LibreCaslonText-700", 700, "normal"], ["Libre Caslon Text", "LibreCaslonText-400i", 400, "italic"],
+  ["IBM Plex Sans", "IBMPlexSans-400", 400, "normal"], ["IBM Plex Sans", "IBMPlexSans-500", 500, "normal"],
+  ["IBM Plex Sans", "IBMPlexSans-600", 600, "normal"], ["IBM Plex Sans", "IBMPlexSans-700", 700, "normal"],
+  ["IBM Plex Mono", "IBMPlexMono-400", 400, "normal"], ["IBM Plex Mono", "IBMPlexMono-500", 500, "normal"],
+  ["Lora", "Lora-500", 500, "normal"], ["Lora", "Lora-400i", 400, "italic"], ["Lora", "Lora-500i", 500, "italic"],
 ].map(([f, file, w, s]) => `    @font-face { font-family: "${f}"; src: url(assets/fonts/${file}.woff2) format("woff2"); font-weight: ${w}; font-style: ${s}; font-display: block; }`).join("\n");
 
+// The site's porcelain: a ground lit from above, white cards, warm rules
+const GROUND = `radial-gradient(ellipse 120% 75% at 50% 30%, #F5F3EF 0%, ${C.paper} 58%, #E3DFD8 100%)`;
 const BASE = `
     .abs { position: absolute; }
     .full { position: absolute; left: 0; top: 0; width: ${W}px; height: ${H}px; }
-    .fell { font-family: "IM Fell English", serif; font-weight: 400; color: ${C.ink}; line-height: 1.02; }
-    .sc { font-family: "IM Fell English SC", serif; font-weight: 400; color: ${C.ink}; letter-spacing: 0.04em; line-height: 1.1; }
-    .caslon { font-family: "Libre Caslon Text", serif; color: ${C.ink}; }
-    .red { color: ${C.red}; }
-    .on-dark { color: ${C.paper}; }
-    .ink { text-shadow: 0 0 0.6px rgba(27, 25, 21, 0.85); }
+    .sans { font-family: "IBM Plex Sans", sans-serif; color: ${C.ink}; }
+    .mono { font-family: "IBM Plex Mono", monospace; color: ${C.muted}; letter-spacing: 0.02em; }
+    .serif { font-family: "Lora", serif; color: ${C.ink}; }
+    .kicker { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 28px; letter-spacing: 0.14em; text-transform: uppercase; color: ${C.muted}; }
     .w { display: inline-block; white-space: pre; }
+    .card { position: absolute; background: ${C.surface}; border: 1px solid ${C.rule}; border-radius: 28px; overflow: hidden;
+      box-shadow: inset 0 1px 0 #FFFFFF, 0 2px 4px rgba(27,22,19,0.04), 0 18px 48px rgba(27,22,19,0.10); }
+    .card .cap { position: absolute; left: 0; bottom: 0; width: 100%; height: 64px; overflow: hidden; padding: 0 28px; display: flex; align-items: center; gap: 18px;
+      background: ${C.surface}; border-top: 1px solid ${C.rule}; font-family: "IBM Plex Mono", monospace; font-size: 28px; color: ${C.muted}; white-space: nowrap; }
+    .card .cap b { font-weight: 500; color: ${C.ink}; }
     .pic { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
     .pic img { display: block; width: 100%; height: 100%; }
-    .sheet { position: absolute; background: ${C.paper} url(assets/paper.jpg) center / cover; box-shadow: 0 18px 44px rgba(40, 24, 8, 0.30), 0 2px 6px rgba(40, 24, 8, 0.18); }
-    .slip { position: absolute; left: 0; width: ${W}px; background: rgba(237, 227, 203, 0.94); }
-    .rule { position: absolute; height: 3px; background: ${C.ink}; }
-    svg.ink-line { position: absolute; overflow: visible; }
-    svg.ink-line path { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 100 120; stroke-dashoffset: 110; }
+    .tag { position: absolute; padding: 10px 18px 11px; border-radius: 10px; background: ${C.surface}; border: 1px solid ${C.rule};
+      font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 26px; letter-spacing: 0.08em; text-transform: uppercase; color: ${C.ink}; white-space: nowrap; }
+    .bar { position: absolute; border-radius: 4px; }
 `;
-
-// A picture sized to its pixels, placed by its camera: framing (fx, fy) of
-// the picture at screen point (sx, sy), at s screen pixels per picture pixel
-function pic(id, name, extra = "") {
-  const s = SIZES[name];
-  if (!s) throw new Error("no picture " + name);
-  return `<div id="${id}" class="pic" style="width:${s.w}px;height:${s.h}px;${extra}"><img src="assets/img/${name}.jpg" alt=""></div>`;
+const words = (text, cls = "w") => text.split(" ").map((w) => `<span class="${cls}">${w} </span>`).join("");
+const picEl = (id, name) => `<div id="${id}" class="pic" style="width:${SIZES[name].w}px;height:${SIZES[name].h}px"><img src="assets/img/${name}.jpg" alt=""></div>`;
+// A numbered figure: an archival picture in a card, framed by a camera, with its source
+function exhibit(id, name, { x, y, w, h, fig, caption, extra = "" }) {
+  return `<div id="${id}" class="card" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;${extra}">
+    <div class="abs" style="left:0;top:0;width:${w}px;height:${h - 64}px;overflow:hidden">${picEl(`${id}-pic`, name)}</div>
+    <div class="cap"><b>FIG. ${fig}</b><span>${caption}</span></div></div>`;
 }
-function frame(name, fx, fy, s, sx = W / 2, sy = H / 2, cover = true) {
-  const { w, h } = SIZES[name];
-  let x = sx - s * fx * w, y = sy - s * fy * h;
-  if (cover) { // never show the edge of a full-bleed picture
-    s = Math.max(s, W / w, H / h);
-    x = Math.min(0, Math.max(W - s * w, sx - s * fx * w));
-    y = Math.min(0, Math.max(H - s * h, sy - s * fy * h));
-  }
+// A camera framing in a w x h window: point (fx, fy) of the picture at the
+// window's centre, at k times the scale that covers the window
+function frame(name, w, h, fx, fy, k = 1) {
+  const { w: iw, h: ih } = SIZES[name];
+  const s = Math.max(w / iw, h / ih) * k;
+  const x = Math.min(0, Math.max(w - s * iw, w / 2 - fx * iw * s)), y = Math.min(0, Math.max(h - s * ih, h / 2 - fy * ih * s));
   return { x: r3(x), y: r3(y), scale: r3(s) };
 }
-const fill = (name) => Math.max(W / SIZES[name].w, H / SIZES[name].h);
-const words = (text, cls = "w") => text.split(" ").map((w) => `<span class="${cls}">${w} </span>`).join("");
-// A hand-drawn line: a rule with a little life in it, pathLength 100
-function stroke(id, x, y, w, h, d, color = C.red, width = 7, extra = "") {
-  return `<svg id="${id}" class="ink-line" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;${extra}" viewBox="0 0 ${w} ${h}"><path d="${d}" pathLength="100" stroke="${color}" stroke-width="${width}"/></svg>`;
+// An isometric machine in a card, scaled to the card's width
+function machine(id, fig, { x, y, w, figNo, caption }) {
+  const h = Math.round(w * fig.height / fig.width) + 64;
+  return `<div id="${id}" class="card fig" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;background:#FBFAF7">
+    <div class="abs" style="left:0;top:0;width:${w}px;height:${h - 64}px">${fig.svg.replace("<svg", `<svg data-layout-ignore style="width:${w}px;height:${h - 64}px;display:block"`)}</div>
+    <div class="cap"><b>FIG. ${figNo}</b><span>${caption}</span></div></div>`;
 }
-// A loose ring round a signature, drawn as a pen would: a little over one turn
-function ring(id, cx, cy, rx, ry) {
-  const pts = [];
-  for (let i = 0; i <= 56; i++) {
-    const a = -2.2 + (i / 56) * Math.PI * 2.18, k = 1 + 0.05 * Math.sin(i * 0.9);
-    pts.push(`${(rx + 12 + Math.cos(a) * rx * k).toFixed(1)},${(ry + 12 + Math.sin(a) * ry * k).toFixed(1)}`);
-  }
-  return stroke(id, cx - rx - 12, cy - ry - 12, 2 * rx + 24, 2 * ry + 24, "M" + pts.join(" L"), C.red, 7);
-}
-// Seeded randomness, so every build is the same
-let seed = 1731;
-const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-// A deckled edge for a loose sheet
-function deckle(w, h, n = 60, amp = 5) {
-  const p = [];
-  for (let i = 0; i <= n; i++) p.push(`${((i / n) * 100).toFixed(2)}% ${(rnd() * amp).toFixed(1)}px`);
-  for (let i = 0; i <= n * 1.6; i++) p.push(`calc(100% - ${(rnd() * amp).toFixed(1)}px) ${((i / (n * 1.6)) * 100).toFixed(2)}%`);
-  for (let i = n; i >= 0; i--) p.push(`${((i / n) * 100).toFixed(2)}% calc(100% - ${(rnd() * amp).toFixed(1)}px)`);
-  for (let i = Math.round(n * 1.6); i >= 0; i--) p.push(`${(rnd() * amp).toFixed(1)}px ${((i / (n * 1.6)) * 100).toFixed(2)}%`);
-  return `clip-path: polygon(${p.join(",")});`;
-}
-// A quill's scrawl of a name on a subscription list
-function scrawl(w) {
-  let d = `M2,${10 + rnd() * 6}`, x = 2;
-  while (x < w - 10) {
-    const step = 8 + rnd() * 14, up = 2 + rnd() * 14;
-    d += ` q${(step / 2).toFixed(1)},${(-up).toFixed(1)} ${step.toFixed(1)},${(rnd() * 6 - 3).toFixed(1)}`;
-    x += step;
-    if (rnd() < 0.14) { d += ` m${(6 + rnd() * 8).toFixed(1)},0`; x += 10; }
-  }
-  return d;
-}
+const FIGCSS = scopedKitCss(".fig") + themeCss(".fig");
 
 const scenes = [];
-let HALL_END; // where the library scene leaves its camera, for the fire to burn
 const SECTION = (id) => T.lines.filter((l) => l.id.startsWith(id));
 const start = (id) => SECTION(id)[0].t0;
+const TOPY = 500; // where a scene's content starts, under the chapter header and the timeline
 
-// ── 1. HOOK: Philadelphia, 1731, and what it lacked ─────────────────────────
+// ── 0. CHROME: the chapter header and the running timeline, 1725 to 1755 ───
+{
+  const s = new Scene("chrome", 0, start("end") - 0.35, 40);
+  const CH = [
+    ["hook", "Philadelphia, 1731", ""], ["who", "The founder", "1"], ["lib", "The Library Company", "2"],
+    ["fire", "The Union Fire Company", "3"], ["hosp", "The Pennsylvania Hospital", "4"], ["acad", "The Academy", "5"],
+    ["turn", "Four foundations", "6"], ["now", "A shared foundation", "7"],
+  ];
+  s.style(`#root { background: none; }
+    .chap { position: absolute; left: 84px; top: 256px; width: 912px; opacity: 0; }
+    .chap .kicker { margin-bottom: 8px; }
+    .chap .t { font-family: "IBM Plex Sans", sans-serif; font-weight: 600; font-size: 54px; letter-spacing: -0.01em; color: ${C.ink}; }`);
+  CH.forEach(([id, title, n], i) => {
+    s.add(`<div id="c${i}" class="chap"><div class="kicker">${n ? `Chapter ${n}` : "Prologue"}</div><div class="t">${words(title)}</div></div>`);
+    const t = Math.max(0, start(id) - 0.3);
+    s.set(`#c${i}`, { opacity: 1 }, t).fromTo(`#c${i} .kicker`, { opacity: 0 }, { opacity: 1, duration: 0.3 }, t);
+    s.fromTo(`#c${i} .w`, { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power2.out", stagger: 0.06 }, t);
+    const next = CH[i + 1] ? start(CH[i + 1][0]) - 0.45 : null;
+    if (next) s.leave(`#c${i}`, next, 0.2);
+  });
+  // the timeline: a rule from 1725 to 1755, a mark at each founding, a needle at the year in hand
+  const X0 = 84, X1 = 996, Y = 420, yr = (y) => X0 + (y - 1725) / 30 * (X1 - X0);
+  let tl = `<div id="line" class="abs" style="left:0;top:0;width:${W}px;height:500px;opacity:0">
+    <div class="bar" style="left:${X0}px;top:${Y}px;width:${X1 - X0}px;height:3px;background:${C.rule}"></div>`;
+  for (let y = 1725; y <= 1755; y += 5) {
+    tl += `<div class="bar" style="left:${r3(yr(y) - 1)}px;top:${Y - 10}px;width:2px;height:${y % 10 === 0 ? 22 : 14}px;background:${C.rule}"></div>`;
+    if (y % 10 === 0) tl += `<div class="mono abs" style="left:${r3(yr(y) - 50)}px;top:${Y + 18}px;width:100px;text-align:center;font-size:28px">${y}</div>`;
+  }
+  const MARKS = [["junto", 1727, "#8A8178"], ["library", 1731, A.library], ["fire", 1736, A.fire], ["hospital", 1751, A.hospital], ["academy", 1751, A.academy]];
+  MARKS.forEach(([name, year, col]) => {
+    const dy = name === "academy" ? -30 : 0;
+    tl += `<div id="m-${name}" class="abs" style="left:${r3(yr(year) - 11)}px;top:${Y - 10 + dy}px;width:22px;height:22px;border-radius:11px;background:${col};border:3px solid ${C.surface};box-shadow:0 2px 6px rgba(27,22,19,.18);opacity:0"></div>`;
+  });
+  tl += `<div id="needle" class="abs" style="left:${r3(yr(1731) - 1.5)}px;top:${Y - 34}px;width:3px;height:44px;background:${C.ink};border-radius:2px"></div></div>`;
+  s.add(tl);
+  s.fromTo("#line", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0.15);
+  // the needle visits each year as the story reaches it
+  const visit = [[at("hook2", "1751"), 1751], [at("lib1", "1727"), 1727], [at("lib2", "1731"), 1731], [at("fire1", "1735"), 1735], [at("fire2", "next"), 1736], [at("hosp1", "1751"), 1751]];
+  visit.forEach(([t, y]) => s.to("#needle", { x: yr(y) - yr(1731), duration: 0.6, ease: "power3.inOut" }, t - 0.1));
+  const pop = (id, t) => s.fromTo(id, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, t);
+  pop("#m-junto", at("lib1", "1727") + 0.4);
+  pop("#m-library", at("lib2", "1731") + 0.4);
+  pop("#m-fire", at("fire2", "union"));
+  pop("#m-hospital", at("hosp1", "hospital"));
+  pop("#m-academy", at("acad1", "academy"));
+  s.leave("#line", start("turn") - 0.45, 0.3);
+  scenes.push(s);
+}
+
+// ── 1. HOOK: the city that had none of the four ────────────────────────────
 {
   const s = new Scene("hook", 0, start("who") - 0.25, 1);
-  const P = "prospect", ps = fill(P);
-  // The engraving as printed: a band across the paper, travelling east to west
-  const PH = 1240, pk = PH / SIZES[P].h, PW = SIZES[P].w * pk;
-  s.add(`<div id="world" class="abs" style="left:0;top:400px;width:${W}px;height:${PH}px;overflow:hidden">${pic("pan", P)}</div>`)
-    .add(`<div id="name" class="sc ink abs" style="left:0;top:178px;width:${W}px;text-align:center;font-size:110px;letter-spacing:0.07em">Philadelphia</div>`)
-    .add(`<div id="year" class="fell red abs" style="left:0;top:296px;width:${W}px;text-align:center;font-size:72px;letter-spacing:0.3em;opacity:0">1731</div>`);
-  s.cam("#pan", { x: 0, y: 0, scale: pk }, { x: -(PW - W) * 0.55, y: 0, scale: pk }, 0, at("hook3") + 1.2, "power1.inOut");
-  s.press("#year", at("hook1", "1731"), { dur: 0.12 });
-  s.sound("impact-bass-1", at("hook1", "1731") + 0.03, 0.22);
-  // The broadside: what the city lacked, each line printed as it is said
-  const items = ["lending library.", "fire company.", "hospital.", "college."];
-  const years = ["1731", "1736", "1751", "1751"];
-  let sheet = `<div id="sheet" class="sheet" style="left:70px;top:440px;width:940px;height:720px;${deckle(940, 720)}">`;
-  items.forEach((it, i) => {
-    sheet += `<div id="it${i}" class="fell ink abs" style="left:84px;top:${52 + i * 120}px;font-size:76px;opacity:0"><span style="position:relative;display:inline-block">No<span id="strike${i}" class="strike"></span></span> ${it}</div>
-      <div id="yr${i}" class="fell ink abs" style="left:740px;top:${66 + i * 120}px;width:150px;text-align:right;font-size:58px;opacity:0">${years[i]}</div>`;
+  const pw = 960, ph = 380;
+  s.add(exhibit("pros", "prospect", { x: 60, y: TOPY + 10, w: pw, h: ph, fig: "0.1", caption: "East Prospect of Philadelphia, Scull &amp; Heap, 1754" }));
+  s.cam("#pros-pic", frame("prospect", pw, ph - 64, 0.12, 0.5), frame("prospect", pw, ph - 64, 0.6, 0.5), 0, L("hook2").t1 + 0.6, "power1.inOut");
+  // four tiles, one an institution each: none in 1731, all founded by 1751
+  const TILES = [["Lending library", "library", "1731", "library"], ["Fire company", "fire", "1736", "fire"], ["Hospital", "hospital", "1751", "hospital"], ["College", "college", "1751", "academy"]];
+  TILES.forEach(([label, w, year, acc], i) => {
+    const x = 60 + (i % 2) * 492, y = TOPY + 418 + Math.floor(i / 2) * 142;
+    s.add(`<div id="t${i}" class="card" style="left:${x}px;top:${y}px;width:468px;height:126px;border-radius:20px;opacity:0">
+      <div id="t${i}-wash" class="abs" style="left:0;top:0;width:468px;height:126px;background:${ACCENTS[acc].top};opacity:0"></div>
+      <div id="t${i}-bar" class="bar" style="left:22px;top:22px;width:8px;height:82px;background:${C.rule}"></div>
+      <div class="sans abs" style="left:52px;top:20px;font-size:38px;font-weight:600">${label}</div>
+      <div id="t${i}-none" class="mono abs" style="left:52px;top:76px;font-size:27px">1731: NONE</div>
+      <div id="t${i}-est" class="mono abs" style="left:52px;top:76px;font-size:27px;color:${A[acc]};font-weight:500;opacity:0">EST. ${year}</div></div>`);
+    s.enter(`#t${i}`, at("hook1", w) - 0.1, { from: "up", dur: 0.5 });
+    s.sound("click-soft", at("hook1", w) - 0.05, 0.25);
+    const t = at("hook2", "all") + i * 0.16;
+    s.fromTo(`#t${i}-wash`, { opacity: 0 }, { opacity: 0.4, duration: 0.4, ease: "power2.inOut" }, t)
+      .fromTo(`#t${i}-bar`, { backgroundColor: C.rule }, { backgroundColor: A[acc], duration: 0.3 }, t)
+      .to(`#t${i}-none`, { opacity: 0, filter: "blur(6px)", duration: 0.15 }, t)
+      .fromTo(`#t${i}-est`, { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2 }, t + 0.1);
   });
-  sheet += `</div>`;
-  s.add(sheet).add(`<div id="sig" class="abs" style="left:420px;top:1000px;width:480px;height:140px;clip-path:inset(0 100% 0 0)"><img src="assets/img/signature.png" alt="" style="width:100%;height:100%;object-fit:contain"></div>`);
-  s.style(`#sheet { transform-origin: 50% 0; }
-    .strike { position: absolute; left: -8px; top: 50%; width: calc(100% + 16px); height: 7px; margin-top: -2px; background: ${C.red}; border-radius: 4px; transform-origin: 0 50%; opacity: 0; }`);
-  s.lay("#sheet", at("hook1", "had") - 0.3, { y: 2000, rot: -5, end: -0.8 });
-  s.sound("whoosh-short", at("hook1", "had") - 0.28, 0.25);
-  // "No lending library. No fire company. No hospital. No college."
-  [["hook1", 1], ["hook2", 1], ["hook2", 2], ["hook2", 3]].forEach(([id, n], i) => s.press(`#it${i}`, at(id, "no", n) - 0.04));
-  // Twenty years later: every "No" struck out in red, and each gets its year
-  const later = at("hook3", "twenty");
-  [0, 1, 2, 3].forEach((i) => s.fromTo(`#strike${i}`, { scaleX: 0, rotation: -5, opacity: 1 }, { scaleX: 1, rotation: -5, opacity: 1, duration: 0.22, ease: "power2.out" }, later + i * 0.14));
-  s.press("#yr0, #yr1, #yr2, #yr3", at("hook3", "four") - 0.35, { stagger: 0.09 });
-  // One man: his own hand, written left to right
-  s.fromTo("#sig", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 1.1, ease: "power1.inOut" }, at("hook3", "one") - 0.1);
-  // Into his signature, and out into his face
-  const zt = L("hook3").t1 + 0.05;
-  s.to("#sheet, #sig", { scale: 5, x: -1200, y: -2300, opacity: 0, duration: 0.45, ease: "power3.in" }, zt);
-  s.sound("whoosh", zt, 0.3);
-  s.t1 = Math.max(s.t1, zt + 0.45);
+  s.sound("whoosh-short", at("hook2", "all") - 0.05, 0.18);
+  s.leave("#pros, #t0, #t1, #t2, #t3", start("who") - 0.5, 0.25);
   scenes.push(s);
 }
 
-// ── 2. WHO: printer, writer, scientist, inventor, Founding Father ──────────
+// ── 2. WHO: a profile, two signatures, one method ──────────────────────────
 {
-  const s = new Scene("who", start("who") - 0.25, start("lib") - 0.2, 2);
-  s.add(`<div id="face" class="full">${pic("p0", "portrait")}</div>`)
-    .add(`<div id="nslip" class="slip" style="top:196px;height:132px;opacity:0"></div>`)
-    .add(`<div id="name" class="sc ink abs" style="left:0;top:218px;width:${W}px;text-align:center;font-size:84px;letter-spacing:0.08em">${words("Benjamin Franklin")}</div>`);
-  const pf = fill("portrait");
-  s.cam("#p0", frame("portrait", 0.53, 0.30, pf * 1.22), frame("portrait", 0.53, 0.30, pf * 1.06), 0, 0.9, "expo.out");
-  s.to("#p0", { ...frame("portrait", 0.53, 0.29, pf * 1.12), duration: at("who1", "printer") - s.t0 - 0.9, ease: "power1.inOut" }, s.t0 + 0.9);
-  s.set("#nslip", { opacity: 1 }, at("who1", "benjamin") - 0.05).press("#name .w", at("who1", "benjamin"), { stagger: 0.16 });
-  // Four quick plates, one a word, cut on the word
-  const four = [["printer", "almanac", 0.5, 0.32], ["writer", "martin", 0.45, 0.32], ["scientist", "kite", 0.55, 0.3], ["inventor", "stove", 0.24, 0.62]];
-  four.forEach(([w, img, fx, fy], i) => {
-    const t = at("who1", w) - 0.07, f = fill(img);
-    s.add(`<div id="m${i}" class="full" style="opacity:0">${pic(`mp${i}`, img)}</div>`)
-      .add(`<div id="lab${i}" class="slip sc ink" style="top:1010px;height:96px;padding:12px 0 0 84px;font-size:62px;letter-spacing:0.1em;opacity:0">${w}</div>`);
-    s.set(`#m${i}`, { opacity: 1 }, t).set(`#lab${i}`, { opacity: 1 }, t);
-    s.cam(`#mp${i}`, frame(img, fx, fy, f * 1.16), frame(img, fx, fy, f * 1.04), t, 0.75, "expo.out");
-    if (i > 0) s.set(`#m${i - 1}, #lab${i - 1}`, { opacity: 0 }, t + 0.02);
-    if (i === 0) s.set("#nslip, #name", { opacity: 0 }, t + 0.02);
+  const s = new Scene("who", start("who") - 0.45, start("lib") - 0.2, 2);
+  // the profile: a portrait, a name, four roles with a picture each
+  s.add(exhibit("por", "portrait", { x: 60, y: TOPY, w: 520, h: 700, fig: "1.1", caption: "Duplessis, c. 1785" }));
+  s.add(`<div id="name" class="abs" style="left:612px;top:${TOPY + 8}px;width:420px;opacity:0">
+    <div class="sans" style="font-size:44px;font-weight:600;line-height:1.08"><span class="w">Benjamin</span><br><span class="w">Franklin</span></div>
+    <div class="mono" style="font-size:28px;margin-top:10px">1706 – 1790</div></div>`);
+  const ROLES = [["printer", "Printer", "almanac", 0.5, 0.3], ["writer", "Writer", "martin", 0.45, 0.32], ["scientist", "Scientist", "kite", 0.55, 0.3], ["inventor", "Inventor", "stove", 0.24, 0.6]];
+  ROLES.forEach(([w, label, img, fx, fy], i) => {
+    const y = TOPY + 180 + i * 130;
+    s.add(`<div id="r${i}" class="abs" style="left:612px;top:${y}px;width:408px;height:112px;opacity:0">
+      <div class="card" style="left:0;top:0;width:150px;height:112px;border-radius:16px"><div class="abs" style="left:0;top:0;width:150px;height:112px;overflow:hidden">${picEl(`r${i}-pic`, img)}</div></div>
+      <div class="sans abs" style="left:176px;top:34px;font-size:36px;font-weight:500">${label}</div></div>`);
+    s.set(`#r${i}-pic`, frame(img, 150, 112, fx, fy, 1.1), 0);
+    s.enter(`#r${i}`, at("who1", w) - 0.08, { from: "right", dur: 0.45 });
   });
-  // A Founding Father: Trumbull's Declaration, along the table to him
-  const tA = at("who2", "and") - 0.1, tr = fill("trumbull");
-  s.add(`<div id="tw" class="full" style="opacity:0">${pic("tp", "trumbull")}</div>`)
-    .add(`<div id="ff" class="slip sc ink" style="top:1010px;height:96px;padding:12px 0 0 84px;font-size:62px;letter-spacing:0.1em;opacity:0">${words("A Founding Father")}</div>`);
-  s.set("#tw", { opacity: 1 }, tA).set("#m3, #lab3", { opacity: 0 }, tA + 0.02);
-  s.cam("#tp", frame("trumbull", 0.30, 0.5, tr), frame("trumbull", 0.585, 0.55, tr * 1.08), tA, at("who2", "who") - tA + 0.1);
-  s.set("#ff", { opacity: 1 }, at("who2", "founding") - 0.05).press("#ff .w", at("who2", "founding") - 0.05, { stagger: 0.12 });
-  s.sound("whoosh-short", tA - 0.02, 0.2);
-  // His own signature on both: the Declaration, then the Constitution
-  // (the engrossed Declaration is too faded to point at one name: the camera
-  // reads its heading; on the Constitution it finds "B Franklin")
-  const docs = [["declaration", ["signed", 1], 0.5, 0.052, 2.2, null], ["constitution4", ["and", 2], 0.88, 0.853, 3.2, [250, 92]]];
-  docs.forEach(([img, [w, nth], fx, fy, z, rr], i) => {
-    const t = at("who2", w, nth) - 0.2, sz = SIZES[img], sw = 980 / sz.w;
-    s.add(`<div id="d${i}" class="full" style="opacity:0;background:${C.paper} url(assets/paper.jpg) center/cover"><div id="dc${i}" class="abs" style="left:0;top:0;width:${W}px;height:${H}px;transform-origin:0 0">
-      <div class="sheet" style="left:0;top:0;width:${r3(sz.w * sw)}px;height:${r3(sz.h * sw)}px;background:none"><img src="assets/img/${img}.jpg" alt="" style="width:100%;height:100%;display:block"></div></div>
-      ${rr ? ring(`ring${i}`, 540, 700, rr[0], rr[1]) : ""}</div>`);
-    // the sheet lands, then the camera finds what it is looking for
-    const land = { x: 50, y: 300, scale: 1 }, near = { x: 540 - fx * sz.w * sw * z, y: 700 - fy * sz.h * sw * z, scale: z };
-    s.set(`#d${i}`, { opacity: 1 }, t);
-    s.fromTo(`#dc${i}`, { x: 50 + (i ? 1200 : 0), y: i ? 300 : 1900, scale: 1, rotation: i ? 6 : -4 }, { ...land, rotation: 0, duration: 0.45, ease: "expo.out" }, t);
-    s.to(`#dc${i}`, { ...near, duration: 0.7, ease: "power2.inOut" }, t + 0.45);
-    if (rr) s.pen(`#ring${i} path`, t + 1.1, 0.4);
-    s.sound("whoosh-short", t, 0.18);
+  const t0 = start("who") - 0.4;
+  s.enter("#por", t0, { from: "left" }).cam("#por-pic", frame("portrait", 520, 636, 0.53, 0.36, 1.15), frame("portrait", 520, 636, 0.53, 0.33, 1.28), t0, L("who1").t1 - t0 + 0.6, "power1.inOut");
+  s.words("#name .w", at("who1", "franklin") - 0.2, { stagger: 0.12 });
+  s.fromTo("#name .mono", { opacity: 0 }, { opacity: 1, duration: 0.3 }, at("who1", "franklin"));
+  s.sound("whoosh-short", t0, 0.2);
+  // two signatures: Trumbull's Declaration, then Franklin's name on the Constitution
+  const tD = at("who2") - 0.2;
+  s.leave("#por, #name, #r0, #r1, #r2, #r3", tD - 0.25, 0.22);
+  s.add(exhibit("trum", "trumbull", { x: 60, y: TOPY, w: 960, h: 620, fig: "1.2", caption: "Trumbull, Declaration of Independence, 1818", extra: "opacity:0" }));
+  s.enter("#trum", tD, { from: "zoom" }).cam("#trum-pic", frame("trumbull", 960, 556, 0.4, 0.5, 1.0), frame("trumbull", 960, 556, 0.62, 0.48, 1.35), tD, at("who2", "constitution") - tD);
+  const tC = at("who2", "and") - 0.15, cz = SIZES.constitution4;
+  s.add(exhibit("con", "constitution4", { x: 60, y: TOPY + 20, w: 960, h: 660, fig: "1.3", caption: "Constitution, p. 4, 1787 · National Archives", extra: "opacity:0" }));
+  // the camera finds "B Franklin" on the page; the ring is drawn where the framing puts it
+  const cw = 960, chh = 596, cf = frame("constitution4", cw, chh, 0.88, 0.853, 2.6);
+  const sx = 60 + cf.x + 0.88 * cz.w * cf.scale, sy = TOPY + 20 + cf.y + 0.853 * cz.h * cf.scale;
+  s.enter("#con", tC, { from: "right", dur: 0.5 });
+  s.cam("#con-pic", frame("constitution4", cw, chh, 0.88, 0.853, 1.0), cf, tC + 0.2, 0.9);
+  s.add(`<svg id="ring" class="abs" style="left:${r3(sx - 230)}px;top:${r3(sy - 95)}px;width:460px;height:190px;overflow:visible" viewBox="0 0 460 190"><ellipse cx="230" cy="95" rx="214" ry="78" fill="none" stroke="${C.clay}" stroke-width="7" pathLength="100" stroke-dasharray="100 120" stroke-dashoffset="110" stroke-linecap="round"/></svg>`);
+  s.fromTo("#ring ellipse", { strokeDashoffset: 110 }, { strokeDashoffset: 0, duration: 0.5, ease: "power2.inOut" }, tC + 1.05);
+  s.add(`<div id="six" class="card" style="left:60px;top:${TOPY + 700}px;width:960px;height:150px;border-radius:22px;opacity:0">
+    <div class="sans abs" style="left:34px;top:14px;font-size:96px;font-weight:700;color:${C.clay}">6</div>
+    <div class="sans abs" style="left:120px;top:26px;width:820px;font-size:32px;line-height:1.3;color:${C.soft}">signers of both founding documents<br><span class="mono" style="font-size:28px">Clymer, Franklin, Morris, Read, Sherman, Wilson</span></div></div>`);
+  s.enter("#six", at("who2", "both") - 0.1, { from: "up", dur: 0.5 });
+  // the method, as a four-step process
+  const tM = at("who3") - 0.2;
+  s.leave("#trum, #con, #ring, #six", tM - 0.25, 0.22);
+  const STEPS = [["need", "Identify a public need"], ["pooling", "Pool contributions"], ["many", "From many members"], ["members", "Found the institution"]];
+  s.add(`<div id="mh" class="kicker abs" style="left:84px;top:${TOPY + 10}px;opacity:0">The method</div>`);
+  s.fromTo("#mh", { opacity: 0 }, { opacity: 1, duration: 0.3 }, tM);
+  STEPS.forEach(([w, label], i) => {
+    const y = TOPY + 80 + i * 176;
+    s.add(`<div id="st${i}" class="card" style="left:84px;top:${y}px;width:912px;height:136px;border-radius:22px;opacity:0">
+      <div class="mono abs" style="left:34px;top:44px;font-size:36px;font-weight:500;color:${C.clay}">0${i + 1}</div>
+      <div class="sans abs" style="left:128px;top:40px;font-size:44px;font-weight:600">${label}</div></div>`);
+    if (i) s.add(`<div id="ln${i}" class="bar" style="left:136px;top:${y - 40}px;width:4px;height:40px;background:${C.rule};transform-origin:50% 0;opacity:0"></div>`);
+    const t = at("who3", w) - 0.1 + (i === 3 ? 0.45 : 0);
+    if (i) s.fromTo(`#ln${i}`, { opacity: 1, scaleY: 0 }, { opacity: 1, scaleY: 1, duration: 0.2, ease: "power2.out" }, t - 0.15);
+    s.enter(`#st${i}`, t, { from: "left", dur: 0.45 });
   });
-  // A polymath, pointed at the public good
-  const tP = at("who3") - 0.02;
-  s.add(`<div id="poly" class="full" style="opacity:0;background:${C.paper} url(assets/paper.jpg) center/cover">
-      <div id="pm" class="fell ink abs" style="left:84px;top:330px;font-size:150px">${words("A polymath,")}</div>
-      ${stroke("arrow", 150, 520, 520, 330, "M20,10 C40,170 180,280 470,300 M440,270 L475,300 L436,322", C.red, 8)}
-      <div id="pg" class="sc ink abs" style="left:84px;top:860px;width:920px;font-size:104px;letter-spacing:0.05em;text-align:right">${words("the public good.")}</div></div>`);
-  s.set("#poly", { opacity: 1 }, tP).press("#pm .w", at("who3", "a"), { stagger: 0.14 });
-  s.pen("#arrow path", at("who3", "pointed"), 0.55).press("#pg .w", at("who3", "public") - 0.05, { stagger: 0.1 });
   scenes.push(s);
 }
 
-// ── 3. LIB: the Junto, the subscribers, the Library Company ────────────────
+// ── 3. LIB: the Junto, the subscription machine, the Library Company ───────
 {
-  const s = new Scene("lib", start("lib") - 0.2, start("fire") - 0.1, 3);
-  s.add(`<div id="junto" class="fell ink abs" style="left:84px;top:270px;font-size:176px">${"The Junto".split("").map((c) => `<span class="w">${c}</span>`).join("")}</div>`)
-    .add(`<div id="yr" class="sc red abs" style="left:90px;top:470px;font-size:56px;letter-spacing:0.12em;opacity:0">Philadelphia, 1727</div>`);
-  const tJ = at("lib1", "junto") - 0.35;
-  s.press("#junto .w", tJ, { stagger: 0.055, dur: 0.1 });
-  for (let k = 0; k < 3; k++) s.sound("key-press", tJ + k * 0.17, 0.3);
-  s.press("#yr", at("lib1", "1727"));
-  const trades = ["a scrivener,", "a glazier,", "a surveyor,", "a shoemaker,", "a joiner,", "a printer"];
-  s.add(`<div id="trades" class="fell ink abs" style="left:90px;top:600px;width:900px;font-size:66px;line-height:1.18">${trades.map((t) => `<span class="w">${t} </span>`).join("")}</div>`);
-  s.press("#trades .w", at("lib1", "club") - 0.05, { stagger: (at("lib1", "he") - at("lib1", "club")) / 6 });
-  const verbs = [["read", "Read,"], ["debate", "debate,"], ["improve", "and improve."]];
-  s.add(`<div id="verbs" class="sc ink abs" style="left:90px;top:900px;font-size:86px;letter-spacing:0.05em">${verbs.map(([, v]) => `<span class="w">${v} </span>`).join("")}</div>`);
-  verbs.forEach(([w], i) => s.press(`#verbs .w:nth-child(${i + 1})`, at("lib1", w) - 0.04));
-  // They pooled their own books; then fifty subscribers, forty shillings each
-  const tB = at("lib2") - 0.2;
-  s.out("#junto, #yr, #trades, #verbs", tB, 0.22);
-  s.add(`<div id="books" class="fell ink abs" style="left:84px;top:300px;font-size:120px;opacity:0">${words("Their own books…")}</div>`);
-  s.press("#books .w", at("lib2", "pooled"), { stagger: 0.12 }).set("#books", { opacity: 1 }, at("lib2", "pooled"));
-  // The subscription list: fifty names, written in as the voice counts them
-  const tS = at("lib2", "then") - 0.15;
-  s.out("#books", tS - 0.05, 0.15);
-  let list = `<div id="list" class="sheet" style="left:60px;top:190px;width:960px;height:880px;${deckle(960, 880)}">
-    <div class="sc ink abs" style="left:0;top:34px;width:960px;text-align:center;font-size:40px;letter-spacing:0.14em">The Subscribers</div>
-    <div id="l1731" class="fell red abs" style="left:0;top:80px;width:960px;text-align:center;font-size:64px">1731</div>`;
-  for (let i = 0; i < 50; i++) {
-    const col = i % 2, row = Math.floor(i / 2), w = 250 + rnd() * 130;
-    list += `<div class="abs caslon" style="left:${70 + col * 450}px;top:${178 + row * 27}px;font-size:21px;width:36px;text-align:right;color:#5a5048">${i + 1}.</div>`;
-    list += stroke(`n${i}`, 116 + col * 450, 168 + row * 27, w, 26, scrawl(w), "#2a241f", 2.2);
-  }
-  list += `</div>`;
-  s.add(list).add(`<div id="count" class="fell ink abs" style="left:640px;top:1066px;width:360px;text-align:right;font-size:96px;opacity:0">50</div>`)
-    .add(`<div id="fee" class="sc ink abs" style="left:84px;top:1090px;font-size:64px;opacity:0">40s. each</div>`);
-  s.lay("#list", tS, { y: 2000, rot: 3, end: 0.6 }).sound("whoosh-short", tS, 0.2);
-  s.press("#l1731", at("lib2", "1731"));
-  const n0 = at("lib2", "fifty") - 0.1, n1 = at("lib2", "pay");
-  s.pen("#list svg[id] path", n0, 0.16).tl.pop();
-  s.tl.push(`tl.fromTo(${js(`#lib-list svg.ink-line:not(#lib-l1731) path`)}, {strokeDashoffset:110}, {strokeDashoffset:0, duration:0.18, ease:"power1.out", stagger:${r3((n1 - n0) / 50)}}, ${s.local(n0)});`);
-  s.press("#count", at("lib2", "subscribers") + 0.1).press("#fee", at("lib2", "forty"));
-  s.sound("typing", n0, 0.18);
-  // The Library Company, still open today
-  const tL = at("lib3") - 0.25, lh = "library-hall", lz = SIZES[lh], lw = 1000 / lz.w;
-  s.add(`<div id="hall" class="full" style="opacity:0;background:${C.paper} url(assets/paper.jpg) center/cover"><div id="hc" class="abs" style="left:0;top:0;width:${W}px;height:${H}px;transform-origin:0 0">
-      <div class="sheet" style="left:40px;top:330px;width:1000px;height:${r3(lz.h * lw)}px;background:none"><img src="assets/img/${lh}.jpg" alt="" style="width:100%;height:100%;display:block"></div></div></div>`)
-    .add(`<div id="lc" class="sc ink abs" style="left:0;top:180px;width:${W}px;text-align:center;font-size:54px;letter-spacing:0.08em;line-height:1.2;opacity:0">The Library Company<br>of Philadelphia</div>`);
-  s.set("#hall", { opacity: 1 }, tL).set("#list, #count, #fee", { opacity: 0 }, tL + 0.02);
-  // the camera walks up Fifth Street to the statue in its niche, and is
-  // still walking when the page catches fire
-  const lk = 2.1, lfx = 0.345, lfy = 0.40, hEnd = start("fire") - 0.1;
-  HALL_END = { x: 540 - (40 + lfx * 1000) * lk, y: 560 - (330 + lfy * lz.h * lw) * lk, scale: lk, w: 1000, h: lz.h * lw };
-  s.fromTo("#hc", { x: 0, y: 0, scale: 1 }, { x: HALL_END.x, y: HALL_END.y, scale: lk, duration: hEnd - tL - 0.3, ease: "power1.inOut" }, tL + 0.3);
-  s.set("#lc", { opacity: 1 }, tL + 0.25).press("#lc", tL + 0.25);
-  s.out("#lc", at("lib3", "still") - 0.2, 0.2);
-  s.sound("whoosh-short", tL - 0.02, 0.2);
-  const tT = at("lib3", "still") - 0.1;
-  s.add(`<div id="since" class="slip" style="top:860px;height:300px;opacity:0"><div class="sc red abs" style="left:84px;top:34px;font-size:52px;letter-spacing:0.12em">${words("Open since 1731")}</div>
-      <div class="fell ink abs" style="left:84px;top:110px;width:920px;font-size:74px;line-height:1.08">${words("America’s oldest cultural institution.")}</div></div>`);
-  s.set("#since", { opacity: 1 }, tT + 0.3).press("#since .sc .w", tT + 0.3, { stagger: 0.08 });
-  s.press("#since .fell .w", at("lib3", "america’s") - 0.05, { stagger: 0.09 });
+  const s = new Scene("lib", start("lib") - 0.2, start("fire") - 0.15, 3);
+  s.raw.push(FIGCSS);
+  // the Junto's members, from Franklin's own list
+  const ROSTER = [["Joseph Breintnal", "scrivener"], ["Thomas Godfrey", "glazier"], ["Nicholas Scull", "surveyor"], ["William Parsons", "shoemaker"], ["William Maugridge", "joiner"], ["Hugh Meredith", "printer"]];
+  s.add(`<div id="jun" class="card" style="left:84px;top:${TOPY}px;width:912px;height:700px;opacity:0">
+    <div class="kicker abs" style="left:40px;top:36px">Founded 1727</div>
+    <div class="sans abs" style="left:40px;top:84px;font-size:76px;font-weight:700;letter-spacing:-0.01em">The Junto</div>
+    ${ROSTER.map(([n, t], i) => `<div id="ro${i}" class="abs" style="left:40px;top:${222 + i * 66}px;width:832px;height:66px;border-top:1px solid ${C.rule};opacity:0">
+      <span class="sans abs" style="left:0;top:14px;font-size:32px;font-weight:500">${n}</span><span class="mono abs" style="right:0;top:17px;font-size:28px">${t}</span></div>`).join("")}
+    <div class="mono abs" style="left:40px;top:632px;font-size:23px">Source: Franklin, Autobiography</div></div>`);
+  s.enter("#jun", at("lib1") - 0.15, { from: "zoom" });
+  ROSTER.forEach((_, i) => s.enter(`#ro${i}`, at("lib1", "tradesmen") - 0.3 + i * 0.12, { from: "up", dur: 0.4 }));
+  // the subscription machine, put together, then run
+  const fig = FIG("library");
+  const tF = at("lib2") - 0.3;
+  s.leave("#jun", tF - 0.2, 0.22);
+  s.add(machine("mac", fig, { x: 110, y: TOPY + 130, w: 860, figNo: "2.1", caption: "The subscription library as a machine" }));
+  s.style(`#mac [data-part^="shelf"] { opacity: 0; }`);
+  s.enter("#mac", tF, { from: "zoom", dur: 0.5 });
+  s.assemble("#mac", fig, tF + 0.1, Math.max(1.6, at("lib2", "fifty") - tF - 0.3));
+  // each stack rides to the hopper and drops in as the subscriptions are paid
+  const c0 = at("lib2", "fifty"), c1 = after("lib2", "each");
+  fig.moves.coins.forEach((m, i) => {
+    const t = c0 + (c1 - c0) * (i / 50);
+    s.to(`#mac [data-part="coin${i}"]`, { x: m.x, y: m.y, duration: 0.45, ease: "power2.inOut" }, t)
+      .to(`#mac [data-part="coin${i}"]`, { x: m.x + fig.moves.coinsDrop.x, y: m.y + fig.moves.coinsDrop.y, opacity: 0, duration: 0.2, ease: "power2.in" }, t + 0.45);
+  });
+  // books arrive shelf by shelf once the fund exists
+  [0, 1, 2].forEach((n) => s.fromTo(`#mac [data-part="shelf${n}"]`, { x: fig.moves.shelfIn.x, y: fig.moves.shelfIn.y, opacity: 0 }, { x: 0, y: 0, opacity: 1, duration: 0.55, ease: "expo.out" }, c1 + 0.3 + n * 0.25));
+  // the arithmetic, above the machine
+  s.add(`<div id="sum" class="abs" style="left:84px;top:${TOPY}px;width:912px;opacity:0">
+    <span id="n50" class="sans" style="font-size:84px;font-weight:700;color:${A.library}">0</span><span class="sans" style="font-size:40px;color:${C.muted};font-weight:500"> × 40s =&nbsp;</span><span id="fund" class="sans" style="font-size:84px;font-weight:700">£0</span>
+    <div class="mono" style="font-size:27px;margin-top:2px">then 10s per member per year</div></div>`);
+  s.set("#sum", { opacity: 1 }, c0 - 0.1).count("#n50", c0, c1 - c0 + 0.45, 0, 50).count("#fund", c0, c1 - c0 + 0.45, 0, 100, "'£' + Math.round(v)");
+  s.sound("typing", c0, 0.16);
+  // the Library Company, from Birch's view of its hall
+  const tL = at("lib3") - 0.25;
+  s.leave("#mac, #sum", tL - 0.2, 0.22);
+  s.add(exhibit("hall", "library-hall", { x: 60, y: TOPY, w: 960, h: 680, fig: "2.2", caption: "Library and Surgeons Hall, Birch, 1799 · LOC", extra: "opacity:0" }));
+  s.enter("#hall", tL, { from: "right" }).cam("#hall-pic", frame("library-hall", 960, 616, 0.45, 0.45, 1.05), frame("library-hall", 960, 616, 0.34, 0.42, 1.6), tL, start("fire") - tL);
+  s.add(`<div id="since" class="tag" style="left:88px;top:${TOPY + 28}px;opacity:0;color:${A.library}">1731 → today</div>`);
+  s.enter("#since", at("lib3", "still") - 0.1, { from: "left", dur: 0.4 });
+  s.sound("whoosh-short", tL, 0.18);
   scenes.push(s);
 }
 
-// ── 4. FIRE: the page burns; an ounce of prevention; leather buckets ───────
+// ── 4. FIRE: the proverb, then the company and its buckets ─────────────────
 {
-  const s = new Scene("fire", start("fire") - 0.1, start("hosp") - 0.15, 4);
-  const hk = HALL_END.scale, hx = HALL_END.x + 40 * hk, hy = HALL_END.y + 330 * hk;
-  // The last picture of the library, burning from its lower edge
-  s.add(`<svg class="full" style="position:absolute" width="${W}" height="${H}">
-      <defs><filter id="rough" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="3" seed="17"/><feDisplacementMap in="SourceGraphic" scale="150"/></filter>
-      <mask id="hole" maskUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="#fff"/><circle id="burn" cx="560" cy="560" r="0" fill="#000" filter="url(#fire-rough)"/></mask>
-      <mask id="char" maskUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="#fff"/><circle id="burn2" cx="560" cy="560" r="0" fill="#000" filter="url(#fire-rough)"/></mask></defs>
-      <g mask="url(#fire-char)"><rect width="${W}" height="${H}" fill="#2a170b"/></g>
-      <g mask="url(#fire-hole)"><image href="assets/paper.jpg" width="${W}" height="${H}" preserveAspectRatio="none"/><image href="assets/img/library-hall.jpg" x="${r3(hx)}" y="${r3(hy)}" width="${r3(HALL_END.w * hk)}" height="${r3(HALL_END.h * hk)}" preserveAspectRatio="none"/>
-      <rect width="${W}" fill="rgba(237,227,203,0.94)" y="860" height="300"/></g></svg>`);
-  // the slip of words over the picture, as the library scene left it
-  s.add(`<div id="slipcopy" class="slip" style="top:860px;height:300px"><div class="sc red abs" style="left:84px;top:34px;font-size:52px;letter-spacing:0.12em">Open since 1731</div>
-      <div class="fell ink abs" style="left:84px;top:110px;width:920px;font-size:74px;line-height:1.08">America’s oldest cultural institution.</div></div>`);
-  const tF = at("fire1") - 0.05;
-  s.fromTo("#burn", { attr: { r: 0 } }, { attr: { r: 2300 }, duration: 2.2, ease: "power1.in" }, tF);
-  s.fromTo("#burn2", { attr: { r: 0 } }, { attr: { r: 2280 }, duration: 2.2, ease: "power1.in" }, tF + 0.12);
-  s.to("#slipcopy", { opacity: 0, duration: 0.3 }, tF + 1.2);
-  s.add(`<div id="fire" class="fell red abs" style="left:84px;top:420px;font-size:230px;opacity:0">Fire.</div>`);
-  s.press("#fire", at("fire1", "next") - 0.05, { dur: 0.16 });
-  // the proverb, as a broadside: the pound outweighs the ounce
-  const tO = at("fire2") - 0.2;
-  s.out("#fire", tO - 0.1, 0.18);
-  s.add(`<div id="prov" class="abs" style="left:84px;top:250px;width:912px">
-      <div id="pv0" class="sc ink" style="font-size:64px;letter-spacing:0.1em">An ounce</div>
-      <div id="pv1" class="fell ink" style="font-size:96px;margin-top:6px">of prevention</div>
-      <div id="pv2" class="fell ink" style="font-size:60px;margin-top:20px">is worth</div>
-      <div id="pv3" class="sc ink" style="font-size:230px;line-height:0.95;letter-spacing:0.01em">a Pound</div>
-      <div id="pv4" class="fell ink" style="font-size:96px">of cure.</div>
-      <div id="pv5" class="sc ink" style="font-size:40px;margin-top:34px;letter-spacing:0.14em;color:#5a5048">Pennsylvania Gazette, 1735</div></div>`);
-  [["ounce", 0], ["prevention", 1], ["worth", 2], ["pound", 3], ["cure", 4]].forEach(([w, i]) => s.press(`#pv${i}`, at("fire2", w) - 0.08, { dur: i === 3 ? 0.16 : 0.13 }));
-  s.sound("impact-bass-2", at("fire2", "pound") - 0.05, 0.2);
-  s.press("#pv5", at("fire2", "pound") + 0.2);
-  // the Union Fire Company, and its buckets
-  const tU = at("fire2", "he") - 0.15;
-  s.to("#prov", { y: -1400, duration: 0.5, ease: "power3.in" }, tU);
-  s.add(`<div id="union" class="abs" style="left:84px;top:300px;width:920px"><div class="sc ink" style="font-size:96px;line-height:1.06">${words("The Union Fire Company")}</div>
-      <div class="sc red" style="font-size:52px;letter-spacing:0.14em;margin-top:22px">1736</div>
-      <div class="fell ink" style="font-size:66px;margin-top:40px;line-height:1.15">${words("Thirty volunteers, pledged to come to any fire with their own leather buckets.")}</div></div>`);
-  s.press("#union .sc:first-child .w", at("fire2", "union") - 0.05, { stagger: 0.12 }).press("#union .red", at("fire2", "company") + 0.2);
-  s.press("#union .fell .w", at("fire2", "volunteers") - 0.05, { stagger: (at("fire2", "leather") - at("fire2", "volunteers")) / 12 });
-  const tK = at("fire2", "leather") - 0.1, bk = "bucket", bf = fill(bk);
-  s.add(`<div id="bucket" class="full" style="opacity:0">${pic("bp", bk)}</div>`);
-  s.set("#bucket", { opacity: 1 }, tK).cam("#bp", frame(bk, 0.5, 0.45, bf * 1.18), frame(bk, 0.5, 0.42, bf * 1.04), tK, 1.4, "expo.out");
-  s.sound("whoosh-short", tK - 0.02, 0.2);
+  const s = new Scene("fire", start("fire") - 0.15, start("hosp") - 0.15, 4);
+  s.add(`<div id="q" class="card" style="left:60px;top:${TOPY}px;width:960px;height:560px;opacity:0">
+    <div class="bar" style="left:44px;top:56px;width:8px;height:300px;background:${A.fire}"></div>
+    <div id="qt" class="serif abs" style="left:84px;top:44px;width:820px;font-size:68px;line-height:1.18;font-style:italic">${words("An ounce of prevention is worth a pound of cure.")}</div>
+    <div class="mono abs" style="left:84px;top:430px;font-size:26px">PENNSYLVANIA GAZETTE · 4 FEB 1735</div></div>`);
+  s.enter("#q", at("fire1") - 0.1, { from: "zoom" });
+  s.words("#qt .w", at("fire1", "ounce") - 0.1, { stagger: (at("fire1", "cure") - at("fire1", "ounce")) / 10 });
+  const tU = at("fire2") - 0.2;
+  s.leave("#q", tU - 0.2, 0.22);
+  s.add(exhibit("buck", "bucket", { x: 60, y: TOPY, w: 560, h: 680, fig: "3.1", caption: "Leather fire bucket", extra: "opacity:0" }));
+  s.enter("#buck", tU, { from: "left" }).cam("#buck-pic", frame("bucket", 560, 616, 0.5, 0.48, 1.1), frame("bucket", 560, 616, 0.5, 0.44, 1.22), tU, start("hosp") - tU);
+  s.add(`<div id="uf" class="abs" style="left:650px;top:${TOPY + 20}px;width:380px;opacity:0">
+    <div class="kicker">Est. 1736</div>
+    <div class="sans" style="font-size:44px;font-weight:600;line-height:1.1;margin-top:10px">Union Fire Company</div>
+    <div style="margin-top:26px;width:80px;height:6px;border-radius:3px;background:${A.fire}"></div>
+    <div class="mono" style="font-size:26px;margin-top:22px;line-height:1.5">Volunteer brigade<br>Members only</div></div>`);
+  s.enter("#uf", at("fire2", "union") - 0.2, { from: "right", dur: 0.5 });
+  s.sound("whoosh-short", tU, 0.18);
   scenes.push(s);
 }
 
-// ── 5. HOSP: Dr Bond's hospital and the first matching grant ───────────────
+// ── 5. HOSP: Dr Bond's proposal, and the matching grant as a machine ───────
 {
   const s = new Scene("hosp", start("hosp") - 0.15, start("acad") - 0.15, 5);
-  const bz = SIZES.bond, bw = 640 / bz.w;
-  s.add(`<div id="bond" class="sheet" style="left:220px;top:250px;width:640px;height:${r3(bz.h * bw)}px;background:none"><img src="assets/img/bond.jpg" alt="" style="width:100%;height:100%;display:block"></div>`)
-    .add(`<div id="bn" class="sc ink abs" style="left:0;top:${290 + bz.h * bw}px;width:${W}px;text-align:center;font-size:56px;letter-spacing:0.1em;opacity:0">Dr Thomas Bond</div>`);
-  s.lay("#bond", at("hosp1") - 0.1, { y: 2000, rot: -6, end: -1.2 }).press("#bn", at("hosp1", "dr") + 0.05);
-  s.sound("whoosh-short", at("hosp1") - 0.1, 0.2);
-  const hz = SIZES.hospital, hw = 700 / hz.w, tH = at("hosp1", "hospital") - 0.15;
-  s.add(`<div id="hosp" class="sheet" style="left:190px;top:230px;width:700px;height:${r3(hz.h * hw)}px;background:none"><img src="assets/img/hospital.jpg" alt="" style="width:100%;height:100%;display:block"></div>`)
-    .add(`<div id="hn" class="sc ink abs" style="left:190px;top:${262 + hz.h * hw}px;width:760px;font-size:50px;letter-spacing:0.1em;opacity:0">${words("A hospital for the sick poor")}</div>`);
-  s.lay("#hosp", tH, { x: 1300, y: 80, rot: 5, end: 0.8 }).out("#bn", tH, 0.15);
-  s.press("#hn .w", at("hosp1", "sick") - 0.1, { stagger: 0.08 }).sound("whoosh-short", tH, 0.2);
-  // The ledger: the Assembly's £2,000 waits on the donors' £2,000
-  const tG = at("hosp2") - 0.25;
-  s.to("#bond, #hosp, #hn", { x: -1300, rotation: -4, duration: 0.45, ease: "power3.in" }, tG - 0.15);
-  s.add(`<div id="ledger" class="abs" style="left:0;top:220px;width:${W}px;height:900px;opacity:0">
-      <div class="rule" style="left:540px;top:0;width:3px;height:520px"></div>
-      <div class="rule" style="left:60px;top:150px;width:960px;height:3px"></div>
-      <div class="sc ink abs" style="left:60px;top:40px;width:460px;text-align:center;font-size:50px;letter-spacing:0.08em;line-height:1.1">The<br>Assembly</div>
-      <div class="sc ink abs" style="left:560px;top:40px;width:460px;text-align:center;font-size:50px;letter-spacing:0.08em;line-height:1.1">Private<br>donors</div>
-      <div id="ghost" class="fell abs" style="left:60px;top:250px;width:460px;text-align:center;font-size:136px;color:transparent;-webkit-text-stroke:2px rgba(27,25,21,0.55);opacity:0">£2,000</div>
-      <div id="paid" class="fell ink abs" style="left:60px;top:250px;width:460px;text-align:center;font-size:136px;opacity:0">£2,000</div>
-      <div id="tally" class="fell ink abs" style="left:560px;top:250px;width:460px;text-align:center;font-size:136px;opacity:0">£0</div>
-      <div id="only" class="fell ink abs" style="left:60px;top:440px;width:460px;text-align:center;font-size:52px;opacity:0">only if …</div>
-      ${stroke("brace", 120, 590, 840, 120, "M10,10 C10,70 400,40 420,110 C440,40 830,70 830,10", C.red, 7)}
-      <div id="match" class="sc ink abs" style="left:0;top:740px;width:${W}px;text-align:center;font-size:72px;letter-spacing:0.08em;opacity:0">${words("A matching grant")}</div></div>`);
-  s.set("#ledger", { opacity: 1 }, tG).press("#ledger > .sc", tG, { stagger: 0.12 });
-  s.press("#ghost", at("hosp2", "two") - 0.05).press("#only", at("hosp2", "only") - 0.05);
-  const d0 = at("hosp2", "private") - 0.05, d1 = after("hosp2", "first");
-  s.set("#tally", { opacity: 1 }, d0);
-  s.tl.push(`{ const o = { v: 0 }; tl.fromTo(o, { v: 0 }, { v: 2000, duration: ${r3(d1 - d0 - 0.1)}, ease: "power1.inOut", onUpdate: () => { document.getElementById("hosp-tally").textContent = "£" + (Math.round(o.v / 50) * 50).toLocaleString("en-GB"); } }, ${s.local(d0)}); }`);
-  s.set("#paid", { opacity: 1 }, d1 + 0.05).set("#ghost, #only", { opacity: 0 }, d1 + 0.05).fromTo("#paid", { scale: 1.12 }, { scale: 1, duration: 0.25, ease: "expo.out" }, d1 + 0.05);
-  s.sound("impact-bass-1", d1 + 0.07, 0.24);
-  s.pen("#brace path", at("hosp3", "matching") - 0.35, 0.45).press("#match .w", at("hosp3", "matching") - 0.05, { stagger: 0.1 });
+  s.raw.push(FIGCSS);
+  s.add(exhibit("bond", "bond", { x: 60, y: TOPY, w: 430, h: 560, fig: "4.1", caption: "Thomas Bond", extra: "opacity:0" }));
+  s.add(exhibit("hos", "hospital", { x: 520, y: TOPY + 80, w: 500, h: 600, fig: "4.2", caption: "Pennsylvania Hospital", extra: "opacity:0" }));
+  s.set("#bond-pic", frame("bond", 430, 496, 0.5, 0.35, 1.05), 0);
+  s.enter("#bond", at("hosp1") - 0.1, { from: "left" }).enter("#hos", at("hosp1", "hospital") - 0.15, { from: "right" });
+  s.cam("#hos-pic", frame("hospital", 500, 536, 0.5, 0.45, 1.0), frame("hospital", 500, 536, 0.55, 0.5, 1.15), at("hosp1") - 0.1, L("hosp1").t1 - at("hosp1") + 0.8);
+  const fig = FIG("grant");
+  const tG = at("hosp2") - 0.3;
+  s.leave("#bond, #hos", tG - 0.2, 0.22);
+  s.add(machine("mac", fig, { x: 110, y: TOPY + 130, w: 860, figNo: "4.3", caption: "The matching grant as a machine" }));
+  s.style(`#mac [data-part^="d"] { opacity: 0; }`);
+  s.enter("#mac", tG, { from: "zoom", dur: 0.5 });
+  s.assemble("#mac", fig, tG + 0.1, Math.max(1.6, at("hosp2", "only") - tG - 0.2));
+  // the donors' coins, £100 each, while the condition is stated
+  const d0 = at("hosp2", "private"), d1 = Math.max(after("hosp2"), at("hosp3", "target"));
+  for (let n = 0; n < 20; n++) s.fromTo(`#mac [data-part="d${n}"]`, { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.18, ease: "power2.in" }, d0 + (d1 - d0) * n / 20);
+  // at the mark: the paddle lifts, the latch lets go, the Assembly's £2,000 drops
+  const tT = d1 + 0.12;
+  s.to(`#mac [data-part="paddle"]`, { x: fig.moves.paddleUp.x, y: fig.moves.paddleUp.y, duration: 0.15, ease: "power2.out" }, tT);
+  s.to(`#mac [data-part="held"]`, { x: fig.moves.drop.x, y: fig.moves.drop.y, duration: 0.32, ease: "power2.in" }, tT + 0.15);
+  s.sound("impact-bass-1", tT + 0.47, 0.22);
+  s.add(`<div id="cnt" class="abs" style="left:84px;top:${TOPY}px;width:420px;opacity:0">
+    <div class="mono" style="font-size:26px">PRIVATE DONORS</div><div id="dn" class="sans" style="font-size:72px;font-weight:700;color:${A.hospital}">£0</div></div>
+    <div id="cnt2" class="abs" style="left:576px;top:${TOPY}px;width:420px;text-align:right;opacity:0">
+    <div class="mono" style="font-size:26px">THE ASSEMBLY</div><div id="an" class="sans" style="font-size:72px;font-weight:700;color:${C.muted}">£2,000</div></div>`);
+  s.set("#cnt, #cnt2", { opacity: 1 }, d0 - 0.1).count("#dn", d0, d1 - d0 + 0.1, 0, 2000, "'£' + (Math.round(v / 100) * 100).toLocaleString('en-GB')");
+  s.fromTo("#an", { color: C.muted }, { color: A.hospital, duration: 0.3 }, tT + 0.45);
   scenes.push(s);
 }
 
-// ── 6. ACAD: the academy that became a university ───────────────────────────
+// ── 6. ACAD: the charter, and the university it became ─────────────────────
 {
   const s = new Scene("acad", start("acad") - 0.15, start("turn") - 0.2, 6);
-  const ch = "charter", cf = fill(ch), pn = "penn", pf = fill(pn);
-  s.add(`<div id="ch" class="full">${pic("cp", ch)}</div>`)
-    .add(`<div id="lab" class="slip sc ink" style="top:1010px;height:96px;padding:12px 0 0 84px;font-size:62px;letter-spacing:0.1em">${words("An academy, 1751")}</div>`)
-    .add(`<div id="pn" class="full" style="opacity:0">${pic("pp", pn)}</div>`)
-    .add(`<div id="lab2" class="slip sc ink" style="top:1010px;height:96px;padding:12px 0 0 84px;font-size:62px;letter-spacing:0.1em;opacity:0">${words("University of Pennsylvania")}</div>`);
-  const tU = at("acad1", "university") - 0.1;
-  s.cam("#cp", frame(ch, 0.3, 0.2, cf * 1.5), frame(ch, 0.6, 0.36, cf * 1.25), 0, tU - s.t0);
-  s.press("#lab .w", at("acad1", "academy") - 0.05, { stagger: 0.1 });
-  s.set("#pn, #lab2", { opacity: 1 }, tU).set("#ch, #lab", { opacity: 0 }, tU + 0.02);
-  s.cam("#pp", frame(pn, 0.5, 0.5, pf * 1.15), frame(pn, 0.5, 0.45, pf * 1.03), tU, 1.6, "expo.out");
-  s.press("#lab2 .w", tU, { stagger: 0.08 }).sound("whoosh-short", tU - 0.02, 0.2);
+  s.add(exhibit("ch", "charter", { x: 60, y: TOPY, w: 960, h: 680, fig: "5.1", caption: "Charter of the College of Philadelphia, 1755", extra: "opacity:0" }));
+  s.enter("#ch", at("acad1") - 0.1, { from: "right" }).cam("#ch-pic", frame("charter", 960, 616, 0.3, 0.12, 1.5), frame("charter", 960, 616, 0.55, 0.3, 1.25), at("acad1") - 0.1, at("acad1", "university") - at("acad1"));
+  const tU = at("acad1", "university") - 0.15;
+  s.add(exhibit("pen", "penn", { x: 60, y: TOPY, w: 960, h: 680, fig: "5.2", caption: "College Hall, University of Pennsylvania", extra: "opacity:0" }));
+  s.leave("#ch", tU + 0.2, 0.25);
+  s.enter("#pen", tU, { from: "zoom", dur: 0.5 }).cam("#pen-pic", frame("penn", 960, 616, 0.5, 0.5, 1.12), frame("penn", 960, 616, 0.5, 0.45, 1.0), tU, 2);
+  s.add(`<div id="yrs" class="tag" style="left:60px;top:${TOPY + 710}px;opacity:0;color:${A.academy}">Academy 1751 · University 1791</div>`);
+  s.enter("#yrs", tU + 0.3, { from: "left", dur: 0.4 });
   scenes.push(s);
 }
 
-// ── 7. TURN: four times, from scratch ───────────────────────────────────────
+// ── 7. TURN: four foundations, built four times ────────────────────────────
 {
   const s = new Scene("turn", start("turn") - 0.2, start("now") - 0.15, 7);
-  s.add(`<div id="thing" class="fell ink abs" style="left:84px;top:520px;font-size:120px;width:920px">${words("But here is the thing.")}</div>`);
-  s.press("#thing .w", at("turn1", "but"), { stagger: (after("turn1") - at("turn1")) / 5 });
-  // the paperwork of each, laid on a pile as it is named
-  const tS = at("turn2") - 0.1;
-  s.out("#thing", tS, 0.18);
-  s.add(`<div id="scratch" class="fell ink abs" style="left:84px;top:250px;font-size:100px">${words("From scratch:")}</div>`);
-  s.press("#scratch .w", at("turn2", "scratch") - 0.4, { stagger: 0.14 });
-  const pile = [["agreements", "charter", -5], ["subscriptions", null, 4], ["fundraising", null, -2], ["books", "almanac", 6]];
-  pile.forEach(([w, img, rot], i) => {
-    const t = at("turn2", w) - 0.12, left = 150 + i * 22, top = 470 + i * 26;
-    let inner;
-    if (img) inner = `<img src="assets/img/${img}.jpg" alt="" style="width:100%;height:100%;object-fit:cover;display:block">`;
-    else if (w === "subscriptions") inner = Array.from({ length: 14 }, (_, k) => stroke(`ps${k}`, 60, 70 + k * 40, 300 + rnd() * 160, 26, scrawl(300 + rnd() * 160), "#2a241f", 2.2).replace('stroke-dasharray: 100 120', '')).join("");
-    else inner = `<div class="fell ink abs" style="left:0;top:90px;width:100%;text-align:center;font-size:96px">£2,000</div><div class="fell ink abs" style="left:0;top:220px;width:100%;text-align:center;font-size:96px">£2,000</div>`;
-    s.add(`<div id="pl${i}" class="sheet" style="left:${left}px;top:${top}px;width:700px;height:580px;overflow:hidden;${img ? "background:none;" : ""}">${inner}</div>`)
-      .add(`<div id="pt${i}" class="slip sc ink" style="top:1080px;height:84px;padding:10px 0 0 84px;font-size:56px;letter-spacing:0.12em;opacity:0">${w}</div>`);
-    s.lay(`#pl${i}`, t, { y: 1700, x: (i % 2 ? 1 : -1) * 300, rot: rot * 3, end: rot, dur: 0.55 });
-    s.set(`#pt${i}`, { opacity: 1 }, t + 0.1);
-    if (i) s.set(`#pt${i - 1}`, { opacity: 0 }, t + 0.1);
-    s.sound(i % 2 ? "impact-bass-2" : "impact-bass-1", t + 0.32, 0.13);
+  s.raw.push(FIGCSS);
+  const fig = FIG("foundations-four");
+  s.add(machine("mac", fig, { x: 90, y: TOPY, w: 900, figNo: "6.1", caption: "Four institutions, four foundations" }));
+  s.enter("#mac", at("turn1") - 0.15, { from: "zoom", dur: 0.4 });
+  s.assemble("#mac", fig, at("turn1"), L("turn1").t1 - at("turn1") + 0.3);
+  const KEYS = [["rules", "Rules"], ["members", "Members"], ["money", "Money"]];
+  KEYS.forEach(([w, label], i) => {
+    s.add(`<div id="k${i}" class="tag" style="left:${118 + i * 230}px;top:${TOPY + 28}px;opacity:0">${label}</div>`);
+    s.enter(`#k${i}`, at("turn1", w) - 0.1, { from: "up", dur: 0.35 });
   });
-  s.style(`svg.ink-line path { stroke-dashoffset: 0; } #pl1 svg.ink-line path, #pl2 svg.ink-line path { stroke-dasharray: none; }`);
-  // four times over, and everything else besides
-  const tF = at("turn3") - 0.1;
-  s.out("#pt3, #scratch", tF, 0.15);
-  s.add(`<div id="four" class="fell red abs" style="left:84px;top:250px;font-size:150px">${words("Four times,")}</div>`);
-  s.press("#four .w", at("turn3", "four") - 0.05, { stagger: 0.14 });
-  const side = [["printing", "press", 0.5, 0.45, "a printing business"], ["almanac", "almanac", 0.5, 0.3, "an almanac"], ["lightning", "kite", 0.62, 0.22, "experiments with lightning"]];
-  side.forEach(([w, img, fx, fy, label], i) => {
-    const t = at("turn3", w) - 0.08, f = fill(img), sz = SIZES[img];
-    // a small picture is a plate laid on the paper, not blown up to the frame
-    const plate = sz.w < 900;
-    s.add(plate
-      ? `<div id="sd${i}" class="full" style="opacity:0;background:${C.paper} url(assets/paper.jpg) center/cover"><div id="sp${i}" class="sheet" style="left:${(W - sz.w * 1.3) / 2}px;top:230px;width:${sz.w * 1.3}px;height:${sz.h * 1.3}px;background:none"><img src="assets/img/${img}.jpg" alt="" style="width:100%;height:100%;display:block"></div></div>`
-      : `<div id="sd${i}" class="full" style="opacity:0">${pic(`sp${i}`, img)}</div>`)
-      .add(`<div id="sl${i}" class="slip sc ink" style="top:1010px;height:96px;padding:12px 0 0 84px;font-size:56px;letter-spacing:0.1em;opacity:0">${label}</div>`);
-    s.set(`#sd${i}, #sl${i}`, { opacity: 1 }, t);
-    if (plate) s.fromTo(`#sp${i}`, { y: 1600, rotation: 5 }, { y: 0, rotation: -1.5, duration: 0.5, ease: "expo.out" }, t);
-    else s.cam(`#sp${i}`, frame(img, fx, fy, f * 1.2), frame(img, fx, fy, f * 1.05), t, 0.9, "expo.out");
-    if (i) s.set(`#sd${i - 1}, #sl${i - 1}`, { opacity: 0 }, t + 0.02);
+  // four times over, beside a printing business, an almanac and electricity
+  s.add(`<div id="x4" class="sans abs" style="left:118px;top:${TOPY + 6}px;font-size:120px;font-weight:700;color:${C.clay};opacity:0">×4</div>`);
+  s.enter("#x4", at("turn2", "four") - 0.1, { from: "zoom", dur: 0.4 });
+  const SIDE = [["printing", "press", "Printing"], ["almanac", "almanac", "Almanac"], ["electricity", "kite", "Electricity"]];
+  s.leave("#k0, #k1, #k2", at("turn2", "while") - 0.3, 0.2);
+  SIDE.forEach(([w, img, label], i) => {
+    s.add(`<div id="sd${i}" class="card" style="left:${300 + i * 226}px;top:${TOPY + 22}px;width:206px;height:178px;border-radius:16px;opacity:0">
+      <div class="abs" style="left:0;top:0;width:206px;height:114px;overflow:hidden">${picEl(`sd${i}-pic`, img)}</div>
+      <div class="cap" style="padding:0 16px"><b>${label}</b></div></div>`);
+    s.set(`#sd${i}-pic`, frame(img, 206, 114, 0.5, 0.35, 1.05), 0);
+    s.enter(`#sd${i}`, at("turn2", w) - 0.15, { from: "up", dur: 0.45 });
   });
-  // the lightning: two white frames on the word
-  s.add(`<div id="flash" class="full" style="background:#fffaf0;opacity:0"></div>`);
-  const tl = at("turn3", "lightning") + 0.25;
-  s.set("#flash", { opacity: 0.85 }, tl).set("#flash", { opacity: 0 }, tl + 2 / FPS).set("#flash", { opacity: 0.6 }, tl + 4 / FPS).set("#flash", { opacity: 0 }, tl + 5 / FPS);
-  s.sound("impact-bass-2", tl, 0.18);
   scenes.push(s);
 }
 
-// ── 8. NOW: no longer from zero; the chase that holds the type ─────────────
+// ── 8. NOW: one shared foundation, and a new project plugged into it ───────
 {
   const s = new Scene("now", start("now") - 0.15, start("end") - 0.35, 8);
-  s.add(`<div id="today" class="sc red abs" style="left:84px;top:250px;font-size:72px;letter-spacing:0.16em">Today</div>`)
-    .add(`<div id="zero" class="fell ink abs" style="left:84px;top:380px;width:920px;font-size:104px;line-height:1.05">${words("A founder would not start from zero.")}</div>`);
-  s.press("#today", at("now1", "today") - 0.05).press("#zero .w", at("now1", "founder") - 0.2, { stagger: (at("now1", "zero") - at("now1", "founder") + 0.2) / 7 });
-  // The chase: an iron frame that locks a forme of type in place
-  const tC = at("now2") - 0.15;
-  s.out("#today, #zero", tC, 0.2);
-  s.add(`<div id="fs" class="sc ink abs" style="left:84px;top:230px;font-size:64px;letter-spacing:0.12em;opacity:0">${words("A fiscal sponsor")}</div>`)
-    .add(`<div id="forme" class="abs" style="left:140px;top:430px;width:800px;height:600px">
-      <div id="chase" class="abs" style="left:0;top:0;width:800px;height:600px;border:30px solid ${C.iron};border-radius:6px;box-shadow:inset 0 0 0 3px #4a4743, 0 14px 30px rgba(40,24,8,0.35)"></div>
-      <div id="q0" class="abs" style="left:560px;top:30px;width:110px;height:34px;background:${C.wood};border:2px solid #8a6a3e"></div>
-      <div id="q1" class="abs" style="left:736px;top:250px;width:34px;height:110px;background:${C.wood};border:2px solid #8a6a3e"></div>
-      <div id="proj" class="fell ink abs" style="left:30px;top:90px;width:740px;text-align:center;font-size:96px">${"A New Project".split("").map((c) => `<span class="w">${c}</span>`).join("")}</div>
-      <div id="can" class="caslon abs" style="left:30px;top:250px;width:740px;text-align:center;font-size:56px;line-height:1.6">
-        <div id="c0" style="opacity:0">accepts gifts</div><div id="c1" style="opacity:0">wins grants</div><div id="c2" style="opacity:0">signs contracts</div></div></div>
-      <div id="home" class="sc red abs" style="left:0;top:1060px;width:${W}px;text-align:center;font-size:58px;letter-spacing:0.12em;opacity:0">${words("a home from day one")}</div>`);
-  s.press("#fs .w", at("now2", "fiscal") - 0.25, { stagger: 0.12 });
-  s.press("#proj .w", at("now2", "new") - 0.1, { stagger: 0.045, dur: 0.1 });
-  s.fromTo("#chase", { y: -900, opacity: 1 }, { y: 0, duration: 0.6, ease: "expo.out" }, at("now2", "home") - 0.45);
-  s.set("#chase", { opacity: 0 }, 0).set("#chase", { opacity: 1 }, at("now2", "home") - 0.45);
-  s.sound("impact-bass-1", at("now2", "home") - 0.1, 0.24);
-  s.fromTo("#q0", { x: 120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.25, ease: "power3.out" }, at("now2", "day") - 0.1)
-    .fromTo("#q1", { y: 140, opacity: 0 }, { y: 0, opacity: 1, duration: 0.25, ease: "power3.out" }, at("now2", "one") - 0.1);
-  s.sound("click-soft", at("now2", "day") + 0.05, 0.4).sound("click-soft", at("now2", "one") + 0.05, 0.4);
-  s.press("#home .w", at("now2", "day") - 0.05, { stagger: 0.07 });
-  [["accept", 0], ["win", 1], ["sign", 2]].forEach(([w, i]) => s.press(`#c${i}`, at("now2", w) - 0.05));
-  // …while the founder does the work
-  const tW = at("now2", "while") - 0.1, mt = "martin", mf = fill(mt);
-  s.add(`<div id="work" class="full" style="opacity:0">${pic("wp", mt)}</div>`)
-    .add(`<div id="wl" class="slip sc ink" style="top:1010px;height:96px;padding:12px 0 0 84px;font-size:56px;letter-spacing:0.1em;opacity:0">${words("The founder does the work")}</div>`);
-  s.set("#work", { opacity: 1 }, tW).cam("#wp", frame(mt, 0.45, 0.4, mf * 1.15), frame(mt, 0.5, 0.36, mf * 1.04), tW, after("now2") - tW + 0.4, "power2.out");
-  s.set("#wl", { opacity: 1 }, at("now2", "founder") - 0.1).press("#wl .w", at("now2", "founder") - 0.1, { stagger: 0.09 });
-  s.sound("whoosh-short", tW - 0.02, 0.2);
+  s.raw.push(FIGCSS);
+  const fig = FIG("foundations-shared");
+  s.add(machine("mac", fig, { x: 90, y: TOPY, w: 900, figNo: "7.1", caption: "One foundation, shared" }));
+  s.style(`#mac [data-part="new"] { opacity: 0; }`);
+  s.enter("#mac", at("now1") - 0.1, { from: "zoom", dur: 0.4 });
+  s.assemble("#mac", fig, at("now1"), L("now1").t1 - at("now1") + 0.8);
+  // the new project slides into the empty socket
+  s.fromTo(`#mac [data-part="new"]`, { opacity: 0 }, { opacity: 1, duration: 0.3 }, at("now2", "new") - 0.4);
+  s.to(`#mac [data-part="new"]`, { x: fig.moves.newIn.x, y: fig.moves.newIn.y, duration: 0.7, ease: "power3.inOut" }, at("now2", "structure") - 0.2);
+  s.sound("click-soft", at("now2", "structure") + 0.5, 0.4);
+  // what it can do from its first day
+  const CAN = [["tax-deductible", "Gifts"], ["grants", "Grants"], ["contracts", "Contracts"]];
+  CAN.forEach(([w, label], i) => {
+    s.add(`<div id="cv${i}" class="tag" style="left:${118 + i * 250}px;top:${TOPY + 28}px;opacity:0;color:${A.mulvium}">✓ ${label}</div>`);
+    s.enter(`#cv${i}`, at("now2", w) - 0.1, { from: "up", dur: 0.35 });
+  });
   scenes.push(s);
 }
 
@@ -553,32 +495,30 @@ const start = (id) => SECTION(id)[0].t0;
 const PLATE = { file: "cosmos-close.mp4", from: 64.6, gather: 77.0, settle: 84.4 };
 {
   const t0 = start("end") - 0.35;
-  // the plate's network grows under the words; it gathers into the wordmark
-  // as the last word lands
   const offset = PLATE.gather - (after("end2") + 0.7);
   const mediaStart = Math.max(0, t0 + offset - PLATE.from);
   const t1 = t0 + (PLATE.settle + 1.6 - PLATE.from - mediaStart);
   const s = new Scene("end", t0, t1, 9);
   s.add(`<video id="plate" class="full" src="assets/${PLATE.file}" muted playsinline style="object-fit:cover"></video>`);
   s.mediaStart = r3(mediaStart);
-  s.add(`<div id="build" class="caslon abs" style="left:0;top:800px;width:${W}px;text-align:center;font-size:58px;line-height:1.3">${words("That is what Mulvium is building:")}<br><span style="font-size:78px">${words("a home for the next Franklin.")}</span></div>`);
-  s.press("#build .w", at("end1", "that") - 0.05, { stagger: (after("end1") - at("end1") - 0.3) / 11 });
-  s.out("#build", at("end2") - 0.15, 0.25);
-  s.add(`<div id="close" class="caslon abs" style="left:90px;top:760px;width:900px;text-align:center;font-size:46px;line-height:1.3">${words("The next great expansion of human creativity will come from making it easier to create")}<br><span class="red" style="font-size:108px;color:${C.clay};font-style:italic">${words("institutions.")}</span></div>`);
-  s.press("#close .w", at("end2", "the") - 0.05, { stagger: (at("end2", "institutions") - at("end2", "the")) / 15 });
-  s.out("#close", after("end2") + 0.6, 0.3);
+  s.add(`<div id="build" class="serif abs" style="left:90px;top:840px;width:900px;text-align:center;font-size:56px;line-height:1.25">${words("Mulvium is building that structure for the next Franklin.")}</div>`);
+  s.words("#build .w", at("end1") - 0.05, { stagger: (after("end1") - at("end1") - 0.3) / 9 });
+  s.leave("#build", at("end2") - 0.15, 0.25);
+  s.add(`<div id="close" class="serif abs" style="left:90px;top:760px;width:900px;text-align:center;font-size:46px;line-height:1.3">${words("The next great expansion of human creativity will come from making it easier to create")}<br><span style="font-size:108px;color:${C.clay};font-style:italic">${words("institutions.")}</span></div>`);
+  s.words("#close .w", at("end2", "the") - 0.05, { stagger: (at("end2", "institutions") - at("end2", "the")) / 15 });
+  s.leave("#close", after("end2") + 0.6, 0.3);
   s.sound("riser", at("end2", "institutions") - 1.6, 0.2);
   scenes.push(s);
 }
 
-// ── Captions: the voice, four to six words at a time ───────────────────────
-// A subtitle never repeats words the page is already printing: where the
-// scene sets the line in type, the line gets no subtitle. Each entry is the
-// first word index from which the line is subtitled (Infinity: never).
+// ── Captions: only where the screen does not already say it ────────────────
+// A subtitle never repeats words the page is setting: lines whose words are
+// on screen in type get none. Each entry is the first word index from which
+// the line is subtitled (Infinity: never).
 const NO = Infinity;
 const CAPTION_FROM = {
-  hook1: NO, hook2: NO, hook3: 0, who1: NO, who2: 6, who3: NO, lib1: NO, lib2: NO, lib3: NO,
-  fire1: NO, fire2: NO, hosp1: 11, hosp2: NO, hosp3: NO, acad1: NO, turn1: NO, turn2: NO, turn3: NO,
+  hook1: NO, hook2: 0, who1: NO, who2: NO, who3: NO, lib1: NO, lib2: NO, lib3: 0,
+  fire1: NO, fire2: 0, hosp1: 0, hosp2: NO, hosp3: NO, acad1: NO, turn1: NO, turn2: NO,
   now1: NO, now2: NO, end1: NO, end2: NO,
 };
 const groups = [];
@@ -600,18 +540,21 @@ groups.forEach((g, i) => {
 });
 caps.style(`
     #root { background: none; }
-    .cap { position: absolute; left: 0; top: 1186px; width: ${W}px; height: 140px; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; }
-    .cap span { max-width: 900px; text-align: center; font-family: "Libre Caslon Text", serif; font-size: 48px; line-height: 1.22; color: ${C.ink};
-      background: rgba(237, 227, 203, 0.94); padding: 8px 22px 12px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }`);
-caps.t1 = scenes[scenes.length - 1].t0;
+    .cap { position: absolute; left: 0; top: 1200px; width: ${W}px; height: 130px; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; }
+    .cap span { max-width: 900px; text-align: center; font-family: "IBM Plex Sans", sans-serif; font-weight: 500; font-size: 44px; line-height: 1.25; color: ${C.surface};
+      background: rgba(27, 22, 19, 0.86); border-radius: 14px; padding: 10px 24px 12px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }`);
+const content = scenes.filter((s) => s.id !== "chrome");
+caps.t1 = content[content.length - 1].t0;
 
 // ── The root: scenes, captions, voice, music, sound ────────────────────────
-const DUR = r3(scenes[scenes.length - 1].t1);
+const DUR = r3(content[content.length - 1].t1);
 fs.mkdirSync(path.join(HERE, "compositions"), { recursive: true });
+for (const f of fs.readdirSync(path.join(HERE, "compositions"))) fs.unlinkSync(path.join(HERE, "compositions", f));
 for (const s of [...scenes, caps]) fs.writeFileSync(path.join(HERE, "compositions", `${s.id}.html`), s.file());
-// Each scene runs until the next one is on top of it
+// Each scene runs until the next one is on top of it; the chrome over all of them
 const hosts = scenes.map((s, i) => {
-  const end = i < scenes.length - 1 ? Math.max(s.t1, scenes[i + 1].t0 + 0.05) : s.t1;
+  const next = content[content.indexOf(s) + 1];
+  const end = s.id === "chrome" ? s.t1 : next ? Math.max(s.t1, next.t0 + 0.05) : s.t1;
   return `      <div id="${s.id}" data-composition-id="${s.id}" data-composition-src="compositions/${s.id}.html" data-start="${r3(s.t0)}" data-duration="${r3(end - s.t0)}" data-track-index="${i % 2 + 1}" data-track-kind="graphics" data-width="${W}" data-height="${H}" style="z-index:${s.z}"></div>`;
 });
 const end = scenes[scenes.length - 1];
@@ -627,9 +570,9 @@ const sfx = scenes.flatMap((s) => s.sfx).sort((a, b) => a.t - b.t).map((x, i) =>
 });
 const index = `<!doctype html>
 <html lang="en" data-resolution="portrait" data-composition-variables='[
-  {"id":"color-paper","type":"color","label":"Paper","default":"${C.paper}"},
+  {"id":"color-paper","type":"color","label":"Ground","default":"${C.paper}"},
   {"id":"color-ink","type":"color","label":"Ink","default":"${C.ink}"},
-  {"id":"color-red","type":"color","label":"Red plate","default":"${C.red}"}
+  {"id":"color-clay","type":"color","label":"Accent","default":"${C.clay}"}
 ]'>
   <head>
     <meta charset="UTF-8" />
@@ -639,15 +582,12 @@ const index = `<!doctype html>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { margin: 0; width: ${W}px; height: ${H}px; overflow: hidden; background: ${C.paper}; }
-      #vignette { position: absolute; inset: 0; pointer-events: none; z-index: 60;
-        background: radial-gradient(ellipse 85% 70% at 50% 46%, rgba(60, 36, 12, 0) 62%, rgba(60, 36, 12, 0.16) 100%); }
     </style>
   </head>
   <body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="${DUR}" data-width="${W}" data-height="${H}" data-motion-blur="on">
 ${hosts.join("\n")}
       <div id="captions" data-composition-id="captions" data-composition-src="compositions/captions.html" data-start="0" data-duration="${r3(caps.t1)}" data-track-index="3" data-track-kind="captions" data-width="${W}" data-height="${H}" style="z-index:50"></div>
-      <div id="vignette" class="clip" data-start="0" data-duration="${DUR}" data-track-index="4" data-layout-ignore></div>
       <audio id="voice" class="clip" src="assets/narration.wav" data-start="0" data-track-index="10" data-volume="1"></audio>
       <audio id="music" class="clip" src="assets/music-bed.m4a" data-start="0" data-duration="${DUR}" data-track-index="11" data-volume="1"></audio>
 ${sfx.join("\n")}

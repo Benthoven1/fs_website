@@ -1,60 +1,90 @@
 <template>
   <style>
-    @font-face { font-family: "IM Fell English"; src: url(assets/fonts/IMFellEnglish-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
-    @font-face { font-family: "IM Fell English"; src: url(assets/fonts/IMFellEnglish-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
-    @font-face { font-family: "IM Fell English SC"; src: url(assets/fonts/IMFellEnglishSC-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
-    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
-    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-700.woff2) format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
-    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
-    #root { position: absolute; inset: 0; overflow: hidden; background: #EDE3CB url(assets/paper.jpg) center / cover; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-600.woff2) format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-700.woff2) format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Mono"; src: url(assets/fonts/IBMPlexMono-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Mono"; src: url(assets/fonts/IBMPlexMono-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500i.woff2) format("woff2"); font-weight: 500; font-style: italic; font-display: block; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse 120% 75% at 50% 30%, #F5F3EF 0%, #ECEAE5 58%, #E3DFD8 100%); }
 
     .abs { position: absolute; }
     .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
-    .fell { font-family: "IM Fell English", serif; font-weight: 400; color: #1B1915; line-height: 1.02; }
-    .sc { font-family: "IM Fell English SC", serif; font-weight: 400; color: #1B1915; letter-spacing: 0.04em; line-height: 1.1; }
-    .caslon { font-family: "Libre Caslon Text", serif; color: #1B1915; }
-    .red { color: #A8261B; }
-    .on-dark { color: #EDE3CB; }
-    .ink { text-shadow: 0 0 0.6px rgba(27, 25, 21, 0.85); }
+    .sans { font-family: "IBM Plex Sans", sans-serif; color: #1B1613; }
+    .mono { font-family: "IBM Plex Mono", monospace; color: #5C544E; letter-spacing: 0.02em; }
+    .serif { font-family: "Lora", serif; color: #1B1613; }
+    .kicker { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 28px; letter-spacing: 0.14em; text-transform: uppercase; color: #5C544E; }
     .w { display: inline-block; white-space: pre; }
+    .card { position: absolute; background: #F9F8F5; border: 1px solid #D9D4CA; border-radius: 28px; overflow: hidden;
+      box-shadow: inset 0 1px 0 #FFFFFF, 0 2px 4px rgba(27,22,19,0.04), 0 18px 48px rgba(27,22,19,0.10); }
+    .card .cap { position: absolute; left: 0; bottom: 0; width: 100%; height: 64px; overflow: hidden; padding: 0 28px; display: flex; align-items: center; gap: 18px;
+      background: #F9F8F5; border-top: 1px solid #D9D4CA; font-family: "IBM Plex Mono", monospace; font-size: 28px; color: #5C544E; white-space: nowrap; }
+    .card .cap b { font-weight: 500; color: #1B1613; }
     .pic { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
     .pic img { display: block; width: 100%; height: 100%; }
-    .sheet { position: absolute; background: #EDE3CB url(assets/paper.jpg) center / cover; box-shadow: 0 18px 44px rgba(40, 24, 8, 0.30), 0 2px 6px rgba(40, 24, 8, 0.18); }
-    .slip { position: absolute; left: 0; width: 1080px; background: rgba(237, 227, 203, 0.94); }
-    .rule { position: absolute; height: 3px; background: #1B1915; }
-    svg.ink-line { position: absolute; overflow: visible; }
-    svg.ink-line path { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 100 120; stroke-dashoffset: 110; }
+    .tag { position: absolute; padding: 10px 18px 11px; border-radius: 10px; background: #F9F8F5; border: 1px solid #D9D4CA;
+      font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 26px; letter-spacing: 0.08em; text-transform: uppercase; color: #1B1613; white-space: nowrap; }
+    .bar { position: absolute; border-radius: 4px; }
 
-#hook-sheet { transform-origin: 50% 0; }
-    .strike { position: absolute; left: -8px; top: 50%; width: calc(100% + 16px); height: 7px; margin-top: -2px; background: #A8261B; border-radius: 4px; transform-origin: 0 50%; opacity: 0; }
+
+
   </style>
   <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
-<div id="hook-world" class="abs" style="left:0;top:400px;width:1080px;height:1240px;overflow:hidden"><div id="hook-pan" class="pic" style="width:5801px;height:1597px;"><img src="assets/img/prospect.jpg" alt=""></div></div>
-<div id="hook-name" class="sc ink abs" style="left:0;top:178px;width:1080px;text-align:center;font-size:110px;letter-spacing:0.07em">Philadelphia</div>
-<div id="hook-year" class="fell red abs" style="left:0;top:296px;width:1080px;text-align:center;font-size:72px;letter-spacing:0.3em;opacity:0">1731</div>
-<div id="hook-sheet" class="sheet" style="left:70px;top:440px;width:940px;height:720px;clip-path: polygon(0.00% 0.1px,1.67% 3.5px,3.33% 4.8px,5.00% 4.6px,6.67% 1.1px,8.33% 0.1px,10.00% 2.2px,11.67% 0.6px,13.33% 4.3px,15.00% 4.8px,16.67% 4.2px,18.33% 0.5px,20.00% 2.0px,21.67% 4.2px,23.33% 2.7px,25.00% 4.6px,26.67% 3.8px,28.33% 1.6px,30.00% 3.5px,31.67% 3.5px,33.33% 3.3px,35.00% 4.0px,36.67% 2.6px,38.33% 2.9px,40.00% 3.6px,41.67% 0.6px,43.33% 1.0px,45.00% 4.7px,46.67% 0.5px,48.33% 3.8px,50.00% 3.8px,51.67% 1.8px,53.33% 1.5px,55.00% 0.8px,56.67% 0.8px,58.33% 0.9px,60.00% 0.5px,61.67% 1.7px,63.33% 2.4px,65.00% 2.0px,66.67% 3.1px,68.33% 4.0px,70.00% 4.6px,71.67% 0.3px,73.33% 3.9px,75.00% 4.1px,76.67% 1.8px,78.33% 2.1px,80.00% 0.3px,81.67% 2.1px,83.33% 4.0px,85.00% 4.8px,86.67% 2.9px,88.33% 4.3px,90.00% 4.4px,91.67% 1.1px,93.33% 0.8px,95.00% 4.2px,96.67% 4.2px,98.33% 4.2px,100.00% 4.8px,calc(100% - 1.6px) 0.00%,calc(100% - 3.5px) 1.04%,calc(100% - 1.2px) 2.08%,calc(100% - 4.4px) 3.13%,calc(100% - 0.4px) 4.17%,calc(100% - 3.5px) 5.21%,calc(100% - 0.3px) 6.25%,calc(100% - 2.9px) 7.29%,calc(100% - 3.3px) 8.33%,calc(100% - 3.6px) 9.38%,calc(100% - 4.8px) 10.42%,calc(100% - 3.1px) 11.46%,calc(100% - 4.1px) 12.50%,calc(100% - 5.0px) 13.54%,calc(100% - 4.8px) 14.58%,calc(100% - 4.2px) 15.63%,calc(100% - 3.5px) 16.67%,calc(100% - 0.9px) 17.71%,calc(100% - 1.1px) 18.75%,calc(100% - 4.8px) 19.79%,calc(100% - 0.0px) 20.83%,calc(100% - 2.3px) 21.88%,calc(100% - 3.6px) 22.92%,calc(100% - 4.7px) 23.96%,calc(100% - 3.7px) 25.00%,calc(100% - 2.0px) 26.04%,calc(100% - 3.4px) 27.08%,calc(100% - 0.3px) 28.13%,calc(100% - 0.6px) 29.17%,calc(100% - 3.3px) 30.21%,calc(100% - 1.2px) 31.25%,calc(100% - 3.0px) 32.29%,calc(100% - 2.4px) 33.33%,calc(100% - 1.1px) 34.38%,calc(100% - 2.0px) 35.42%,calc(100% - 1.6px) 36.46%,calc(100% - 3.3px) 37.50%,calc(100% - 0.9px) 38.54%,calc(100% - 0.2px) 39.58%,calc(100% - 0.4px) 40.63%,calc(100% - 4.8px) 41.67%,calc(100% - 0.8px) 42.71%,calc(100% - 3.4px) 43.75%,calc(100% - 0.4px) 44.79%,calc(100% - 2.7px) 45.83%,calc(100% - 4.8px) 46.88%,calc(100% - 1.1px) 47.92%,calc(100% - 0.7px) 48.96%,calc(100% - 4.3px) 50.00%,calc(100% - 3.6px) 51.04%,calc(100% - 1.5px) 52.08%,calc(100% - 4.9px) 53.13%,calc(100% - 4.3px) 54.17%,calc(100% - 3.1px) 55.21%,calc(100% - 2.9px) 56.25%,calc(100% - 2.8px) 57.29%,calc(100% - 1.4px) 58.33%,calc(100% - 0.8px) 59.38%,calc(100% - 3.8px) 60.42%,calc(100% - 2.5px) 61.46%,calc(100% - 1.6px) 62.50%,calc(100% - 1.0px) 63.54%,calc(100% - 0.7px) 64.58%,calc(100% - 2.6px) 65.63%,calc(100% - 3.5px) 66.67%,calc(100% - 2.5px) 67.71%,calc(100% - 1.4px) 68.75%,calc(100% - 0.7px) 69.79%,calc(100% - 3.3px) 70.83%,calc(100% - 1.9px) 71.88%,calc(100% - 3.6px) 72.92%,calc(100% - 1.1px) 73.96%,calc(100% - 2.1px) 75.00%,calc(100% - 4.2px) 76.04%,calc(100% - 0.8px) 77.08%,calc(100% - 0.3px) 78.13%,calc(100% - 1.9px) 79.17%,calc(100% - 2.1px) 80.21%,calc(100% - 3.5px) 81.25%,calc(100% - 2.4px) 82.29%,calc(100% - 4.1px) 83.33%,calc(100% - 3.4px) 84.38%,calc(100% - 2.3px) 85.42%,calc(100% - 0.5px) 86.46%,calc(100% - 2.9px) 87.50%,calc(100% - 2.5px) 88.54%,calc(100% - 4.2px) 89.58%,calc(100% - 2.2px) 90.63%,calc(100% - 3.1px) 91.67%,calc(100% - 1.2px) 92.71%,calc(100% - 3.3px) 93.75%,calc(100% - 0.8px) 94.79%,calc(100% - 3.9px) 95.83%,calc(100% - 3.1px) 96.88%,calc(100% - 1.3px) 97.92%,calc(100% - 1.7px) 98.96%,calc(100% - 1.6px) 100.00%,100.00% calc(100% - 0.2px),98.33% calc(100% - 0.6px),96.67% calc(100% - 0.1px),95.00% calc(100% - 3.5px),93.33% calc(100% - 4.5px),91.67% calc(100% - 4.1px),90.00% calc(100% - 0.6px),88.33% calc(100% - 4.0px),86.67% calc(100% - 1.3px),85.00% calc(100% - 4.2px),83.33% calc(100% - 0.5px),81.67% calc(100% - 1.3px),80.00% calc(100% - 0.4px),78.33% calc(100% - 0.3px),76.67% calc(100% - 2.8px),75.00% calc(100% - 3.8px),73.33% calc(100% - 0.1px),71.67% calc(100% - 2.0px),70.00% calc(100% - 0.2px),68.33% calc(100% - 4.4px),66.67% calc(100% - 3.2px),65.00% calc(100% - 0.7px),63.33% calc(100% - 0.1px),61.67% calc(100% - 4.7px),60.00% calc(100% - 1.4px),58.33% calc(100% - 3.6px),56.67% calc(100% - 5.0px),55.00% calc(100% - 3.0px),53.33% calc(100% - 1.9px),51.67% calc(100% - 1.7px),50.00% calc(100% - 4.8px),48.33% calc(100% - 0.7px),46.67% calc(100% - 3.8px),45.00% calc(100% - 4.0px),43.33% calc(100% - 1.4px),41.67% calc(100% - 1.0px),40.00% calc(100% - 1.8px),38.33% calc(100% - 0.7px),36.67% calc(100% - 4.1px),35.00% calc(100% - 1.4px),33.33% calc(100% - 2.4px),31.67% calc(100% - 2.8px),30.00% calc(100% - 3.1px),28.33% calc(100% - 2.6px),26.67% calc(100% - 3.7px),25.00% calc(100% - 0.5px),23.33% calc(100% - 2.7px),21.67% calc(100% - 4.0px),20.00% calc(100% - 1.4px),18.33% calc(100% - 2.4px),16.67% calc(100% - 0.2px),15.00% calc(100% - 3.4px),13.33% calc(100% - 1.5px),11.67% calc(100% - 1.7px),10.00% calc(100% - 3.5px),8.33% calc(100% - 1.0px),6.67% calc(100% - 3.5px),5.00% calc(100% - 3.9px),3.33% calc(100% - 0.2px),1.67% calc(100% - 0.1px),0.00% calc(100% - 4.6px),0.2px 100.00%,3.6px 98.96%,3.8px 97.92%,0.1px 96.88%,4.3px 95.83%,4.7px 94.79%,1.8px 93.75%,3.8px 92.71%,3.1px 91.67%,2.1px 90.63%,3.5px 89.58%,4.2px 88.54%,3.1px 87.50%,2.9px 86.46%,4.7px 85.42%,2.8px 84.38%,2.9px 83.33%,0.4px 82.29%,0.3px 81.25%,2.7px 80.21%,4.4px 79.17%,4.4px 78.13%,0.8px 77.08%,1.5px 76.04%,1.6px 75.00%,0.4px 73.96%,0.7px 72.92%,2.4px 71.88%,4.4px 70.83%,1.9px 69.79%,4.5px 68.75%,0.2px 67.71%,2.6px 66.67%,3.4px 65.63%,0.1px 64.58%,2.5px 63.54%,0.4px 62.50%,2.0px 61.46%,0.3px 60.42%,1.5px 59.38%,4.2px 58.33%,0.7px 57.29%,2.5px 56.25%,3.3px 55.21%,2.4px 54.17%,2.5px 53.13%,3.9px 52.08%,0.9px 51.04%,3.2px 50.00%,1.6px 48.96%,0.3px 47.92%,0.9px 46.88%,1.0px 45.83%,4.2px 44.79%,0.1px 43.75%,0.7px 42.71%,3.3px 41.67%,3.8px 40.63%,4.4px 39.58%,1.4px 38.54%,2.1px 37.50%,3.8px 36.46%,2.9px 35.42%,0.2px 34.38%,4.9px 33.33%,2.3px 32.29%,4.7px 31.25%,1.0px 30.21%,0.9px 29.17%,1.7px 28.13%,0.9px 27.08%,4.4px 26.04%,0.2px 25.00%,0.6px 23.96%,0.8px 22.92%,1.8px 21.88%,4.7px 20.83%,4.0px 19.79%,3.5px 18.75%,3.9px 17.71%,3.7px 16.67%,1.0px 15.63%,1.7px 14.58%,4.7px 13.54%,2.3px 12.50%,3.5px 11.46%,2.6px 10.42%,4.8px 9.38%,4.0px 8.33%,2.1px 7.29%,1.4px 6.25%,0.0px 5.21%,3.6px 4.17%,4.1px 3.13%,4.0px 2.08%,3.3px 1.04%,4.4px 0.00%);"><div id="hook-it0" class="fell ink abs" style="left:84px;top:52px;font-size:76px;opacity:0"><span style="position:relative;display:inline-block">No<span id="hook-strike0" class="strike"></span></span> lending library.</div>
-      <div id="hook-yr0" class="fell ink abs" style="left:740px;top:66px;width:150px;text-align:right;font-size:58px;opacity:0">1731</div><div id="hook-it1" class="fell ink abs" style="left:84px;top:172px;font-size:76px;opacity:0"><span style="position:relative;display:inline-block">No<span id="hook-strike1" class="strike"></span></span> fire company.</div>
-      <div id="hook-yr1" class="fell ink abs" style="left:740px;top:186px;width:150px;text-align:right;font-size:58px;opacity:0">1736</div><div id="hook-it2" class="fell ink abs" style="left:84px;top:292px;font-size:76px;opacity:0"><span style="position:relative;display:inline-block">No<span id="hook-strike2" class="strike"></span></span> hospital.</div>
-      <div id="hook-yr2" class="fell ink abs" style="left:740px;top:306px;width:150px;text-align:right;font-size:58px;opacity:0">1751</div><div id="hook-it3" class="fell ink abs" style="left:84px;top:412px;font-size:76px;opacity:0"><span style="position:relative;display:inline-block">No<span id="hook-strike3" class="strike"></span></span> college.</div>
-      <div id="hook-yr3" class="fell ink abs" style="left:740px;top:426px;width:150px;text-align:right;font-size:58px;opacity:0">1751</div></div>
-<div id="hook-sig" class="abs" style="left:420px;top:1000px;width:480px;height:140px;clip-path:inset(0 100% 0 0)"><img src="assets/img/signature.png" alt="" style="width:100%;height:100%;object-fit:contain"></div>
+<div id="hook-pros" class="card" style="left:60px;top:510px;width:960px;height:380px;">
+    <div class="abs" style="left:0;top:0;width:960px;height:316px;overflow:hidden"><div id="hook-pros-pic" class="pic" style="width:5801px;height:1597px"><img src="assets/img/prospect.jpg" alt=""></div></div>
+    <div class="cap"><b>FIG. 0.1</b><span>East Prospect of Philadelphia, Scull &amp; Heap, 1754</span></div></div>
+<div id="hook-t0" class="card" style="left:60px;top:918px;width:468px;height:126px;border-radius:20px;opacity:0">
+      <div id="hook-t0-wash" class="abs" style="left:0;top:0;width:468px;height:126px;background:#c8d6ea;opacity:0"></div>
+      <div id="hook-t0-bar" class="bar" style="left:22px;top:22px;width:8px;height:82px;background:#D9D4CA"></div>
+      <div class="sans abs" style="left:52px;top:20px;font-size:38px;font-weight:600">Lending library</div>
+      <div id="hook-t0-none" class="mono abs" style="left:52px;top:76px;font-size:27px">1731: NONE</div>
+      <div id="hook-t0-est" class="mono abs" style="left:52px;top:76px;font-size:27px;color:#4d6d96;font-weight:500;opacity:0">EST. 1731</div></div>
+<div id="hook-t1" class="card" style="left:552px;top:918px;width:468px;height:126px;border-radius:20px;opacity:0">
+      <div id="hook-t1-wash" class="abs" style="left:0;top:0;width:468px;height:126px;background:#f0d5bb;opacity:0"></div>
+      <div id="hook-t1-bar" class="bar" style="left:22px;top:22px;width:8px;height:82px;background:#D9D4CA"></div>
+      <div class="sans abs" style="left:52px;top:20px;font-size:38px;font-weight:600">Fire company</div>
+      <div id="hook-t1-none" class="mono abs" style="left:52px;top:76px;font-size:27px">1731: NONE</div>
+      <div id="hook-t1-est" class="mono abs" style="left:52px;top:76px;font-size:27px;color:#a8603f;font-weight:500;opacity:0">EST. 1736</div></div>
+<div id="hook-t2" class="card" style="left:60px;top:1060px;width:468px;height:126px;border-radius:20px;opacity:0">
+      <div id="hook-t2-wash" class="abs" style="left:0;top:0;width:468px;height:126px;background:#b8ddd8;opacity:0"></div>
+      <div id="hook-t2-bar" class="bar" style="left:22px;top:22px;width:8px;height:82px;background:#D9D4CA"></div>
+      <div class="sans abs" style="left:52px;top:20px;font-size:38px;font-weight:600">Hospital</div>
+      <div id="hook-t2-none" class="mono abs" style="left:52px;top:76px;font-size:27px">1731: NONE</div>
+      <div id="hook-t2-est" class="mono abs" style="left:52px;top:76px;font-size:27px;color:#357f77;font-weight:500;opacity:0">EST. 1751</div></div>
+<div id="hook-t3" class="card" style="left:552px;top:1060px;width:468px;height:126px;border-radius:20px;opacity:0">
+      <div id="hook-t3-wash" class="abs" style="left:0;top:0;width:468px;height:126px;background:#c4ddb8;opacity:0"></div>
+      <div id="hook-t3-bar" class="bar" style="left:22px;top:22px;width:8px;height:82px;background:#D9D4CA"></div>
+      <div class="sans abs" style="left:52px;top:20px;font-size:38px;font-weight:600">College</div>
+      <div id="hook-t3-none" class="mono abs" style="left:52px;top:76px;font-size:27px">1731: NONE</div>
+      <div id="hook-t3-est" class="mono abs" style="left:52px;top:76px;font-size:27px;color:#55804a;font-weight:500;opacity:0">EST. 1751</div></div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo("#hook-pan", {"x":0,"y":0,"scale":0.776}, {"x":-1883.321,"y":0,"scale":0.776,"duration":9.995,"ease":"power1.inOut"}, 0);
-    tl.fromTo("#hook-year", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.12,"ease":"power4.out","stagger":0.1}, 1.36);
-    tl.fromTo("#hook-sheet", {"x":0,"y":2000,"rotation":-5}, {"x":0,"y":0,"rotation":-0.8,"duration":0.85,"ease":"expo.out"}, 3.08);
-    tl.fromTo("#hook-it0", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 3.84);
-    tl.fromTo("#hook-it1", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 5.452);
-    tl.fromTo("#hook-it2", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 6.812);
-    tl.fromTo("#hook-it3", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.1}, 7.812);
-    tl.fromTo("#hook-strike0", {"scaleX":0,"rotation":-5,"opacity":1}, {"scaleX":1,"rotation":-5,"opacity":1,"duration":0.22,"ease":"power2.out"}, 8.795);
-    tl.fromTo("#hook-strike1", {"scaleX":0,"rotation":-5,"opacity":1}, {"scaleX":1,"rotation":-5,"opacity":1,"duration":0.22,"ease":"power2.out"}, 8.935);
-    tl.fromTo("#hook-strike2", {"scaleX":0,"rotation":-5,"opacity":1}, {"scaleX":1,"rotation":-5,"opacity":1,"duration":0.22,"ease":"power2.out"}, 9.075);
-    tl.fromTo("#hook-strike3", {"scaleX":0,"rotation":-5,"opacity":1}, {"scaleX":1,"rotation":-5,"opacity":1,"duration":0.22,"ease":"power2.out"}, 9.215);
-    tl.fromTo("#hook-yr0, #hook-yr1, #hook-yr2, #hook-yr3", {"opacity":0,"scale":1.035,"filter":"blur(3px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.14,"ease":"power4.out","stagger":0.09}, 10.725);
-    tl.fromTo("#hook-sig", {"clipPath":"inset(0 100% 0 0)"}, {"clipPath":"inset(0 0% 0 0)","duration":1.1,"ease":"power1.inOut"}, 12.135);
-    tl.to("#hook-sheet, #hook-sig", {"scale":5,"x":-1200,"y":-2300,"opacity":0,"duration":0.45,"ease":"power3.in"}, 14.915);
+    tl.fromTo("#hook-pros-pic", {"x":0,"y":0,"scale":0.198}, {"x":-187.85,"y":0,"scale":0.198,"duration":15.585,"ease":"power1.inOut"}, 0);
+    tl.fromTo("#hook-t0", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 3.89);
+    tl.fromTo("#hook-t0-wash", {"opacity":0}, {"opacity":0.4,"duration":0.4,"ease":"power2.inOut"}, 9.845);
+    tl.fromTo("#hook-t0-bar", {"backgroundColor":"#D9D4CA"}, {"backgroundColor":"#4d6d96","duration":0.3}, 9.845);
+    tl.to("#hook-t0-none", {"opacity":0,"filter":"blur(6px)","duration":0.15}, 9.845);
+    tl.fromTo("#hook-t0-est", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.2}, 9.945);
+    tl.fromTo("#hook-t1", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 4.885);
+    tl.fromTo("#hook-t1-wash", {"opacity":0}, {"opacity":0.4,"duration":0.4,"ease":"power2.inOut"}, 10.005);
+    tl.fromTo("#hook-t1-bar", {"backgroundColor":"#D9D4CA"}, {"backgroundColor":"#a8603f","duration":0.3}, 10.005);
+    tl.to("#hook-t1-none", {"opacity":0,"filter":"blur(6px)","duration":0.15}, 10.005);
+    tl.fromTo("#hook-t1-est", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.2}, 10.105);
+    tl.fromTo("#hook-t2", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 6.26);
+    tl.fromTo("#hook-t2-wash", {"opacity":0}, {"opacity":0.4,"duration":0.4,"ease":"power2.inOut"}, 10.165);
+    tl.fromTo("#hook-t2-bar", {"backgroundColor":"#D9D4CA"}, {"backgroundColor":"#357f77","duration":0.3}, 10.165);
+    tl.to("#hook-t2-none", {"opacity":0,"filter":"blur(6px)","duration":0.15}, 10.165);
+    tl.fromTo("#hook-t2-est", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.2}, 10.265);
+    tl.fromTo("#hook-t3", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 7.455);
+    tl.fromTo("#hook-t3-wash", {"opacity":0}, {"opacity":0.4,"duration":0.4,"ease":"power2.inOut"}, 10.325);
+    tl.fromTo("#hook-t3-bar", {"backgroundColor":"#D9D4CA"}, {"backgroundColor":"#55804a","duration":0.3}, 10.325);
+    tl.to("#hook-t3-none", {"opacity":0,"filter":"blur(6px)","duration":0.15}, 10.325);
+    tl.fromTo("#hook-t3-est", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.2}, 10.425);
+    tl.to("#hook-pros, #hook-t0, #hook-t1, #hook-t2, #hook-t3", {"opacity":0,"filter":"blur(8px)","duration":0.25,"ease":"power2.in"}, 15.235);
     window.__timelines["hook"] = tl;
   </script>
 </template>

@@ -1,0 +1,11 @@
+{
+ "width": 1000,
+ "height": 760,
+ "accent": "library",
+ "moves": {
+  "lift": {
+   "x": 0,
+   "y": -175.36
+  }
+ }
+}
