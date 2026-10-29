@@ -178,8 +178,12 @@ const WORLD = (() => {
     shared: [at("now1") - 1.2, after("now1") + 0.2],
   };
   // the same order arithmetic as world.js: a part arrives at t0 + (t1 - t0) * order / max
-  const MAXORD = { library: 6 + 49 * 0.02, fire: 5 + 29 * 0.04, hospital: 5.6, academy: 6.1, shared: 5.4 };
-  const arrive = (plot, order) => { const [a, b] = plotBuild[plot]; return a + (b - a) * order / MAXORD[plot]; };
+  // each plinth lands as the opening names its plot
+  const plinths = { library: at("hook1", "library"), fire: at("hook1", "fire"), hospital: at("hook1", "hospital"), academy: at("hook1", "college") };
+  // the same arithmetic as world.js: a part arrives at t0 + (t1 - t0) * (order - lo) / (hi - lo),
+  // over the parts each design builds after its plinth (the shared plot builds its plinth too)
+  const ORDERS = { library: [1, 6 + 49 * 0.02], fire: [1, 5 + 29 * 0.04], hospital: [1, 5.8], academy: [1, 6.4], shared: [0, 5.4] };
+  const arrive = (plot, order) => { const [a, b] = plotBuild[plot], [lo, hi] = ORDERS[plot]; return a + (b - a) * (order - lo) / (hi - lo); };
   const d0 = at("hosp2", "private"), d1 = Math.max(after("hosp2"), at("hosp3", "target"));
   const events = {
     libCoins: [at("lib2", "fifty"), after("lib2", "each")],
@@ -211,8 +215,8 @@ const WORLD = (() => {
   const tAll = at("hook2", "all");
   const labels = [
     ...NAMES.flatMap(([plot, name, id, w, year]) => [
-      { text: name, anchor: `${plot}.slab`, t0: at(id, w) - 0.1, t1: tAll },
-      { text: `${name} · ${year}`, anchor: `${plot}.slab`, t0: tAll, t1: start("who") - 0.4 },
+      { text: name, anchor: `${plot}.plinth`, t0: at(id, w) + 0.3, t1: tAll },
+      { text: `${name} · ${year}`, anchor: `${plot}.plinth`, t0: tAll, t1: start("who") - 0.4 },
     ]),
     { text: "rules", anchor: "library.rules", t0: arrive("library", 1) + 0.3, t1: at("lib2", "fifty") - 0.2 },
     { text: "members", anchor: "library.members", t0: arrive("library", 2) + 0.3, t1: at("lib2", "fifty") - 0.2 },
@@ -232,7 +236,7 @@ const WORLD = (() => {
     ["library", "#D3DEEC", after("lib1") - 0.4], ["fire", "#F0DAC8", after("fire1") - 0.4], ["hospital", "#CFE4E0", after("hosp1") - 0.4],
     ["academy", "#D9E7CF", at("acad1") - 1.2], ["neutral", "#E6E1D8", at("turn1") - 0.9], ["mulvium", "#ECD6E0", at("now1") - 1.4],
   ];
-  return { ghosts: tAll, build: plotBuild, events, cam, labels, veils, tints };
+  return { plinths, build: plotBuild, events, cam, labels, veils, tints };
 })();
 {
   const s = new Scene("world", 0, start("end") + 0.6, 0);

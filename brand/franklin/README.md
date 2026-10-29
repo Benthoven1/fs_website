@@ -25,9 +25,11 @@ paintings, engravings and documents of his city come up over it on cards
   `assets/narration.wav` and transcribes every word's time into `timing.json`.
 - `denoise.py` — clears the hiss the designed voice carries (DeepFilterNet3,
   at most 28 dB of reduction, so soft consonants survive).
-- `figures/*.mjs` — the designs, drawn with the Anatomy kit: `node
-  figures/fire.mjs` (and `academy`) writes `assets/fig/<name>.svg` and its
-  parts list, `<name>.parts.json`, which the 3D world builds part for part.
+- `figures/*.mjs` — the five plots, drawn with the Anatomy kit to its craft
+  rules (`parts.mjs` holds the pieces they share): `node figures/library.mjs`
+  (and `fire`, `hospital`, `academy`, `shared`) writes `assets/fig/<plot>.svg`
+  and its parts list, `<plot>.parts.json`, which the 3D world builds part for
+  part.
 - `assets/lib/world.js` — the designs in 3D on a plain backdrop, and a frame
   for any time t; `build.mjs` writes its schedule (builds, moves, camera,
   labels, backdrop tints).
@@ -52,6 +54,7 @@ python3 narrate.py speak <cache-dir>
 python3 denoise.py <dfn3-weights> <cache-dir> <clean-dir>
 python3 narrate.py build <clean-dir>          # needs faster-whisper
 python3 prep.py <download-dir>                # the pictures, as named in CREDITS.md
+for f in library fire hospital academy shared; do node figures/$f.mjs; done
 node build.mjs
 python3 mix.py <prelude.ogg>
 npx hyperframes check && npx hyperframes snapshot --review

@@ -65,36 +65,100 @@ body{margin:0;background:#eceae5}.fig{width:${width}px;margin:0 auto;background:
 export const build = (n, svg) => `<g data-build="${Math.round(n * 1000) / 1000}">${svg}</g>`;
 export const LIFT = 70;
 
-// A design recorder: each solid drawn with the kit is also written down, with
+// A design recorder. Each solid drawn with the kit is also written down, with
 // its material, so the film's 3D world builds the same design part for part
-// (assets/fig/<name>.parts.json). Plan coordinates are the world's: x along,
-// y toward the viewer, z up; a part is one group that arrives in build order.
+// (assets/fig/<name>.parts.json). Coordinates are the kit's world: x along,
+// y toward the viewer, z up. A part is one group that arrives in build order;
+// a part with an `event` is placed by the film instead (coins that flow,
+// books that arrive with the fund, the new project that is set in).
+//
+// Kinds: box (a rounded slab, optionally rotated about one axis), cyl (an
+// upright cylinder or frustum), rod (a cylinder along x or y), torus, prism
+// (a convex polygon in x-z extruded along y), dots (screw and rivet heads),
+// line (a polyline: seams, grooves, rules), ring, ticks, knurl, doc (an
+// archive document laid on a face).
+const DARK = new Set(["iron", "walnut", "leather", "slate", "ink"]);
 export function recorder(P) {
   const parts = [];
   let cur = null;
-  const TONE = { lit: "hi" };
-  const r = {
+  const tone = (mat) => (mat.startsWith("acc") ? "hi" : DARK.has(mat) ? "lo" : mat.startsWith("stone") ? "mid" : "hi");
+  const lit = (mat) => mat.startsWith("acc");
+  const push = (s) => { cur.solids.push(Object.fromEntries(Object.entries(s).map(([a, v]) => [a, typeof v === "number" ? Math.round(v * 1000) / 1000 : v]))); };
+  const pts = (a) => k.pointsAt(a, P);
+  const R = {
     parts,
-    part(name, { build: n, from = "up" }, draw) {
-      cur = { name, build: n, from, solids: [] };
+    part(name, { build: n = 0, from = "up", event, dist } = {}, draw) {
+      cur = { name, build: n, from, event, dist, solids: [] };
       const svg = draw();
       parts.push(cur); cur = null;
       return build(n, `<g data-part="${name}">${svg}</g>`, from);
     },
-    box(plan, z, h, material, style = {}) {
-      cur.solids.push({ kind: "box", x: plan.x, y: plan.y, w: plan.w, d: plan.d, z, h, material });
-      return k.solidSvg(k.slabOf({ r: 1, ...plan }, z, h, P, 4, 0.5), { tone: TONE[material] || "hi", lit: material.startsWith("lit"), ...style });
+    box(plan, z, h, mat, { bevel = 0.5, rot, r } = {}) {
+      push({ kind: "box", x: plan.x, y: plan.y, w: plan.w, d: plan.d, z, h, r: r ?? plan.r ?? 0.8, bevel, mat, ...(rot ? { rot } : {}) });
+      return k.solidSvg(k.slabOf({ r: 0.8, ...plan }, z, h, P, 3, Math.min(bevel, h / 3)), { tone: tone(mat), lit: lit(mat) });
     },
-    cyl(cx, cy, rad, z, h, material, style = {}) {
-      cur.solids.push({ kind: "cyl", x: cx, y: cy, r: rad, z, h, material });
-      return k.solidSvg(k.cylinder(cx, cy, rad, z, h, P, 28), { tone: "hi", lit: material.startsWith("lit"), ...style });
+    cyl(x, y, r, z, h, mat, { r2, seg = 32 } = {}) {
+      push({ kind: "cyl", x, y, r, r2: r2 ?? r, z, h, seg, mat });
+      return k.solidSvg(k.cylinder(x, y, Math.max(r, r2 ?? r), z, h, P, seg), { tone: tone(mat), lit: lit(mat) });
+    },
+    rod([x, y, z], axis, len, r, mat, { seg = 16 } = {}) {
+      push({ kind: "rod", x, y, z, axis, len, r, seg, mat });
+      const plan = axis === "x" ? { x, y: y - r, w: len, d: 2 * r, r: r * 0.9 } : { x: x - r, y, w: 2 * r, d: len, r: r * 0.9 };
+      return k.solidSvg(k.slabOf(plan, z - r, 2 * r, P, 3), { tone: tone(mat), lit: lit(mat) });
+    },
+    torus(x, y, z, radius, tube, mat, { arc = Math.PI * 2, axis = "y" } = {}) {
+      push({ kind: "torus", x, y, z, R: radius, t: tube, arc, axis, mat });
+      return "";
+    },
+    prism(polygon, y0, y1, mat) {
+      push({ kind: "prism", polygon, y0, y1, mat });
+      const xs = polygon.map((p) => p[0]), zs = polygon.map((p) => p[1]);
+      return k.solidSvg(k.slabOf({ x: Math.min(...xs), y: y0, w: Math.max(...xs) - Math.min(...xs), d: y1 - y0, r: 0.5 }, Math.min(...zs), Math.max(...zs) - Math.min(...zs), P, 3), { tone: tone(mat), lit: lit(mat) });
+    },
+    dots(points, mat = "iron", { size = 0.7, normal = "z" } = {}) {
+      push({ kind: "dots", pts: points, size, normal, mat });
+      return k.dotsSvg(pts(points), { size: 0.45 });
+    },
+    line(points, tone = "lo", { closed = false } = {}) {
+      push({ kind: "line", pts: points, tone, closed });
+      return k.lineSvg(k.pathOf(pts(points), closed), { tone, free: true });
+    },
+    ring(x, y, z, r, tone = "lo") {
+      push({ kind: "ring", x, y, z, r, tone });
+      return k.lineSvg(k.ring(x, y, r, z, P, 32), { tone });
+    },
+    // a rounded-rectangle groove on a top face
+    groove(plan, z, tone = "faint") {
+      const { x, y, w, d } = plan;
+      return R.line([[x, y, z], [x + w, y, z], [x + w, y + d, z], [x, y + d, z]], tone, { closed: true });
+    },
+    // ruler ticks along x, hanging from a strip's edge (edge = the strip's y)
+    ticks(x0, x1, step, every, edge, z, [short, long], { axis = "x" } = {}) {
+      const segs = [];
+      for (let i = Math.ceil(x0 / step), at = i * step; at <= x1 + 1e-9; i++, at = i * step) {
+        const L = i % every === 0 ? long : short;
+        segs.push(axis === "x" ? [[at, edge, z], [at, edge + L, z]] : [[edge, at, z], [edge + L, at, z]]);
+      }
+      push({ kind: "ticks", segs, tone: "lo" });
+      return segs.map(([a, b]) => k.lineSvg(k.segment(a, b, P), { tone: "lo" })).join("");
+    },
+    knurl(x, y, r, z0, z1, count, tone = "lo") {
+      push({ kind: "knurl", x, y, r, z0, z1, count, tone });
+      return k.lineSvg(k.knurl(x, y, r, z0, z1, count, P), { tone });
+    },
+    // a document laid flat at (x, y, z), turned with its desk (rot, as for a box)
+    doc(name, { x, y, z, w, d, rot }) {
+      push({ kind: "doc", name, x, y, z, w, d, ...(rot ? { rot } : {}) });
+      return "";
     },
   };
-  return r;
+  return R;
 }
 export function writeParts(name, parts) {
   mkdirSync(OUT, { recursive: true });
-  writeFileSync(join(OUT, `${name}.parts.json`), JSON.stringify(parts.map((p) => ({ ...p, solids: p.solids.map((s) => Object.fromEntries(Object.entries(s).map(([a, v]) => [a, typeof v === "number" ? Math.round(v * 100) / 100 : v]))) }))));
+  writeFileSync(join(OUT, `${name}.parts.json`), JSON.stringify(parts));
+  const n = parts.reduce((a, p) => a + p.solids.filter((s) => !["line", "ring", "ticks", "knurl"].includes(s.kind)).length, 0);
+  console.log(`${name}: ${parts.length} parts, ${n} solids`);
 }
 
 export const screen = (P, by) => {

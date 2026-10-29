@@ -1,155 +1,95 @@
-// library.mjs — Fig. 2, the subscription library as a machine. Fifty coin
-// stacks on a tray (the subscribers, 40 shillings each) run down one rail
-// into a hopper on a strongbox (the pooled fund, £100), and the fund fills a
-// bookcase (the collection). One tray, one box, one case: many small
-// payments, one shared library.
-import { k, writeFigure, screen, build, LIFT } from "./common.mjs";
+// library.mjs — the Library Company's plot. Its foundation (with a hopper on
+// the strongbox: the common fund's mouth), a walnut bookcase with panelled
+// sides, lipped shelves and a dentilled cornice, the collection in its
+// bindings, and a felt-lined tray of fifty subscriptions, four milled coins to
+// a stack. The coins and the books are placed by the film (events): the coins
+// ride into the hopper, the books arrive shelf by shelf once the fund exists.
+import { k, writeFigure, writeParts, recorder } from "./common.mjs";
+import { plinth, foundation } from "./parts.mjs";
 
 const W = 1000, H = 760;
-const PLATE = { x: -92, y: -204, w: 184, d: 408, r: 8 };
-const PLATE_H = 12, FOOT_H = 5;
-const TRAY = { x: -72, y: 58, w: 144, d: 132, r: 4 };
-const TRAY_H = 5;
-const COLS = 5, ROWS = 10, GAP_X = 26, GAP_Y = 12.4, COIN_R = 4.2, COIN_H = 1.4, PER_STACK = 4;
-const BOX = { x: -36, y: -44, w: 72, d: 70, r: 3 };
-const BOX_H = 48;
-const HOPPER = [0, -9];
-const CASE = { x: -40, y: -190, w: 44, d: 124, r: 2 };
-const CASE_H = 112;
-const SHELVES = [0, 36, 72];
+const P = k.fitProjection(k.boxCorners({ x: -115, y: -110, w: 230, d: 220 }, -19, 110), W, H, { pad: 40, azimuth: 45 });
+const R = recorder(P);
+const body = [plinth(R), foundation(R, { doc: "almanac", hopper: true })];
 
-const P = k.fitProjection(
-  [...k.boxCorners(PLATE, -PLATE_H - FOOT_H, 0), [CASE.x, CASE.y, CASE_H + 4], [CASE.x + CASE.w, CASE.y + CASE.d, CASE_H + 4], [HOPPER[0], HOPPER[1], BOX_H + 30]],
-  W, H, { pad: 40, azimuth: 52 },
-);
-const at = (p) => k.iso(p, P);
-const S = (paths, style) => k.solidSvg(paths, style);
-const L = (d, style) => k.lineSvg(d, style);
-const D = (pts, style) => k.dotsSvg(pts, style);
-const byDepth = (pts) => [...pts].sort((a, b) => k.depthOf([a[0], a[1], 0], P) - k.depthOf([b[0], b[1], 0], P));
-
-function plate() {
-  const out = [`<path class="iso-halo" d="${k.haloOf(PLATE, -PLATE_H - FOOT_H, PLATE_H, P)}"/>`];
-  for (const [x, y] of byDepth(k.corners(PLATE, 24))) {
-    out.push(S(k.cylinder(x, y, 7, -PLATE_H - FOOT_H, 1.6, P, 28), { tone: "lo" }));
-    out.push(S(k.cylinder(x, y, 5.4, -PLATE_H - FOOT_H + 1.6, FOOT_H - 1.6, P, 28), { tone: "mid" }));
+// the bookcase, open to the front (+y)
+const BX = -60, BY = 40, CW = 74, CH = 92, CD = 26, Z = 5;
+body.push(R.part("case", { build: 4, from: "back" }, () => {
+  let o = "";
+  o += R.box({ x: BX - CW / 2 - 1.5, y: BY - CD / 2 - 1.5, w: CW + 3, d: CD + 3, r: 0.8 }, 0, Z, "walnut", { bevel: 0.6 });
+  o += R.line([[BX - CW / 2, BY + CD / 2 + 1.5, Z * 0.5], [BX + CW / 2, BY + CD / 2 + 1.5, Z * 0.5]], "faint");
+  for (const sx of [-1, 1]) {
+    const x0 = sx < 0 ? BX - CW / 2 : BX + CW / 2 - 4;
+    o += R.box({ x: x0, y: BY - CD / 2, w: 4, d: CD, r: 0.5 }, Z, CH, "walnut", { bevel: 0.4 });
   }
-  out.push(S(k.slabOf(PLATE, -PLATE_H, PLATE_H, P, 8, 1.6), { tone: "mid" }));
-  out.push(L(k.planOutline(k.insetPlan(PLATE, 5), 0, P), { tone: "lo" }));
-  const screws = k.corners(PLATE, 10);
-  out.push(L(screws.map(([x, y]) => k.ring(x, y, 2.2, 0, P, 16)).join(""), { tone: "lo" }));
-  out.push(D(screws.map(([x, y]) => at([x, y, 0])), { size: 0.5 }));
-  // a ruled strip along the front (+x) edge, and a label plate
-  const strip = { x: PLATE.x + PLATE.w - 14, y: -146, w: 7, d: 330, r: 1 };
-  out.push(S(k.slabOf(strip, 0, 0.6, P, 3), { tone: "lo", crease: "none" }));
-  const ticks = k.topTicks(strip.y + 4, strip.y + strip.d - 4, 5, 5, strip.x + 0.8, 0.6, [2, 3.6], P, "y");
-  out.push(L(ticks.minor, { tone: "lo" }), L(ticks.major, { tone: "mid" }));
-  const label = { x: PLATE.x + PLATE.w - 18, y: -196, w: 11, d: 40, r: 1.2 };
-  out.push(S(k.slabOf(label, 0, 0.8, P, 3), { tone: "mid", crease: "none" }));
-  out.push(k.faceTextSvg(k.topMatrix([label.x + label.w / 2 + 1.1, label.y + label.d / 2], 0.8, P, "y"), "LIBRARY CO. 1731", { size: 3.1, tone: "mid", anchor: "middle" }));
-  return out.join("");
-}
+  // a raised panel on the visible end
+  o += R.box({ x: BX + CW / 2, y: BY - CD / 2 + 3.5, w: 0.9, d: CD - 7, r: 0.3 }, Z + 7, CH - 14, "walnutLight", { bevel: 0.3 });
+  o += R.box({ x: BX - CW / 2 + 4, y: BY - CD / 2, w: CW - 8, d: 2.5, r: 0.3 }, Z, CH, "walnutLight", { bevel: 0.2 });
+  for (const z of [0, 30, 60]) {
+    o += R.box({ x: BX - CW / 2 + 4, y: BY - CD / 2 + 2.5, w: CW - 8, d: CD - 2.5, r: 0.3 }, Z + z, 3, "walnut", { bevel: 0.3 });
+    o += R.box({ x: BX - CW / 2 + 4, y: BY + CD / 2 - 1.4, w: CW - 8, d: 1.6, r: 0.3 }, Z + z - 1, 4.2, "walnutLight", { bevel: 0.3 });
+    for (const sx of [-1, 1]) o += R.dots([[BX + sx * (CW / 2 - 4), BY + CD / 2 - 4, Z + z + 3.1]], "brass", { size: 0.45 });
+  }
+  // the cornice: a two-tier moulding over a row of dentils
+  for (let i = 0; i < 12; i++) o += R.box({ x: BX - CW / 2 + 2 + i * 6.1, y: BY + CD / 2, w: 3, d: 1.4, r: 0.2 }, Z + CH - 3.2, 2.6, "walnutLight", { bevel: 0.2 });
+  o += R.box({ x: BX - CW / 2 - 2, y: BY - CD / 2 - 2, w: CW + 4, d: CD + 4, r: 0.6 }, Z + CH, 3, "walnut", { bevel: 0.6 });
+  o += R.box({ x: BX - CW / 2 - 3.6, y: BY - CD / 2 - 3.6, w: CW + 7.2, d: CD + 7.2, r: 0.8 }, Z + CH + 3, 2.6, "walnutLight", { bevel: 0.8 });
+  o += R.box({ x: BX - 8, y: BY + CD / 2 + 1.6, w: 16, d: 0.6, r: 0.3 }, Z + CH - 9, 4.4, "brass", { bevel: 0.2 });
+  o += R.dots([[BX - 6.6, BY + CD / 2 + 2.2, Z + CH - 6.8], [BX + 6.6, BY + CD / 2 + 2.2, Z + CH - 6.8]], "iron", { size: 0.4, normal: "y" });
+  return o;
+}));
 
-// The tray of subscriptions: fifty stacks of four coins
-const stacks = [];
-for (let c = 0; c < COLS; c++) for (let r = 0; r < ROWS; r++)
-  stacks.push([TRAY.x + 20 + c * GAP_X, TRAY.y + 10 + r * GAP_Y]);
-function tray() {
-  const out = [S(k.slabOf(TRAY, 0, TRAY_H, P, 6, 0.8), { tone: "mid" })];
-  out.push(L(k.planOutline(k.insetPlan(TRAY, 3), TRAY_H, P), { tone: "faint" }));
-  // the rail the coins leave by, from the tray's front edge to the hopper
-  return out.join("");
-}
-function stackSvg([x, y], i) {
-  const parts = [];
-  for (let n = 0; n < PER_STACK; n++)
-    parts.push(S(k.cylinder(x, y, COIN_R, TRAY_H + n * COIN_H, COIN_H - 0.15, P, 24), { tone: "mid", crease: "none" }));
-  parts.push(L(k.ring(x, y, COIN_R - 1.4, TRAY_H + PER_STACK * COIN_H - 0.15, P, 20), { tone: "faint" }));
-  return build(3 + i * 0.03, `<g data-part="coin${i}">${parts.join("")}</g>`);
-}
-
-function rail() {
-  const out = [];
-  const r = { x: -5, y: BOX.y + BOX.d, w: 10, d: TRAY.y - BOX.y - BOX.d + 2, r: 1 };
-  out.push(S(k.slabOf(r, 0, 3, P, 3, 0.4), { tone: "mid" }));
-  out.push(L(k.lineOnTop([0, r.y + 3], [0, r.y + r.d - 3], 3, P), { tone: "faint" }));
-  out.push(D([at([0, r.y + 4, 3]), at([0, r.y + r.d - 4, 3])], { size: 0.45 }));
-  return out.join("");
-}
-
-function strongbox() {
-  const out = [];
-  out.push(`<path class="iso-halo" d="${k.haloOf(BOX, 0, 1, P)}" style="filter:blur(5px)"/>`);
-  out.push(S(k.slabOf(BOX, 0, BOX_H - 8, P, 5, 0.8), { tone: "hi" }));
-  out.push(L(k.sideSeam(BOX, 12, P), { tone: "faint" }));
-  // the lid, a little proud of the body
-  const lid = { x: BOX.x - 2, y: BOX.y - 2, w: BOX.w + 4, d: BOX.d + 4, r: 4 };
-  out.push(S(k.slabOf(lid, BOX_H - 8, 8, P, 5, 1), { tone: "hi" }));
-  out.push(L(k.planOutline(k.insetPlan(lid, 4), BOX_H, P), { tone: "faint" }));
-  // hasp and keyhole on the front (+x) face
-  const fx = BOX.x + BOX.w;
-  out.push(S(k.slabOf({ x: fx, y: -5, w: 1.6, d: 10, r: 0.6 }, BOX_H - 18, 14, P, 2), { tone: "hi" }));
-  out.push(D([at([fx + 1.6, 0, BOX_H - 12])], { size: 0.9, tone: "hi" }));
-  // corner straps
-  for (const y of [BOX.y + 6, BOX.y + BOX.d - 6])
-    out.push(L(k.segment([fx, y, 2], [fx, y, BOX_H - 9], P), { tone: "lo" }));
-  // the hopper on the lid: a wide collar over a neck
-  const body = out.splice(0).join("");
-  const [hx, hy] = HOPPER;
-  out.push(S(k.cylinder(hx, hy, 9, BOX_H, 6, P, 36, 0.6), { tone: "hi" }));
-  out.push(S(k.cylinder(hx, hy, 22, BOX_H + 6, 10, P, 48, 0.8), { tone: "hi" }));
-  out.push(L(k.ring(hx, hy, 18.5, BOX_H + 16, P, 48), { tone: "lo" }));
-  out.push(L(k.ring(hx, hy, 9, BOX_H + 16, P, 32), { tone: "mid" }));
-  out.push(D(byDepth(Array.from({ length: 8 }, (_, i) => [hx + Math.cos(i * Math.PI / 4) * 20.2, hy + Math.sin(i * Math.PI / 4) * 20.2])).map(([x, y]) => at([x, y, BOX_H + 16])), { size: 0.45 }));
-  return build(1.6, body) + build(2.1, out.join(""));
-}
-
-// The bookcase: two sides, a back, three shelves and a cornice
-const books = [];
-SHELVES.forEach((z, s) => {
-  let y = CASE.y + 6;
-  let n = 0;
-  while (y < CASE.y + CASE.d - 10) {
-    const d = 4 + ((s * 7 + n * 3) % 4) * 1.2, h = 22 + ((s * 5 + n * 7) % 5) * 2.2;
-    books.push({ plan: { x: CASE.x + 6, y, w: CASE.w - 12, d, r: 0.6 }, z: z + 6, h, shelf: s });
-    y += d + 0.6;
-    n++;
+// the collection: blue for the Library Company, with calf, morocco and cloth among it
+const BIND = ["acc", "acc", "bindBlue2", "bindNavy", "bindCalf", "bindOx", "bindGreen"];
+const hash = (n) => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+let nb = 0;
+[0, 30, 60].forEach((z, s) => {
+  let x = BX - CW / 2 + 5.5;
+  for (let n = 0; x < BX + CW / 2 - 9; n++) {
+    const bw = 3.8 + hash(s * 17 + n) * 2.4, bh = 18 + hash(s * 31 + n * 3) * 7, bd = 17 + hash(n * 5 + s) * 3;
+    const mat = BIND[Math.floor(hash(s * 7 + n * 5) * BIND.length)];
+    const fy = BY + CD / 2 - 2.4;
+    body.push(R.part(`book${nb++}`, { build: 0, event: "books" }, () =>
+      R.box({ x, y: fy - bd, w: bw, d: bd, r: 0.4 }, Z + z + 3, bh, mat, { bevel: 0.3 }) +
+      R.box({ x: x - 0.05, y: fy - 0.05, w: bw + 0.1, d: 0.3, r: 0.1 }, Z + z + 3 + bh * 0.16, 0.9, "gilt", { bevel: 0.05 }) +
+      R.box({ x: x - 0.05, y: fy - 0.05, w: bw + 0.1, d: 0.3, r: 0.1 }, Z + z + 3 + bh * 0.8, 0.9, "gilt", { bevel: 0.05 }) +
+      R.box({ x: x + bw * 0.18, y: fy, w: bw * 0.64, d: 0.2, r: 0.1 }, Z + z + 3 + bh * 0.56, bh * 0.14, "bindLabel", { bevel: 0.05 })));
+    x += bw + 0.5;
   }
 });
-function bookcase() {
-  const out = [];
-  out.push(`<path class="iso-halo" d="${k.haloOf(CASE, 0, 1, P)}" style="filter:blur(5px)"/>`);
-  out.push(S(k.slabOf({ x: CASE.x, y: CASE.y, w: 5, d: CASE.d, r: 1 }, 0, CASE_H, P, 3, 0.5), { tone: "mid" }));
-  out.push(S(k.slabOf({ x: CASE.x, y: CASE.y, w: CASE.w, d: 5, r: 1 }, 0, CASE_H, P, 3, 0.5), { tone: "mid" }));
-  SHELVES.forEach((z, s) => {
-    out.push(S(k.slabOf({ x: CASE.x, y: CASE.y, w: CASE.w, d: CASE.d, r: 1 }, z, 6, P, 3, 0.5), { tone: "mid" }));
-    out.push(L(k.lineOnTop([CASE.x + 2, CASE.y + 3], [CASE.x + 2, CASE.y + CASE.d - 3], z + 6, P), { tone: "faint" }));
-    const row = books.filter((b) => b.shelf === s).map((b, i) => `<g data-part="book${s}-${i}">${S(k.slabOf(b.plan, b.z, b.h, P, 3, 0.4), { tone: "hi", lit: true, crease: "lo" })}</g>`);
-    out.push(`<g data-part="shelf${s}">${row.join("")}</g>`);
-  });
-  out.push(S(k.slabOf({ x: CASE.x, y: CASE.y, w: CASE.w, d: CASE.d, r: 1 }, CASE_H - 6, 6, P, 3, 0.5), { tone: "mid" }));
-  out.push(S(k.slabOf({ x: CASE.x - 2, y: CASE.y - 2, w: CASE.w + 4, d: CASE.d + 4, r: 1.6 }, CASE_H, 4, P, 3, 0.6), { tone: "mid" }));
-  out.push(S(k.slabOf({ x: CASE.x, y: CASE.y + CASE.d - 5, w: CASE.w, d: 5, r: 1 }, 0, CASE_H - 6, P, 3, 0.5), { tone: "mid" }));
-  out.push(D([at([CASE.x + CASE.w, CASE.y + CASE.d - 2.5, 20]), at([CASE.x + CASE.w, CASE.y + CASE.d - 2.5, 90])], { size: 0.45 }));
-  return out.join("");
+
+// the tray of subscriptions
+const TX = 48, TY = 44, TW = 116, TD = 78;
+body.push(R.part("tray", { build: 5, from: "front" }, () => {
+  let o = "";
+  o += R.box({ x: TX - TW / 2, y: TY - TD / 2, w: TW, d: TD, r: 2 }, 0, 3, "walnut", { bevel: 0.8 });
+  o += R.box({ x: TX - TW / 2 + 3, y: TY - TD / 2 + 3, w: TW - 6, d: TD - 6, r: 1 }, 3, 0.6, "felt", { bevel: 0.1 });
+  for (const [x, y, w, d] of [[TX - TW / 2, TY - TD / 2, TW, 3], [TX - TW / 2, TY + TD / 2 - 3, TW, 3], [TX - TW / 2, TY - TD / 2 + 3, 3, TD - 6], [TX + TW / 2 - 3, TY - TD / 2 + 3, 3, TD - 6]])
+    o += R.box({ x, y, w, d, r: 0.5 }, 3, 4, "oak", { bevel: 0.4 });
+  for (let c = 1; c < 10; c++) o += R.line([[TX - 50 + c * 10, TY - TD / 2 + 3, 3.62], [TX - 50 + c * 10, TY + TD / 2 - 3, 3.62]], "faint");
+  for (let r = 1; r < 5; r++) o += R.line([[TX - TW / 2 + 3, TY - 32.5 + r * 13, 3.62], [TX + TW / 2 - 3, TY - 32.5 + r * 13, 3.62]], "faint");
+  // handles at both ends, and a plate on the front rim
+  for (const sx of [-1, 1]) {
+    const xe = TX + sx * (TW / 2);
+    for (const dy of [-10, 10]) o += R.box({ x: xe + (sx > 0 ? 0 : -2.2), y: TY + dy - 1, w: 2.2, d: 2, r: 0.4 }, 3, 2.4, "brass", { bevel: 0.2 });
+    o += R.rod([xe + sx * 2.2 - (sx > 0 ? 0 : 0), TY - 11, 4.2], "y", 22, 0.7, "brass", { seg: 12 });
+  }
+  o += R.box({ x: TX - 14, y: TY + TD / 2, w: 28, d: 0.6, r: 0.3 }, 3.6, 3, "brass", { bevel: 0.15 });
+  o += R.line([[TX - 10, TY + TD / 2 + 0.62, 5.1], [TX + 10, TY + TD / 2 + 0.62, 5.1]], "mid");
+  return o;
+}));
+// fifty stacks of four coins, each coin milled on its edge
+for (let c = 0; c < 10; c++) for (let r = 0; r < 5; r++) {
+  const x = TX - 45 + c * 10, y = TY - 26 + r * 13, i = c * 5 + r;
+  body.push(R.part(`stack${i}`, { build: 6 + i * 0.02, event: "coins", dist: 220 }, () => {
+    let o = "";
+    for (let n = 0; n < 4; n++) {
+      o += R.cyl(x, y, 4.3, 3.6 + n * 1.5, 1.35, "brass", { seg: 24 });
+      o += R.knurl(x, y, 4.3, 3.6 + n * 1.5, 3.6 + n * 1.5 + 1.35, 28, "faint");
+    }
+    return o + R.ring(x, y, 3.6 + 6 - 0.13, 3, "lo");
+  }));
 }
 
-// Painter's order, back (-y) to front (+y): the case, the box and its
-// hopper, the rail, then the tray and its stacks, each back to front
-const order = stacks.map((p, i) => ({ p, i })).sort((a, b) => k.depthOf([...a.p, 0], P) - k.depthOf([...b.p, 0], P));
-const body = [build(0, plate()), build(1, bookcase()), strongbox(), build(2.4, rail()), build(2.7, tray()), ...order.map(({ p, i }) => stackSvg(p, i))];
-
-// Moves: each stack rides to the hopper's mouth and drops in; each shelf of
-// books slides in from behind the case
-const moves = {
-  coins: stacks.map(([x, y]) => screen(P, [HOPPER[0] - x, HOPPER[1] - y, BOX_H + 18 - TRAY_H])),
-  coinsDrop: screen(P, [0, 0, -14]),
-  shelfIn: screen(P, [-34, 0, 0]),
-  lift: screen(P, [0, 0, LIFT]),
-};
-
-writeFigure("library", {
-  width: W, height: H, accent: "library",
-  label: "Fifty stacks of coins on a tray run down a rail into the hopper of a strongbox, and the box fills a bookcase: fifty subscriptions pooled into one library.",
-  body, moves,
-});
+writeFigure("library", { width: W, height: H, accent: "library", label: "The Library Company's plot: its foundation, a bookcase, and a tray of fifty subscriptions.", body });
+writeParts("library", R.parts);

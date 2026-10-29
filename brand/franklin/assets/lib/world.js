@@ -1,67 +1,121 @@
-// world.js — the film's 3D figures: the isometric designs (made with the
-// Anatomy kit, github.com/wheresryan22/anatomy) built in three dimensions on a
-// plain backdrop. Four plots, one per institution, each standing on its
-// foundation (rules, members, money) and carrying its own work; a fifth with
-// one foundation shared. Every frame is a pure function of the film's time t
-// (HyperFrames seeks frames out of order): parts arrive on a schedule that
-// build.mjs writes from the narration's word timings. Nothing is drawn here but
-// the figures and their shadows: the backdrop is the page behind the canvas.
+// world.js — the film's 3D figures. Every solid comes from a design drawn with
+// the Anatomy kit (github.com/wheresryan22/anatomy; figures/*.mjs), whose
+// recorder wrote it down part for part (assets/fig/<plot>.parts.json): this
+// file only turns those records into geometry, lights them, and moves them on
+// the film's schedule. Nothing else is modelled; the backdrop is the page
+// behind the transparent canvas.
 //
-// Units are centimetres of a table model; y is up; the camera looks from the
-// front right (+x, +z).
+// Every frame is a pure function of the film's time t (HyperFrames seeks
+// frames out of order). Each part arrives along one direction at its time;
+// some parts are placed by events instead: the library's coins ride into the
+// hopper, its books arrive shelf by shelf, the donors' coins stack up, the
+// Assembly's coins drop, the new project is set into its bay.
+//
+// Design coordinates are the kit's: x along, y toward the viewer, z up. Here
+// they become three.js (x, z + LIFT, y), plot by plot.
 import * as THREE from "./three/three.module.min.js";
 import { RoundedBoxGeometry } from "./three/RoundedBoxGeometry.js";
+import { mergeGeometries } from "./three/BufferGeometryUtils.js";
 
-const COL = {
-  stone: "#E8E3D9", stoneDark: "#CFC7B8", walnut: "#7A5640", oak: "#B68C63", iron: "#45423F",
-  brass: "#D2AE66", pewter: "#B9BFC3", leather: "#86523A", leatherRed: "#9C4B35", brick: "#B2664B",
-  ghost: "#7E7468",
+export const PLOTS = { library: [-170, -160], fire: [170, -160], hospital: [-170, 160], academy: [170, 160], shared: [700, 0] };
+const LIFT = 19; // the plinth's slab and feet: the design's z = 0 is the slab top
+const ACCENT = { library: "#4D6D96", fire: "#A8603F", hospital: "#357F77", academy: "#55804A", mulvium: "#9A5571" };
+const MAT = {
+  stone: ["#E9E4DA", 0.8], stoneDark: ["#CFC7B8", 0.8], porcelain: ["#F6F3EE", 0.55], trim: ["#F4F0E8", 0.6],
+  iron: ["#4A4744", 0.5, 0.2], brass: ["#D0AB62", 0.35, 0.25], pewter: ["#B9BFC3", 0.35, 0.25], gilt: ["#D8B66A", 0.4, 0.2],
+  oak: ["#B68C63", 0.62], oakLight: ["#C9A27A", 0.6], walnut: ["#7A5640", 0.6], walnutLight: ["#8E6A50", 0.6],
+  paper: ["#F1E8D2", 0.85], ink: ["#2B2522", 0.6], felt: ["#46604E", 0.95], glass: ["#5E6E78", 0.25], rope: ["#CDBB94", 0.9],
+  brick: ["#B0634A", 0.85], brickDark: ["#8F4C38", 0.85], slate: ["#5F6772", 0.7], crest: ["#E9DCC0", 0.7],
+  leather: ["#6E4430", 0.7], leatherRed: ["#9C4B35", 0.7],
+  bindBlue2: ["#5A7AA3", 0.65], bindNavy: ["#2F4566", 0.65], bindCalf: ["#9A6B42", 0.65], bindOx: ["#6D2E2A", 0.65], bindGreen: ["#3F5F4C", 0.65], bindLabel: ["#E6D6B0", 0.7],
 };
-export const PLOTS = { library: [-160, -150], fire: [160, -150], hospital: [-160, 150], academy: [160, 150], shared: [640, 0] };
-const DOCS = { library: "almanac", fire: "stove", hospital: "declaration", academy: "charter", shared: "constitution4" };
+const TONE = { faint: ["#B9AFA2", 0.8], lo: ["#8F857A", 0.9], mid: ["#6E655C", 1], hi: ["#3B332F", 1] };
 
-// ── easing and small helpers ───────────────────────────────────────────────
+// ── easing ─────────────────────────────────────────────────────────────────
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
-const smooth = (x) => { x = clamp01(x); return x * x * (3 - 2 * x); };
 const inOut = (x) => { x = clamp01(x); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
 const outCubic = (x) => 1 - Math.pow(1 - clamp01(x), 3);
 const outBack = (x) => { x = clamp01(x); const c = 1.2; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
 const span = (t, a, b) => (b <= a ? (t >= a ? 1 : 0) : clamp01((t - a) / (b - a)));
-// a seeded hash: every tree and binding is the same in every frame
-const hash = (n) => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
 
-const mats = {};
-// metals get a little emissive lift: there is no environment map to reflect
-const mat = (color, rough = 0.6, { metal = 0, flat = false } = {}) => mats[`${color}/${rough}/${metal}/${flat}`] ||= new THREE.MeshStandardMaterial({
-  color, roughness: rough, metalness: metal, flatShading: flat, emissive: metal ? color : "#000000", emissiveIntensity: metal ? 0.18 : 0,
-});
-const BRASS = () => mat(COL.brass, 0.35, { metal: 0.25 });
-const PEWTER = () => mat(COL.pewter, 0.35, { metal: 0.25 });
-const IRON = () => mat(COL.iron, 0.5, { metal: 0.15 });
-const EDGE = new THREE.LineBasicMaterial({ color: "#3B332F", transparent: true, opacity: 0.22 });
-const GHOST = new THREE.LineDashedMaterial({ color: COL.ghost, transparent: true, opacity: 0, dashSize: 3, gapSize: 2.2 });
-const GHOST_START = GHOST.clone(); // the plots' outlines, drawn from the first frame
+const materials = {};
+function material(name, plot) {
+  // "acc" is the plot's own colour; the shared plot's is Mulvium's
+  const key = name === "acc" ? `acc:${ACCENT[plot] ? plot : "mulvium"}` : name;
+  if (materials[key]) return materials[key];
+  const spec = key.startsWith("acc:") ? [ACCENT[key.slice(4)], 0.55] : MAT[key];
+  if (!spec) throw new Error("no material " + key);
+  const [color, rough, metal = 0] = spec;
+  return (materials[key] = new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal, emissive: metal ? color : "#000000", emissiveIntensity: metal ? 0.16 : 0 }));
+}
+const EDGE = new THREE.LineBasicMaterial({ color: "#3B332F", transparent: true, opacity: 0.2 });
+const LINES = Object.fromEntries(Object.entries(TONE).map(([k, [c, o]]) => [k, new THREE.LineBasicMaterial({ color: c, transparent: o < 1, opacity: o })]));
 
-// A solid with a fine drawn outline (from the sharp shape, so rounded boxes
-// still read with crisp corners, as in a technical drawing)
-function solid(geo, sharp, material) {
-  const m = new THREE.Mesh(geo, material);
-  m.castShadow = true; m.receiveShadow = true;
-  const g = new THREE.Group(); g.add(m);
-  g.add(new THREE.LineSegments(new THREE.EdgesGeometry(sharp || geo, 30), EDGE));
-  return g;
+// ── records to geometry ────────────────────────────────────────────────────
+const V = (x, y, z) => new THREE.Vector3(x, z + LIFT, y); // design → three
+function rotated(geo, rot) {
+  if (!rot) return geo;
+  const p = V(...rot.at), a = THREE.MathUtils.degToRad(rot.deg);
+  geo.translate(-p.x, -p.y, -p.z);
+  // the design's rule: a positive angle lifts the +y side (axis x), the +x
+  // side (axis y), or turns x toward y (axis z)
+  if (rot.axis === "x") geo.rotateX(-a); else if (rot.axis === "y") geo.rotateZ(a); else geo.rotateY(-a);
+  geo.translate(p.x, p.y, p.z);
+  return geo;
 }
-function box(w, h, d, material, { r = 1.4 } = {}) {
-  const geo = new RoundedBoxGeometry(w, h, d, 2, Math.min(r, w / 2 - 0.01, h / 2 - 0.01, d / 2 - 0.01)); geo.translate(0, h / 2, 0);
-  const sharp = new THREE.BoxGeometry(w, h, d); sharp.translate(0, h / 2, 0);
-  return solid(geo, sharp, material);
+const bare = (g) => { const n = g.index ? g.toNonIndexed() : g; for (const k of Object.keys(n.attributes)) if (k !== "position" && k !== "normal") n.deleteAttribute(k); return n; };
+function solidGeometry(s) {
+  let geo, edge = null;
+  if (s.kind === "box") {
+    const r = Math.min(Math.max(s.bevel, 0.05), s.w / 2 - 0.01, s.h / 2 - 0.01, s.d / 2 - 0.01);
+    geo = r > 0.25 ? new RoundedBoxGeometry(s.w, s.h, s.d, 2, r) : new THREE.BoxGeometry(s.w, s.h, s.d);
+    const c = V(s.x + s.w / 2, s.y + s.d / 2, s.z + s.h / 2);
+    geo.translate(c.x, c.y, c.z);
+    if (Math.max(s.w, s.h, s.d) > 1.6) { edge = new THREE.EdgesGeometry(new THREE.BoxGeometry(s.w, s.h, s.d)); edge.translate(c.x, c.y, c.z); }
+  } else if (s.kind === "cyl") {
+    geo = new THREE.CylinderGeometry(s.r2, s.r, s.h, s.seg);
+    const c = V(s.x, s.y, s.z + s.h / 2);
+    geo.translate(c.x, c.y, c.z);
+    if (Math.max(s.r, s.r2) > 1.2) { edge = new THREE.EdgesGeometry(new THREE.CylinderGeometry(s.r2, s.r, s.h, s.seg), 40); edge.translate(c.x, c.y, c.z); }
+  } else if (s.kind === "rod") {
+    geo = new THREE.CylinderGeometry(s.r, s.r, s.len, s.seg);
+    if (s.axis === "x") geo.rotateZ(Math.PI / 2); else geo.rotateX(Math.PI / 2);
+    const c = s.axis === "x" ? V(s.x + s.len / 2, s.y, s.z) : V(s.x, s.y + s.len / 2, s.z);
+    geo.translate(c.x, c.y, c.z);
+  } else if (s.kind === "torus") {
+    // the record names the ring's normal: y (the default plane, x-z), x or z
+    geo = new THREE.TorusGeometry(s.R, s.t, 8, 28, s.arc);
+    if (s.axis === "x") geo.rotateY(Math.PI / 2); else if (s.axis === "z") geo.rotateX(Math.PI / 2);
+    const c = V(s.x, s.y, s.z);
+    geo.translate(c.x, c.y, c.z);
+  } else if (s.kind === "prism") {
+    const shape = new THREE.Shape(s.polygon.map(([x, z]) => new THREE.Vector2(x, z)));
+    geo = new THREE.ExtrudeGeometry(shape, { depth: s.y1 - s.y0, bevelEnabled: false });
+    geo.translate(0, LIFT, s.y0);
+    edge = new THREE.EdgesGeometry(geo, 30);
+  } else if (s.kind === "dots") {
+    geo = mergeGeometries(s.pts.map(([x, y, z]) => {
+      const g = new THREE.CylinderGeometry(s.size, s.size, 0.5, 10);
+      if (s.normal === "y") g.rotateX(Math.PI / 2); else if (s.normal === "x") g.rotateZ(Math.PI / 2);
+      const c = V(x + (s.normal === "x" ? 0.2 : 0), y + (s.normal === "y" ? 0.2 : 0), z + (s.normal === "z" ? 0.2 : 0));
+      g.translate(c.x, c.y, c.z);
+      return bare(g);
+    }));
+  }
+  if (!geo) return null;
+  geo = rotated(bare(geo), s.rot);
+  if (edge) edge = rotated(bare(edge), s.rot);
+  return { geo, edge };
 }
-function cyl(rTop, rBot, h, material, { seg = 36 } = {}) {
-  const geo = new THREE.CylinderGeometry(rTop, rBot, h, seg); geo.translate(0, h / 2, 0);
-  return solid(geo, null, material);
+function lineSegments(s) {
+  const out = [];
+  const seg = (a, b) => out.push(V(...a), V(...b));
+  if (s.kind === "line") { for (let i = 0; i < s.pts.length - 1; i++) seg(s.pts[i], s.pts[i + 1]); if (s.closed) seg(s.pts[s.pts.length - 1], s.pts[0]); }
+  else if (s.kind === "ticks") s.segs.forEach(([a, b]) => seg(a, b));
+  else if (s.kind === "ring") for (let i = 0; i < 32; i++) { const a = (i / 32) * Math.PI * 2, b = ((i + 1) / 32) * Math.PI * 2; seg([s.x + s.r * Math.cos(a), s.y + s.r * Math.sin(a), s.z], [s.x + s.r * Math.cos(b), s.y + s.r * Math.sin(b), s.z]); }
+  else if (s.kind === "knurl") for (let i = 0; i < s.count; i++) { const a = (i / s.count) * Math.PI * 2, x = s.x + (s.r + 0.03) * Math.cos(a), y = s.y + (s.r + 0.03) * Math.sin(a); seg([x, y, s.z0 + 0.15], [x, y, s.z1 - 0.15]); }
+  return out;
 }
-const at = (obj, x, y, z) => { obj.position.set(x, y, z); return obj; };
-const group = (...kids) => { const g = new THREE.Group(); kids.forEach((k) => g.add(k)); return g; };
 
 // ── the world ──────────────────────────────────────────────────────────────
 export async function createWorld(canvas, labelLayer, S) {
@@ -71,221 +125,110 @@ export async function createWorld(canvas, labelLayer, S) {
   renderer.setPixelRatio(1); renderer.setSize(W, H, false);
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-  // the archive's documents, laid open on each plot's lectern
+  const url = (p) => new URL(p, import.meta.url).href;
+  const designs = Object.fromEntries(await Promise.all(Object.keys(PLOTS).map(async (p) => [p, await (await fetch(url(`../fig/${p}.parts.json`))).json()])));
+  const docNames = [...new Set(Object.values(designs).flat().flatMap((d) => d.solids.filter((s) => s.kind === "doc").map((s) => s.name)))];
   const loader = new THREE.TextureLoader();
-  const docs = Object.fromEntries(await Promise.all(Object.entries(DOCS).map(async ([plot, name]) => {
-    const t = await loader.loadAsync(new URL(`../img/${name}.jpg`, import.meta.url).href);
-    t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter;
-    return [plot, t];
+  const docs = Object.fromEntries(await Promise.all(docNames.map(async (n) => {
+    const t = await loader.loadAsync(url(`../img/${n}.jpg`));
+    t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+    return [n, t];
   })));
 
   const scene = new THREE.Scene();
-
   // a warm key from the upper left, an open sky, a soft fill
   scene.add(new THREE.HemisphereLight("#FFFFFF", "#D9D2C6", 1.45));
   const sun = new THREE.DirectionalLight("#FFF6EA", 2.0);
   sun.position.set(-420, 1500, 620); sun.castShadow = true; sun.shadow.mapSize.set(4096, 4096);
-  Object.assign(sun.shadow.camera, { left: -1000, right: 1000, top: 1000, bottom: -1000, near: 100, far: 3400 });
+  Object.assign(sun.shadow.camera, { left: -1100, right: 1100, top: 1100, bottom: -1100, near: 100, far: 3600 });
   sun.shadow.bias = -0.0003; sun.shadow.normalBias = 0.5;
-  sun.target.position.set(240, 0, 0); scene.add(sun, sun.target);
+  sun.target.position.set(260, 0, 0); scene.add(sun, sun.target);
   const fill = new THREE.DirectionalLight("#E4ECF8", 0.35); fill.position.set(700, 380, -300); scene.add(fill);
-
   // the floor: invisible, it only takes the figures' shadows
-  {
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(12000, 12000), new THREE.ShadowMaterial({ color: "#3B2E22", opacity: 0.16 }));
-    floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
-  }
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(12000, 12000), new THREE.ShadowMaterial({ color: "#3B2E22", opacity: 0.16 }));
+  floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
 
-  const camera = new THREE.PerspectiveCamera(34, W / H, 5, 14000);
-
-  // ── parts ────────────────────────────────────────────────────────────────
-  // Every part has a home and arrives into it along one direction; until it
-  // arrives (once the blueprints are up) its dashed outline stands in its place
+  // ── parts: each record merged by material into a few meshes ──────────────
   const parts = [], anchors = {};
   const DIRS = { up: [0, 1, 0], down: [0, -1, 0], left: [-1, 0, 0], right: [1, 0, 0], back: [0, 0, -1], front: [0, 0, 1] };
-  function part(plot, obj, { order, from = "up", dist, ghostFrom = "ghosts", name } = {}) {
+  for (const [plot, design] of Object.entries(designs)) {
     const [cx, cz] = PLOTS[plot];
-    const home = obj.position.clone().add(new THREE.Vector3(cx, 0, cz));
-    obj.position.copy(home); scene.add(obj);
-    const ghost = new THREE.Group();
-    obj.updateMatrixWorld(true);
-    obj.traverse((o) => {
-      if (o.isLineSegments && o.material === EDGE) {
-        const l = new THREE.LineSegments(o.geometry, ghostFrom === "start" ? GHOST_START : GHOST);
-        l.computeLineDistances(); l.applyMatrix4(o.matrixWorld); ghost.add(l);
-      }
-    });
-    scene.add(ghost);
-    const b = new THREE.Box3().setFromObject(obj), h = b.max.y - b.min.y;
-    const d = dist ?? (from === "down" ? h + 6 : from === "up" ? 520 : 640);
-    const p = { plot, obj, ghost, home, order, from, d, at: Infinity, dur: from === "down" ? 0.9 : 0.75 };
-    parts.push(p);
-    if (name) anchors[`${plot}.${name}`] = new THREE.Vector3((b.min.x + b.max.x) / 2, b.max.y, (b.min.z + b.max.z) / 2);
-    return p;
-  }
-
-  // A plot's foundation: a stone slab, and along its back what every
-  // institution needs under it: rules (a walnut lectern with the articles
-  // open on it), members (an oak card cabinet) and money (an iron-strapped chest)
-  const SLAB = 14;
-  function foundation(plot, { w = 230, d = 220, s = 1, hopper = false } = {}) {
-    part(plot, box(w, SLAB, d, mat(COL.stone, 0.75), { r: 3 }), { order: 0, from: "down", ghostFrom: "start", name: "slab" });
-    const bz = -d / 2 + 38 * s;
-    const desk = at(box(36 * s, 2.5 * s, 40 * s, mat(COL.walnut, 0.6)), 0, 22 * s, 0); desk.rotation.x = 0.45;
-    const page = new THREE.Mesh(new THREE.PlaneGeometry(30 * s, 34 * s), new THREE.MeshStandardMaterial({ map: docs[plot], roughness: 0.85 }));
-    page.rotation.x = -Math.PI / 2 + 0.45; page.position.set(0, 25.6 * s, 0.6 * s);
-    const lect = group(box(30 * s, 22 * s, 26 * s, mat(COL.walnut, 0.6)), desk, page);
-    part(plot, at(lect, -w / 2 + 40 * s, SLAB, bz), { order: 1, from: "left", name: "rules" });
-    const cab = group(box(34 * s, 40 * s, 30 * s, mat(COL.oak, 0.6)));
-    for (const y of [9, 22, 33]) {
-      cab.add(at(box(30 * s, 0.6, 0.8, mat(COL.walnut)), 0, (y + 4) * s, 15 * s));
-      cab.add(at(box(8 * s, 2 * s, 2 * s, BRASS(), { r: 0.6 }), 0, y * s, 15.4 * s));
-    }
-    part(plot, at(cab, 0, SLAB, bz), { order: 2, from: "back", name: "members" });
-    const chest = group(box(42 * s, 26 * s, 32 * s, mat(COL.oak, 0.6)), at(box(44 * s, 8 * s, 34 * s, mat(COL.oak, 0.6)), 0, 26 * s, 0));
-    for (const x of [-14, 14]) chest.add(at(box(4 * s, 34.4 * s, 34.4 * s, IRON(), { r: 0.6 }), x * s, -0.2, 0));
-    chest.add(at(box(6 * s, 9 * s, 2 * s, BRASS(), { r: 0.6 }), 0, 19 * s, 17.4 * s));
-    if (hopper) chest.add(at(cyl(13, 7, 9, BRASS()), 0, 34 * s, 0));
-    part(plot, at(chest, w / 2 - 40 * s, SLAB, bz), { order: 3, from: "right", name: "money" });
-    return { bz };
-  }
-
-  // An institution's own work, as in the foundations figure: a block in its
-  // colour, ribbed on its front face
-  function work(color, w = 50, d = 50, h = 88) {
-    const g = group(box(w, h, d, mat(color, 0.55), { r: 2 }));
-    for (let y = 16; y < h - 8; y += 16) g.add(at(box(w - 8, 1.2, 1, mat("#FFFFFF", 0.5), { r: 0.4 }), 0, y, d / 2));
-    g.add(at(box(w - 8, 1.2, d - 8, mat("#FFFFFF", 0.5), { r: 0.4 }), 0, h, 0));
-    return g;
-  }
-  const ACC = { library: "#4D6D96", fire: "#A8603F", hospital: "#357F77", academy: "#55804A", mulvium: "#9A5571" };
-
-  // ── library: subscriptions run into the chest; the chest fills the shelves
-  const lib = {};
-  {
-    const P = "library";
-    const f = foundation(P, { hopper: true });
-    const bc = group(), CW = 72, CH = 94, CD = 24, wood = mat(COL.walnut, 0.6);
-    bc.add(at(box(4, CH, CD, wood), -CW / 2 + 2, 0, 0), at(box(4, CH, CD, wood), CW / 2 - 2, 0, 0),
-      at(box(CW, CH, 3, wood), 0, 0, -CD / 2 + 1.5), at(box(CW + 6, 5, CD + 3, wood), 0, CH, 0));
-    const shelfY = [0, 31, 62];
-    for (const y of shelfY) bc.add(at(box(CW, 4, CD, wood), 0, y, 0));
-    part(P, at(bc, -62, SLAB, 40), { order: 4, from: "back", name: "case" });
-    // the collection, in the library's blue with calf and morocco among it
-    const BIND = ["#4D6D96", "#5A7AA3", "#3F5F88", "#8B5A3C", "#6D3A33", "#4F6B57", "#6A86AB"];
-    lib.books = [];
-    shelfY.forEach((y, s) => {
-      let x = -CW / 2 + 5;
-      for (let n = 0; x < CW / 2 - 8; n++) {
-        const bw = 4 + hash(s * 17 + n) * 2.6, bh = 19 + hash(s * 31 + n * 3) * 7;
-        const b = at(box(bw, bh, 17, mat(BIND[Math.floor(hash(s * 7 + n * 5) * BIND.length)], 0.65), { r: 0.5 }), -62 + x + bw / 2 + PLOTS[P][0], SLAB + y + 4, 41 + PLOTS[P][1]);
-        b.visible = false; scene.add(b);
-        lib.books.push({ obj: b, home: b.position.clone() });
-        x += bw + 0.6;
-      }
-    });
-    const TX = 46, TZ = 46;
-    part(P, at(box(112, 5, 76, mat(COL.oak, 0.6), { r: 2 }), TX, SLAB, TZ), { order: 5, from: "front", name: "tray" });
-    lib.stacks = [];
-    for (let c = 0; c < 10; c++) for (let r = 0; r < 5; r++)
-      lib.stacks.push(part(P, at(cyl(4.4, 4.4, 6.4, BRASS(), { seg: 24 }), TX - 45 + c * 10, SLAB + 5, TZ - 26 + r * 13), { order: 6 + (c * 5 + r) * 0.02, from: "up", dist: 260 }));
-    lib.mouth = new THREE.Vector3(230 / 2 - 40 + PLOTS[P][0], SLAB + 34 + 9 + 2, f.bz + PLOTS[P][1]);
-  }
-
-  // ── fire company and academy: their foundations, and the designs drawn
-  // for them with the Anatomy kit (figures/fire.mjs, figures/academy.mjs),
-  // built here part for part from the parts lists the kit wrote down
-  const MATS = {
-    oak: () => mat(COL.oak, 0.6), walnut: () => mat(COL.walnut, 0.6), iron: IRON, brass: BRASS, stoneDark: () => mat(COL.stoneDark, 0.75),
-    brick: () => mat(COL.brick, 0.8), trim: () => mat("#F6F2EA", 0.6), band: () => mat("#EFE6D2", 0.7),
-    "lit:leather": () => mat(COL.leather, 0.7), "lit:leatherRed": () => mat(COL.leatherRed, 0.7),
-  };
-  for (const P of ["fire", "academy"]) {
-    foundation(P);
-    const design = await (await fetch(new URL(`../fig/${P}.parts.json`, import.meta.url))).json();
     for (const d of design) {
+      const byMat = {}, edges = [], byTone = {};
       const g = new THREE.Group();
-      for (const q of d.solids) {
-        const m = q.material === "lit" ? mat(ACC[P], 0.6) : MATS[q.material]();
-        g.add(q.kind === "box" ? at(box(q.w, q.h, q.d, m, { r: Math.min(1.2, q.w / 3, q.d / 3) }), q.x + q.w / 2, SLAB + q.z, q.y + q.d / 2)
-          : at(cyl(q.r, q.r, q.h, m, { seg: 24 }), q.x, SLAB + q.z, q.y));
+      for (const s of d.solids) {
+        if (s.kind === "doc") {
+          const geo = new THREE.PlaneGeometry(s.w, s.d);
+          geo.rotateX(-Math.PI / 2);
+          const c = V(s.x, s.y, s.z);
+          geo.translate(c.x, c.y, c.z);
+          const page = new THREE.Mesh(rotated(geo, s.rot), new THREE.MeshStandardMaterial({ map: docs[s.name], roughness: 0.85 }));
+          page.receiveShadow = true;
+          g.add(page);
+          continue;
+        }
+        if (["line", "ticks", "ring", "knurl"].includes(s.kind)) { (byTone[s.tone] ||= []).push(...lineSegments(s)); continue; }
+        const r = solidGeometry(s);
+        if (!r) continue;
+        (byMat[s.mat] ||= []).push(r.geo);
+        if (r.edge) edges.push(r.edge);
       }
-      part(P, g, { order: d.build, from: d.from, dist: d.from === "up" ? 170 : undefined, name: d.name });
+      for (const [m, list] of Object.entries(byMat)) {
+        const mesh = new THREE.Mesh(mergeGeometries(list), material(m, plot));
+        mesh.castShadow = true; mesh.receiveShadow = true;
+        g.add(mesh);
+      }
+      if (edges.length) g.add(new THREE.LineSegments(mergeGeometries(edges), EDGE));
+      for (const [tone, pts] of Object.entries(byTone)) g.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), LINES[tone]));
+      g.position.set(cx, 0, cz);
+      scene.add(g);
+      const box = new THREE.Box3().setFromObject(g), h = box.max.y - box.min.y;
+      const p = { plot, name: d.name, obj: g, home: g.position.clone(), order: d.build, from: d.from, event: d.event, at: Infinity, dur: d.from === "down" ? 0.9 : 0.75 };
+      p.d = d.dist ?? (d.from === "down" ? h + 4 : d.from === "up" ? 420 : 560);
+      p.center = box.getCenter(new THREE.Vector3()).sub(g.position);
+      parts.push(p);
+      anchors[`${plot}.${d.name}`] = new THREE.Vector3((box.min.x + box.max.x) / 2, box.max.y, (box.min.z + box.max.z) / 2);
     }
   }
-
-  // ── hospital: the matching grant ─────────────────────────────────────────
-  const hosp = {};
-  {
-    const P = "hospital";
-    foundation(P);
-    const COIN = 4, N = 20, R = 15, MARK = 4 + N * COIN, BAR = MARK + 44, HELD = 34, oak = mat(COL.oak, 0.6);
-    const col = () => group(cyl(R + 3, R + 3, 4, mat(COL.stoneDark, 0.7)), at(box(6, BAR + 6, 6, oak), 0, 0, -R - 8), at(box(6, 6, R + 12, oak), 0, BAR, -R / 2 - 2));
-    const AX = -48, DX = 48, Z = 38;
-    part(P, at(col(), AX, SLAB, Z), { order: 4, from: "left", name: "assemblyCol" });
-    part(P, at(col(), DX, SLAB, Z), { order: 4.4, from: "right", name: "donorCol" });
-    const rod = cyl(1.4, 1.4, DX - AX, IRON(), { seg: 12 }); rod.rotation.z = Math.PI / 2;
-    part(P, at(group(rod), DX, SLAB + BAR + 2.5, Z - R - 8), { order: 5, from: "back" });
-    hosp.paddle = part(P, at(box(R + 8, 2.4, 6, IRON(), { r: 0.8 }), DX - 2, SLAB + MARK + 1, Z), { order: 5.2, from: "right", name: "mark" });
-    // the Assembly's £2,000 in pewter, hung up until the donors match it
-    const held = group();
-    for (let n = 0; n < N; n++) held.add(at(cyl(R, R, COIN - 0.25, PEWTER(), { seg: 36 }), 0, 4 + n * COIN, 0));
-    held.add(at(cyl(1, 1, BAR - MARK - HELD + 2, IRON(), { seg: 8 }), 0, MARK, 0));
-    hosp.held = part(P, at(held, AX, SLAB + HELD, Z), { order: 5.6, from: "up", name: "held" });
-    hosp.coins = [];
-    for (let n = 0; n < N; n++) {
-      const c = at(cyl(R, R, COIN - 0.25, BRASS(), { seg: 36 }), DX + PLOTS[P][0], SLAB + 4 + n * COIN, Z + PLOTS[P][1]);
-      c.visible = false; scene.add(c); hosp.coins.push({ obj: c, home: c.position.clone() });
-    }
-    hosp.HELD = HELD;
-    anchors["hospital.donors"] = new THREE.Vector3(DX + PLOTS[P][0], SLAB + MARK + 10, Z + PLOTS[P][1]);
-    anchors["hospital.assembly"] = new THREE.Vector3(AX + PLOTS[P][0], SLAB + HELD + MARK + 10, Z + PLOTS[P][1]);
-  }
-
-  // ── the shared foundation: services once, sockets for projects ──────────
-  const shared = {};
-  {
-    const P = "shared";
-    foundation(P, { w: 330, d: 230, s: 1.35 });
-    part(P, at(box(300, 2, 6, BRASS(), { r: 0.8 }), 0, SLAB, -6), { order: 4, from: "left", name: "bus" });
-    const XS = [-117, -39, 39, 117];
-    XS.forEach((x, i) => {
-      part(P, at(box(52, 1.6, 52, mat(COL.stoneDark, 0.8), { r: 1 }), x, SLAB, 50), { order: 4.4 + i * 0.1, from: "down" });
-      part(P, at(box(4, 1.6, 50, BRASS(), { r: 0.6 }), x, SLAB, 15), { order: 4.4 + i * 0.1, from: "down" });
-    });
-    // institutions already plugged in, and the new project, in Mulvium's colour
-    ["library", "fire", "hospital"].forEach((c, i) => part(P, at(work(ACC[c], 36, 36, 56), XS[i], SLAB + 1.6, 50), { order: 5 + i * 0.2, from: "up", dist: 300 }));
-    shared.newp = part(P, at(work(ACC.mulvium, 36, 36, 56), XS[3], SLAB + 1.6, 50), { order: 99, from: "up", dist: 360, name: "new" });
-  }
+  const named = (plot, re) => parts.filter((p) => p.plot === plot && re.test(p.name)).sort((a, b) => +a.name.replace(/\D/g, "") - +b.name.replace(/\D/g, ""));
+  const lib = { stacks: named("library", /^stack\d+$/), books: named("library", /^book\d+$/) };
+  lib.mouth = V(230 / 2 - 40, -220 / 2 + 38, 51.2).add(new THREE.Vector3(PLOTS.library[0], 0, PLOTS.library[1]));
+  const find = (plot, name) => parts.find((p) => p.plot === plot && p.name === name);
+  const hosp = { donors: named("hospital", /^donor\d+$/), held: find("hospital", "held"), paddle: find("hospital", "paddle"), HELD: 34 };
+  const newp = find("shared", "new");
 
   // marks for "rules, members, money" on all four plots at once
   const rings = [];
   for (const plot of ["library", "fire", "hospital", "academy"]) for (const what of ["rules", "members", "money"]) {
     const a = anchors[`${plot}.${what}`];
-    const r = new THREE.Mesh(new THREE.TorusGeometry(30, 1.8, 8, 64), new THREE.MeshStandardMaterial({ color: "#C27A55", roughness: 0.4, emissive: "#C27A55", emissiveIntensity: 0.35 }));
-    r.rotation.x = -Math.PI / 2; r.position.set(a.x, SLAB + 1.2, a.z); r.visible = false; scene.add(r);
+    const r = new THREE.Mesh(new THREE.TorusGeometry(31, 1.8, 8, 64), new THREE.MeshStandardMaterial({ color: "#C27A55", roughness: 0.4, emissive: "#C27A55", emissiveIntensity: 0.35 }));
+    r.rotation.x = -Math.PI / 2; r.position.set(a.x, LIFT + 0.4, a.z); r.visible = false; scene.add(r);
     rings.push({ obj: r, what });
   }
 
   // ── schedule ─────────────────────────────────────────────────────────────
+  // each plinth lands when the opening names its plot; the rest of a plot is
+  // built in its window, in the design's order
+  for (const [plot, t] of Object.entries(S.plinths)) find(plot, "plinth").at = t;
   for (const [plot, [t0, t1]] of Object.entries(S.build)) {
-    const ps = parts.filter((p) => p.plot === plot && p.order < 99);
-    const max = Math.max(...ps.map((p) => p.order));
-    ps.forEach((p) => (p.at = t0 + (t1 - t0) * (p.order / max)));
+    const ps = parts.filter((p) => p.plot === plot && !(p.event && p.event !== "coins") && !(p.name === "plinth" && S.plinths[plot] !== undefined));
+    const lo = Math.min(...ps.map((p) => p.order)), hi = Math.max(...ps.map((p) => p.order));
+    ps.forEach((p) => (p.at = t0 + (t1 - t0) * ((p.order - lo) / Math.max(1e-6, hi - lo))));
   }
-  shared.newp.at = S.events.nowNew;
+  newp.at = S.events.nowNew;
 
   // ── camera ───────────────────────────────────────────────────────────────
+  const camera = new THREE.PerspectiveCamera(34, W / H, 5, 14000);
   const DIR = new THREE.Vector3(0.62, 0.62, 1).normalize();
   const HIGH = new THREE.Vector3(0.45, 1.05, 1).normalize();
   function shot(s) {
     const [kind, plot, what] = s.split(":");
-    if (kind === "wide") return { target: new THREE.Vector3(0, 330, 20), dist: 2700, dir: HIGH.clone() };
-    if (kind === "all4") return { target: new THREE.Vector3(0, 120, 20), dist: 2350, dir: HIGH.clone() };
+    if (kind === "wide") return { target: new THREE.Vector3(0, 340, 20), dist: 2900, dir: HIGH.clone() };
+    if (kind === "all4") return { target: new THREE.Vector3(0, 130, 20), dist: 2500, dir: HIGH.clone() };
     const [cx, cz] = PLOTS[plot];
-    if (kind === "plot") return { target: new THREE.Vector3(cx, 40, cz + 6), dist: plot === "shared" ? 1250 : 1000, dir: DIR.clone() };
-    if (kind === "mid") return { target: new THREE.Vector3(cx + (plot === "shared" ? 70 : 0), 40, cz + 6), dist: 760, dir: DIR.clone() };
-    if (kind === "close") return { target: anchors[`${plot}.${what}`].clone().add(new THREE.Vector3(0, -8, 0)), dist: 560, dir: DIR.clone() };
+    if (kind === "plot") return { target: new THREE.Vector3(cx, 60, cz + 6), dist: plot === "shared" ? 1300 : 1050, dir: DIR.clone() };
+    if (kind === "mid") return { target: new THREE.Vector3(cx + (plot === "shared" ? 70 : 0), 60, cz + 6), dist: 800, dir: DIR.clone() };
+    if (kind === "close") return { target: anchors[`${plot}.${what}`].clone().add(new THREE.Vector3(0, -14, 0)), dist: 560, dir: DIR.clone() };
     throw new Error("shot " + s);
   }
   const cams = S.cam.map((c) => ({ ...c, s: shot(c.shot) }));
@@ -301,30 +244,29 @@ export async function createWorld(canvas, labelLayer, S) {
     camera.lookAt(cur.target);
   }
 
-  // ── labels: names on the model, projected to the screen ──────────────────
+  // ── labels: names over the model, projected to the screen ────────────────
   const labels = (S.labels || []).map((l) => {
+    if (!anchors[l.anchor]) throw new Error("no anchor " + l.anchor);
     const el = document.createElement("div");
     el.className = "wl";
     el.innerHTML = `<span class="wl-t">${l.text}</span><i class="wl-l"></i><b class="wl-d"></b>`;
     labelLayer.appendChild(el);
-    if (!anchors[l.anchor]) throw new Error("no anchor " + l.anchor);
     return { ...l, el, text: el.firstChild, half: l.text.length * 10.5 + 8, a: anchors[l.anchor] };
   });
   const v = new THREE.Vector3();
 
   // ── a frame ──────────────────────────────────────────────────────────────
+  function place(p, k) {
+    const e = p.from === "down" ? outCubic(k) : outBack(k), d = DIRS[p.from];
+    p.obj.position.set(p.home.x + d[0] * p.d * (1 - e), p.home.y + d[1] * p.d * (1 - e), p.home.z + d[2] * p.d * (1 - e));
+  }
   function renderAt(t) {
-    GHOST.opacity = 0.75 * smooth((t - S.ghosts) / 0.8);
-    GHOST_START.opacity = Math.max(0.75 * smooth((t - 0.2) / 0.8), GHOST.opacity);
     for (const p of parts) {
-      const k = (t - p.at) / p.dur, arrived = t >= p.at;
-      p.obj.visible = arrived;
-      p.ghost.visible = !arrived || k < 0.6;
-      if (!arrived) continue;
-      const e = p.from === "down" ? outCubic(k) : outBack(k), d = DIRS[p.from];
-      p.obj.position.set(p.home.x + d[0] * p.d * (1 - e), p.home.y + d[1] * p.d * (1 - e), p.home.z + d[2] * p.d * (1 - e));
+      if (p.event && p.event !== "coins") continue;
+      p.obj.visible = t >= p.at;
+      if (p.obj.visible) place(p, (t - p.at) / p.dur);
     }
-    // library: each stack lifts, rides to the hopper and drops in; then the books
+    // library: each stack, once landed, lifts, rides to the hopper and drops in
     {
       const [c0, c1] = S.events.libCoins;
       lib.stacks.forEach((p, i) => {
@@ -332,32 +274,34 @@ export async function createWorld(canvas, labelLayer, S) {
         const u = (t - (c0 + (c1 - c0) * (i / lib.stacks.length))) / 0.85;
         if (u <= 0) return;
         if (u >= 1) { p.obj.visible = false; return; }
-        const e = inOut(Math.min(1, u / 0.78));
-        const pos = p.home.clone().lerp(lib.mouth, e); pos.y += Math.sin(Math.PI * e) * 46;
+        const from = p.home.clone().add(p.center), e = inOut(Math.min(1, u / 0.78));
+        const pos = from.clone().lerp(lib.mouth, e); pos.y += Math.sin(Math.PI * e) * 95; // high enough to clear the cabinet
         if (u > 0.78) pos.y = lib.mouth.y - 14 * ((u - 0.78) / 0.22);
-        p.obj.position.copy(pos);
+        p.obj.position.copy(pos.sub(p.center));
       });
       const [b0, b1] = S.events.libBooks;
       lib.books.forEach((b, i) => {
         const k = (t - (b0 + (b1 - b0) * (i / lib.books.length))) / 0.5;
-        b.obj.visible = k > 0; b.obj.position.copy(b.home); b.obj.position.z -= 30 * (1 - outCubic(k));
+        b.obj.visible = k > 0;
+        b.obj.position.copy(b.home); b.obj.position.z -= 30 * (1 - outCubic(k));
       });
     }
-    // hospital: the donors' coins stack up; at the mark the paddle lifts and the
-    // Assembly's coins drop onto their platform
+    // hospital: the donors' coins stack up; at the mark the paddle lifts and
+    // the Assembly's coins drop onto their platform
     {
       const [d0, d1] = S.events.hospDonors, tt = S.events.hospTrip;
-      hosp.coins.forEach((c, n) => {
-        const k = (t - (d0 + (d1 - d0) * (n / hosp.coins.length))) / 0.3;
+      hosp.donors.forEach((c, n) => {
+        const k = (t - (d0 + (d1 - d0) * (n / hosp.donors.length))) / 0.3;
         c.obj.visible = k > 0; c.obj.position.copy(c.home); c.obj.position.y += 60 * Math.pow(1 - clamp01(k), 2);
       });
       if (t >= hosp.paddle.at + hosp.paddle.dur) hosp.paddle.obj.position.y = hosp.paddle.home.y + 6 * outCubic((t - tt) / 0.15);
       if (t >= hosp.held.at + hosp.held.dur) {
         const k = clamp01((t - tt - 0.15) / 0.34);
         hosp.held.obj.position.y = hosp.held.home.y - hosp.HELD * k * k;
-        hosp.held.obj.children[hosp.held.obj.children.length - 1].visible = k === 0;
       }
     }
+    newp.obj.visible = t >= newp.at;
+    if (newp.obj.visible) place(newp, (t - newp.at) / 0.75);
     for (const r of rings) {
       const k = (t - S.events.turn[r.what]) / 0.45;
       r.obj.visible = k > 0 && t < S.events.turnEnd;
