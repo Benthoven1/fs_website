@@ -22,6 +22,8 @@ STORY:   one story, told like a reel: the payoff first, then how it was done.
          - the founder in quick full-screen cuts (printer, writer, scientist, inventor);
            Trumbull's Declaration into the Constitution, a quick pan that holds on
            "B Franklin", a ring round the name, 1 of 6
+         - the method, drawn on a dark ground: members scattered as small spheres,
+           a ring for "a public need", the spheres pooled into it until it is full
          - each institution: archival plates full screen with slow camera moves, cut
            with its plot being built in 3D from the Anatomy designs (figures/*.mjs);
            the library dives into Birch's hall, the hospital out to its Pine Building
@@ -32,7 +34,8 @@ STORY:   one story, told like a reel: the payoff first, then how it was done.
            their president, at their bench and subscription box; College Hall
          - the turn to now: every institution's rules, members and money become
            spheres and rise off the plots into three planets on the landing page's
-           rings (js/main.js), named in the screen's quarters; a new project rises
+           four crossing rings (js/main.js), each held in its own quarter of the
+           screen and named there; a new project rises
            into the centre (the landing page's star), is wired to all three, takes
            gifts, grants and contracts, and grows
          - the close: the launch film's network, held gathered to a point under
@@ -44,7 +47,9 @@ TYPE:    the narration's own words set as the picture where they carry it (the "
          one:"); subtitles elsewhere, never both. Lora for set words, Major Mono
          Display (lower case) for kickers, IBM Plex Sans for subtitles and sources.
 
-LOOK:    full-bleed archival plates with a scrim where type sits; between them the
+LOOK:    archival plates: a picture near the screen's shape fills it, centred, at
+         most 1.1x; a wider one is shown whole across the width over a blurred,
+         darkened copy of itself; a scrim where type sits; between them the
          figures on a backdrop that turns deep in each institution's colour (blue,
          red, teal, green; a plum night for Mulvium's cosmos), porcelain between. No cards, tags,
          timeline or numbering. Figures in stone, walnut, oak, brass, pewter, leather

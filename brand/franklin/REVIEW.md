@@ -1,9 +1,28 @@
-# Review — Franklin essay v6
+# Review — Franklin essay v7
 
-Rendered 176.1 s, 1080 × 1920, 30 fps. Reviewed from snapshot sheets on the
+Rendered 176.0 s, 1080 × 1920, 30 fps. Reviewed from snapshot sheets on the
 real narration timing and frames of the delivered MP4.
 
-## What changed from v5
+## What changed from v6
+
+- Legibility: type has a tighter, darker shadow; kickers are larger and
+  solid white; the plates' scrims are heavier where type sits; type over a
+  fitted picture moves onto the dark band beneath it; the Junto's roster
+  sits below the State House, trades in a warm accent; the library's sum has
+  a dark band of its own over the model.
+- The library's arithmetic, step by step: 50 subscribers × 40s, = 2,000s =
+  £100 (20 shillings to the pound), then 10s a year each = £25 a year.
+- The method is drawn rather than set over bare plinths: members scattered
+  as small spheres, a ring for "a public need", the spheres pooled into it.
+- The cosmos keeps the landing page's four crossing rings (tilts as in
+  js/main.js; the fourth carries no planet). Each planet's place on its ring
+  is solved through the camera so it sits in its own quarter, and money takes
+  whichever of the two outer rings carries it further into its corner.
+- Pictures are no longer far in or off-centre: wide ones are shown whole
+  across the width over a blurred copy of themselves, near-portrait ones fill
+  the screen centred at no more than 1.1×. The Constitution keeps its pan.
+
+## What changed in v6
 
 - Voice and music start at 0:00: the 1.2 s lead-in and the Prelude
   recording's 1.4 s of silence are gone.
