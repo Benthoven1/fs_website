@@ -1,40 +1,45 @@
-# Review — Franklin essay v4
+# Review — Franklin essay v5
 
-Rendered 157.0 s, 1080 × 1920, 30 fps. `npx hyperframes check` passes with no
-errors; its remaining warnings are "nothing changes" stretches over the 3D
-canvas, which the check does not see moving, and WebGL driver notices.
-Reviewed from snapshot sheets on the real narration timing and sixteen
-frames of the delivered MP4.
+Rendered 174.4 s, 1080 × 1920, 30 fps. Reviewed from snapshot sheets on the
+real narration timing and frames of the delivered MP4.
 
-## Creative calls
+## What changed from v4
 
-- A reel's structure: the hook shows what the city lacked in 1731, then the
-  payoff (the finished model, "1751 · All four.") before the story rewinds to
-  bare plinths and tells how it was done.
-- The archive fills the screen: plates with slow camera moves, entered by cut,
-  punch, wipe or a dive out of the model (the library's bookcase into Birch's
-  hall, the hospital's lectern into the 1751 Act). No cards, tags, timeline
-  or numbering.
-- The narration's own words become the picture where they carry it (the "No…"
-  lines, the proverb, "only if", "Rules written.", "Four times.", "From day
-  one:"); subtitles run elsewhere, never both at once.
-- The figures are Anatomy designs built in 3D, each institution with its own
-  rules, members and money. The synthesis is the film's turn: all of them lift
-  off and fuse into one foundation at the centre, wired to every plot, and a
-  new project's plot arrives already connected while its building rises.
-- The library's and fire company's lecterns carry Franklin's own prints (the
-  1733 almanac, the 1744 fireplace pamphlet): their founding articles were not
-  found as free scans. The hospital's carries the 1751 Act itself.
+- **The modern institution is the landing page's cosmos.** The cabinet-building
+  "fifth plot" is gone. On "A founder today", every institution's rules,
+  members and money shrink into porcelain spheres and rise off the four plots
+  into three planets (members green, rules blue, money pink), each growing as
+  its spheres arrive. The star (Mulvium) lands with its rings on "fiscal
+  sponsor"; a new project's planet flies up into the outer orbit, is wired to
+  the star and the three planets, takes gifts, grants and contracts as pulses
+  of light, and grows while "the founder does the work". Colours, ring radii,
+  tilts and the star's size are the site's (js/main.js), scaled; the group is
+  tipped toward the camera so no ring is seen edge-on.
+- **The academy has substance.** Four lines instead of one: Franklin's 1749
+  *Proposals* (its title page full screen; "useful subjects, in English,
+  alongside Latin and Greek" set as type), the 24 trustees with Franklin as
+  president buying the hall built for George Whitefield (their bench and
+  subscription box on the model), and College Hall for the University of
+  Pennsylvania.
+- **The network opens out.** The launch film's close enters gathered to a
+  point and expands on "The next great expansion" before resolving into the
+  wordmark.
+- **Deeper grounds.** When the backdrop leaves porcelain it goes to a deep
+  gradient in the institution's colour: navy for the library, oxblood for the
+  fire company, teal for the hospital, forest green for the academy, and a
+  plum night for the cosmos. Type on those grounds is white.
 
 ## Measured, not heard
 
-- Every narrated line transcribed back and matched to the script; pace
-  2.1–3.1 words a second.
-- Delivered file −15.0 LUFS integrated, true peak −0.9 dBFS.
+- The four new academy lines were transcribed back and match the script;
+  1749 is read as a year.
+- Delivered file normalised to −15 LUFS integrated.
 - Nobody has listened to the film; voice and mix were judged by measurement.
 
 ## What more time would change
 
-- The two stand-in documents, if scans of the 1731 and 1736 articles turn up.
-- The almanac cut in "Four times." sets its words over a busy page; a darker
-  scrim there, or a tighter framing on the title, would read better.
+- The "mulvium" label sits close to the star and inner ring in the widest
+  cosmos frame.
+- The library's and fire company's lecterns still carry stand-in documents
+  (the 1733 almanac, the 1744 fireplace pamphlet) in place of their founding
+  articles.
