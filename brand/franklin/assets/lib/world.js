@@ -332,7 +332,7 @@ export async function createWorld(canvas, labelLayer, S) {
     if (kind === "all4") return { target: new THREE.Vector3(0, 120, 20), dist: 2350, dir: HIGH.clone() };
     const [cx, cz] = PLOTS[plot];
     if (kind === "plot") return { target: new THREE.Vector3(cx, 40, cz + 6), dist: plot === "shared" ? 1250 : 1000, dir: DIR.clone() };
-    if (kind === "mid") return { target: new THREE.Vector3(cx, 40, cz + 6), dist: 760, dir: DIR.clone() };
+    if (kind === "mid") return { target: new THREE.Vector3(cx + (plot === "shared" ? 70 : 0), 40, cz + 6), dist: 760, dir: DIR.clone() };
     if (kind === "close") return { target: anchors[`${plot}.${what}`].clone().add(new THREE.Vector3(0, -8, 0)), dist: 560, dir: DIR.clone() };
     throw new Error("shot " + s);
   }
@@ -356,7 +356,7 @@ export async function createWorld(canvas, labelLayer, S) {
     el.innerHTML = `<span class="wl-t">${l.text}</span><i class="wl-l"></i><b class="wl-d"></b>`;
     labelLayer.appendChild(el);
     if (!anchors[l.anchor]) throw new Error("no anchor " + l.anchor);
-    return { ...l, el, a: anchors[l.anchor] };
+    return { ...l, el, text: el.firstChild, half: l.text.length * 10.5 + 8, a: anchors[l.anchor] };
   });
   const v = new THREE.Vector3();
 
@@ -417,8 +417,12 @@ export async function createWorld(canvas, labelLayer, S) {
       const k = Math.min(span(t, l.t0, l.t0 + 0.3), 1 - span(t, l.t1 - 0.25, l.t1));
       if (k <= 0) { l.el.style.opacity = 0; continue; }
       v.copy(l.a).project(camera);
+      const x = (v.x * 0.5 + 0.5) * W, y = (-v.y * 0.5 + 0.5) * H;
+      // the name stays inside the frame even when its point is near an edge
+      const dx = Math.min(0, W - 48 - (x + l.half)) + Math.max(0, 48 - (x - l.half));
       l.el.style.opacity = k;
-      l.el.style.transform = `translate(${((v.x * 0.5 + 0.5) * W).toFixed(1)}px, ${((-v.y * 0.5 + 0.5) * H).toFixed(1)}px)`;
+      l.el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+      l.text.style.transform = `translateX(${dx.toFixed(1)}px)`;
     }
   }
   return { renderAt, anchors };

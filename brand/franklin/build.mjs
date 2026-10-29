@@ -218,8 +218,6 @@ const WORLD = (() => {
     { text: "money", anchor: "library.money", t0: arrive("library", 3) + 0.3, t1: at("lib2", "fifty") - 0.2 },
     { text: "the collection", anchor: "library.case", t0: after("lib2", "each") + 0.6, t1: start("lib3") - 0.2 },
     { text: "the alarm bell", anchor: "fire.bell", t0: arrive("fire", 4.5) + 0.4, t1: at("fire2", "thirty") - 0.2 },
-    { text: "private donors", anchor: "hospital.donors", t0: d0, t1: start("acad") - 0.3 },
-    { text: "the assembly", anchor: "hospital.assembly", t0: d0 + 0.3, t1: start("acad") - 0.3 },
     { text: "academy · 1751", anchor: "academy.roof", t0: at("acad1", "opened") + 0.7, t1: start("turn") - 0.3 },
     { text: "shared services", anchor: "shared.members", t0: at("now2", "existing") - 0.1, t1: start("end") - 0.5 },
     { text: "new project", anchor: "shared.new", t0: at("now2", "new") + 0.2, t1: start("end") - 0.5 },
