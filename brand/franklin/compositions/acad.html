@@ -3,52 +3,48 @@
     @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
     @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
     @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-600.woff2) format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
-    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-700.woff2) format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
-    @font-face { font-family: "IBM Plex Mono"; src: url(assets/fonts/IBMPlexMono-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
-    @font-face { font-family: "IBM Plex Mono"; src: url(assets/fonts/IBMPlexMono-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-600.woff2) format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500i.woff2) format("woff2"); font-weight: 500; font-style: italic; font-display: block; }
-    #root { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse 120% 75% at 50% 30%, #F5F3EF 0%, #ECEAE5 58%, #E3DFD8 100%); }
+    @font-face { font-family: "Major Mono Display"; src: url(assets/fonts/MajorMonoDisplay-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    #root { position: absolute; inset: 0; overflow: hidden; }
 
     .abs { position: absolute; }
     .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
-    .sans { font-family: "IBM Plex Sans", sans-serif; color: #1B1613; }
-    .mono { font-family: "IBM Plex Mono", monospace; color: #5C544E; letter-spacing: 0.02em; }
+    .disp { font-family: "Lora", serif; font-weight: 600; color: #1B1613; }
+    .small { font-family: "IBM Plex Sans", sans-serif; color: #5C544E; }
     .serif { font-family: "Lora", serif; color: #1B1613; }
-    .kicker { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 28px; letter-spacing: 0.14em; text-transform: uppercase; color: #5C544E; }
+    .kicker { font-family: "Major Mono Display", monospace; font-size: 30px; letter-spacing: 0.06em; text-transform: lowercase; color: #5C544E; }
     .w { display: inline-block; white-space: pre; }
     .card { position: absolute; background: #F9F8F5; border: 1px solid #D9D4CA; border-radius: 28px; overflow: hidden;
       box-shadow: inset 0 1px 0 #FFFFFF, 0 2px 4px rgba(27,22,19,0.04), 0 18px 48px rgba(27,22,19,0.10); }
     .card .cap { position: absolute; left: 0; bottom: 0; width: 100%; height: 64px; overflow: hidden; padding: 0 28px; display: flex; align-items: center; gap: 18px;
-      background: #F9F8F5; border-top: 1px solid #D9D4CA; font-family: "IBM Plex Mono", monospace; font-size: 28px; color: #5C544E; white-space: nowrap; }
+      background: #F9F8F5; border-top: 1px solid #D9D4CA; font-family: "IBM Plex Sans", sans-serif; font-size: 28px; color: #5C544E; white-space: nowrap; }
     .card .cap b { font-weight: 500; color: #1B1613; }
     .pic { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
     .pic img { display: block; width: 100%; height: 100%; }
     .tag { position: absolute; padding: 10px 18px 11px; border-radius: 10px; background: #F9F8F5; border: 1px solid #D9D4CA;
-      font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 26px; letter-spacing: 0.08em; text-transform: uppercase; color: #1B1613; white-space: nowrap; }
+      font-family: "Major Mono Display", monospace; font-size: 30px; letter-spacing: 0.04em; text-transform: lowercase; color: #1B1613; white-space: nowrap; }
     .bar { position: absolute; border-radius: 4px; }
 
 
 
   </style>
-  <div id="root" data-composition-id="acad" data-width="1080" data-height="1920">
-<div id="acad-ch" class="card" style="left:60px;top:500px;width:960px;height:680px;opacity:0">
-    <div class="abs" style="left:0;top:0;width:960px;height:616px;overflow:hidden"><div id="acad-ch-pic" class="pic" style="width:1920px;height:2052px"><img src="assets/img/charter.jpg" alt=""></div></div>
-    <div class="cap"><b>FIG. 5.1</b><span>Charter of the College of Philadelphia, 1755</span></div></div>
-<div id="acad-pen" class="card" style="left:60px;top:500px;width:960px;height:680px;opacity:0">
-    <div class="abs" style="left:0;top:0;width:960px;height:616px;overflow:hidden"><div id="acad-pen-pic" class="pic" style="width:1920px;height:1276px"><img src="assets/img/penn.jpg" alt=""></div></div>
-    <div class="cap"><b>FIG. 5.2</b><span>College Hall, University of Pennsylvania</span></div></div>
-<div id="acad-yrs" class="tag" style="left:60px;top:1210px;opacity:0;color:#55804a">Academy 1751 · University 1791</div>
+  <div id="root" data-composition-id="acad" data-width="1080" data-height="1920" data-duration="8.335">
+<div id="acad-yrs" class="abs" style="left:84px;top:1420px;width:440px;opacity:0">
+    <div class="kicker">academy</div><div class="disp" style="font-size:72px;color:#55804A">1751</div>
+    <div class="kicker" style="margin-top:10px">university</div><div class="disp" style="font-size:72px">1791</div></div>
+<div id="acad-pen" class="card" style="left:556px;top:1400px;width:440px;height:330px;opacity:0;border-radius:20px">
+    <div class="abs" style="left:0;top:0;width:440px;height:266px;overflow:hidden"><div id="acad-pen-pic" class="pic" style="width:1920px;height:1276px"><img src="assets/img/penn.jpg" alt=""></div></div>
+    <div class="cap"><span>College Hall, Penn</span></div></div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo("#acad-ch", {"opacity":0,"filter":"blur(6px)","x":120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.6,"ease":"expo.out","stagger":0}, 0.05);
-    tl.fromTo("#acad-ch-pic", {"x":0,"y":0,"scale":0.75}, {"x":-180,"y":-76.75,"scale":0.625,"duration":4.655,"ease":"power2.inOut"}, 0.05);
-    tl.to("#acad-ch", {"opacity":0,"filter":"blur(8px)","duration":0.25,"ease":"power2.in"}, 4.855);
-    tl.fromTo("#acad-pen", {"opacity":0,"filter":"blur(6px)","scale":0.94}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 4.655);
-    tl.fromTo("#acad-pen-pic", {"x":-57.6,"y":-49.28,"scale":0.56}, {"x":0,"y":0,"scale":0.5,"duration":2,"ease":"power2.inOut"}, 4.655);
-    tl.fromTo("#acad-yrs", {"opacity":0,"filter":"blur(6px)","x":-120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.4,"ease":"expo.out","stagger":0}, 4.955);
+    tl.fromTo("#acad-yrs", {"opacity":0,"filter":"blur(6px)","x":-120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 2.515);
+    tl.fromTo("#acad-pen", {"opacity":0,"filter":"blur(6px)","x":120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 4.655);
+    tl.fromTo("#acad-pen-pic", {"x":-26.4,"y":-30.753,"scale":0.257}, {"x":0,"y":0,"scale":0.229,"duration":2.4,"ease":"power2.inOut"}, 4.655);
     window.__timelines["acad"] = tl;
   </script>
+
 </template>

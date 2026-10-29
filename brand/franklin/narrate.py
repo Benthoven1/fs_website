@@ -88,6 +88,8 @@ def build(cache):
         section = re.match(r"[a-z]+", line["id"]).group(0)
         if prev is not None:
             gap = SECTION_PAUSE if section != prev else PAUSE
+            # a held beat before a line, where the picture needs the time (a build)
+            gap += line.get("pause_before", 0)
             out.append(np.zeros(int(gap * sr)))
             t += gap
         # Quicken without changing pitch, and level the voice

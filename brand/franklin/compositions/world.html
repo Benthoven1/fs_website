@@ -1,0 +1,67 @@
+<template>
+  <style>
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-600.woff2) format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-600.woff2) format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500i.woff2) format("woff2"); font-weight: 500; font-style: italic; font-display: block; }
+    @font-face { font-family: "Major Mono Display"; src: url(assets/fonts/MajorMonoDisplay-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    #root { position: absolute; inset: 0; overflow: hidden; }
+
+    .abs { position: absolute; }
+    .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .disp { font-family: "Lora", serif; font-weight: 600; color: #1B1613; }
+    .small { font-family: "IBM Plex Sans", sans-serif; color: #5C544E; }
+    .serif { font-family: "Lora", serif; color: #1B1613; }
+    .kicker { font-family: "Major Mono Display", monospace; font-size: 30px; letter-spacing: 0.06em; text-transform: lowercase; color: #5C544E; }
+    .w { display: inline-block; white-space: pre; }
+    .card { position: absolute; background: #F9F8F5; border: 1px solid #D9D4CA; border-radius: 28px; overflow: hidden;
+      box-shadow: inset 0 1px 0 #FFFFFF, 0 2px 4px rgba(27,22,19,0.04), 0 18px 48px rgba(27,22,19,0.10); }
+    .card .cap { position: absolute; left: 0; bottom: 0; width: 100%; height: 64px; overflow: hidden; padding: 0 28px; display: flex; align-items: center; gap: 18px;
+      background: #F9F8F5; border-top: 1px solid #D9D4CA; font-family: "IBM Plex Sans", sans-serif; font-size: 28px; color: #5C544E; white-space: nowrap; }
+    .card .cap b { font-weight: 500; color: #1B1613; }
+    .pic { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+    .pic img { display: block; width: 100%; height: 100%; }
+    .tag { position: absolute; padding: 10px 18px 11px; border-radius: 10px; background: #F9F8F5; border: 1px solid #D9D4CA;
+      font-family: "Major Mono Display", monospace; font-size: 30px; letter-spacing: 0.04em; text-transform: lowercase; color: #1B1613; white-space: nowrap; }
+    .bar { position: absolute; border-radius: 4px; }
+
+
+    .wl { position: absolute; left: 0; top: 0; width: 0; height: 0; opacity: 0; }
+    .wl-d { position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 6px; background: #1B1613; border: 2px solid #F9F8F5; }
+    .wl-l { position: absolute; left: -1px; top: -64px; width: 2px; height: 58px; background: #1B1613; }
+    .wl-t { position: absolute; bottom: 66px; left: -300px; width: 600px; text-align: center; font-family: "Major Mono Display", monospace; font-size: 32px;
+      letter-spacing: 0.04em; color: #1B1613; white-space: nowrap; text-shadow: 0 0 10px #F9F8F5, 0 0 4px #F9F8F5; }
+
+  </style>
+  <div id="root" data-composition-id="world" data-width="1080" data-height="1920" data-duration="169.675">
+<canvas id="world-cv" class="full" width="1080" height="1920" data-layout-ignore></canvas>
+    <div id="world-lab" class="full" data-layout-ignore></div>
+    <div id="world-veil" class="full" style="background:#ECEAE5;opacity:0"></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.set("#world-veil", {"opacity":0}, 0);
+    tl.to("#world-veil", {"opacity":0.86,"duration":0.45,"ease":"power2.out"}, 15.285);
+    tl.to("#world-veil", {"opacity":0,"duration":0.5,"ease":"power2.inOut"}, 47.845);
+    tl.to("#world-veil", {"opacity":0.86,"duration":0.45,"ease":"power2.out"}, 60.255);
+    tl.to("#world-veil", {"opacity":0,"duration":0.5,"ease":"power2.inOut"}, 79.485);
+    tl.to("#world-veil", {"opacity":0.86,"duration":0.45,"ease":"power2.out"}, 91.465);
+    tl.to("#world-veil", {"opacity":0,"duration":0.5,"ease":"power2.inOut"}, 99.545);
+    tl.to({}, { duration: 169.675 }, 0);
+    window.__timelines["world"] = tl;
+  </script>
+  <script>
+    window.__hf = window.__hf || {}; window.__hf.buildReady = window.__hf.buildReady || {};
+    window.__hf.buildReady["world"] = new Promise((r) => (window.__worldReady = r));
+  </script>
+  <script type="module">
+    import { createWorld } from "../assets/lib/world.js";
+    let world = null, last = 0;
+    window.addEventListener("hf-seek", (e) => { last = e.detail.time; if (world) world.renderAt(last); });
+    createWorld(document.getElementById("world-cv"), document.getElementById("world-lab"), {"ghosts":9.845,"build":{"library":[47.945,54.57],"fire":[79.585,88.985],"hospital":[99.645,105.845],"academy":[119.37,123.285],"shared":[147.86,153.35]},"events":{"libCoins":[54.82,58.05],"libBooks":[58.45,60.705],"hospDonors":[106.295,111.415],"hospTrip":111.535,"turn":{"rules":132.43,"members":133.915,"money":135.765},"turnEnd":148.76,"nowNew":157.925},"cam":[{"t":0,"dur":0,"shot":"wide"},{"t":15.135,"dur":3,"shot":"all4"},{"t":47.395,"dur":1.7,"shot":"plot:library"},{"t":54.42,"dur":1.1,"shot":"mid:library"},{"t":58.15,"dur":1,"shot":"close:library:case"},{"t":60.405,"dur":1.6,"shot":"plot:library"},{"t":79.035,"dur":1.8,"shot":"plot:fire"},{"t":84.83,"dur":1.4,"shot":"mid:fire"},{"t":91.415,"dur":2,"shot":"all4"},{"t":99.095,"dur":1.8,"shot":"plot:hospital"},{"t":106.095,"dur":1.2,"shot":"mid:hospital"},{"t":119.02,"dur":1.6,"shot":"plot:academy"},{"t":127.705,"dur":1.9,"shot":"all4"},{"t":147.66,"dur":2.2,"shot":"plot:shared"},{"t":154.87,"dur":1,"shot":"mid:shared"}],"labels":[{"text":"lending library","anchor":"library.slab","t0":3.89,"t1":9.845},{"text":"lending library · 1731","anchor":"library.slab","t0":9.845,"t1":15.335},{"text":"fire company","anchor":"fire.slab","t0":4.885,"t1":9.845},{"text":"fire company · 1736","anchor":"fire.slab","t0":9.845,"t1":15.335},{"text":"hospital","anchor":"hospital.slab","t0":6.26,"t1":9.845},{"text":"hospital · 1751","anchor":"hospital.slab","t0":9.845,"t1":15.335},{"text":"college","anchor":"academy.slab","t0":7.455,"t1":9.845},{"text":"college · 1751","anchor":"academy.slab","t0":9.845,"t1":15.335},{"text":"rules","anchor":"library.rules","t0":49.194,"t1":54.62},{"text":"members","anchor":"library.members","t0":50.143,"t1":54.62},{"text":"money","anchor":"library.money","t0":51.092,"t1":54.62},{"text":"the collection","anchor":"library.case","t0":58.65,"t1":60.305},{"text":"the alarm bell","anchor":"fire.bell","t0":86.852,"t1":84.83},{"text":"private donors","anchor":"hospital.donors","t0":106.295,"t1":119.92},{"text":"the assembly","anchor":"hospital.assembly","t0":106.595,"t1":119.92},{"text":"academy · 1751","anchor":"academy.roof","t0":123.385,"t1":128.305},{"text":"shared services","anchor":"shared.members","t0":156.41,"t1":168.575},{"text":"new project","anchor":"shared.new","t0":155.57,"t1":168.575}],"veils":[[15.285,47.845],[60.255,79.485],[91.465,99.545]]})
+      .then((w) => { world = w; w.renderAt(last); window.__worldReady(); });
+  </script>
+</template>

@@ -3,88 +3,44 @@
     @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
     @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
     @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-600.woff2) format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
-    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-700.woff2) format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
-    @font-face { font-family: "IBM Plex Mono"; src: url(assets/fonts/IBMPlexMono-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
-    @font-face { font-family: "IBM Plex Mono"; src: url(assets/fonts/IBMPlexMono-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-600.woff2) format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500i.woff2) format("woff2"); font-weight: 500; font-style: italic; font-display: block; }
-    #root { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse 120% 75% at 50% 30%, #F5F3EF 0%, #ECEAE5 58%, #E3DFD8 100%); }
+    @font-face { font-family: "Major Mono Display"; src: url(assets/fonts/MajorMonoDisplay-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    #root { position: absolute; inset: 0; overflow: hidden; }
 
     .abs { position: absolute; }
     .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
-    .sans { font-family: "IBM Plex Sans", sans-serif; color: #1B1613; }
-    .mono { font-family: "IBM Plex Mono", monospace; color: #5C544E; letter-spacing: 0.02em; }
+    .disp { font-family: "Lora", serif; font-weight: 600; color: #1B1613; }
+    .small { font-family: "IBM Plex Sans", sans-serif; color: #5C544E; }
     .serif { font-family: "Lora", serif; color: #1B1613; }
-    .kicker { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 28px; letter-spacing: 0.14em; text-transform: uppercase; color: #5C544E; }
+    .kicker { font-family: "Major Mono Display", monospace; font-size: 30px; letter-spacing: 0.06em; text-transform: lowercase; color: #5C544E; }
     .w { display: inline-block; white-space: pre; }
     .card { position: absolute; background: #F9F8F5; border: 1px solid #D9D4CA; border-radius: 28px; overflow: hidden;
       box-shadow: inset 0 1px 0 #FFFFFF, 0 2px 4px rgba(27,22,19,0.04), 0 18px 48px rgba(27,22,19,0.10); }
     .card .cap { position: absolute; left: 0; bottom: 0; width: 100%; height: 64px; overflow: hidden; padding: 0 28px; display: flex; align-items: center; gap: 18px;
-      background: #F9F8F5; border-top: 1px solid #D9D4CA; font-family: "IBM Plex Mono", monospace; font-size: 28px; color: #5C544E; white-space: nowrap; }
+      background: #F9F8F5; border-top: 1px solid #D9D4CA; font-family: "IBM Plex Sans", sans-serif; font-size: 28px; color: #5C544E; white-space: nowrap; }
     .card .cap b { font-weight: 500; color: #1B1613; }
     .pic { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
     .pic img { display: block; width: 100%; height: 100%; }
     .tag { position: absolute; padding: 10px 18px 11px; border-radius: 10px; background: #F9F8F5; border: 1px solid #D9D4CA;
-      font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 26px; letter-spacing: 0.08em; text-transform: uppercase; color: #1B1613; white-space: nowrap; }
+      font-family: "Major Mono Display", monospace; font-size: 30px; letter-spacing: 0.04em; text-transform: lowercase; color: #1B1613; white-space: nowrap; }
     .bar { position: absolute; border-radius: 4px; }
 
 
 
   </style>
-  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
-<div id="hook-pros" class="card" style="left:60px;top:510px;width:960px;height:380px;">
-    <div class="abs" style="left:0;top:0;width:960px;height:316px;overflow:hidden"><div id="hook-pros-pic" class="pic" style="width:5801px;height:1597px"><img src="assets/img/prospect.jpg" alt=""></div></div>
-    <div class="cap"><b>FIG. 0.1</b><span>East Prospect of Philadelphia, Scull &amp; Heap, 1754</span></div></div>
-<div id="hook-t0" class="card" style="left:60px;top:918px;width:468px;height:126px;border-radius:20px;opacity:0">
-      <div id="hook-t0-wash" class="abs" style="left:0;top:0;width:468px;height:126px;background:#c8d6ea;opacity:0"></div>
-      <div id="hook-t0-bar" class="bar" style="left:22px;top:22px;width:8px;height:82px;background:#D9D4CA"></div>
-      <div class="sans abs" style="left:52px;top:20px;font-size:38px;font-weight:600">Lending library</div>
-      <div id="hook-t0-none" class="mono abs" style="left:52px;top:76px;font-size:27px">1731: NONE</div>
-      <div id="hook-t0-est" class="mono abs" style="left:52px;top:76px;font-size:27px;color:#4d6d96;font-weight:500;opacity:0">EST. 1731</div></div>
-<div id="hook-t1" class="card" style="left:552px;top:918px;width:468px;height:126px;border-radius:20px;opacity:0">
-      <div id="hook-t1-wash" class="abs" style="left:0;top:0;width:468px;height:126px;background:#f0d5bb;opacity:0"></div>
-      <div id="hook-t1-bar" class="bar" style="left:22px;top:22px;width:8px;height:82px;background:#D9D4CA"></div>
-      <div class="sans abs" style="left:52px;top:20px;font-size:38px;font-weight:600">Fire company</div>
-      <div id="hook-t1-none" class="mono abs" style="left:52px;top:76px;font-size:27px">1731: NONE</div>
-      <div id="hook-t1-est" class="mono abs" style="left:52px;top:76px;font-size:27px;color:#a8603f;font-weight:500;opacity:0">EST. 1736</div></div>
-<div id="hook-t2" class="card" style="left:60px;top:1060px;width:468px;height:126px;border-radius:20px;opacity:0">
-      <div id="hook-t2-wash" class="abs" style="left:0;top:0;width:468px;height:126px;background:#b8ddd8;opacity:0"></div>
-      <div id="hook-t2-bar" class="bar" style="left:22px;top:22px;width:8px;height:82px;background:#D9D4CA"></div>
-      <div class="sans abs" style="left:52px;top:20px;font-size:38px;font-weight:600">Hospital</div>
-      <div id="hook-t2-none" class="mono abs" style="left:52px;top:76px;font-size:27px">1731: NONE</div>
-      <div id="hook-t2-est" class="mono abs" style="left:52px;top:76px;font-size:27px;color:#357f77;font-weight:500;opacity:0">EST. 1751</div></div>
-<div id="hook-t3" class="card" style="left:552px;top:1060px;width:468px;height:126px;border-radius:20px;opacity:0">
-      <div id="hook-t3-wash" class="abs" style="left:0;top:0;width:468px;height:126px;background:#c4ddb8;opacity:0"></div>
-      <div id="hook-t3-bar" class="bar" style="left:22px;top:22px;width:8px;height:82px;background:#D9D4CA"></div>
-      <div class="sans abs" style="left:52px;top:20px;font-size:38px;font-weight:600">College</div>
-      <div id="hook-t3-none" class="mono abs" style="left:52px;top:76px;font-size:27px">1731: NONE</div>
-      <div id="hook-t3-est" class="mono abs" style="left:52px;top:76px;font-size:27px;color:#55804a;font-weight:500;opacity:0">EST. 1751</div></div>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920" data-duration="15.485">
+<div id="hook-pros" class="card" style="left:60px;top:380px;width:960px;height:420px;">
+    <div class="abs" style="left:0;top:0;width:960px;height:356px;overflow:hidden"><div id="hook-pros-pic" class="pic" style="width:5801px;height:1597px"><img src="assets/img/prospect.jpg" alt=""></div></div>
+    <div class="cap"><span>East Prospect of Philadelphia, Scull &amp; Heap, 1754</span></div></div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo("#hook-pros-pic", {"x":0,"y":0,"scale":0.198}, {"x":-187.85,"y":0,"scale":0.198,"duration":15.585,"ease":"power1.inOut"}, 0);
-    tl.fromTo("#hook-t0", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 3.89);
-    tl.fromTo("#hook-t0-wash", {"opacity":0}, {"opacity":0.4,"duration":0.4,"ease":"power2.inOut"}, 9.845);
-    tl.fromTo("#hook-t0-bar", {"backgroundColor":"#D9D4CA"}, {"backgroundColor":"#4d6d96","duration":0.3}, 9.845);
-    tl.to("#hook-t0-none", {"opacity":0,"filter":"blur(6px)","duration":0.15}, 9.845);
-    tl.fromTo("#hook-t0-est", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.2}, 9.945);
-    tl.fromTo("#hook-t1", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 4.885);
-    tl.fromTo("#hook-t1-wash", {"opacity":0}, {"opacity":0.4,"duration":0.4,"ease":"power2.inOut"}, 10.005);
-    tl.fromTo("#hook-t1-bar", {"backgroundColor":"#D9D4CA"}, {"backgroundColor":"#a8603f","duration":0.3}, 10.005);
-    tl.to("#hook-t1-none", {"opacity":0,"filter":"blur(6px)","duration":0.15}, 10.005);
-    tl.fromTo("#hook-t1-est", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.2}, 10.105);
-    tl.fromTo("#hook-t2", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 6.26);
-    tl.fromTo("#hook-t2-wash", {"opacity":0}, {"opacity":0.4,"duration":0.4,"ease":"power2.inOut"}, 10.165);
-    tl.fromTo("#hook-t2-bar", {"backgroundColor":"#D9D4CA"}, {"backgroundColor":"#357f77","duration":0.3}, 10.165);
-    tl.to("#hook-t2-none", {"opacity":0,"filter":"blur(6px)","duration":0.15}, 10.165);
-    tl.fromTo("#hook-t2-est", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.2}, 10.265);
-    tl.fromTo("#hook-t3", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 7.455);
-    tl.fromTo("#hook-t3-wash", {"opacity":0}, {"opacity":0.4,"duration":0.4,"ease":"power2.inOut"}, 10.325);
-    tl.fromTo("#hook-t3-bar", {"backgroundColor":"#D9D4CA"}, {"backgroundColor":"#55804a","duration":0.3}, 10.325);
-    tl.to("#hook-t3-none", {"opacity":0,"filter":"blur(6px)","duration":0.15}, 10.325);
-    tl.fromTo("#hook-t3-est", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.2}, 10.425);
-    tl.to("#hook-pros, #hook-t0, #hook-t1, #hook-t2, #hook-t3", {"opacity":0,"filter":"blur(8px)","duration":0.25,"ease":"power2.in"}, 15.235);
+    tl.fromTo("#hook-pros-pic", {"x":0,"y":0,"scale":0.223}, {"x":-295.888,"y":0,"scale":0.223,"duration":15.585,"ease":"power1.inOut"}, 0);
+    tl.to("#hook-pros", {"opacity":0,"filter":"blur(8px)","duration":0.25,"ease":"power2.in"}, 15.235);
     window.__timelines["hook"] = tl;
   </script>
+
 </template>

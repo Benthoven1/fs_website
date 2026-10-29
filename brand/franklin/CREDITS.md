@@ -39,14 +39,14 @@ the licence named here. The pixels of the archival pictures are unaltered
 
 ## Type
 
-IBM Plex Sans and IBM Plex Mono (IBM) and Lora (Cyreal), under the SIL Open
-Font License, from Google Fonts.
+Lora (Cyreal), Major Mono Display (Emre Parlak) and IBM Plex Sans (IBM), the
+Mulvium site's own type, under the SIL Open Font License, from Google Fonts.
 
-## Isometric figures
+## The 3D world
 
-The four machines (`figures/`, written to `assets/fig/`) are drawn with the
-[Anatomy](https://github.com/wheresryan22/anatomy) kit by Ryan, MIT licence,
-vendored in `figures/kit/` with its licence.
+Rendered with [three.js](https://threejs.org/) r170 (MIT licence), vendored
+in `assets/lib/three/` with its licence; the model itself (`assets/lib/world.js`)
+is written for this film.
 
 ## The close
 

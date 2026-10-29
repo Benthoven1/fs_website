@@ -9,12 +9,12 @@ academy that became the University of Pennsylvania; each built from scratch.
 What a fiscal sponsor would do for him today, and Mulvium's close.
 
 It is a [HyperFrames](https://github.com/heygen-com/hyperframes) project:
-HTML and GSAP, rendered frame by frame to MP4. The look is the Mulvium site's
-porcelain, set like a textbook: chapters, a running timeline, numbered figures
-with their sources, key figures, and four isometric machines (drawn with the
-[Anatomy](https://github.com/wheresryan22/anatomy) kit) that are put
-together on screen before they run. The pictures are the real paintings,
-engravings and documents of Franklin's city (`CREDITS.md`). `SPEC.md` is the director's brief;
+HTML and GSAP, rendered frame by frame to MP4. One 3D model runs under the
+whole film (three.js, `assets/lib/world.js`): a commons by the Delaware on
+which Franklin's four institutions are built part by part as the narration
+reaches them, then a fifth plot with one foundation shared. The real
+paintings, engravings and documents of his city come up over it on cards
+(`CREDITS.md`). `SPEC.md` is the director's brief;
 `REVIEW.md` is the last review of the film against it.
 
 - `script.json` — the narration, line by line, and the voice that reads it.
@@ -24,9 +24,8 @@ engravings and documents of Franklin's city (`CREDITS.md`). `SPEC.md` is the dir
   `assets/narration.wav` and transcribes every word's time into `timing.json`.
 - `denoise.py` — clears the hiss the designed voice carries (DeepFilterNet3,
   at most 28 dB of reduction, so soft consonants survive).
-- `figures/*.mjs` — the machines: `node figures/library.mjs` (and `grant`,
-  `foundations`) writes `assets/fig/<name>.svg`, its moves (`.json`) and a page
-  to look at it on its own (`.html`). Every part carries its build order.
+- `assets/lib/world.js` — the 3D world: the model, its parts, and a frame for
+  any time t; `build.mjs` writes its schedule (builds, moves, camera, labels).
 - `prep.py` — readies the archival pictures in `assets/img/` (no grade, no
   filter) and records their sizes.
 - `build.mjs` — writes the film: `index.html` (scene hosts, captions, voice,
@@ -48,7 +47,6 @@ python3 narrate.py speak <cache-dir>
 python3 denoise.py <dfn3-weights> <cache-dir> <clean-dir>
 python3 narrate.py build <clean-dir>          # needs faster-whisper
 python3 prep.py <download-dir>                # the pictures, as named in CREDITS.md
-for f in library grant foundations; do node figures/$f.mjs; done
 node build.mjs
 python3 mix.py <prelude.ogg>
 npx hyperframes check && npx hyperframes snapshot --review

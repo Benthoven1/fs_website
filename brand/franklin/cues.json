@@ -1,38 +1,39 @@
 {
- "duration": 181.825,
- "voiceEnd": 172.715,
+ "duration": 190.125,
+ "voiceEnd": 181.015,
  "sections": {
+  "world": 0,
   "chrome": 0,
   "hook": 0,
   "who": 15.285,
   "lib": 38.535,
-  "fire": 67.38,
-  "hosp": 88.265,
-  "acad": 114.17,
-  "turn": 121.505,
-  "now": 140.61,
-  "end": 160.425
+  "fire": 69.18,
+  "hosp": 91.465,
+  "acad": 120.07,
+  "turn": 128.405,
+  "now": 148.91,
+  "end": 168.725
  },
  "sfx": [
   {
    "name": "click-soft",
    "t": 3.94,
-   "vol": 0.25
+   "vol": 0.22
   },
   {
    "name": "click-soft",
    "t": 4.935,
-   "vol": 0.25
+   "vol": 0.22
   },
   {
    "name": "click-soft",
    "t": 6.31,
-   "vol": 0.25
+   "vol": 0.22
   },
   {
    "name": "click-soft",
    "t": 7.505,
-   "vol": 0.25
+   "vol": 0.22
   },
   {
    "name": "whoosh-short",
@@ -45,33 +46,63 @@
    "vol": 0.2
   },
   {
-   "name": "typing",
-   "t": 53.02,
+   "name": "whoosh",
+   "t": 47.895,
    "vol": 0.16
   },
   {
-   "name": "whoosh-short",
-   "t": 58.455,
-   "vol": 0.18
+   "name": "typing",
+   "t": 54.82,
+   "vol": 0.14
   },
   {
    "name": "whoosh-short",
-   "t": 77.755,
+   "t": 60.255,
    "vol": 0.18
+  },
+  {
+   "name": "whoosh",
+   "t": 79.535,
+   "vol": 0.16
+  },
+  {
+   "name": "whoosh",
+   "t": 99.595,
+   "vol": 0.16
   },
   {
    "name": "impact-bass-1",
-   "t": 107.005,
+   "t": 112.005,
    "vol": 0.22
   },
   {
    "name": "click-soft",
-   "t": 150.725,
+   "t": 132.43,
+   "vol": 0.2
+  },
+  {
+   "name": "click-soft",
+   "t": 133.915,
+   "vol": 0.2
+  },
+  {
+   "name": "click-soft",
+   "t": 135.765,
+   "vol": 0.2
+  },
+  {
+   "name": "whoosh",
+   "t": 147.76,
+   "vol": 0.16
+  },
+  {
+   "name": "click-soft",
+   "t": 158.675,
    "vol": 0.4
   },
   {
    "name": "riser",
-   "t": 170.115,
+   "t": 178.415,
    "vol": 0.2
   }
  ]

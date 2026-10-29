@@ -29,7 +29,8 @@
     },
     {
       "id": "lib2",
-      "text": "In 1731 he proposed that members pool their money to buy books: fifty subscribers paid forty shillings each, then ten shillings a year."
+      "text": "In 1731 he proposed that members pool their money to buy books: fifty subscribers paid forty shillings each, then ten shillings a year.",
+      "pause_before": 1.8
     },
     {
       "id": "lib3",
@@ -41,7 +42,8 @@
     },
     {
       "id": "fire2",
-      "text": "The next year he organised the Union Fire Company, thirty volunteers who kept their own leather buckets and turned out for fires."
+      "text": "The next year he organised the Union Fire Company, thirty volunteers who kept their own leather buckets and turned out for fires.",
+      "pause_before": 1.4
     },
     {
       "id": "hosp1",
@@ -49,7 +51,8 @@
     },
     {
       "id": "hosp2",
-      "text": "The Pennsylvania Assembly would grant two thousand pounds only if private donors first raised the same amount."
+      "text": "The Pennsylvania Assembly would grant two thousand pounds only if private donors first raised the same amount.",
+      "pause_before": 1.8
     },
     {
       "id": "hosp3",
@@ -57,11 +60,13 @@
     },
     {
       "id": "acad1",
-      "text": "The same year, Franklin's academy opened. It later became the University of Pennsylvania."
+      "text": "The same year, Franklin's academy opened. It later became the University of Pennsylvania.",
+      "pause_before": 0.9
     },
     {
       "id": "turn1",
-      "text": "Each institution had to be built from nothing: its rules written, its members recruited and its money raised."
+      "text": "Each institution had to be built from nothing: its rules written, its members recruited and its money raised.",
+      "pause_before": 1.0
     },
     {
       "id": "turn2",
@@ -69,7 +74,8 @@
     },
     {
       "id": "now1",
-      "text": "A founder today does not have to start from nothing."
+      "text": "A founder today does not have to start from nothing.",
+      "pause_before": 1.4
     },
     {
       "id": "now2",

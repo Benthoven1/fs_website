@@ -3,36 +3,35 @@
     @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
     @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
     @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-600.woff2) format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
-    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-700.woff2) format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
-    @font-face { font-family: "IBM Plex Mono"; src: url(assets/fonts/IBMPlexMono-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
-    @font-face { font-family: "IBM Plex Mono"; src: url(assets/fonts/IBMPlexMono-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-600.woff2) format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500i.woff2) format("woff2"); font-weight: 500; font-style: italic; font-display: block; }
-    #root { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse 120% 75% at 50% 30%, #F5F3EF 0%, #ECEAE5 58%, #E3DFD8 100%); }
+    @font-face { font-family: "Major Mono Display"; src: url(assets/fonts/MajorMonoDisplay-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    #root { position: absolute; inset: 0; overflow: hidden; }
 
     .abs { position: absolute; }
     .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
-    .sans { font-family: "IBM Plex Sans", sans-serif; color: #1B1613; }
-    .mono { font-family: "IBM Plex Mono", monospace; color: #5C544E; letter-spacing: 0.02em; }
+    .disp { font-family: "Lora", serif; font-weight: 600; color: #1B1613; }
+    .small { font-family: "IBM Plex Sans", sans-serif; color: #5C544E; }
     .serif { font-family: "Lora", serif; color: #1B1613; }
-    .kicker { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 28px; letter-spacing: 0.14em; text-transform: uppercase; color: #5C544E; }
+    .kicker { font-family: "Major Mono Display", monospace; font-size: 30px; letter-spacing: 0.06em; text-transform: lowercase; color: #5C544E; }
     .w { display: inline-block; white-space: pre; }
     .card { position: absolute; background: #F9F8F5; border: 1px solid #D9D4CA; border-radius: 28px; overflow: hidden;
       box-shadow: inset 0 1px 0 #FFFFFF, 0 2px 4px rgba(27,22,19,0.04), 0 18px 48px rgba(27,22,19,0.10); }
     .card .cap { position: absolute; left: 0; bottom: 0; width: 100%; height: 64px; overflow: hidden; padding: 0 28px; display: flex; align-items: center; gap: 18px;
-      background: #F9F8F5; border-top: 1px solid #D9D4CA; font-family: "IBM Plex Mono", monospace; font-size: 28px; color: #5C544E; white-space: nowrap; }
+      background: #F9F8F5; border-top: 1px solid #D9D4CA; font-family: "IBM Plex Sans", sans-serif; font-size: 28px; color: #5C544E; white-space: nowrap; }
     .card .cap b { font-weight: 500; color: #1B1613; }
     .pic { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
     .pic img { display: block; width: 100%; height: 100%; }
     .tag { position: absolute; padding: 10px 18px 11px; border-radius: 10px; background: #F9F8F5; border: 1px solid #D9D4CA;
-      font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 26px; letter-spacing: 0.08em; text-transform: uppercase; color: #1B1613; white-space: nowrap; }
+      font-family: "Major Mono Display", monospace; font-size: 30px; letter-spacing: 0.04em; text-transform: lowercase; color: #1B1613; white-space: nowrap; }
     .bar { position: absolute; border-radius: 4px; }
 
 
 
   </style>
-  <div id="root" data-composition-id="end" data-width="1080" data-height="1920">
+  <div id="root" data-composition-id="end" data-width="1080" data-height="1920" data-duration="21.4">
 <video id="end-plate" data-start="0" data-media-start="0" data-duration="21.4" class="full clip" src="assets/cosmos-close.mp4" muted playsinline style="object-fit:cover"></video>
 <div id="end-build" class="serif abs" style="left:90px;top:840px;width:900px;text-align:center;font-size:56px;line-height:1.25"><span class="w">Mulvium </span><span class="w">is </span><span class="w">building </span><span class="w">that </span><span class="w">structure </span><span class="w">for </span><span class="w">the </span><span class="w">next </span><span class="w">Franklin. </span></div>
 <div id="end-close" class="serif abs" style="left:90px;top:760px;width:900px;text-align:center;font-size:46px;line-height:1.3"><span class="w">The </span><span class="w">next </span><span class="w">great </span><span class="w">expansion </span><span class="w">of </span><span class="w">human </span><span class="w">creativity </span><span class="w">will </span><span class="w">come </span><span class="w">from </span><span class="w">making </span><span class="w">it </span><span class="w">easier </span><span class="w">to </span><span class="w">create </span><br><span style="font-size:108px;color:#B87758;font-style:italic"><span class="w">institutions. </span></span></div>
@@ -47,4 +46,5 @@
     tl.to("#end-close", {"opacity":0,"filter":"blur(8px)","duration":0.3,"ease":"power2.in"}, 12.89);
     window.__timelines["end"] = tl;
   </script>
+
 </template>
