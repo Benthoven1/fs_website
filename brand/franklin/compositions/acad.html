@@ -41,16 +41,16 @@
     .kk.ink { color: #5C544E; }
     .flash { position: absolute; inset: 0; background: #FFFFFF; opacity: 0; }
   </style>
-  <div id="root" data-composition-id="acad" data-width="1080" data-height="1920" data-duration="28.435">
+  <div id="root" data-composition-id="acad" data-width="1080" data-height="1920" data-duration="23.246">
 <div id="acad-ac" class="kt white" style="left:72px;top:250px;width:936px;font-size:110px;text-align:left;">Academy <i>1751</i></div>
 <div id="acad-prop" class="full plate" style="z-index:1;opacity:0">
-    <div class="full" style="overflow:hidden"><div id="acad-prop-pic" class="pic" style="width:1129px;height:1800px"><img src="assets/img/proposals.jpg" alt=""></div></div>
-    <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 45%, rgba(14,10,8,0.62) 100%)"></div>
+    <div class="full" style="overflow:hidden"><div id="acad-prop-pic" class="pic" style="width:1120px;height:1800px"><img src="assets/img/proposals.jpg" alt=""></div></div>
+    <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 48%, rgba(14,10,8,0.88) 64%, rgba(14,10,8,0.92) 100%)"></div>
     <div class="credit">Franklin, Proposals Relating to the Education of Youth in Pensilvania, 1749</div></div>
-<div id="acad-y1749" class="kt white" style="left:72px;top:1060px;width:936px;font-size:150px;text-align:left;z-index:5">1749</div>
-<div id="acad-a1" class="kt white" style="left:72px;top:1240px;width:936px;font-size:64px;text-align:left;z-index:5">A school for <i>useful</i> subjects,</div>
-<div id="acad-a2" class="kt white" style="left:72px;top:1322px;width:936px;font-size:64px;text-align:left;z-index:5">taught in English,</div>
-<div id="acad-a3" class="kt white" style="left:72px;top:1404px;width:936px;font-size:64px;text-align:left;z-index:5">alongside Latin and Greek.</div>
+<div id="acad-y1749" class="kt white" style="left:72px;top:1270px;width:936px;font-size:150px;text-align:left;z-index:5">1749</div>
+<div id="acad-a1" class="kt white" style="left:72px;top:1450px;width:936px;font-size:64px;text-align:left;z-index:5">A school for <i>useful</i> subjects,</div>
+<div id="acad-a2" class="kt white" style="left:72px;top:1532px;width:936px;font-size:64px;text-align:left;z-index:5">taught in English,</div>
+<div id="acad-a3" class="kt white" style="left:72px;top:1614px;width:936px;font-size:64px;text-align:left;z-index:5">alongside Latin and Greek.</div>
 <div id="acad-tr24" class="kt white" style="left:72px;top:250px;width:936px;font-size:190px;text-align:left;">24 <i style="font-size:0.42em;opacity:0.85">trustees</i></div>
 <div id="acad-pres" class="kt white" style="left:72px;top:470px;width:936px;font-size:72px;text-align:left;"><i>Franklin, president</i></div>
 <div id="acad-pen" class="full plate" style="z-index:1;opacity:0">
@@ -61,26 +61,27 @@
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo("#acad-ac", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 1.92);
-    tl.to("#acad-ac", {"opacity":0,"filter":"blur(8px)","duration":0.25}, 3.255);
-    tl.fromTo("#acad-prop-pic", {"x":-272.88,"y":0,"scale":1.44}, {"x":-122.347,"y":0,"scale":1.173,"duration":9.875,"ease":"power1.inOut"}, 3.055);
-    tl.set("#acad-prop", {"opacity":1}, 3.355);
-    tl.fromTo("#acad-prop", {"clipPath":"inset(100% 0% 0% 0%)"}, {"clipPath":"inset(0% 0% 0% 0%)","duration":0.55,"ease":"expo.out"}, 3.355);
-    tl.to("#acad-prop", {"clipPath":"inset(0% 0% 100% 0%)","duration":0.5,"ease":"expo.in"}, 12.13);
-    tl.set("#acad-prop", {"opacity":0}, 12.63);
-    tl.fromTo("#acad-y1749", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 5.63);
-    tl.fromTo("#acad-a1", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 8.195);
-    tl.fromTo("#acad-a2", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 9.555);
-    tl.fromTo("#acad-a3", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 10.28);
-    tl.fromTo("#acad-tr24", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 12.68);
-    tl.fromTo("#acad-pres", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 17.055);
-    tl.to("#acad-tr24, #acad-pres", {"opacity":0,"filter":"blur(8px)","duration":0.3}, 22.485);
-    tl.fromTo("#acad-pen-pic", {"x":-1121.191,"y":-144,"scale":1.73}, {"x":-846.734,"y":0,"scale":1.505,"duration":6.35,"ease":"power1.inOut"}, 22.385);
-    tl.set("#acad-pen", {"opacity":1}, 22.685);
-    tl.fromTo("#acad-pen", {"clipPath":"inset(100% 0% 0% 0%)"}, {"clipPath":"inset(0% 0% 0% 0%)","duration":0.55,"ease":"expo.out"}, 22.685);
-    tl.to("#acad-pen", {"clipPath":"inset(0% 0% 100% 0%)","duration":0.5,"ease":"expo.in"}, 27.935);
-    tl.set("#acad-pen", {"opacity":0}, 28.435);
-    tl.fromTo("#acad-upenn", {"opacity":0,"y":50,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.6,"ease":"expo.out"}, 24.805);
+    tl.fromTo("#acad-ac", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 2.2);
+    tl.to("#acad-ac", {"opacity":0,"filter":"blur(8px)","duration":0.25}, 3.464);
+    tl.fromTo("#acad-prop-pic", {"x":-129.013,"y":0,"scale":1.195}, {"x":-69.28,"y":0,"scale":1.088,"duration":8.28,"ease":"power1.inOut"}, 3.264);
+    tl.set("#acad-prop", {"opacity":1}, 3.564);
+    tl.fromTo("#acad-prop", {"clipPath":"inset(100% 0% 0% 0%)"}, {"clipPath":"inset(0% 0% 0% 0%)","duration":0.55,"ease":"expo.out"}, 3.564);
+    tl.to("#acad-prop", {"clipPath":"inset(0% 0% 100% 0%)","duration":0.5,"ease":"expo.in"}, 10.744);
+    tl.set("#acad-prop", {"opacity":0}, 11.244);
+    tl.fromTo("#acad-y1749", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 4.794);
+    tl.fromTo("#acad-a1", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 7.424);
+    tl.fromTo("#acad-a2", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 8.504);
+    tl.fromTo("#acad-a3", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 9.384);
+    tl.to("#acad-y1749, #acad-a1, #acad-a2, #acad-a3", {"opacity":0,"filter":"blur(8px)","duration":0.25}, 11.044);
+    tl.fromTo("#acad-tr24", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 11.294);
+    tl.fromTo("#acad-pres", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 14.404);
+    tl.to("#acad-tr24, #acad-pres", {"opacity":0,"filter":"blur(8px)","duration":0.3}, 18.304);
+    tl.fromTo("#acad-pen-pic", {"x":-1121.191,"y":-144,"scale":1.73}, {"x":-846.734,"y":0,"scale":1.505,"duration":5.342,"ease":"power1.inOut"}, 18.204);
+    tl.set("#acad-pen", {"opacity":1}, 18.504);
+    tl.fromTo("#acad-pen", {"clipPath":"inset(100% 0% 0% 0%)"}, {"clipPath":"inset(0% 0% 0% 0%)","duration":0.55,"ease":"expo.out"}, 18.504);
+    tl.to("#acad-pen", {"clipPath":"inset(0% 0% 100% 0%)","duration":0.5,"ease":"expo.in"}, 22.746);
+    tl.set("#acad-pen", {"opacity":0}, 23.246);
+    tl.fromTo("#acad-upenn", {"opacity":0,"y":50,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.6,"ease":"expo.out"}, 19.924);
     window.__timelines["acad"] = tl;
   </script>
 

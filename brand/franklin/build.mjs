@@ -164,6 +164,7 @@ const LOW = 1400; // type set over the model: the open ground under it
 function plate(s, id, name, { t0, t1, from, to, scrim = "low", credit = "", enter = "cut", exit = "cut", z = 1 }) {
   const sc = scrim === "low" ? "linear-gradient(180deg, rgba(14,10,8,0) 45%, rgba(14,10,8,0.62) 100%)"
     : scrim === "high" ? "linear-gradient(0deg, rgba(14,10,8,0) 50%, rgba(14,10,8,0.55) 100%)"
+    : scrim === "deep" ? "linear-gradient(180deg, rgba(14,10,8,0) 48%, rgba(14,10,8,0.88) 64%, rgba(14,10,8,0.92) 100%)"
     : scrim === "both" ? "linear-gradient(180deg, rgba(14,10,8,0.45) 0%, rgba(14,10,8,0) 30%, rgba(14,10,8,0) 52%, rgba(14,10,8,0.65) 100%)" : "none";
   s.add(`<div id="${id}" class="full plate" style="z-index:${z};opacity:0">
     <div class="full" style="overflow:hidden">${picEl(`${id}-pic`, name)}</div>
@@ -460,11 +461,12 @@ const WORLD = (() => {
   land(s, "#ac", at("acad1", "academy") - 0.1);
   s.to("#ac", { opacity: 0, filter: "blur(8px)", duration: 0.25 }, start("acad2") - 0.3);
   // the plan, in Franklin's own printing, and what it asked for
-  plate(s, "prop", "proposals", { t0: start("acad2") - 0.2, t1: start("acad3") - 0.1, from: [0.5, 0.3, 1.35], to: [0.5, 0.42, 1.1], scrim: "low", credit: "Franklin, Proposals Relating to the Education of Youth in Pensilvania, 1749", enter: "wipe", exit: "wipeUp" });
-  s.add(kt("y1749", "1749", { y: 1060, size: 150, extra: "z-index:5" }));
+  plate(s, "prop", "proposals", { t0: start("acad2") - 0.2, t1: start("acad3") - 0.1, from: [0.5, 0.36, 1.12], to: [0.5, 0.4, 1.02], scrim: "deep", credit: "Franklin, Proposals Relating to the Education of Youth in Pensilvania, 1749", enter: "wipe", exit: "wipeUp" });
+  s.add(kt("y1749", "1749", { y: 1270, size: 150, extra: "z-index:5" }));
   land(s, "#y1749", at("acad2", "1749") - 0.15);
   const AIMS = [["a1", "A school for <i>useful</i> subjects,", "useful"], ["a2", "taught in English,", "english"], ["a3", "alongside Latin and Greek.", "alongside"]];
-  AIMS.forEach(([id, text, w], i) => { s.add(kt(id, text, { y: 1240 + i * 82, size: 64, extra: "z-index:5" })); land(s, `#${id}`, at("acad2", w) - 0.1); });
+  AIMS.forEach(([id, text, w], i) => { s.add(kt(id, text, { y: 1450 + i * 82, size: 64, extra: "z-index:5" })); land(s, `#${id}`, at("acad2", w) - 0.1); });
+  s.to("#y1749, #a1, #a2, #a3", { opacity: 0, filter: "blur(8px)", duration: 0.25 }, start("acad3") - 0.3);
   // the trustees, on the model: their bench and their subscription box
   s.add(kt("tr24", `24 <i style="font-size:0.42em;opacity:0.85">trustees</i>`, { y: 250, size: 190 }));
   slam(s, "#tr24", at("acad3", "twenty-four") - 0.05);
@@ -559,7 +561,7 @@ const PLATE = { file: "cosmos-close.mp4", from: 64.6, enter: 65.3, settle: 84.4 
 // is set on screen in type, or carried by the picture alone.
 const SPAN = {
   hook2: [9], who2: [0, 11], who3: [0, 8], lib1: [0, 6], lib2: [0, 12], lib3: [0], fire1: [0, 13], fire2: [0, 9],
-  hosp1: [0], hosp3: [0], acad1: [0], acad2: [0, 7], acad3: [10], turn1: [0, 8], now2: [0, 13],
+  hosp1: [0], hosp3: [0], acad1: [0], acad2: [0, 6], acad3: [10], turn1: [0, 8], now2: [0, 13],
 };
 const groups = [];
 for (const l of T.lines) {

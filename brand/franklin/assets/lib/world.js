@@ -212,6 +212,8 @@ export async function createWorld(canvas, labelLayer, S) {
   const C0 = new THREE.Vector3(0, 1150, 0), K = 62;
   const porcelain = (c, r = 0.38) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: 0 });
   const cosmos = new THREE.Group(); cosmos.position.copy(C0); scene.add(cosmos);
+  // tipped toward the camera so the flat ring reads as an ellipse, not a line
+  cosmos.rotation.set(0.55, 0.3, 0);
   const star = new THREE.Mesh(new THREE.SphereGeometry(1.25 * K, 64, 64), porcelain("#F0D5BB"));
   cosmos.add(star);
   const ORBITS = [
