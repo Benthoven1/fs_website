@@ -1,0 +1,75 @@
+<template>
+  <style>
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-600.woff2) format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-600.woff2) format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500i.woff2) format("woff2"); font-weight: 500; font-style: italic; font-display: block; }
+    @font-face { font-family: "Major Mono Display"; src: url(assets/fonts/MajorMonoDisplay-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    #root { position: absolute; inset: 0; overflow: hidden; }
+
+    .abs { position: absolute; }
+    .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .disp { font-family: "Lora", serif; font-weight: 600; color: #1B1613; }
+    .small { font-family: "IBM Plex Sans", sans-serif; color: #5C544E; }
+    .serif { font-family: "Lora", serif; color: #1B1613; }
+    .kicker { font-family: "Major Mono Display", monospace; font-size: 30px; letter-spacing: 0.06em; text-transform: lowercase; color: #5C544E; }
+    .w { display: inline-block; white-space: pre; }
+    .card { position: absolute; background: #F9F8F5; border: 1px solid #D9D4CA; border-radius: 28px; overflow: hidden;
+      box-shadow: inset 0 1px 0 #FFFFFF, 0 2px 4px rgba(27,22,19,0.04), 0 18px 48px rgba(27,22,19,0.10); }
+    .card .cap { position: absolute; left: 0; bottom: 0; width: 100%; height: 64px; overflow: hidden; padding: 0 28px; display: flex; align-items: center; gap: 18px;
+      background: #F9F8F5; border-top: 1px solid #D9D4CA; font-family: "IBM Plex Sans", sans-serif; font-size: 28px; color: #5C544E; white-space: nowrap; }
+    .card .cap b { font-weight: 500; color: #1B1613; }
+    .pic { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+    .pic img { display: block; width: 100%; height: 100%; }
+    .tag { position: absolute; padding: 10px 18px 11px; border-radius: 10px; background: #F9F8F5; border: 1px solid #D9D4CA;
+      font-family: "Major Mono Display", monospace; font-size: 30px; letter-spacing: 0.04em; text-transform: lowercase; color: #1B1613; white-space: nowrap; }
+    .bar { position: absolute; border-radius: 4px; }
+
+
+    #root { background: none; }
+    .cap { position: absolute; left: 0; top: 1440px; width: 1080px; height: 130px; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; }
+    .cap span { max-width: 900px; text-align: center; font-family: "IBM Plex Sans", sans-serif; font-weight: 500; font-size: 44px; line-height: 1.25; color: #F9F8F5;
+      background: rgba(27, 22, 19, 0.86); border-radius: 14px; padding: 10px 24px 12px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+
+  </style>
+  <div id="root" data-composition-id="captions" data-width="1080" data-height="1920" data-duration="138.28">
+<div id="captions-g0" class="cap"><span>By 1751 it had all four,</span></div>
+<div id="captions-g1" class="cap"><span>and Benjamin Franklin had helped to</span></div>
+<div id="captions-g2" class="cap"><span>found each of them.</span></div>
+<div id="captions-g3" class="cap"><span>The Library Company of Philadelphia</span></div>
+<div id="captions-g4" class="cap"><span>still operates today and is regarded</span></div>
+<div id="captions-g5" class="cap"><span>as America's oldest cultural institution.</span></div>
+<div id="captions-g6" class="cap"><span>In 1751, Doctor</span></div>
+<div id="captions-g7" class="cap"><span>Thomas Bond proposed a hospital for</span></div>
+<div id="captions-g8" class="cap"><span>the sick poor,</span></div>
+<div id="captions-g9" class="cap"><span>and Franklin designed its financing.</span></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.set("#captions-g0", {"opacity":1,"visibility":"visible"}, 8.618);
+    tl.set("#captions-g0", {"opacity":0,"visibility":"hidden"}, 11.678);
+    tl.set("#captions-g1", {"opacity":1,"visibility":"visible"}, 11.918);
+    tl.set("#captions-g1", {"opacity":0,"visibility":"hidden"}, 13.728);
+    tl.set("#captions-g2", {"opacity":1,"visibility":"visible"}, 13.738);
+    tl.set("#captions-g2", {"opacity":0,"visibility":"hidden"}, 14.978);
+    tl.set("#captions-g3", {"opacity":1,"visibility":"visible"}, 52.157);
+    tl.set("#captions-g3", {"opacity":0,"visibility":"hidden"}, 53.747);
+    tl.set("#captions-g4", {"opacity":1,"visibility":"visible"}, 53.757);
+    tl.set("#captions-g4", {"opacity":0,"visibility":"hidden"}, 55.827);
+    tl.set("#captions-g5", {"opacity":1,"visibility":"visible"}, 55.837);
+    tl.set("#captions-g5", {"opacity":0,"visibility":"hidden"}, 58.337);
+    tl.set("#captions-g6", {"opacity":1,"visibility":"visible"}, 76.574);
+    tl.set("#captions-g6", {"opacity":0,"visibility":"hidden"}, 78.394);
+    tl.set("#captions-g7", {"opacity":1,"visibility":"visible"}, 78.474);
+    tl.set("#captions-g7", {"opacity":0,"visibility":"hidden"}, 80.344);
+    tl.set("#captions-g8", {"opacity":1,"visibility":"visible"}, 80.354);
+    tl.set("#captions-g8", {"opacity":0,"visibility":"hidden"}, 81.384);
+    tl.set("#captions-g9", {"opacity":1,"visibility":"visible"}, 81.394);
+    tl.set("#captions-g9", {"opacity":0,"visibility":"hidden"}, 83.374);
+    window.__timelines["captions"] = tl;
+  </script>
+
+</template>

@@ -1,94 +1,94 @@
 {
-  "voice": "bf_emma",
-  "speed": 1.05,
+  "voice": "franklin-statesman-clean",
+  "style": "formal documentary narration, clear and authoritative, normal English intonation, measured pace, statements falling at the end",
+  "seed": 7,
   "lines": [
     {
       "id": "hook1",
-      "text": "In 1731, Philadelphia had no lending library."
+      "text": "In 1731, Philadelphia had no lending library, no fire company, no hospital and no college."
     },
     {
       "id": "hook2",
-      "text": "No fire company. No hospital. No college."
-    },
-    {
-      "id": "hook3",
-      "text": "Twenty years later, it had all four, and one man had helped to start every one of them."
+      "text": "By 1751 it had all four, and Benjamin Franklin had helped to found each of them."
     },
     {
       "id": "who1",
-      "text": "Benjamin Franklin was a printer by trade."
+      "text": "Franklin was a printer, writer, scientist and inventor."
     },
     {
       "id": "who2",
-      "text": "He was also a writer, a scientist, an inventor, and later, a diplomat."
+      "text": "He later signed both the Declaration of Independence and the Constitution, one of six men to sign both."
     },
     {
       "id": "who3",
-      "text": "A polymath: excellent across disciplines, and pointed at the public good."
+      "text": "Much of his civic work followed one method: identify a public need, then meet it by pooling contributions from many members."
     },
     {
       "id": "lib1",
-      "text": "His first institution solved a simple problem: in the colonies, books were rare and expensive."
+      "text": "The method began with the Junto, a club of Philadelphia tradesmen that Franklin organised in 1727 for reading and debate."
     },
     {
       "id": "lib2",
-      "text": "So in 1731, he persuaded fifty subscribers to pay forty shillings each, and buy books together."
+      "text": "In 1731 he proposed that members pool their money to buy books: fifty subscribers paid forty shillings each, then ten shillings a year.",
+      "pause_before": 1.8
     },
     {
       "id": "lib3",
-      "text": "The Library Company of Philadelphia is still open today."
+      "text": "The Library Company of Philadelphia still operates today and is regarded as America's oldest cultural institution."
     },
     {
       "id": "fire1",
-      "text": "Fire was the next problem."
+      "text": "In 1735, Franklin's newspaper published his letter on fire safety, which argued that an ounce of prevention is worth a pound of cure."
     },
     {
       "id": "fire2",
-      "text": "After warning readers that an ounce of prevention is worth a pound of cure, he organised the Union Fire Company: volunteers who pledged their own leather buckets to every blaze."
+      "text": "The next year he organised the Union Fire Company, thirty volunteers who kept their own leather buckets and turned out for fires.",
+      "pause_before": 1.4
     },
     {
       "id": "hosp1",
-      "text": "When the physician Thomas Bond wanted a hospital for the sick poor, Franklin found a clever way to pay for it."
+      "text": "In 1751, Doctor Thomas Bond proposed a hospital for the sick poor, and Franklin designed its financing."
     },
     {
       "id": "hosp2",
-      "text": "He asked the Pennsylvania Assembly to promise two thousand pounds, but only if private donors raised two thousand of their own."
+      "text": "The Pennsylvania Assembly would grant two thousand pounds only if private donors first raised the same amount.",
+      "pause_before": 1.8
     },
     {
       "id": "hosp3",
-      "text": "It was one of America's first matching grants."
+      "text": "The donors met the target. The Pennsylvania Hospital became one of the first uses of a matching grant in America."
     },
     {
       "id": "acad1",
-      "text": "Then came an academy, which grew into the University of Pennsylvania."
+      "text": "The same year, Franklin's academy opened. It later became the University of Pennsylvania.",
+      "pause_before": 0.9
     },
     {
       "id": "turn1",
-      "text": "But here is the thing."
+      "text": "Each institution had to be built from nothing: its rules written, its members recruited and its money raised.",
+      "pause_before": 1.0
     },
     {
       "id": "turn2",
-      "text": "Each one had to be built from scratch: the agreements, the subscriptions, the fundraising, the books."
-    },
-    {
-      "id": "turn3",
-      "text": "Franklin did it four times, alongside a printing business, an almanac, and experiments with lightning."
+      "text": "Franklin did this four times while running a printing business, publishing an almanac and conducting his experiments with electricity."
     },
     {
       "id": "now1",
-      "text": "Today, a founder like Franklin would not have to start from zero."
+      "text": "A founder today does not have to start from nothing.",
+      "pause_before": 1.4
     },
     {
       "id": "now2",
-      "text": "A fiscal sponsor can give a new project a legal and financial home from day one, so it can accept gifts, win grants and sign contracts, while the founder gets on with the work."
+      "text": "A fiscal sponsor gives a new project an existing legal and financial structure. From day one it can accept tax-deductible gifts, apply for grants and sign contracts, while the founder does the work."
     },
     {
       "id": "end1",
-      "text": "That is what Mulvium is building: a home for the next Franklin."
+      "text": "Mulvium is building that structure for the next Franklin."
     },
     {
       "id": "end2",
-      "text": "Because the next great expansion of human creativity will come from making it easier to create institutions."
+      "text": "The next great expansion of human creativity will come from making it easier to create institutions."
     }
-  ]
+  ],
+  "tempo": 1.0
 }

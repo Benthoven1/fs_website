@@ -1,46 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Benjamin Franklin, Institution Builder</title>
-  <meta name="description" content="A narrated essay on Benjamin Franklin, who helped start Philadelphia's library, fire company, hospital and academy, and what a fiscal sponsor would do for him today." />
-  <meta name="robots" content="noindex" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&amp;family=Lora:ital,wght@0,400;0,500;1,400;1,500&amp;family=IM+Fell+English:ital@0;1&amp;family=Caveat:wght@700&amp;family=IBM+Plex+Sans:wght@500&amp;family=Major+Mono+Display&amp;display=block" rel="stylesheet" />
-  <!-- The wordmark's own faces and the many it passes through, for its letters alone -->
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&amp;family=Playfair+Display:ital,wght@0,500;0,900;1,400&amp;family=Italiana&amp;family=Inter:wght@900&amp;family=Cormorant+SC:wght@500&amp;family=Abril+Fatface&amp;family=Bodoni+Moda:wght@700&amp;family=DM+Serif+Display:ital@0;1&amp;family=Fraunces:wght@300;900&amp;family=Space+Mono:wght@700&amp;family=Syne:wght@800&amp;family=Unbounded:wght@700&amp;family=Bebas+Neue&amp;family=Monoton&amp;family=Rubik+Mono+One&amp;family=Josefin+Sans:wght@100&amp;family=UnifrakturMaguntia&amp;family=Orbitron:wght@900&amp;family=Archivo+Black&amp;family=Caveat:wght@700&amp;family=Poiret+One&amp;family=Limelight&amp;family=Yeseva+One&amp;family=Zilla+Slab:wght@700&amp;family=Righteous&amp;family=Lobster&amp;family=Shrikhand&amp;family=Rye&amp;family=Syncopate:wght@700&amp;family=Cormorant+Garamond:ital,wght@1,300&amp;family=IBM+Plex+Mono:wght@300&amp;family=Bungee&amp;family=Pirata+One&amp;family=Gloock&amp;text=MULVIUMmulvium&amp;display=block" rel="stylesheet" />
-  <link rel="stylesheet" href="essay.css" />
-  <script type="importmap">
-    { "imports": { "three": "https://unpkg.com/three@0.161.0/build/three.module.min.js" } }
-  </script>
-</head>
-<body>
-  <!-- Drawn at 1080 × 1920 and scaled to the window. Layers, bottom to top:
-       the cosmos, the painted essay, the words over the close, the caption,
-       paper over the cosmos, the wordmark, black, then grain. -->
-  <div id="stage" aria-hidden="true">
-    <canvas id="gl"></canvas>
-    <canvas id="art"></canvas>
-    <div id="words"></div>
-    <div id="caption"></div>
-    <div id="veil"></div>
-    <div id="brand">
-      <div class="mark"></div>
-      <div class="cta"><span class="pill">Join the waitlist</span><span class="url">mulvium.org</span></div>
+<!doctype html>
+<html lang="en" data-resolution="portrait" data-composition-variables='[
+  {"id":"color-paper","type":"color","label":"Ground","default":"#ECEAE5"},
+  {"id":"color-ink","type":"color","label":"Ink","default":"#1B1613"},
+  {"id":"color-clay","type":"color","label":"Accent","default":"#B87758"}
+]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Franklin, institution builder</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #ECEAE5; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="156.876" data-width="1080" data-height="1920" data-motion-blur="off">
+      <div id="world" data-composition-id="world" data-composition-src="compositions/world.html" data-start="0" data-duration="139.23" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:0"></div>
+      <div id="chrome" data-composition-id="chrome" data-composition-src="compositions/chrome.html" data-start="0" data-duration="138.28" data-track-index="2" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:40"></div>
+      <div id="hook" data-composition-id="hook" data-composition-src="compositions/hook.html" data-start="0" data-duration="15.351" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:1"></div>
+      <div id="who" data-composition-id="who" data-composition-src="compositions/who.html" data-start="15.151" data-duration="19.089" data-track-index="2" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:2"></div>
+      <div id="lib" data-composition-id="lib" data-composition-src="compositions/lib.html" data-start="34.19" data-duration="24.86" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:3"></div>
+      <div id="fire" data-composition-id="fire" data-composition-src="compositions/fire.html" data-start="59" data-duration="17.524" data-track-index="2" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:4"></div>
+      <div id="hosp" data-composition-id="hosp" data-composition-src="compositions/hosp.html" data-start="76.474" data-duration="23.706" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:5"></div>
+      <div id="acad" data-composition-id="acad" data-composition-src="compositions/acad.html" data-start="100.13" data-duration="7.949" data-track-index="2" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:6"></div>
+      <div id="turn" data-composition-id="turn" data-composition-src="compositions/turn.html" data-start="108.029" data-duration="15.24" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:7"></div>
+      <div id="now" data-composition-id="now" data-composition-src="compositions/now.html" data-start="123.219" data-duration="15.111" data-track-index="2" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:8"></div>
+      <div id="end" data-composition-id="end" data-composition-src="compositions/end.html" data-start="138.28" data-duration="18.596" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:9"></div>
+      <div id="captions" data-composition-id="captions" data-composition-src="compositions/captions.html" data-start="0" data-duration="138.28" data-track-index="3" data-track-kind="captions" data-width="1080" data-height="1920" style="z-index:50"></div>
+      <audio id="voice" class="clip" src="assets/narration.wav" data-start="0" data-track-index="10" data-volume="1"></audio>
+      <audio id="music" class="clip" src="assets/music-bed.m4a" data-start="0" data-duration="156.876" data-track-index="11" data-volume="1"></audio>
+      <audio id="sfx0" class="clip" src="assets/sfx/click-soft.mp3" data-start="4.31" data-duration="0.37" data-track-index="12" data-volume="0.22"></audio>
+      <audio id="sfx1" class="clip" src="assets/sfx/click-soft.mp3" data-start="5.33" data-duration="0.37" data-track-index="12" data-volume="0.22"></audio>
+      <audio id="sfx2" class="clip" src="assets/sfx/click-soft.mp3" data-start="6.35" data-duration="0.37" data-track-index="12" data-volume="0.22"></audio>
+      <audio id="sfx3" class="clip" src="assets/sfx/click-soft.mp3" data-start="7.63" data-duration="0.37" data-track-index="12" data-volume="0.22"></audio>
+      <audio id="sfx4" class="clip" src="assets/sfx/whoosh-short.mp3" data-start="10.738" data-duration="0.57" data-track-index="12" data-volume="0.18"></audio>
+      <audio id="sfx5" class="clip" src="assets/sfx/whoosh-short.mp3" data-start="15.201" data-duration="0.57" data-track-index="12" data-volume="0.2"></audio>
+      <audio id="sfx6" class="clip" src="assets/sfx/whoosh.mp3" data-start="41.509" data-duration="0.57" data-track-index="12" data-volume="0.16"></audio>
+      <audio id="sfx7" class="clip" src="assets/sfx/typing.mp3" data-start="47.549" data-duration="1.54" data-track-index="12" data-volume="0.14"></audio>
+      <audio id="sfx8" class="clip" src="assets/sfx/whoosh-short.mp3" data-start="51.957" data-duration="0.57" data-track-index="12" data-volume="0.18"></audio>
+      <audio id="sfx9" class="clip" src="assets/sfx/whoosh.mp3" data-start="67.097" data-duration="0.57" data-track-index="12" data-volume="0.16"></audio>
+      <audio id="sfx10" class="clip" src="assets/sfx/whoosh.mp3" data-start="83.533" data-duration="0.57" data-track-index="12" data-volume="0.16"></audio>
+      <audio id="sfx11" class="clip" src="assets/sfx/impact-bass-1.mp3" data-start="93.474" data-duration="2.12" data-track-index="12" data-volume="0.22"></audio>
+      <audio id="sfx12" class="clip" src="assets/sfx/click-soft.mp3" data-start="110.979" data-duration="0.37" data-track-index="12" data-volume="0.2"></audio>
+      <audio id="sfx13" class="clip" src="assets/sfx/click-soft.mp3" data-start="112.199" data-duration="0.37" data-track-index="12" data-volume="0.2"></audio>
+      <audio id="sfx14" class="clip" src="assets/sfx/click-soft.mp3" data-start="113.539" data-duration="0.37" data-track-index="12" data-volume="0.2"></audio>
+      <audio id="sfx15" class="clip" src="assets/sfx/whoosh.mp3" data-start="122.069" data-duration="0.57" data-track-index="12" data-volume="0.16"></audio>
+      <audio id="sfx16" class="clip" src="assets/sfx/click-soft.mp3" data-start="130.551" data-duration="0.37" data-track-index="12" data-volume="0.4"></audio>
+      <audio id="sfx17" class="clip" src="assets/sfx/riser.mp3" data-start="144.556" data-duration="10.03" data-track-index="12" data-volume="0.2"></audio>
     </div>
-    <div id="black"></div>
-    <canvas id="grain"></canvas>
-  </div>
-
-  <button id="play" type="button" hidden>
-    <span class="play-mark" aria-hidden="true"></span>
-    <span class="play-label">Play the essay</span>
-    <span class="play-note">Sound on</span>
-  </button>
-  <audio id="sound" src="soundtrack.m4a" preload="none"></audio>
-
-  <script type="module" src="essay.js"></script>
-</body>
+    <script>
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </body>
 </html>

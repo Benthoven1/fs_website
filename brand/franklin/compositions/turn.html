@@ -1,0 +1,65 @@
+<template>
+  <style>
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-600.woff2) format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-600.woff2) format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500i.woff2) format("woff2"); font-weight: 500; font-style: italic; font-display: block; }
+    @font-face { font-family: "Major Mono Display"; src: url(assets/fonts/MajorMonoDisplay-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    #root { position: absolute; inset: 0; overflow: hidden; }
+
+    .abs { position: absolute; }
+    .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .disp { font-family: "Lora", serif; font-weight: 600; color: #1B1613; }
+    .small { font-family: "IBM Plex Sans", sans-serif; color: #5C544E; }
+    .serif { font-family: "Lora", serif; color: #1B1613; }
+    .kicker { font-family: "Major Mono Display", monospace; font-size: 30px; letter-spacing: 0.06em; text-transform: lowercase; color: #5C544E; }
+    .w { display: inline-block; white-space: pre; }
+    .card { position: absolute; background: #F9F8F5; border: 1px solid #D9D4CA; border-radius: 28px; overflow: hidden;
+      box-shadow: inset 0 1px 0 #FFFFFF, 0 2px 4px rgba(27,22,19,0.04), 0 18px 48px rgba(27,22,19,0.10); }
+    .card .cap { position: absolute; left: 0; bottom: 0; width: 100%; height: 64px; overflow: hidden; padding: 0 28px; display: flex; align-items: center; gap: 18px;
+      background: #F9F8F5; border-top: 1px solid #D9D4CA; font-family: "IBM Plex Sans", sans-serif; font-size: 28px; color: #5C544E; white-space: nowrap; }
+    .card .cap b { font-weight: 500; color: #1B1613; }
+    .pic { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+    .pic img { display: block; width: 100%; height: 100%; }
+    .tag { position: absolute; padding: 10px 18px 11px; border-radius: 10px; background: #F9F8F5; border: 1px solid #D9D4CA;
+      font-family: "Major Mono Display", monospace; font-size: 30px; letter-spacing: 0.04em; text-transform: lowercase; color: #1B1613; white-space: nowrap; }
+    .bar { position: absolute; border-radius: 4px; }
+
+
+
+  </style>
+  <div id="root" data-composition-id="turn" data-width="1080" data-height="1920" data-duration="15.19">
+<div id="turn-k0" class="tag" style="left:84px;top:1480px;opacity:0">rules</div>
+<div id="turn-k1" class="tag" style="left:334px;top:1480px;opacity:0">members</div>
+<div id="turn-k2" class="tag" style="left:584px;top:1480px;opacity:0">money</div>
+<div id="turn-x4" class="disp abs" style="left:84px;top:1380px;font-size:132px;color:#B87758;opacity:0">×4</div>
+<div id="turn-sd0" class="card" style="left:300px;top:1400px;width:216px;height:220px;border-radius:16px;opacity:0">
+      <div class="abs" style="left:0;top:0;width:216px;height:156px;overflow:hidden"><div id="turn-sd0-pic" class="pic" style="width:500px;height:501px"><img src="assets/img/press.jpg" alt=""></div></div>
+      <div class="cap" style="padding:0 16px"><span>Printing</span></div></div>
+<div id="turn-sd1" class="card" style="left:536px;top:1400px;width:216px;height:220px;border-radius:16px;opacity:0">
+      <div class="abs" style="left:0;top:0;width:216px;height:156px;overflow:hidden"><div id="turn-sd1-pic" class="pic" style="width:628px;height:1033px"><img src="assets/img/almanac.jpg" alt=""></div></div>
+      <div class="cap" style="padding:0 16px"><span>Almanac</span></div></div>
+<div id="turn-sd2" class="card" style="left:772px;top:1400px;width:216px;height:220px;border-radius:16px;opacity:0">
+      <div class="abs" style="left:0;top:0;width:216px;height:156px;overflow:hidden"><div id="turn-sd2-pic" class="pic" style="width:1920px;height:2573px"><img src="assets/img/kite.jpg" alt=""></div></div>
+      <div class="cap" style="padding:0 16px"><span>Electricity</span></div></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#turn-k0", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.35,"ease":"expo.out","stagger":0}, 2.9);
+    tl.fromTo("#turn-k1", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.35,"ease":"expo.out","stagger":0}, 4.12);
+    tl.fromTo("#turn-k2", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.35,"ease":"expo.out","stagger":0}, 5.46);
+    tl.to("#turn-k0, #turn-k1, #turn-k2", {"opacity":0,"filter":"blur(8px)","duration":0.2,"ease":"power2.in"}, 7.05);
+    tl.fromTo("#turn-x4", {"opacity":0,"filter":"blur(6px)","scale":0.94}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.4,"ease":"expo.out","stagger":0}, 7.3);
+    tl.set("#turn-sd0-pic", {"x":-5.4,"y":-1.539,"scale":0.454}, 0);
+    tl.fromTo("#turn-sd0", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.45,"ease":"expo.out","stagger":0}, 8.65);
+    tl.set("#turn-sd1-pic", {"x":-5.4,"y":-52.573,"scale":0.361}, 0);
+    tl.fromTo("#turn-sd1", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.45,"ease":"expo.out","stagger":0}, 10.21);
+    tl.set("#turn-sd2-pic", {"x":-5.4,"y":-28.377,"scale":0.118}, 0);
+    tl.fromTo("#turn-sd2", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.45,"ease":"expo.out","stagger":0}, 12.31);
+    window.__timelines["turn"] = tl;
+  </script>
+
+</template>

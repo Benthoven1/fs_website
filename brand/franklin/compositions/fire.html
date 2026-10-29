@@ -1,0 +1,61 @@
+<template>
+  <style>
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-600.woff2) format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500.woff2) format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-600.woff2) format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+    @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500i.woff2) format("woff2"); font-weight: 500; font-style: italic; font-display: block; }
+    @font-face { font-family: "Major Mono Display"; src: url(assets/fonts/MajorMonoDisplay-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    #root { position: absolute; inset: 0; overflow: hidden; }
+
+    .abs { position: absolute; }
+    .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .disp { font-family: "Lora", serif; font-weight: 600; color: #1B1613; }
+    .small { font-family: "IBM Plex Sans", sans-serif; color: #5C544E; }
+    .serif { font-family: "Lora", serif; color: #1B1613; }
+    .kicker { font-family: "Major Mono Display", monospace; font-size: 30px; letter-spacing: 0.06em; text-transform: lowercase; color: #5C544E; }
+    .w { display: inline-block; white-space: pre; }
+    .card { position: absolute; background: #F9F8F5; border: 1px solid #D9D4CA; border-radius: 28px; overflow: hidden;
+      box-shadow: inset 0 1px 0 #FFFFFF, 0 2px 4px rgba(27,22,19,0.04), 0 18px 48px rgba(27,22,19,0.10); }
+    .card .cap { position: absolute; left: 0; bottom: 0; width: 100%; height: 64px; overflow: hidden; padding: 0 28px; display: flex; align-items: center; gap: 18px;
+      background: #F9F8F5; border-top: 1px solid #D9D4CA; font-family: "IBM Plex Sans", sans-serif; font-size: 28px; color: #5C544E; white-space: nowrap; }
+    .card .cap b { font-weight: 500; color: #1B1613; }
+    .pic { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+    .pic img { display: block; width: 100%; height: 100%; }
+    .tag { position: absolute; padding: 10px 18px 11px; border-radius: 10px; background: #F9F8F5; border: 1px solid #D9D4CA;
+      font-family: "Major Mono Display", monospace; font-size: 30px; letter-spacing: 0.04em; text-transform: lowercase; color: #1B1613; white-space: nowrap; }
+    .bar { position: absolute; border-radius: 4px; }
+
+
+
+  </style>
+  <div id="root" data-composition-id="fire" data-width="1080" data-height="1920" data-duration="17.474">
+<div id="fire-q" class="card" style="left:60px;top:380px;width:960px;height:560px;opacity:0">
+    <div id="fire-qbar" class="bar" style="left:44px;top:56px;width:8px;height:300px;background:#A8603F;transform-origin:50% 0"></div>
+    <div id="fire-qt" class="serif abs" style="left:84px;top:44px;width:820px;font-size:68px;line-height:1.18;font-style:italic"><span class="w">An </span><span class="w">ounce </span><span class="w">of </span><span class="w">prevention </span><span class="w">is </span><span class="w">worth </span><span class="w">a </span><span class="w">pound </span><span class="w">of </span><span class="w">cure. </span></div>
+    <div class="kicker abs" style="left:84px;top:430px">pennsylvania gazette · 4 feb 1735</div></div>
+<div id="fire-uf" class="abs" style="left:84px;top:1420px;width:560px;opacity:0">
+    <div class="kicker">est. 1736</div>
+    <div class="disp" style="font-size:56px;line-height:1.1;margin-top:8px">Union Fire Company</div>
+    <div class="small" style="font-size:30px;margin-top:14px;line-height:1.45"><b id="fire-n30" style="font-weight:600;color:#A8603F">0</b> volunteers, each with<br>their own leather bucket</div></div>
+<div id="fire-buck" class="card" style="left:700px;top:1380px;width:296px;height:360px;opacity:0;border-radius:20px">
+    <div class="abs" style="left:0;top:0;width:296px;height:296px;overflow:hidden"><div id="fire-buck-pic" class="pic" style="width:1920px;height:2428px"><img src="assets/img/bucket.jpg" alt=""></div></div>
+    <div class="cap"><span>A fire bucket</span></div></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#fire-q", {"opacity":0,"filter":"blur(6px)","scale":0.94}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.6,"ease":"expo.out","stagger":0}, 0.05);
+    tl.fromTo("#fire-qbar", {"scaleY":0}, {"scaleY":1,"duration":3.62,"ease":"power1.inOut"}, 2.05);
+    tl.set("#fire-qt", {"opacity":1}, 5.57);
+    tl.fromTo("#fire-qt .w", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.16,"ease":"power2.out","stagger":0.186}, 5.57);
+    tl.to("#fire-q", {"opacity":0,"filter":"blur(8px)","duration":0.25,"ease":"power2.in"}, 8.847);
+    tl.fromTo("#fire-uf", {"opacity":0,"filter":"blur(6px)","x":-120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 11.037);
+    { const o = { v: 0 }, el = document.querySelector("#fire-n30"); tl.fromTo(o, { v: 0 }, { v: 30, duration: 0.9, ease: "power2.out", onUpdate: () => { const v = o.v; el.textContent = Math.round(v); } }, 12.237); }
+    tl.set("#fire-buck-pic", {"x":-22.2,"y":-50.014,"scale":0.177}, 0);
+    tl.fromTo("#fire-buck", {"opacity":0,"filter":"blur(6px)","x":120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 14.337);
+    window.__timelines["fire"] = tl;
+  </script>
+
+</template>
