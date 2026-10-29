@@ -60,8 +60,20 @@
     },
     {
       "id": "acad1",
-      "text": "The same year, Franklin's academy opened. It later became the University of Pennsylvania.",
+      "text": "The same year, Franklin's academy opened.",
       "pause_before": 0.9
+    },
+    {
+      "id": "acad2",
+      "text": "He had published the plan in 1749: a school that would teach useful subjects in English, alongside Latin and Greek."
+    },
+    {
+      "id": "acad3",
+      "text": "Twenty-four trustees raised the funds, with Franklin as their president, and bought a hall built for the preacher George Whitefield."
+    },
+    {
+      "id": "acad4",
+      "text": "The academy later became the University of Pennsylvania."
     },
     {
       "id": "turn1",

@@ -11,8 +11,9 @@
 // at its time, and some are placed by events: the library's coins ride into
 // the hopper, its books arrive shelf by shelf, the donors' coins stack up,
 // the Assembly's coins drop. Near the end every institution's rules, members
-// and money fly to the hub and fuse into one foundation, and the new
-// project's building rises storey by storey.
+// and money turn to spheres, rise, and become the planets of Mulvium's own
+// cosmos (the landing page's star, rings and pastel porcelain, js/main.js);
+// a new project's planet joins it and is given all three.
 //
 // Design coordinates are the kit's: x along, y toward the viewer, z up. Here
 // they become three.js (x, z + LIFT, y), plot by plot.
@@ -20,7 +21,7 @@ import * as THREE from "./three/three.module.min.js";
 import { RoundedBoxGeometry } from "./three/RoundedBoxGeometry.js";
 import { mergeGeometries } from "./three/BufferGeometryUtils.js";
 
-export const PLOTS = { library: [-200, -190], fire: [200, -190], hospital: [-200, 190], academy: [200, 190], hub: [0, 0], project: [0, 470] };
+export const PLOTS = { library: [-200, -190], fire: [200, -190], hospital: [-200, 190], academy: [200, 190] };
 const INSTITUTIONS = ["library", "fire", "hospital", "academy"];
 const LIFT = 19; // the plinth's slab and feet: the design's z = 0 is the slab top
 const ACCENT = { library: "#4D6D96", fire: "#A8603F", hospital: "#357F77", academy: "#55804A", mulvium: "#9A5571" };
@@ -38,6 +39,7 @@ const TONE = { faint: ["#B9AFA2", 0.8], lo: ["#8F857A", 0.9], mid: ["#6E655C", 1
 // ── easing ─────────────────────────────────────────────────────────────────
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
 const inOut = (x) => { x = clamp01(x); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+const smooth = (x) => { x = clamp01(x); return x * x * (3 - 2 * x); };
 const outCubic = (x) => 1 - Math.pow(1 - clamp01(x), 3);
 const outBack = (x) => { x = clamp01(x); const c = 1.2; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
 const span = (t, a, b) => (b <= a ? (t >= a ? 1 : 0) : clamp01((t - a) / (b - a)));
@@ -202,10 +204,53 @@ export async function createWorld(canvas, labelLayer, S) {
   lib.mouth = V(230 / 2 - 40, -220 / 2 + 38, 51.2).add(new THREE.Vector3(PLOTS.library[0], 0, PLOTS.library[1]));
   const find = (plot, name) => parts.find((p) => p.plot === plot && p.name === name);
   const hosp = { donors: named("hospital", /^donor\d+$/), held: find("hospital", "held"), paddle: find("hospital", "paddle"), HELD: 34 };
-  const growing = named("project", /^storey\d+$/);
-  // the merge: each institution's own foundation piece and the hub's piece it becomes
-  const merging = INSTITUTIONS.flatMap((plot, i) => ["rules", "members", "money"].map((what, j) => ({ p: find(plot, what), to: find("hub", what), k: i * 3 + j })).filter((m) => m.p));
-  const hubPieces = ["rules", "members", "money"].map((w) => find("hub", w));
+
+  // ── the modern institution: the site's cosmos, high over the plots ───────
+  // The star is Mulvium; three planets are what every institution had to make
+  // for itself (rules, members, money); the fourth is a new project. Sizes,
+  // rings, tilts and colours are the landing page's (js/main.js), scaled.
+  const C0 = new THREE.Vector3(0, 1150, 0), K = 62;
+  const porcelain = (c, r = 0.38) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: 0 });
+  const cosmos = new THREE.Group(); cosmos.position.copy(C0); scene.add(cosmos);
+  const star = new THREE.Mesh(new THREE.SphereGeometry(1.25 * K, 64, 64), porcelain("#F0D5BB"));
+  cosmos.add(star);
+  const ORBITS = [
+    { id: "members", color: "#C4DDB8", radius: 3.0, tilt: [0, 0, 0], speed: 0.36, phase: 0.0 },
+    { id: "rules", color: "#B8CAE0", radius: 3.8, tilt: [Math.PI / 2, 0, 0], speed: 0.26, phase: 1.1 },
+    { id: "money", color: "#E0B8C8", radius: 4.5, tilt: [Math.PI / 3.2, Math.PI / 5 + Math.PI / 2, 0], speed: 0.22, phase: 2.4 },
+    { id: "project", color: "#B8DDD8", radius: 5.0, tilt: [Math.PI / 3.2, Math.PI / 5, 0], speed: 0.18, phase: 3.8 },
+  ];
+  const ringMat = porcelain("#CDBE96", 0.35); ringMat.transparent = true;
+  const planets = Object.fromEntries(ORBITS.map((o) => {
+    const pivot = new THREE.Group(); pivot.rotation.set(...o.tilt); cosmos.add(pivot);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(o.radius * K, 0.045 * K, 16, 256), ringMat);
+    pivot.add(ring);
+    const rot = new THREE.Group(); pivot.add(rot);
+    const planet = new THREE.Mesh(new THREE.SphereGeometry(0.5 * K, 48, 48), porcelain(o.color));
+    planet.position.set(o.radius * K, 0, 0); rot.add(planet);
+    return [o.id, { ...o, pivot, ring, rot, planet }];
+  }));
+  const planetAt = (id) => planets[id].planet.getWorldPosition(new THREE.Vector3());
+  // each institution's rules, members and money, and the sphere it turns into
+  const KIND_COLOR = { rules: "#B8CAE0", members: "#C4DDB8", money: "#E0B8C8" };
+  const rising = INSTITUTIONS.flatMap((plot, i) => ["rules", "members", "money"].map((what, j) => ({ p: find(plot, what), what, k: i * 3 + j }))).filter((m) => m.p);
+  rising.forEach((m) => { m.orb = new THREE.Mesh(new THREE.SphereGeometry(14, 32, 32), porcelain(KIND_COLOR[m.what])); m.orb.visible = false; scene.add(m.orb); });
+  // the structure a new project is given: a line to each planet and the star
+  const tethers = ["members", "rules", "money", "star"].map((to) => {
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(1.8, 1.8, 1, 10), new THREE.MeshStandardMaterial({ color: "#FFFFFF", emissive: "#FFFFFF", emissiveIntensity: 0.4, roughness: 0.5 }));
+    m.visible = false; scene.add(m);
+    return { to, m };
+  });
+  const pulses = ["members", "money", "rules"].map((from) => {
+    const m = new THREE.Mesh(new THREE.SphereGeometry(9, 20, 20), new THREE.MeshStandardMaterial({ color: "#FFFFFF", emissive: "#FFF4E0", emissiveIntensity: 1.2 }));
+    m.visible = false; scene.add(m);
+    return { from, m };
+  });
+  const beam = (m, a, b) => {
+    const d = b.clone().sub(a), len = d.length();
+    m.position.copy(a).addScaledVector(d, 0.5); m.scale.set(1, Math.max(0.001, len), 1);
+    m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize());
+  };
 
   // marks for "rules, members, money" on all four plots at once
   const rings = [];
@@ -221,12 +266,7 @@ export async function createWorld(canvas, labelLayer, S) {
   // each plinth lands when the opening names its plot; the rest of a plot is
   // built in its window, in the design's order
   for (const [plot, t] of Object.entries(S.plinths)) find(plot, "plinth").at = t;
-  const [m0, m1] = S.events.merge;
-  find("hub", "plinth").at = m0 - 0.4;
-  hubPieces.forEach((p) => (p.at = m1 - 0.1, p.dur = 0.45, p.from = "pop"));
-  find("hub", "links").at = m1 + 0.3;
-  const [q0] = S.events.project;
-  find("project", "plinth").at = q0; find("project", "socket").at = q0 + 0.5; find("project", "scaffold").at = q0 + 0.9;
+  const CO = S.events.cosmos;
   for (const [plot, [t0, t1]] of Object.entries(S.build)) {
     const ps = parts.filter((p) => p.plot === plot && !(p.event && p.event !== "coins") && p.name !== "plinth");
     const lo = Math.min(...ps.map((p) => p.order)), hi = Math.max(...ps.map((p) => p.order));
@@ -241,14 +281,14 @@ export async function createWorld(canvas, labelLayer, S) {
     const [kind, plot, what] = s.split(":");
     if (kind === "wide") return { target: new THREE.Vector3(0, 340, 20), dist: 3200, dir: HIGH.clone() };
     if (kind === "all4") return { target: new THREE.Vector3(0, 120, 20), dist: 2900, dir: HIGH.clone() };
-    if (kind === "all5") return { target: new THREE.Vector3(0, 110, 180), dist: 3300, dir: HIGH.clone() };
-    if (kind === "hub") return { target: new THREE.Vector3(0, 60, 30), dist: 1700, dir: HIGH.clone() };
+    if (kind === "cosmos") return { target: C0.clone(), dist: 2350, dir: new THREE.Vector3(0.22, 0.38, 1).normalize() };
+    if (kind === "cosmosClose") return { target: C0.clone().add(new THREE.Vector3(60, -40, 80)), dist: 1500, dir: new THREE.Vector3(0.3, 0.3, 1).normalize() };
     // the opening's sweep: low from the left, round to the right
     if (kind === "sweepA") return { target: new THREE.Vector3(0, 90, 0), dist: 2000, dir: new THREE.Vector3(-0.9, 0.42, 1).normalize() };
     if (kind === "sweepB") return { target: new THREE.Vector3(0, 70, 0), dist: 2500, dir: new THREE.Vector3(0.95, 0.7, 0.75).normalize() };
     const [cx, cz] = PLOTS[plot];
-    if (kind === "plot") return { target: new THREE.Vector3(cx, plot === "project" ? 150 : 60, cz + 6), dist: plot === "project" ? 1150 : 1050, dir: DIR.clone() };
-    if (kind === "mid") return { target: new THREE.Vector3(cx + (plot === "shared" ? 70 : 0), 60, cz + 6), dist: 800, dir: DIR.clone() };
+    if (kind === "plot") return { target: new THREE.Vector3(cx, 60, cz + 6), dist: 1050, dir: DIR.clone() };
+    if (kind === "mid") return { target: new THREE.Vector3(cx, 60, cz + 6), dist: 800, dir: DIR.clone() };
     if (kind === "close") return { target: anchors[`${plot}.${what}`].clone().add(new THREE.Vector3(0, -14, 0)), dist: 560, dir: DIR.clone() };
     throw new Error("shot " + s);
   }
@@ -266,13 +306,16 @@ export async function createWorld(canvas, labelLayer, S) {
   }
 
   // ── labels: names over the model, projected to the screen ────────────────
+  // names on the cosmos follow their planets
+  const UP = new THREE.Vector3(0, 0.62 * K, 0);
+  const moving = { "cosmos.star": () => star.getWorldPosition(new THREE.Vector3()).add(new THREE.Vector3(0, 1.4 * K, 0)), ...Object.fromEntries(ORBITS.map((o) => [`cosmos.${o.id}`, () => planetAt(o.id).add(UP)])) };
   const labels = (S.labels || []).map((l) => {
-    if (!anchors[l.anchor]) throw new Error("no anchor " + l.anchor);
+    if (!anchors[l.anchor] && !moving[l.anchor]) throw new Error("no anchor " + l.anchor);
     const el = document.createElement("div");
     el.className = "wl";
     el.innerHTML = `<span class="wl-t">${l.text}</span><i class="wl-l"></i><b class="wl-d"></b>`;
     labelLayer.appendChild(el);
-    return { ...l, el, text: el.firstChild, half: l.text.length * 10.5 + 8, a: anchors[l.anchor] };
+    return { ...l, el, text: el.firstChild, half: l.text.length * 10.5 + 8, get: moving[l.anchor] || (() => anchors[l.anchor]) };
   });
   const v = new THREE.Vector3();
 
@@ -294,6 +337,7 @@ export async function createWorld(canvas, labelLayer, S) {
     // come back; the plinths stay
     for (const p of parts) {
       if (!inst(p)) { p.obj.visible = false; continue; }
+      cosmos.visible = false; rising.forEach((m) => (m.orb.visible = false)); tethers.forEach((th) => (th.m.visible = false)); pulses.forEach((pu) => (pu.m.visible = false));
       p.obj.scale.setScalar(1);
       if (p.name === "plinth") { p.obj.visible = true; p.obj.position.copy(p.home); continue; }
       const finished = !/^stack\d+$/.test(p.name);
@@ -312,16 +356,7 @@ export async function createWorld(canvas, labelLayer, S) {
       p.obj.visible = t >= p.at;
       if (p.obj.visible) place(p, (t - p.at) / p.dur);
     }
-    // the merge: each piece lifts off its plot, arcs to the hub, and becomes the hub's
-    for (const { p, to, k } of merging) {
-      if (t < m0 || !p.obj.visible) continue;
-      const u = clamp01((t - m0 - k * 0.07) / Math.max(0.4, m1 - m0 - 0.8));
-      if (u >= 1) { p.obj.visible = false; continue; }
-      const e = inOut(u), s = 1 - 0.2 * e;
-      const c = p.world.clone().lerp(to.world, e); c.y += Math.sin(Math.PI * e) * 180;
-      p.obj.scale.setScalar(s);
-      p.obj.position.copy(c).addScaledVector(p.center, -s);
-    }
+    cosmosAt(t);
     // library: each stack, once landed, lifts, rides to the hopper and drops in
     {
       const [c0, c1] = S.events.libCoins;
@@ -356,21 +391,75 @@ export async function createWorld(canvas, labelLayer, S) {
         hosp.held.obj.position.y = hosp.held.home.y - hosp.HELD * k * k;
       }
     }
-    // the new project's building, storey by storey
-    {
-      const [g0, g1] = S.events.grow;
-      growing.forEach((p, n) => {
-        const k = (t - (g0 + (g1 - g0) * n / growing.length)) / 0.6;
-        p.obj.visible = k > 0; p.obj.scale.setScalar(1);
-        p.obj.position.copy(p.home); p.obj.position.y -= 30 * (1 - outCubic(k));
-      });
-    }
     for (const r of rings) {
       const k = (t - S.events.turn[r.what]) / 0.45;
       r.obj.visible = k > 0 && t < S.events.turnEnd;
       const s = 0.6 + 0.4 * outBack(k); r.obj.scale.set(s, s, s);
     }
     frame(t);
+  }
+  // The cosmos at t: the pieces turn to spheres and rise to their planets; the
+  // star and its rings arrive; the new project's planet flies up into its
+  // orbit, is wired to the rest, takes gifts, grants and contracts, and grows
+  function cosmosAt(t) {
+    const [a, b] = CO.rise, tStar = CO.star, tNew = CO.project, tWire = CO.wire, [g0, g1] = CO.grow;
+    cosmos.visible = t >= a;
+    for (const o of ORBITS) o.rot = planets[o.id].rot, o.rot.rotation.z = o.phase + o.speed * 0.6 * (t - a);
+    cosmos.updateMatrixWorld(true);
+    // the pieces become spheres, and the spheres rise
+    const arrived = { rules: 0, members: 0, money: 0 }, total = { rules: 0, members: 0, money: 0 };
+    for (const m of rising) {
+      total[m.what]++;
+      if (t < a) { m.orb.visible = false; continue; }
+      const t0 = a + m.k * 0.09, flight = Math.max(0.8, b - t0);
+      const k1 = clamp01((t - t0) / 0.35), u = clamp01((t - t0 - 0.3) / flight);
+      // the piece shrinks into its sphere
+      const s = 1 - outCubic(k1);
+      m.p.obj.visible = s > 0.01; m.p.obj.scale.setScalar(Math.max(0.001, s));
+      m.p.obj.position.copy(m.p.world).addScaledVector(m.p.center, -s);
+      if (u >= 1) { m.orb.visible = false; arrived[m.what]++; continue; }
+      m.orb.visible = k1 > 0;
+      const from = m.p.world, to = planetAt(m.what), e = inOut(u);
+      const ctrl = from.clone().lerp(to, 0.35); ctrl.y = from.y + 700;
+      const q = from.clone().multiplyScalar((1 - e) * (1 - e)).addScaledVector(ctrl, 2 * e * (1 - e)).addScaledVector(to, e * e);
+      m.orb.position.copy(q); m.orb.scale.setScalar(0.4 + 0.6 * outCubic(k1) + 0.6 * e);
+    }
+    for (const id of ["rules", "members", "money"]) {
+      const f = arrived[id] / total[id];
+      planets[id].planet.visible = f > 0;
+      planets[id].planet.scale.setScalar(0.35 + 0.65 * Math.sqrt(f));
+    }
+    // the star and its rings
+    const ks = clamp01((t - tStar) / 0.8);
+    star.visible = ks > 0; star.scale.setScalar(Math.max(0.001, outBack(ks)));
+    ringMat.opacity = clamp01((t - tStar - 0.2) / 0.8);
+    ORBITS.forEach((o, i) => { planets[o.id].ring.visible = ringMat.opacity > 0; planets[o.id].ring.scale.setScalar(0.85 + 0.15 * outCubic(clamp01((t - tStar - 0.2 - i * 0.12) / 0.8))); });
+    // the new project: up from the plots into its orbit, then growing
+    const np = planets.project, kn = clamp01((t - tNew) / 1.3);
+    np.planet.visible = kn > 0;
+    np.planet.scale.setScalar(0.35 + 0.65 * smooth((t - g0) / Math.max(0.3, g1 - g0)));
+    np.planet.position.set(np.radius * K, 0, 0);
+    if (kn > 0 && kn < 1) {
+      cosmos.updateMatrixWorld(true);
+      const w = planetAt("project"), p = new THREE.Vector3(0, 60, 0).lerp(w, inOut(kn));
+      np.planet.position.copy(np.rot.worldToLocal(p));
+    }
+    cosmos.updateMatrixWorld(true);
+    // the structure: a line from the project to each planet and the star
+    const P = planetAt("project");
+    tethers.forEach((th, i) => {
+      const kt = clamp01((t - tWire - i * 0.25) / 0.6);
+      th.m.visible = kt > 0;
+      if (!th.m.visible) return;
+      const target = th.to === "star" ? star.getWorldPosition(new THREE.Vector3()) : planetAt(th.to);
+      beam(th.m, P, P.clone().lerp(target, outCubic(kt)));
+    });
+    // gifts, grants, contracts: a pulse from members, money and rules in to the project
+    pulses.forEach((pu, i) => {
+      const k = (t - CO.pulses[i]) / 0.7;
+      pu.m.visible = k > 0 && k < 1;
+      if (pu.m.visible) pu.m.position.copy(planetAt(pu.from).lerp(P, inOut(k)));
+    });
   }
   function frame(t) {
     for (const r of rings) if (t < S.events.turn.rules) r.obj.visible = false;
@@ -379,7 +468,7 @@ export async function createWorld(canvas, labelLayer, S) {
     for (const l of labels) {
       const k = Math.min(span(t, l.t0, l.t0 + 0.3), 1 - span(t, l.t1 - 0.25, l.t1));
       if (k <= 0) { l.el.style.opacity = 0; continue; }
-      v.copy(l.a).project(camera);
+      v.copy(l.get()).project(camera);
       const x = (v.x * 0.5 + 0.5) * W, y = (-v.y * 0.5 + 0.5) * H;
       // the name stays inside the frame even when its point is near an edge
       const dx = Math.min(0, W - 48 - (x + l.half)) + Math.max(0, 48 - (x - l.half));

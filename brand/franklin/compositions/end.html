@@ -31,19 +31,20 @@
 
 
   </style>
-  <div id="root" data-composition-id="end" data-width="1080" data-height="1920" data-duration="18.596">
-<video id="end-plate" data-start="0" data-media-start="2.804" data-duration="18.596" class="full clip" src="assets/cosmos-close.mp4" muted playsinline style="object-fit:cover"></video>
+  <div id="root" data-composition-id="end" data-width="1080" data-height="1920" data-duration="20.7">
+<div id="end-pw" class="full" style="opacity:0"><video id="end-plate" data-start="0" data-media-start="0.7" data-duration="20.7" class="full clip" src="assets/cosmos-close.mp4" muted playsinline style="object-fit:cover"></video></div>
 <div id="end-build" class="serif abs" style="left:90px;top:840px;width:900px;text-align:center;font-size:56px;line-height:1.25"><span class="w">Mulvium </span><span class="w">is </span><span class="w">building </span><span class="w">that </span><span class="w">structure </span><span class="w">for </span><span class="w">the </span><span class="w">next </span><span class="w">Franklin. </span></div>
 <div id="end-close" class="serif abs" style="left:90px;top:760px;width:900px;text-align:center;font-size:46px;line-height:1.3"><span class="w">The </span><span class="w">next </span><span class="w">great </span><span class="w">expansion </span><span class="w">of </span><span class="w">human </span><span class="w">creativity </span><span class="w">will </span><span class="w">come </span><span class="w">from </span><span class="w">making </span><span class="w">it </span><span class="w">easier </span><span class="w">to </span><span class="w">create </span><br><span style="font-size:108px;color:#B87758;font-style:italic"><span class="w">institutions. </span></span></div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#end-pw", {"opacity":0}, {"opacity":1,"duration":0.6,"ease":"power1.out"}, 0);
     tl.set("#end-build", {"opacity":1}, 0.3);
-    tl.fromTo("#end-build .w", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.16,"ease":"power2.out","stagger":0.283}, 0.3);
-    tl.to("#end-build", {"opacity":0,"filter":"blur(8px)","duration":0.25,"ease":"power2.in"}, 3.366);
-    tl.set("#end-close", {"opacity":1}, 3.466);
-    tl.fromTo("#end-close .w", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.16,"ease":"power2.out","stagger":0.291}, 3.466);
-    tl.to("#end-close", {"opacity":0,"filter":"blur(8px)","duration":0.3,"ease":"power2.in"}, 9.496);
+    tl.fromTo("#end-build .w", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.16,"ease":"power2.out","stagger":0.44}, 0.3);
+    tl.to("#end-build", {"opacity":0,"filter":"blur(8px)","duration":0.25,"ease":"power2.in"}, 4.78);
+    tl.set("#end-close", {"opacity":1}, 4.88);
+    tl.fromTo("#end-close .w", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.16,"ease":"power2.out","stagger":0.424}, 4.88);
+    tl.to("#end-close", {"opacity":0,"filter":"blur(8px)","duration":0.3,"ease":"power2.in"}, 12.89);
     window.__timelines["end"] = tl;
   </script>
 

@@ -30,38 +30,38 @@
 
 
     .wl { position: absolute; left: 0; top: 0; width: 0; height: 0; opacity: 0; }
-    .wl-d { position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 6px; background: #1B1613; border: 2px solid #F9F8F5; }
-    .wl-l { position: absolute; left: -1px; top: -64px; width: 2px; height: 58px; background: #1B1613; }
+    .wl-d { position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 6px; background: #FFFFFF; border: 2px solid rgba(0,0,0,0.25); }
+    .wl-l { position: absolute; left: -1px; top: -64px; width: 2px; height: 58px; background: rgba(255,255,255,0.85); }
     .wl-t { position: absolute; bottom: 66px; left: -300px; width: 600px; text-align: center; font-family: "Major Mono Display", monospace; font-size: 32px;
-      letter-spacing: 0.04em; color: #1B1613; white-space: nowrap; text-shadow: 0 0 10px #F9F8F5, 0 0 4px #F9F8F5; }
+      letter-spacing: 0.04em; color: #FFFFFF; white-space: nowrap; text-shadow: 0 1px 12px rgba(0,0,0,0.55); }
 
   </style>
-  <div id="root" data-composition-id="world" data-width="1080" data-height="1920" data-duration="139.23">
+  <div id="root" data-composition-id="world" data-width="1080" data-height="1920" data-duration="189.825">
 <div id="world-bg" class="full" style="background:linear-gradient(180deg, #F3F1EC 0%, #ECEAE5 100%)"></div>
-    <div id="world-tint-library" class="full" style="opacity:0;background:linear-gradient(180deg, #D3DEEC 0%, #F1EEE8 62%, #ECEAE5 100%)"></div><div id="world-tint-fire" class="full" style="opacity:0;background:linear-gradient(180deg, #F0DAC8 0%, #F1EEE8 62%, #ECEAE5 100%)"></div><div id="world-tint-hospital" class="full" style="opacity:0;background:linear-gradient(180deg, #CFE4E0 0%, #F1EEE8 62%, #ECEAE5 100%)"></div><div id="world-tint-academy" class="full" style="opacity:0;background:linear-gradient(180deg, #D9E7CF 0%, #F1EEE8 62%, #ECEAE5 100%)"></div><div id="world-tint-neutral" class="full" style="opacity:0;background:linear-gradient(180deg, #E6E1D8 0%, #F1EEE8 62%, #ECEAE5 100%)"></div><div id="world-tint-mulvium" class="full" style="opacity:0;background:linear-gradient(180deg, #ECD6E0 0%, #F1EEE8 62%, #ECEAE5 100%)"></div>
+    <div id="world-tint-library" class="full" style="opacity:0;background:linear-gradient(180deg, #1F3F6B 0%, #4E73A3 100%)"></div><div id="world-tint-fire" class="full" style="opacity:0;background:linear-gradient(180deg, #7A2817 0%, #B4583A 100%)"></div><div id="world-tint-hospital" class="full" style="opacity:0;background:linear-gradient(180deg, #13514A 0%, #3F8A80 100%)"></div><div id="world-tint-academy" class="full" style="opacity:0;background:linear-gradient(180deg, #264F22 0%, #5E8A4E 100%)"></div><div id="world-tint-neutral" class="full" style="opacity:0;background:linear-gradient(180deg, #E6E1D8 0%, #ECEAE5 100%)"></div><div id="world-tint-mulvium" class="full" style="opacity:0;background:linear-gradient(180deg, #24122A 0%, #5A2E4E 100%)"></div>
 <canvas id="world-cv" class="full" width="1080" height="1920" data-layout-ignore></canvas>
     <div id="world-lab" class="full" data-layout-ignore></div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
     tl.set("#world-tint-library", {"opacity":0}, 0);
-    tl.to("#world-tint-library", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 41.009);
-    tl.to("#world-tint-library", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 67.797);
+    tl.to("#world-tint-library", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 47.395);
+    tl.to("#world-tint-library", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 80.235);
     tl.set("#world-tint-fire", {"opacity":0}, 0);
-    tl.to("#world-tint-fire", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 66.597);
-    tl.to("#world-tint-fire", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 84.233);
+    tl.to("#world-tint-fire", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 79.035);
+    tl.to("#world-tint-fire", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 100.295);
     tl.set("#world-tint-hospital", {"opacity":0}, 0);
-    tl.to("#world-tint-hospital", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 83.033);
-    tl.to("#world-tint-hospital", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 100.28);
+    tl.to("#world-tint-hospital", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 99.095);
+    tl.to("#world-tint-hospital", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 120.22);
     tl.set("#world-tint-academy", {"opacity":0}, 0);
-    tl.to("#world-tint-academy", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 99.08);
-    tl.to("#world-tint-academy", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 108.529);
+    tl.to("#world-tint-academy", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 119.02);
+    tl.to("#world-tint-academy", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 149.055);
     tl.set("#world-tint-neutral", {"opacity":0}, 0);
-    tl.to("#world-tint-neutral", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 107.329);
-    tl.to("#world-tint-neutral", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 123.969);
+    tl.to("#world-tint-neutral", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 147.855);
+    tl.to("#world-tint-neutral", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 170.425);
     tl.set("#world-tint-mulvium", {"opacity":0}, 0);
-    tl.to("#world-tint-mulvium", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 122.769);
-    tl.to({}, { duration: 139.23 }, 0);
+    tl.to("#world-tint-mulvium", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 169.225);
+    tl.to({}, { duration: 189.825 }, 0);
     window.__timelines["world"] = tl;
   </script>
   <script>
@@ -72,7 +72,7 @@
     import { createWorld } from "../assets/lib/world.js";
     let world = null, last = 0;
     window.addEventListener("hf-seek", (e) => { last = e.detail.time; if (world) world.renderAt(last); });
-    createWorld(document.getElementById("world-cv"), document.getElementById("world-lab"), {"plinths":{"library":7.618,"fire":7.618,"hospital":7.618,"academy":7.618},"preview":[8.618,12.558,14.158],"build":{"library":[41.559,47.299],"fire":[67.197,74.437],"hospital":[83.583,88.673],"academy":[99.43,103.2]},"events":{"libCoins":[47.549,50.369],"libBooks":[50.769,52.407],"hospDonors":[89.153,92.884],"hospTrip":93.004,"turn":{"rules":110.979,"members":112.199,"money":113.539},"turnEnd":123.509,"merge":[123.509,126.369],"project":[127.741],"grow":[136.441,138.28]},"cam":[{"t":0,"dur":0,"shot":"sweepA"},{"t":8.618,"dur":3.8,"shot":"sweepB"},{"t":14.158,"dur":0.1,"shot":"all4"},{"t":40.909,"dur":1.6,"shot":"plot:library"},{"t":47.149,"dur":1.1,"shot":"mid:library"},{"t":50.469,"dur":1.2,"shot":"close:library:case"},{"t":59.15,"dur":0.1,"shot":"plot:fire"},{"t":71.137,"dur":1.4,"shot":"mid:fire"},{"t":76.624,"dur":0.1,"shot":"plot:hospital"},{"t":88.953,"dur":1.2,"shot":"mid:hospital"},{"t":93.384,"dur":1.4,"shot":"close:hospital:rules"},{"t":98.98,"dur":0.1,"shot":"plot:academy"},{"t":107.329,"dur":0.1,"shot":"all4"},{"t":127.241,"dur":1.6,"shot":"all5"},{"t":130.821,"dur":1.6,"shot":"plot:project"}],"labels":[{"text":"rules","anchor":"library.rules","t0":41.859,"t1":47.349},{"text":"members","anchor":"library.members","t0":42.819,"t1":47.349},{"text":"money","anchor":"library.money","t0":43.779,"t1":47.349},{"text":"one foundation","anchor":"hub.members","t0":126.569,"t1":127.641}],"tints":[["library","#D3DEEC",41.009],["fire","#F0DAC8",66.597],["hospital","#CFE4E0",83.033],["academy","#D9E7CF",99.08],["neutral","#E6E1D8",107.329],["mulvium","#ECD6E0",122.769]]})
+    createWorld(document.getElementById("world-cv"), document.getElementById("world-lab"), {"plinths":{"library":7.55,"fire":7.55,"hospital":7.55,"academy":7.55},"preview":[8.55,11.405,13.005],"build":{"library":[47.945,54.57],"fire":[79.635,88.985],"hospital":[99.645,105.845],"academy":[119.37,123.555]},"events":{"libCoins":[54.82,58.05],"libBooks":[58.45,60.705],"hospDonors":[106.295,111.415],"hospTrip":111.535,"turn":{"rules":152.58,"members":154.065,"money":155.915},"turnEnd":169.825,"cosmos":{"rise":[169.425,174.2],"star":174.225,"project":175.37,"wire":176.56,"pulses":[181.625,183.875,185.07],"grow":[185.905,189.075]}},"cam":[{"t":0,"dur":0,"shot":"sweepA"},{"t":8.55,"dur":3.8,"shot":"sweepB"},{"t":13.005,"dur":0.1,"shot":"all4"},{"t":47.295,"dur":1.6,"shot":"plot:library"},{"t":54.42,"dur":1.1,"shot":"mid:library"},{"t":58.15,"dur":1.2,"shot":"close:library:case"},{"t":69.33,"dur":0.1,"shot":"plot:fire"},{"t":84.83,"dur":1.4,"shot":"mid:fire"},{"t":91.615,"dur":0.1,"shot":"plot:hospital"},{"t":106.095,"dur":1.2,"shot":"mid:hospital"},{"t":111.915,"dur":1.4,"shot":"close:hospital:rules"},{"t":118.92,"dur":0.1,"shot":"plot:academy"},{"t":132.55,"dur":0.1,"shot":"close:academy:members"},{"t":138.035,"dur":1.4,"shot":"mid:academy"},{"t":147.855,"dur":0.1,"shot":"all4"},{"t":169.225,"dur":3,"shot":"cosmos"},{"t":185.605,"dur":2.2,"shot":"cosmosClose"}],"labels":[{"text":"rules","anchor":"library.rules","t0":48.245,"t1":54.62},{"text":"members","anchor":"library.members","t0":49.353,"t1":54.62},{"text":"money","anchor":"library.money","t0":50.461,"t1":54.62},{"text":"rules","anchor":"cosmos.rules","t0":174,"t1":179.31},{"text":"members","anchor":"cosmos.members","t0":174,"t1":179.31},{"text":"money","anchor":"cosmos.money","t0":174,"t1":179.31},{"text":"mulvium","anchor":"cosmos.star","t0":174.825,"t1":179.31},{"text":"a new project","anchor":"cosmos.project","t0":176.57,"t1":188.825}],"tints":[["library","#1F3F6B","#4E73A3",47.395],["fire","#7A2817","#B4583A",79.035],["hospital","#13514A","#3F8A80",99.095],["academy","#264F22","#5E8A4E",119.02],["neutral","#E6E1D8","#ECEAE5",147.855],["mulvium","#24122A","#5A2E4E",169.225]]})
       .then((w) => { world = w; w.renderAt(last); window.__worldReady(); });
   </script>
 </template>

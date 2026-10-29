@@ -214,7 +214,7 @@ const WORLD = (() => {
     library: [after("lib1") + 0.15, at("lib2", "fifty") - 0.25],
     fire: [after("fire1") + 0.2, after("fire2", "buckets") + 0.2],
     hospital: [after("hosp1") + 0.15, at("hosp2", "only") + 0.2],
-    academy: [at("acad1") - 0.85, at("acad1", "opened") + 0.6],
+    academy: [at("acad1") - 0.85, after("acad1") + 0.2],
   };
   // the opening: the finished model, then taken apart behind the portrait
   const p0 = at("hook2") - 0.05, p1 = at("hook2", "benjamin") + 0.35, p2 = p1 + 1.6;
@@ -227,10 +227,13 @@ const WORLD = (() => {
     libBooks: [after("lib2", "each") + 0.4, Math.min(after("lib2") + 0.8, start("lib3") + 0.2)],
     hospDonors: [d0, d1], hospTrip: d1 + 0.12,
     turn: { rules: at("turn1", "rules") - 0.05, members: at("turn1", "members") - 0.05, money: at("turn1", "money") - 0.05 },
-    turnEnd: at("now1", "founder"),
-    merge: [at("now1", "founder"), at("now1", "nothing") + 0.7],
-    project: [at("now2", "new") - 0.1],
-    grow: [at("now2", "while"), after("now2") + 0.4],
+    turnEnd: at("now1", "founder") + 0.4,
+    cosmos: {
+      rise: [at("now1", "founder"), after("now1") + 0.9], star: at("now2", "sponsor") - 0.1,
+      project: at("now2", "new") - 0.15, wire: at("now2", "existing") - 0.1,
+      pulses: [at("now2", "tax-deductible"), at("now2", "grants"), at("now2", "contracts")],
+      grow: [at("now2", "while"), after("now2") + 0.6],
+    },
   };
   const cam = [
     { t: 0, dur: 0, shot: "sweepA" },
@@ -245,39 +248,43 @@ const WORLD = (() => {
     { t: d0 - 0.2, dur: 1.2, shot: "mid:hospital" },
     { t: d1 + 0.5, dur: 1.4, shot: "close:hospital:rules" },
     { t: at("acad1") - 1.3, dur: 0.1, shot: "plot:academy" },
+    { t: start("acad3") - 0.3, dur: 0.1, shot: "close:academy:members" },
+    { t: at("acad3", "bought") - 0.4, dur: 1.4, shot: "mid:academy" },
     { t: start("turn") - 0.9, dur: 0.1, shot: "all4" },
-    { t: at("now2", "new") - 0.6, dur: 1.6, shot: "all5" },
-    { t: at("now2", "from") - 0.4, dur: 1.6, shot: "plot:project" },
+    { t: at("now1", "founder") - 0.2, dur: 3.0, shot: "cosmos" },
+    { t: at("now2", "while") - 0.3, dur: 2.2, shot: "cosmosClose" },
   ];
   const labels = [
     { text: "rules", anchor: "library.rules", t0: arrive("library", 1) + 0.3, t1: at("lib2", "fifty") - 0.2 },
     { text: "members", anchor: "library.members", t0: arrive("library", 2) + 0.3, t1: at("lib2", "fifty") - 0.2 },
     { text: "money", anchor: "library.money", t0: arrive("library", 3) + 0.3, t1: at("lib2", "fifty") - 0.2 },
-    { text: "one foundation", anchor: "hub.members", t0: events.merge[1] + 0.2, t1: at("now2", "new") - 0.2 },
+    ...["rules", "members", "money"].map((w) => ({ text: w, anchor: `cosmos.${w}`, t0: events.cosmos.rise[1] - 0.2, t1: at("now2", "from") - 0.2 })),
+    { text: "mulvium", anchor: "cosmos.star", t0: events.cosmos.star + 0.6, t1: at("now2", "from") - 0.2 },
+    { text: "a new project", anchor: "cosmos.project", t0: events.cosmos.project + 1.2, t1: start("end") - 0.4 },
   ];
   const tints = [
-    ["library", "#D3DEEC", after("lib1") - 0.4], ["fire", "#F0DAC8", after("fire1") - 0.4], ["hospital", "#CFE4E0", after("hosp1") - 0.4],
-    ["academy", "#D9E7CF", at("acad1") - 1.2], ["neutral", "#E6E1D8", start("turn") - 0.9], ["mulvium", "#ECD6E0", at("now1") - 0.6],
+    ["library", "#1F3F6B", "#4E73A3", after("lib1") - 0.4], ["fire", "#7A2817", "#B4583A", after("fire1") - 0.4], ["hospital", "#13514A", "#3F8A80", after("hosp1") - 0.4],
+    ["academy", "#264F22", "#5E8A4E", at("acad1") - 1.2], ["neutral", "#E6E1D8", C.paper, start("turn") - 0.9], ["mulvium", "#24122A", "#5A2E4E", at("now1", "founder") - 0.2],
   ];
   return { plinths, preview: [p0, p1, p2], build: plotBuild, events, cam, labels, tints };
 })();
 {
   const s = new Scene("world", 0, start("end") + 0.6, 0);
   s.add(`<div id="bg" class="full" style="background:linear-gradient(180deg, #F3F1EC 0%, ${C.paper} 100%)"></div>
-    ${WORLD.tints.map(([n, c]) => `<div id="tint-${n}" class="full" style="opacity:0;background:linear-gradient(180deg, ${c} 0%, #F1EEE8 62%, ${C.paper} 100%)"></div>`).join("")}`);
-  WORLD.tints.forEach(([n, , t], i) => {
+    ${WORLD.tints.map(([n, c1, c2]) => `<div id="tint-${n}" class="full" style="opacity:0;background:linear-gradient(180deg, ${c1} 0%, ${c2} 100%)"></div>`).join("")}`);
+  WORLD.tints.forEach(([n, , , t], i) => {
     s.set(`#tint-${n}`, { opacity: 0 }, 0).to(`#tint-${n}`, { opacity: 1, duration: 1.2, ease: "power1.inOut" }, t);
     const next = WORLD.tints[i + 1];
-    if (next) s.to(`#tint-${n}`, { opacity: 0, duration: 1.2, ease: "power1.inOut" }, next[2] + 1.2);
+    if (next) s.to(`#tint-${n}`, { opacity: 0, duration: 1.2, ease: "power1.inOut" }, next[3] + 1.2);
   });
   s.add(`<canvas id="cv" class="full" width="${W}" height="${H}" data-layout-ignore></canvas>
     <div id="lab" class="full" data-layout-ignore></div>`);
   s.style(`
     .wl { position: absolute; left: 0; top: 0; width: 0; height: 0; opacity: 0; }
-    .wl-d { position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 6px; background: ${C.ink}; border: 2px solid ${C.surface}; }
-    .wl-l { position: absolute; left: -1px; top: -64px; width: 2px; height: 58px; background: ${C.ink}; }
+    .wl-d { position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 6px; background: #FFFFFF; border: 2px solid rgba(0,0,0,0.25); }
+    .wl-l { position: absolute; left: -1px; top: -64px; width: 2px; height: 58px; background: rgba(255,255,255,0.85); }
     .wl-t { position: absolute; bottom: 66px; left: -300px; width: 600px; text-align: center; font-family: "Major Mono Display", monospace; font-size: 32px;
-      letter-spacing: 0.04em; color: ${C.ink}; white-space: nowrap; text-shadow: 0 0 10px ${C.surface}, 0 0 4px ${C.surface}; }`);
+      letter-spacing: 0.04em; color: #FFFFFF; white-space: nowrap; text-shadow: 0 1px 12px rgba(0,0,0,0.55); }`);
   s.tl.push(`tl.to({}, { duration: ${r3(s.t1 - s.t0)} }, 0);`);
   s.scripts.push(`  <script>
     window.__hf = window.__hf || {}; window.__hf.buildReady = window.__hf.buildReady || {};
@@ -385,7 +392,7 @@ const WORLD = (() => {
   // the arithmetic, set on the ground under the model as the subscriptions run in
   const c0 = at("lib2", "fifty"), c1 = after("lib2", "each");
   s.add(`<div id="sum" class="abs" style="left:72px;top:${LOW}px;width:936px;opacity:0">
-    <span id="n50" class="serif" style="font-size:190px;font-weight:600;color:${A.library}">0</span><span class="serif" style="font-size:64px;color:${C.muted};font-style:italic"> × 40s = </span><span id="fund" class="serif" style="font-size:150px;font-weight:600;color:${C.ink}">£0</span></div>`);
+    <span id="n50" class="serif" style="font-size:190px;font-weight:600;color:#FFFFFF">0</span><span class="serif" style="font-size:64px;color:rgba(255,255,255,0.75);font-style:italic"> × 40s = </span><span id="fund" class="serif" style="font-size:150px;font-weight:600;color:#FFFFFF">£0</span></div>`);
   land(s, "#sum", c0).count("#n50", c0, c1 - c0 + 0.4, 0, 50).count("#fund", c0, c1 - c0 + 0.4, 0, 100, "'£' + Math.round(v)");
   s.to("#sum", { opacity: 0, filter: "blur(8px)", duration: 0.3 }, start("lib3") - 0.5);
   s.sound("typing", c0, 0.12);
@@ -409,9 +416,9 @@ const WORLD = (() => {
   s.to("#gz, #q", { opacity: 0, duration: 0.3 }, after("fire1") + 0.1);
   s.sound("whoosh", after("fire1") + 0.1, 0.16);
   // on the model: the count of volunteers, then of buckets
-  s.add(kt("v30", `<span id="n30">0</span> <i style="font-size:0.42em;color:${C.muted}">volunteers</i>`, { y: LOW - 20, size: 200, cls: "ink", extra: `color:${A.fire}` }));
+  s.add(kt("v30", `<span id="n30">0</span> <i style="font-size:0.42em;opacity:0.8">volunteers</i>`, { y: LOW - 20, size: 200 }));
   land(s, "#v30", at("fire2", "thirty") - 0.15).count("#n30", at("fire2", "thirty") - 0.1, 0.9, 0, 30);
-  s.add(kt("b30", `30 <i style="font-size:0.42em;color:${C.muted}">leather buckets</i>`, { y: LOW + 190, size: 110, cls: "ink" }));
+  s.add(kt("b30", `30 <i style="font-size:0.42em;opacity:0.8">leather buckets</i>`, { y: LOW + 190, size: 110 }));
   land(s, "#b30", at("fire2", "buckets") - 0.2);
   scenes.push(s);
 }
@@ -427,17 +434,17 @@ const WORLD = (() => {
   s.set("#bk", { opacity: 0 }, after("hosp1") - 0.3);
   // the condition, in large type on the model
   const d0 = at("hosp2", "private"), d1 = Math.max(after("hosp2"), at("hosp3", "target")), tT = d1 + 0.12;
-  s.add(kk("ak", "the assembly", { y: 250, cls: "ink" }));
-  s.add(kt("an", "£2,000", { y: 300, size: 150, cls: "ink", extra: `color:${C.muted}` }));
+  s.add(kk("ak", "the assembly", { y: 250 }));
+  s.add(kt("an", "£2,000", { y: 300, size: 150, extra: "color:rgba(255,255,255,0.7)" }));
   land(s, "#ak", at("hosp2", "assembly") - 0.1);
   land(s, "#an", at("hosp2", "two") - 0.1);
-  s.add(kt("oif", "<i>only if</i>", { y: 470, size: 100, cls: "ink", extra: `color:${C.clay}` }));
+  s.add(kt("oif", "<i>only if</i>", { y: 470, size: 100, extra: "color:#F6C9A8" }));
   slam(s, "#oif", at("hosp2", "only") - 0.05);
-  s.add(kk("dk", "private donors", { y: LOW, cls: "ink" }));
-  s.add(kt("dn", "£0", { y: LOW + 50, size: 150, cls: "ink", extra: `color:${C.clay}` }));
+  s.add(kk("dk", "private donors", { y: LOW }));
+  s.add(kt("dn", "£0", { y: LOW + 50, size: 150, extra: "color:#F6C9A8" }));
   land(s, "#dk", d0 - 0.2); land(s, "#dn", d0 - 0.2);
   s.count("#dn", d0, d1 - d0 + 0.1, 0, 2000, "'£' + (Math.round(v / 100) * 100).toLocaleString('en-GB')");
-  s.fromTo("#an", { color: C.muted }, { color: A.hospital, duration: 0.3 }, tT + 0.45);
+  s.fromTo("#an", { color: "rgba(255,255,255,0.7)" }, { color: "#FFFFFF", duration: 0.3 }, tT + 0.45);
   s.sound("impact-bass-1", tT + 0.47, 0.22);
   s.to("#ak, #an, #oif, #dk, #dn", { opacity: 0, filter: "blur(8px)", duration: 0.3 }, d1 + 1.0);
   // into the lectern: the Act, full screen
@@ -445,16 +452,29 @@ const WORLD = (() => {
   scenes.push(s);
 }
 
-// ── ACAD: the hall rises; the university it became ─────────────────────────
+// ── ACAD: the hall rises; the 1749 plan; the trustees; the university ──────
 {
   const s = new Scene("acad", start("acad") - 0.1, start("turn") - 0.2, 15);
   s.raw.push(KT);
-  s.add(kt("ac", `Academy <i>1751</i>`, { y: 250, size: 110, cls: "ink", extra: `color:${A.academy}` }));
+  s.add(kt("ac", `Academy <i>1751</i>`, { y: 250, size: 110 }));
   land(s, "#ac", at("acad1", "academy") - 0.1);
-  s.set("#ac", { opacity: 0 }, at("acad1", "it") - 0.05);
-  plate(s, "pen", "penn", { t0: at("acad1", "it") - 0.05, t1: start("turn") - 0.2, from: [0.5, 0.5, 1.15], to: [0.48, 0.42, 1.0], credit: "College Hall, University of Pennsylvania", enter: "wipe", exit: "wipeUp" });
+  s.to("#ac", { opacity: 0, filter: "blur(8px)", duration: 0.25 }, start("acad2") - 0.3);
+  // the plan, in Franklin's own printing, and what it asked for
+  plate(s, "prop", "proposals", { t0: start("acad2") - 0.2, t1: start("acad3") - 0.1, from: [0.5, 0.3, 1.35], to: [0.5, 0.42, 1.1], scrim: "low", credit: "Franklin, Proposals Relating to the Education of Youth in Pensilvania, 1749", enter: "wipe", exit: "wipeUp" });
+  s.add(kt("y1749", "1749", { y: 1060, size: 150, extra: "z-index:5" }));
+  land(s, "#y1749", at("acad2", "1749") - 0.15);
+  const AIMS = [["a1", "A school for <i>useful</i> subjects,", "useful"], ["a2", "taught in English,", "english"], ["a3", "alongside Latin and Greek.", "alongside"]];
+  AIMS.forEach(([id, text, w], i) => { s.add(kt(id, text, { y: 1240 + i * 82, size: 64, extra: "z-index:5" })); land(s, `#${id}`, at("acad2", w) - 0.1); });
+  // the trustees, on the model: their bench and their subscription box
+  s.add(kt("tr24", `24 <i style="font-size:0.42em;opacity:0.85">trustees</i>`, { y: 250, size: 190 }));
+  slam(s, "#tr24", at("acad3", "twenty-four") - 0.05);
+  s.add(kt("pres", "<i>Franklin, president</i>", { y: 470, size: 72 }));
+  land(s, "#pres", at("acad3", "president") - 0.1);
+  s.to("#tr24, #pres", { opacity: 0, filter: "blur(8px)", duration: 0.3 }, start("acad4") - 0.3);
+  // what it became
+  plate(s, "pen", "penn", { t0: start("acad4") - 0.1, t1: start("turn") - 0.2, from: [0.5, 0.5, 1.15], to: [0.48, 0.42, 1.0], credit: "College Hall, University of Pennsylvania", enter: "wipe", exit: "wipeUp" });
   s.add(kt("upenn", "University<br>of Pennsylvania", { y: 1150, size: 110, extra: "z-index:5" }));
-  land(s, "#upenn", at("acad1", "university") - 0.1, { dy: 50, dur: 0.6 });
+  land(s, "#upenn", at("acad4", "university") - 0.1, { dy: 50, dur: 0.6 });
   scenes.push(s);
 }
 
@@ -486,39 +506,43 @@ const WORLD = (() => {
   scenes.push(s);
 }
 
-// ── NOW: the foundations fuse into one; a new project, founded on it ───────
+// ── NOW: the foundations rise and become Mulvium's cosmos; a new project ───
 {
   const s = new Scene("now", start("now") - 0.6, start("end") - 0.35, 17);
   s.raw.push(KT);
   const L1 = [["f1", "A founder today", "founder"], ["f2", "does not have to start", "does"], ["f3", "<i>from nothing.</i>", "from"]];
-  L1.forEach(([id, text, w], i) => { s.add(kt(id, text, { y: 240 + i * 100, size: 88, cls: "ink" })); land(s, `#${id}`, at("now1", w) - 0.1); });
-  s.sound("riser", at("now1") - 0.4, 0.14).sound("impact-bass-1", at("now1", "nothing") + 0.7, 0.2);
-  s.to("#f1, #f2, #f3", { opacity: 0, filter: "blur(8px)", duration: 0.3 }, at("now2", "new") - 0.4);
-  s.add(kk("fs", "fiscal sponsorship", { y: 250, cls: "ink" }));
+  L1.forEach(([id, text, w], i) => { s.add(kt(id, text, { y: 240 + i * 100, size: 88 })); land(s, `#${id}`, at("now1", w) - 0.1); });
+  s.sound("riser", at("now1") - 0.4, 0.14).sound("impact-bass-1", at("now2", "sponsor"), 0.22);
+  s.to("#f1, #f2, #f3", { opacity: 0, filter: "blur(8px)", duration: 0.3 }, at("now2") - 0.2);
+  s.add(kk("fs", "fiscal sponsorship", { y: 250 }));
   land(s, "#fs", at("now2", "fiscal") - 0.1);
-  s.sound("whoosh", at("now2", "new") - 0.5, 0.16);
-  s.add(kt("d1", "From day one:", { y: 300, size: 96, cls: "ink" }));
+  s.sound("whoosh", at("now2", "new") - 0.3, 0.16);
+  s.add(kt("d1", "From day one:", { y: 300, size: 96 }));
   land(s, "#d1", at("now2", "from") - 0.1);
   const CAN = [["c1", "tax-deductible gifts", "tax-deductible"], ["c2", "grants", "grants"], ["c3", "contracts", "contracts"]];
   CAN.forEach(([id, text, w], i) => {
-    s.add(kt(id, `<span style="color:${A.mulvium}">✓</span> ${text}`, { y: LOW - 30 + i * 92, size: 74, cls: "ink" }));
+    s.add(kt(id, `<span style="color:#F2B8CF">✓</span> ${text}`, { y: LOW - 30 + i * 92, size: 74 }));
     land(s, `#${id}`, at("now2", w) - 0.1);
     s.sound("click-soft", at("now2", w) - 0.05, 0.25);
   });
-  s.add(kt("work", "<i>while the founder does the work.</i>", { y: LOW + 270, size: 64, cls: "ink", extra: `color:${C.muted}` }));
+  s.add(kt("work", "<i>while the founder does the work.</i>", { y: LOW + 270, size: 64, extra: "opacity:0;color:rgba(255,255,255,0.8)" }));
   land(s, "#work", at("now2", "while") - 0.1);
   scenes.push(s);
 }
 
-// ── END: the cosmos and the wordmark (the launch film's own close) ──────
-const PLATE = { file: "cosmos-close.mp4", from: 64.6, gather: 77.0, settle: 84.4 };
+// ── END: the launch film's network, from its point outward; the wordmark ───
+// cosmos-close.mp4 is the launch film from 64.6 s on, without its words. It
+// enters at 65.3 s, the network still gathered to a point, so the network
+// opens out as "The next great expansion" is said, and later gathers back
+// into the wordmark.
+const PLATE = { file: "cosmos-close.mp4", from: 64.6, enter: 65.3, settle: 84.4 };
 {
   const t0 = start("end") - 0.35;
-  const offset = PLATE.gather - (after("end2") + 0.7);
-  const mediaStart = Math.max(0, t0 + offset - PLATE.from);
-  const t1 = t0 + (PLATE.settle + 1.6 - PLATE.from - mediaStart);
+  const mediaStart = PLATE.enter - PLATE.from;
+  const t1 = t0 + (PLATE.settle + 1.6 - PLATE.enter);
   const s = new Scene("end", t0, t1, 9);
-  s.add(`<video id="plate" class="full" src="assets/${PLATE.file}" muted playsinline style="object-fit:cover"></video>`);
+  s.add(`<div id="pw" class="full" style="opacity:0"><video id="plate" class="full" src="assets/${PLATE.file}" muted playsinline style="object-fit:cover"></video></div>`);
+  s.fromTo("#pw", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power1.out" }, t0);
   s.mediaStart = r3(mediaStart);
   s.add(`<div id="build" class="serif abs" style="left:90px;top:840px;width:900px;text-align:center;font-size:56px;line-height:1.25">${words("Mulvium is building that structure for the next Franklin.")}</div>`);
   s.words("#build .w", at("end1") - 0.05, { stagger: (after("end1") - at("end1") - 0.3) / 9 });
@@ -535,7 +559,7 @@ const PLATE = { file: "cosmos-close.mp4", from: 64.6, gather: 77.0, settle: 84.4
 // is set on screen in type, or carried by the picture alone.
 const SPAN = {
   hook2: [9], who2: [0, 11], who3: [0, 8], lib1: [0, 6], lib2: [0, 12], lib3: [0], fire1: [0, 13], fire2: [0, 9],
-  hosp1: [0], hosp3: [0], acad1: [0, 6], turn1: [0, 8], now2: [0, 13],
+  hosp1: [0], hosp3: [0], acad1: [0], acad2: [0, 7], acad3: [10], turn1: [0, 8], now2: [0, 13],
 };
 const groups = [];
 for (const l of T.lines) {

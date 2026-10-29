@@ -26,10 +26,16 @@ STORY:   one story, told like a reel: the payoff first, then how it was done.
            the library dives into Birch's hall, the hospital into its 1751 Act
          - "four times": rules, members and money ringed on all four plots, then cuts
            to the press, the almanac and the kite
-         - the synthesis: every institution's rules, members and money lift off and
-           fuse into one foundation at the centre (figures/hub.mjs), wired to all four;
-           a new project's plot slides in already connected, and its building rises
-           in a scaffold (figures/project.mjs) while the founder does the work
+         - the academy: the hall rises; Franklin's 1749 Proposals full screen (useful
+           subjects, in English, alongside Latin and Greek); 24 trustees, Franklin
+           their president, at their bench and subscription box; College Hall
+         - the turn to now: every institution's rules, members and money become
+           spheres and rise off the plots, into the planets of Mulvium's own cosmos
+           (the landing page's star, rings and pastel porcelain, js/main.js); the star
+           arrives at "fiscal sponsor"; a new project's planet flies up into its orbit,
+           is wired to the rest, takes gifts, grants and contracts, and grows
+         - the close: the launch film's network, entering gathered to a point, opens
+           out on "The next great expansion" and gathers into the wordmark
 
 TYPE:    the narration's own words set as the picture where they carry it (the "No…"
          lines, the proverb, "only if", "Rules written.", "Four times.", "From day
@@ -37,8 +43,8 @@ TYPE:    the narration's own words set as the picture where they carry it (the "
          Display (lower case) for kickers, IBM Plex Sans for subtitles and sources.
 
 LOOK:    full-bleed archival plates with a scrim where type sits; between them the
-         figures on a porcelain backdrop that leans to each institution's colour
-         (pale blue, apricot, pale teal, sage, rose for Mulvium). No cards, tags,
+         figures on a backdrop that turns deep in each institution's colour (blue,
+         red, teal, green; a plum night for Mulvium's cosmos), porcelain between. No cards, tags,
          timeline or numbering. Figures in stone, walnut, oak, brass, pewter, leather
          and brick, flat colours, a fine outline on every solid.
 

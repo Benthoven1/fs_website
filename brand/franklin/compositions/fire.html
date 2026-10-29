@@ -41,29 +41,29 @@
     .kk.ink { color: #5C544E; }
     .flash { position: absolute; inset: 0; background: #FFFFFF; opacity: 0; }
   </style>
-  <div id="root" data-composition-id="fire" data-width="1080" data-height="1920" data-duration="17.474">
+  <div id="root" data-composition-id="fire" data-width="1080" data-height="1920" data-duration="22.285">
 <div id="fire-buck" class="full plate" style="z-index:1;opacity:0">
     <div class="full" style="overflow:hidden"><div id="fire-buck-pic" class="pic" style="width:1920px;height:2428px"><img src="assets/img/bucket.jpg" alt=""></div></div>
     <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0.45) 0%, rgba(14,10,8,0) 30%, rgba(14,10,8,0) 52%, rgba(14,10,8,0.65) 100%)"></div>
     <div class="credit">Leather fire bucket, Dedham Historical Society</div></div>
 <div id="fire-gz" class="kk white" style="left:72px;top:250px;width:936px;text-align:left">pennsylvania gazette · 1735</div>
 <div id="fire-q" class="kt white" style="left:72px;top:420px;width:936px;font-size:112px;text-align:left;font-style:italic;font-weight:500"><span class="w">An </span><span class="w">ounce </span><span class="w">of </span><span class="w">prevention </span><span class="w">is </span><span class="w">worth </span><span class="w">a </span><span class="w">pound </span><span class="w">of </span><span class="w">cure. </span></div>
-<div id="fire-v30" class="kt ink" style="left:72px;top:1380px;width:936px;font-size:200px;text-align:left;color:#A8603F"><span id="fire-n30">0</span> <i style="font-size:0.42em;color:#5C544E">volunteers</i></div>
-<div id="fire-b30" class="kt ink" style="left:72px;top:1590px;width:936px;font-size:110px;text-align:left;">30 <i style="font-size:0.42em;color:#5C544E">leather buckets</i></div>
+<div id="fire-v30" class="kt white" style="left:72px;top:1380px;width:936px;font-size:200px;text-align:left;"><span id="fire-n30">0</span> <i style="font-size:0.42em;opacity:0.8">volunteers</i></div>
+<div id="fire-b30" class="kt white" style="left:72px;top:1590px;width:936px;font-size:110px;text-align:left;">30 <i style="font-size:0.42em;opacity:0.8">leather buckets</i></div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo("#fire-buck-pic", {"x":-257.1,"y":-96,"scale":0.83}, {"x":-446.886,"y":-163.2,"scale":1.028,"duration":9.047,"ease":"power1.inOut"}, 0);
+    tl.fromTo("#fire-buck-pic", {"x":-257.1,"y":-96,"scale":0.83}, {"x":-446.886,"y":-163.2,"scale":1.028,"duration":11.305,"ease":"power1.inOut"}, 0);
     tl.set("#fire-buck", {"opacity":1}, 0);
-    tl.to("#fire-buck", {"clipPath":"inset(0% 0% 100% 0%)","duration":0.5,"ease":"expo.in"}, 7.947);
-    tl.set("#fire-buck", {"opacity":0}, 8.447);
-    tl.fromTo("#fire-gz", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 1.9);
-    tl.set("#fire-q", {"opacity":1}, 5.4);
-    tl.fromTo("#fire-q .w", {"opacity":0,"y":20,"filter":"blur(6px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.25,"ease":"power2.out","stagger":0.198}, 5.4);
-    tl.to("#fire-gz, #fire-q", {"opacity":0,"duration":0.3}, 8.047);
-    tl.fromTo("#fire-v30", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 12.137);
-    { const o = { v: 0 }, el = document.querySelector("#fire-n30"); tl.fromTo(o, { v: 0 }, { v: 30, duration: 0.9, ease: "power2.out", onUpdate: () => { const v = o.v; el.textContent = Math.round(v); } }, 12.187); }
-    tl.fromTo("#b30", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 14.527);
+    tl.to("#fire-buck", {"clipPath":"inset(0% 0% 100% 0%)","duration":0.5,"ease":"expo.in"}, 10.205);
+    tl.set("#fire-buck", {"opacity":0}, 10.705);
+    tl.fromTo("#fire-gz", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 1.485);
+    tl.set("#fire-q", {"opacity":1}, 6.235);
+    tl.fromTo("#fire-q .w", {"opacity":0,"y":20,"filter":"blur(6px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.25,"ease":"power2.out","stagger":0.331}, 6.235);
+    tl.to("#fire-gz, #fire-q", {"opacity":0,"duration":0.3}, 10.305);
+    tl.fromTo("#fire-v30", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 15.65);
+    { const o = { v: 0 }, el = document.querySelector("#fire-n30"); tl.fromTo(o, { v: 0 }, { v: 30, duration: 0.9, ease: "power2.out", onUpdate: () => { const v = o.v; el.textContent = Math.round(v); } }, 15.7); }
+    tl.fromTo("#b30", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 18.81);
     window.__timelines["fire"] = tl;
   </script>
 

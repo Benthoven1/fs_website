@@ -41,7 +41,7 @@
     .kk.ink { color: #5C544E; }
     .flash { position: absolute; inset: 0; background: #FFFFFF; opacity: 0; }
   </style>
-  <div id="root" data-composition-id="lib" data-width="1080" data-height="1920" data-duration="25.06">
+  <div id="root" data-composition-id="lib" data-width="1080" data-height="1920" data-duration="30.895">
 <div id="lib-jun" class="full plate" style="z-index:1;opacity:0">
     <div class="full" style="overflow:hidden"><div id="lib-jun-pic" class="pic" style="width:1866px;height:1098px"><img src="assets/img/statehouse.jpg" alt=""></div></div>
     <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0.45) 0%, rgba(14,10,8,0) 30%, rgba(14,10,8,0) 52%, rgba(14,10,8,0.65) 100%)"></div>
@@ -66,7 +66,7 @@
       <span class="serif" style="font-size:52px;font-weight:600;color:#FFF;text-shadow:0 2px 18px rgba(0,0,0,.5)">Hugh Meredith</span>
       <span class="kk white" style="position:relative;opacity:1;font-size:30px;margin-left:18px">printer</span></div>
 <div id="lib-sum" class="abs" style="left:72px;top:1400px;width:936px;opacity:0">
-    <span id="lib-n50" class="serif" style="font-size:190px;font-weight:600;color:#4D6D96">0</span><span class="serif" style="font-size:64px;color:#5C544E;font-style:italic"> × 40s = </span><span id="lib-fund" class="serif" style="font-size:150px;font-weight:600;color:#1B1613">£0</span></div>
+    <span id="lib-n50" class="serif" style="font-size:190px;font-weight:600;color:#FFFFFF">0</span><span class="serif" style="font-size:64px;color:rgba(255,255,255,0.75);font-style:italic"> × 40s = </span><span id="lib-fund" class="serif" style="font-size:150px;font-weight:600;color:#FFFFFF">£0</span></div>
 <div id="lib-hall" class="full plate" style="z-index:1;opacity:0">
     <div class="full" style="overflow:hidden"><div id="lib-hall-pic" class="pic" style="width:1526px;height:1243px"><img src="assets/img/library-hall.jpg" alt=""></div></div>
     <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 45%, rgba(14,10,8,0.62) 100%)"></div>
@@ -75,27 +75,27 @@
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo("#lib-jun-pic", {"x":-1091.475,"y":0,"scale":1.749}, {"x":-1221.993,"y":-307.2,"scale":2.098,"duration":8.119,"ease":"power1.inOut"}, 0);
+    tl.fromTo("#lib-jun-pic", {"x":-1091.475,"y":0,"scale":1.749}, {"x":-1221.993,"y":-307.2,"scale":2.098,"duration":10.16,"ease":"power1.inOut"}, 0);
     tl.set("#lib-jun", {"opacity":1}, 0.05);
     tl.fromTo("#lib-jun", {"clipPath":"inset(100% 0% 0% 0%)"}, {"clipPath":"inset(0% 0% 0% 0%)","duration":0.55,"ease":"expo.out"}, 0.05);
-    tl.to("#lib-jun", {"clipPath":"inset(0% 0% 100% 0%)","duration":0.5,"ease":"expo.in"}, 7.069);
-    tl.set("#lib-jun", {"opacity":0}, 7.569);
-    tl.fromTo("#lib-jk", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 1.5);
-    tl.fromTo("#lib-ro0", {"opacity":0,"y":24,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 2.83);
-    tl.fromTo("#lib-ro1", {"opacity":0,"y":24,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 3.05);
-    tl.fromTo("#lib-ro2", {"opacity":0,"y":24,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 3.27);
-    tl.fromTo("#lib-ro3", {"opacity":0,"y":24,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 3.49);
-    tl.fromTo("#lib-ro4", {"opacity":0,"y":24,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 3.71);
-    tl.fromTo("#lib-ro5", {"opacity":0,"y":24,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 3.93);
-    tl.set("#lib-jk, #lib-ro0, #lib-ro1, #lib-ro2, #lib-ro3, #lib-ro4, #lib-ro5", {"opacity":0}, 7.119);
-    tl.fromTo("#lib-sum", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 13.559);
-    { const o = { v: 0 }, el = document.querySelector("#lib-n50"); tl.fromTo(o, { v: 0 }, { v: 50, duration: 3.22, ease: "power2.out", onUpdate: () => { const v = o.v; el.textContent = Math.round(v); } }, 13.559); }
-    { const o = { v: 0 }, el = document.querySelector("#lib-fund"); tl.fromTo(o, { v: 0 }, { v: 100, duration: 3.22, ease: "power2.out", onUpdate: () => { const v = o.v; el.textContent = '£' + Math.round(v); } }, 13.559); }
-    tl.to("#lib-sum", {"opacity":0,"filter":"blur(8px)","duration":0.3}, 17.717);
-    tl.fromTo("#lib-hall-pic", {"x":-697.496,"y":-120,"scale":1.931}, {"x":-702.211,"y":-289.92,"scale":2.394,"duration":7.743,"ease":"power1.inOut"}, 17.617);
-    tl.fromTo("#lib-hall", {"opacity":0,"scale":1.22,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.8,"ease":"expo.out"}, 17.917);
-    tl.set("#lib-hall", {"opacity":0}, 25.06);
-    tl.fromTo("#lib-today", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 20.437);
+    tl.to("#lib-jun", {"clipPath":"inset(0% 0% 100% 0%)","duration":0.5,"ease":"expo.in"}, 9.11);
+    tl.set("#lib-jun", {"opacity":0}, 9.61);
+    tl.fromTo("#lib-jk", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 2.255);
+    tl.fromTo("#lib-ro0", {"opacity":0,"y":24,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 4.405);
+    tl.fromTo("#lib-ro1", {"opacity":0,"y":24,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 4.625);
+    tl.fromTo("#lib-ro2", {"opacity":0,"y":24,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 4.845);
+    tl.fromTo("#lib-ro3", {"opacity":0,"y":24,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 5.065);
+    tl.fromTo("#lib-ro4", {"opacity":0,"y":24,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 5.285);
+    tl.fromTo("#lib-ro5", {"opacity":0,"y":24,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 5.505);
+    tl.set("#lib-jk, #lib-ro0, #lib-ro1, #lib-ro2, #lib-ro3, #lib-ro4, #lib-ro5", {"opacity":0}, 9.16);
+    tl.fromTo("#lib-sum", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 16.485);
+    { const o = { v: 0 }, el = document.querySelector("#lib-n50"); tl.fromTo(o, { v: 0 }, { v: 50, duration: 3.63, ease: "power2.out", onUpdate: () => { const v = o.v; el.textContent = Math.round(v); } }, 16.485); }
+    { const o = { v: 0 }, el = document.querySelector("#lib-fund"); tl.fromTo(o, { v: 0 }, { v: 100, duration: 3.63, ease: "power2.out", onUpdate: () => { const v = o.v; el.textContent = '£' + Math.round(v); } }, 16.485); }
+    tl.to("#lib-sum", {"opacity":0,"filter":"blur(8px)","duration":0.3}, 21.67);
+    tl.fromTo("#lib-hall-pic", {"x":-697.496,"y":-120,"scale":1.931}, {"x":-702.211,"y":-289.92,"scale":2.394,"duration":9.625,"ease":"power1.inOut"}, 21.57);
+    tl.fromTo("#lib-hall", {"opacity":0,"scale":1.22,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.8,"ease":"expo.out"}, 21.87);
+    tl.set("#lib-hall", {"opacity":0}, 30.895);
+    tl.fromTo("#lib-today", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 25.51);
     window.__timelines["lib"] = tl;
   </script>
 

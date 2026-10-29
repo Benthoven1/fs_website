@@ -13,9 +13,9 @@ HTML and GSAP, rendered frame by frame to MP4. Isometric designs drawn
 with the [Anatomy](https://github.com/wheresryan22/anatomy) kit are built in 3D
 (three.js, `assets/lib/world.js`) under the whole film: Franklin's four
 institutions, put together part by part as the narration reaches them, then
-one foundation shared. The real
-paintings, engravings and documents of his city come up over it on cards
-(`CREDITS.md`). `SPEC.md` is the director's brief;
+Mulvium's own cosmos, which every institution's foundations rise to
+become. The real paintings, engravings and documents of his city fill the
+screen between them (`CREDITS.md`). `SPEC.md` is the director's brief;
 `REVIEW.md` is the last review of the film against it.
 
 - `script.json` — the narration, line by line, and the voice that reads it.
@@ -27,7 +27,7 @@ paintings, engravings and documents of his city come up over it on cards
   at most 28 dB of reduction, so soft consonants survive).
 - `figures/*.mjs` — the five plots, drawn with the Anatomy kit to its craft
   rules (`parts.mjs` holds the pieces they share): `node figures/library.mjs`
-  (and `fire`, `hospital`, `academy`, `shared`) writes `assets/fig/<plot>.svg`
+  (and `fire`, `hospital`, `academy`) writes `assets/fig/<plot>.svg`
   and its parts list, `<plot>.parts.json`, which the 3D world builds part for
   part.
 - `assets/lib/world.js` — the designs in 3D on a plain backdrop, and a frame
@@ -54,7 +54,7 @@ python3 narrate.py speak <cache-dir>
 python3 denoise.py <dfn3-weights> <cache-dir> <clean-dir>
 python3 narrate.py build <clean-dir>          # needs faster-whisper
 python3 prep.py <download-dir>                # the pictures, as named in CREDITS.md
-for f in library fire hospital academy shared; do node figures/$f.mjs; done
+for f in library fire hospital academy; do node figures/$f.mjs; done
 node build.mjs
 python3 mix.py <prelude.ogg>
 npx hyperframes check && npx hyperframes snapshot --review
