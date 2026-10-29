@@ -1,9 +1,30 @@
-# Review — Franklin essay v5
+# Review — Franklin essay v6
 
-Rendered 174.4 s, 1080 × 1920, 30 fps. Reviewed from snapshot sheets on the
+Rendered 176.1 s, 1080 × 1920, 30 fps. Reviewed from snapshot sheets on the
 real narration timing and frames of the delivered MP4.
 
-## What changed from v4
+## What changed from v5
+
+- Voice and music start at 0:00: the 1.2 s lead-in and the Prelude
+  recording's 1.4 s of silence are gone.
+- The rules lecterns no longer shimmer in wide shots. The founding document
+  sat 0.06 units above its desk, too close for the depth buffer at 3,000
+  units, so the two surfaces fought. The page is now offset in depth, the
+  near plane is tighter, and hairlines fade as the camera pulls back.
+  Measured on the "Rules written." wide shot, frame-to-frame change across
+  the lectern pages is gone.
+- The cosmos: the new project is the centre sphere; members, rules and money
+  orbit it on the landing page's rings, turning slowly so each stays in its
+  quarter of the screen, where its name sits with a dot of its colour.
+- The network plate holds its gathered point (frame 51 of the launch film's
+  close, for 2.86 s) under "Mulvium is building that structure…", now set
+  below the point, and opens out on "expansion".
+- The Constitution: a quick pan (0.75 s) that comes to rest on "B Franklin",
+  with the ring sized from the signature's measured place on the scan.
+- The hospital closes on a HABS photograph of the Pine Building in place of
+  the 1751 Act page.
+
+## What changed in v5
 
 - **The modern institution is the landing page's cosmos.** The cabinet-building
   "fifth plot" is gone. On "A founder today", every institution's rules,
@@ -33,7 +54,7 @@ real narration timing and frames of the delivered MP4.
 
 - The four new academy lines were transcribed back and match the script;
   1749 is read as a year.
-- Delivered file normalised to −15 LUFS integrated.
+- Delivered file −15.0 LUFS integrated, true peak −0.5 dBFS.
 - Nobody has listened to the film; voice and mix were judged by measurement.
 
 ## What more time would change
