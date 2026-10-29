@@ -1,48 +1,41 @@
-# Review — Franklin essay v2
+# Review — Franklin essay v3
 
-Rendered 140.6 s, 1080 × 1920, 30 fps; `npx hyperframes check` passes with
-no errors or warnings left. Reviewed from `snapshot --review` sheets, sixteen
-mid-beat snapshots and twenty frames of the delivered MP4.
+Rendered 156.9 s, 1080 × 1920, 30 fps. `npx hyperframes check` passes with no
+errors; its remaining warnings are "nothing changes" stretches over the 3D
+canvas, which the check does not see moving, and WebGL driver notices.
+Reviewed from snapshot sheets on the real narration timing and sixteen
+frames of the delivered MP4.
 
 ## Creative calls
 
-- The look is the subject's own medium, Franklin's print shop: laid paper,
-  letterpress ink, the Fell and Caslon types, and the almanac's red as the
-  single accent per frame. Type is pressed, strikes and rings are pen
-  strokes, papers are laid on a pile, the library page burns into the fire.
-- Real artifacts carry every section; drawn things only where nothing
-  survives (the broadside of what the city lacked, the subscribers' list,
-  the ledger, the printer's chase).
-- The engrossed Declaration is too faded to point at a name, so the camera
-  reads its heading; Franklin's own signature is circled on page 4 of the
-  Constitution, where it is legible.
-- The Library Company statue photograph never arrived (Commons
-  rate-limited this machine), so Birch's 1799 engraving carries the whole
-  library beat, walking up to the statue in its niche — it keeps the beat
-  inside the print medium, and is arguably better.
-- The narrator is a designed voice (VoxCPM2): the "statesman" timbre, with
-  its delivery directed by a control (normal English intonation, statements
-  falling) instead of copied from the audition; six rushed lines were
-  re-taken slower and two slowed 14%.
-- The close is the launch film's own (cosmos, wordmark), rendered clean, so
-  the essay ends exactly as the brand does.
+- One story in one place: no chapters. The designs stand on a porcelain
+  backdrop that leans to each institution's colour in turn, and the archive's
+  pictures and documents come up over them on cards.
+- Every figure is designed with the Anatomy kit to its craft rules (about
+  1,650 solids over five plots) and built in 3D from the kit's own records;
+  nothing in the world is modelled outside it.
+- Rules, members and money are each institution's own: the Library Company's
+  subscription chest is the hopper its coins pour into; the fire company has
+  a roll board of thirty name tags and a fines box; the hospital has its
+  contributors' book, and its money is the grant machine itself; the Academy
+  has its trustees' bench and a subscription box. Only the shared foundation
+  has the generic cabinet and strongbox, once, for everyone.
+- The hospital's lectern carries the 1751 Act, from Franklin and Hall's 1754
+  printing. The Library Company's and the fire company's founding articles
+  were not found as free scans, so those lecterns carry Franklin's own prints
+  (the 1733 almanac and the 1744 fireplace pamphlet) instead.
+- The script was rewritten in a formal documentary register (Humanizer pass),
+  with held beats before each build so the assembly has room.
 
 ## Measured, not heard
 
-- Every narrated line transcribed back and matched to the script (all
-  match; years read as years). Speaking pace evened to 2.3–3.1 words/s.
-- Mix: music bed about 19 dB under the voice, up in the pauses and under
-  the close; delivered file −15.2 LUFS integrated, peak −0.8 dBFS.
-- Nobody has listened to the film; the voice and mix were judged by pitch,
-  pace and loudness measurements only.
+- Every narrated line transcribed back and matched to the script; pace
+  2.1–3.1 words a second.
+- Delivered file −15.0 LUFS integrated, true peak −0.5 dBFS.
+- Nobody has listened to the film; voice and mix were judged by measurement.
 
-## Weakest shots, and what more time would change
+## What more time would change
 
-- The press (`press.jpg`, 500 px) is the softest picture; it is shown as a
-  small plate. A better scan of a period press (or the 1920 engraving of
-  Franklin as an apprentice) would replace it.
-- The burn's char ring is a flat dark band; a scorch gradient at its inner
-  edge would read more as paper and less as ink.
-- Captions sit on paper slips throughout; over the paper scenes they are
-  nearly invisible as slips, which is intended, but the slip over the
-  bucket photograph is the one place they compete with the picture.
+- The two stand-in documents, if scans of the 1731 and 1736 articles turn up.
+- The opening plinths sit small under the prospect card; a slower push-in
+  during "no lending library…" would let them read before the founder's cards.
