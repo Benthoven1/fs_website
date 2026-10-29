@@ -30,16 +30,50 @@
 
 
 
+    .plate { overflow: hidden; transform-origin: 50% 50%; }
+    .credit { position: absolute; right: 48px; bottom: 120px; font-family: "IBM Plex Sans", sans-serif; font-size: 28px; color: rgba(255,255,255,0.72); text-shadow: 0 1px 6px rgba(0,0,0,0.5); }
+    .kt { position: absolute; z-index: 5; font-family: "Lora", serif; font-weight: 600; letter-spacing: -0.01em; line-height: 1.04; opacity: 0; }
+    .kt.white { color: #FFFFFF; text-shadow: 0 2px 24px rgba(0,0,0,0.45); }
+    .kt.ink { color: #1B1613; }
+    .kt i { font-style: italic; font-weight: 500; }
+    .kk { position: absolute; z-index: 5; font-family: "Major Mono Display", monospace; font-size: 34px; letter-spacing: 0.06em; text-transform: lowercase; opacity: 0; }
+    .kk.white { color: rgba(255,255,255,0.9); text-shadow: 0 1px 10px rgba(0,0,0,0.5); }
+    .kk.ink { color: #5C544E; }
+    .flash { position: absolute; inset: 0; background: #FFFFFF; opacity: 0; }
   </style>
-  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920" data-duration="15.351">
-<div id="hook-pros" class="card" style="left:60px;top:380px;width:960px;height:420px;">
-    <div class="abs" style="left:0;top:0;width:960px;height:356px;overflow:hidden"><div id="hook-pros-pic" class="pic" style="width:5801px;height:1597px"><img src="assets/img/prospect.jpg" alt=""></div></div>
-    <div class="cap"><span>East Prospect of Philadelphia, Scull &amp; Heap, 1754</span></div></div>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920" data-duration="12.808">
+<div id="hook-pros" class="full plate" style="z-index:1;opacity:0">
+    <div class="full" style="overflow:hidden"><div id="hook-pros-pic" class="pic" style="width:5801px;height:1597px"><img src="assets/img/prospect.jpg" alt=""></div></div>
+    <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0.45) 0%, rgba(14,10,8,0) 30%, rgba(14,10,8,0) 52%, rgba(14,10,8,0.65) 100%)"></div>
+    <div class="credit">Scull &amp; Heap, East Prospect of Philadelphia, 1754</div></div>
+<div id="hook-y1731" class="kt white" style="left:72px;top:250px;width:936px;font-size:230px;text-align:left;">1731.</div>
+<div id="hook-phl" class="kk white" style="left:72px;top:520px;width:936px;text-align:left">philadelphia</div>
+<div id="hook-no1" class="kt white" style="left:72px;top:1080px;width:936px;font-size:76px;text-align:left;">No lending library.</div>
+<div id="hook-no2" class="kt white" style="left:72px;top:1176px;width:936px;font-size:76px;text-align:left;">No fire company.</div>
+<div id="hook-no3" class="kt white" style="left:72px;top:1272px;width:936px;font-size:76px;text-align:left;">No hospital.</div>
+<div id="hook-no4" class="kt white" style="left:72px;top:1368px;width:936px;font-size:76px;text-align:left;">No college.</div>
+<div id="hook-fl" class="flash"></div>
+<div id="hook-y1751" class="kt ink" style="left:72px;top:230px;width:936px;font-size:200px;text-align:left;">1751</div>
+<div id="hook-all4" class="kt ink" style="left:72px;top:440px;width:936px;font-size:110px;text-align:left;"><i>All four.</i></div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo("#hook-pros-pic", {"x":0,"y":0,"scale":0.223}, {"x":-295.888,"y":0,"scale":0.223,"duration":15.451,"ease":"power1.inOut"}, 0);
-    tl.to("#hook-pros", {"opacity":0,"filter":"blur(8px)","duration":0.25,"ease":"power2.in"}, 15.101);
+    tl.fromTo("#hook-pros-pic", {"x":-631.678,"y":-88.32,"scale":1.262}, {"x":-3990.49,"y":-115.2,"scale":1.347,"duration":9.268,"ease":"power1.inOut"}, 0);
+    tl.set("#hook-pros", {"opacity":1}, 0);
+    tl.fromTo("#hook-pros", {"scale":1.08}, {"scale":1,"duration":0.45,"ease":"expo.out","immediateRender":false}, 0);
+    tl.set("#hook-pros", {"opacity":0}, 8.668);
+    tl.fromTo("#hook-y1731", {"opacity":1,"scale":1.18,"filter":"blur(6px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.7,"ease":"expo.out"}, 0);
+    tl.fromTo("#hook-phl", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 2.98);
+    tl.fromTo("#hook-no1", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 3.73);
+    tl.fromTo("#hook-no2", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 5.17);
+    tl.fromTo("#hook-no3", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 6.21);
+    tl.fromTo("#hook-no4", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 7.39);
+    tl.fromTo("#hook-fl", {"opacity":0}, {"opacity":1,"duration":0.12,"ease":"power1.in"}, 8.548);
+    tl.to("#hook-fl", {"opacity":0,"duration":0.5,"ease":"power2.out"}, 8.668);
+    tl.set("#hook-y1731, #hook-phl, #hook-no1, #hook-no2, #hook-no3, #hook-no4", {"opacity":0}, 8.668);
+    tl.fromTo("#hook-y1751", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 8.778);
+    tl.fromTo("#hook-all4", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 10.688);
+    tl.to("#hook-y1751, #hook-all4", {"opacity":0,"filter":"blur(8px)","duration":0.25}, 12.108);
     window.__timelines["hook"] = tl;
   </script>
 

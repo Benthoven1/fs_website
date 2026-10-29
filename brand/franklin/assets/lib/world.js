@@ -6,10 +6,13 @@
 // behind the transparent canvas.
 //
 // Every frame is a pure function of the film's time t (HyperFrames seeks
-// frames out of order). Each part arrives along one direction at its time;
-// some parts are placed by events instead: the library's coins ride into the
-// hopper, its books arrive shelf by shelf, the donors' coins stack up, the
-// Assembly's coins drop, the new project is set into its bay.
+// frames out of order). The opening shows the finished model, then takes it
+// apart back to its plinths; from there each part arrives along one direction
+// at its time, and some are placed by events: the library's coins ride into
+// the hopper, its books arrive shelf by shelf, the donors' coins stack up,
+// the Assembly's coins drop. Near the end every institution's rules, members
+// and money fly to the hub and fuse into one foundation, and the new
+// project's building rises storey by storey.
 //
 // Design coordinates are the kit's: x along, y toward the viewer, z up. Here
 // they become three.js (x, z + LIFT, y), plot by plot.
@@ -17,7 +20,8 @@ import * as THREE from "./three/three.module.min.js";
 import { RoundedBoxGeometry } from "./three/RoundedBoxGeometry.js";
 import { mergeGeometries } from "./three/BufferGeometryUtils.js";
 
-export const PLOTS = { library: [-170, -160], fire: [170, -160], hospital: [-170, 160], academy: [170, 160], shared: [700, 0] };
+export const PLOTS = { library: [-200, -190], fire: [200, -190], hospital: [-200, 190], academy: [200, 190], hub: [0, 0], project: [0, 470] };
+const INSTITUTIONS = ["library", "fire", "hospital", "academy"];
 const LIFT = 19; // the plinth's slab and feet: the design's z = 0 is the slab top
 const ACCENT = { library: "#4D6D96", fire: "#A8603F", hospital: "#357F77", academy: "#55804A", mulvium: "#9A5571" };
 const MAT = {
@@ -190,6 +194,7 @@ export async function createWorld(canvas, labelLayer, S) {
       p.center = box.getCenter(new THREE.Vector3()).sub(g.position);
       parts.push(p);
       anchors[`${plot}.${d.name}`] = new THREE.Vector3((box.min.x + box.max.x) / 2, box.max.y, (box.min.z + box.max.z) / 2);
+      p.world = box.getCenter(new THREE.Vector3());
     }
   }
   const named = (plot, re) => parts.filter((p) => p.plot === plot && re.test(p.name)).sort((a, b) => +a.name.replace(/\D/g, "") - +b.name.replace(/\D/g, ""));
@@ -197,7 +202,10 @@ export async function createWorld(canvas, labelLayer, S) {
   lib.mouth = V(230 / 2 - 40, -220 / 2 + 38, 51.2).add(new THREE.Vector3(PLOTS.library[0], 0, PLOTS.library[1]));
   const find = (plot, name) => parts.find((p) => p.plot === plot && p.name === name);
   const hosp = { donors: named("hospital", /^donor\d+$/), held: find("hospital", "held"), paddle: find("hospital", "paddle"), HELD: 34 };
-  const newp = find("shared", "new");
+  const growing = named("project", /^storey\d+$/);
+  // the merge: each institution's own foundation piece and the hub's piece it becomes
+  const merging = INSTITUTIONS.flatMap((plot, i) => ["rules", "members", "money"].map((what, j) => ({ p: find(plot, what), to: find("hub", what), k: i * 3 + j })).filter((m) => m.p));
+  const hubPieces = ["rules", "members", "money"].map((w) => find("hub", w));
 
   // marks for "rules, members, money" on all four plots at once
   const rings = [];
@@ -213,12 +221,17 @@ export async function createWorld(canvas, labelLayer, S) {
   // each plinth lands when the opening names its plot; the rest of a plot is
   // built in its window, in the design's order
   for (const [plot, t] of Object.entries(S.plinths)) find(plot, "plinth").at = t;
+  const [m0, m1] = S.events.merge;
+  find("hub", "plinth").at = m0 - 0.4;
+  hubPieces.forEach((p) => (p.at = m1 - 0.1, p.dur = 0.45, p.from = "pop"));
+  find("hub", "links").at = m1 + 0.3;
+  const [q0] = S.events.project;
+  find("project", "plinth").at = q0; find("project", "socket").at = q0 + 0.5; find("project", "scaffold").at = q0 + 0.9;
   for (const [plot, [t0, t1]] of Object.entries(S.build)) {
-    const ps = parts.filter((p) => p.plot === plot && !(p.event && p.event !== "coins") && !(p.name === "plinth" && S.plinths[plot] !== undefined));
+    const ps = parts.filter((p) => p.plot === plot && !(p.event && p.event !== "coins") && p.name !== "plinth");
     const lo = Math.min(...ps.map((p) => p.order)), hi = Math.max(...ps.map((p) => p.order));
     ps.forEach((p) => (p.at = t0 + (t1 - t0) * ((p.order - lo) / Math.max(1e-6, hi - lo))));
   }
-  newp.at = S.events.nowNew;
 
   // ── camera ───────────────────────────────────────────────────────────────
   const camera = new THREE.PerspectiveCamera(34, W / H, 5, 14000);
@@ -226,10 +239,15 @@ export async function createWorld(canvas, labelLayer, S) {
   const HIGH = new THREE.Vector3(0.45, 1.05, 1).normalize();
   function shot(s) {
     const [kind, plot, what] = s.split(":");
-    if (kind === "wide") return { target: new THREE.Vector3(0, 340, 20), dist: 2900, dir: HIGH.clone() };
-    if (kind === "all4") return { target: new THREE.Vector3(0, 130, 20), dist: 2500, dir: HIGH.clone() };
+    if (kind === "wide") return { target: new THREE.Vector3(0, 340, 20), dist: 3200, dir: HIGH.clone() };
+    if (kind === "all4") return { target: new THREE.Vector3(0, 120, 20), dist: 2900, dir: HIGH.clone() };
+    if (kind === "all5") return { target: new THREE.Vector3(0, 110, 180), dist: 3300, dir: HIGH.clone() };
+    if (kind === "hub") return { target: new THREE.Vector3(0, 60, 30), dist: 1700, dir: HIGH.clone() };
+    // the opening's sweep: low from the left, round to the right
+    if (kind === "sweepA") return { target: new THREE.Vector3(0, 90, 0), dist: 2000, dir: new THREE.Vector3(-0.9, 0.42, 1).normalize() };
+    if (kind === "sweepB") return { target: new THREE.Vector3(0, 70, 0), dist: 2500, dir: new THREE.Vector3(0.95, 0.7, 0.75).normalize() };
     const [cx, cz] = PLOTS[plot];
-    if (kind === "plot") return { target: new THREE.Vector3(cx, 60, cz + 6), dist: plot === "shared" ? 1300 : 1050, dir: DIR.clone() };
+    if (kind === "plot") return { target: new THREE.Vector3(cx, plot === "project" ? 150 : 60, cz + 6), dist: plot === "project" ? 1150 : 1050, dir: DIR.clone() };
     if (kind === "mid") return { target: new THREE.Vector3(cx + (plot === "shared" ? 70 : 0), 60, cz + 6), dist: 800, dir: DIR.clone() };
     if (kind === "close") return { target: anchors[`${plot}.${what}`].clone().add(new THREE.Vector3(0, -14, 0)), dist: 560, dir: DIR.clone() };
     throw new Error("shot " + s);
@@ -260,14 +278,49 @@ export async function createWorld(canvas, labelLayer, S) {
 
   // ── a frame ──────────────────────────────────────────────────────────────
   function place(p, k) {
+    p.obj.scale.setScalar(1);
+    if (p.from === "pop") { // in place, growing from a little smaller
+      const s = 0.82 + 0.18 * outBack(k);
+      p.obj.scale.setScalar(s); p.obj.position.copy(p.home).addScaledVector(p.center, 1 - s);
+      return;
+    }
     const e = p.from === "down" ? outCubic(k) : outBack(k), d = DIRS[p.from];
     p.obj.position.set(p.home.x + d[0] * p.d * (1 - e), p.home.y + d[1] * p.d * (1 - e), p.home.z + d[2] * p.d * (1 - e));
   }
+  const [p0, p1, p2] = S.preview, inst = (p) => INSTITUTIONS.includes(p.plot);
+  const hiOrder = Math.max(...parts.map((p) => p.order));
+  function preview(t) {
+    // the finished model, then taken apart, each part leaving the way it will
+    // come back; the plinths stay
+    for (const p of parts) {
+      if (!inst(p)) { p.obj.visible = false; continue; }
+      p.obj.scale.setScalar(1);
+      if (p.name === "plinth") { p.obj.visible = true; p.obj.position.copy(p.home); continue; }
+      const finished = !/^stack\d+$/.test(p.name);
+      if (t < p1) { p.obj.visible = finished; p.obj.position.copy(p.home); if (p.name === "held") p.obj.position.y -= hosp.HELD; continue; }
+      const k = clamp01((t - p1 - 0.5 * (1 - p.order / hiOrder)) / 0.6);
+      p.obj.visible = finished && k < 1;
+      if (p.event && p.event !== "coins") { p.obj.position.copy(p.home); p.obj.position.y += 260 * k * k; continue; }
+      place(p, 1 - k);
+      if (p.name === "held") p.obj.position.y -= hosp.HELD;
+    }
+  }
   function renderAt(t) {
+    if (t >= p0 && t < p2) { preview(t); return frame(t); }
     for (const p of parts) {
       if (p.event && p.event !== "coins") continue;
       p.obj.visible = t >= p.at;
       if (p.obj.visible) place(p, (t - p.at) / p.dur);
+    }
+    // the merge: each piece lifts off its plot, arcs to the hub, and becomes the hub's
+    for (const { p, to, k } of merging) {
+      if (t < m0 || !p.obj.visible) continue;
+      const u = clamp01((t - m0 - k * 0.07) / Math.max(0.4, m1 - m0 - 0.8));
+      if (u >= 1) { p.obj.visible = false; continue; }
+      const e = inOut(u), s = 1 - 0.2 * e;
+      const c = p.world.clone().lerp(to.world, e); c.y += Math.sin(Math.PI * e) * 180;
+      p.obj.scale.setScalar(s);
+      p.obj.position.copy(c).addScaledVector(p.center, -s);
     }
     // library: each stack, once landed, lifts, rides to the hopper and drops in
     {
@@ -303,13 +356,24 @@ export async function createWorld(canvas, labelLayer, S) {
         hosp.held.obj.position.y = hosp.held.home.y - hosp.HELD * k * k;
       }
     }
-    newp.obj.visible = t >= newp.at;
-    if (newp.obj.visible) place(newp, (t - newp.at) / 0.75);
+    // the new project's building, storey by storey
+    {
+      const [g0, g1] = S.events.grow;
+      growing.forEach((p, n) => {
+        const k = (t - (g0 + (g1 - g0) * n / growing.length)) / 0.6;
+        p.obj.visible = k > 0; p.obj.scale.setScalar(1);
+        p.obj.position.copy(p.home); p.obj.position.y -= 30 * (1 - outCubic(k));
+      });
+    }
     for (const r of rings) {
       const k = (t - S.events.turn[r.what]) / 0.45;
       r.obj.visible = k > 0 && t < S.events.turnEnd;
       const s = 0.6 + 0.4 * outBack(k); r.obj.scale.set(s, s, s);
     }
+    frame(t);
+  }
+  function frame(t) {
+    for (const r of rings) if (t < S.events.turn.rules) r.obj.visible = false;
     cameraAt(t);
     renderer.render(scene, camera);
     for (const l of labels) {

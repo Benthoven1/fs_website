@@ -30,20 +30,40 @@
 
 
 
+    .plate { overflow: hidden; transform-origin: 50% 50%; }
+    .credit { position: absolute; right: 48px; bottom: 120px; font-family: "IBM Plex Sans", sans-serif; font-size: 28px; color: rgba(255,255,255,0.72); text-shadow: 0 1px 6px rgba(0,0,0,0.5); }
+    .kt { position: absolute; z-index: 5; font-family: "Lora", serif; font-weight: 600; letter-spacing: -0.01em; line-height: 1.04; opacity: 0; }
+    .kt.white { color: #FFFFFF; text-shadow: 0 2px 24px rgba(0,0,0,0.45); }
+    .kt.ink { color: #1B1613; }
+    .kt i { font-style: italic; font-weight: 500; }
+    .kk { position: absolute; z-index: 5; font-family: "Major Mono Display", monospace; font-size: 34px; letter-spacing: 0.06em; text-transform: lowercase; opacity: 0; }
+    .kk.white { color: rgba(255,255,255,0.9); text-shadow: 0 1px 10px rgba(0,0,0,0.5); }
+    .kk.ink { color: #5C544E; }
+    .flash { position: absolute; inset: 0; background: #FFFFFF; opacity: 0; }
   </style>
-  <div id="root" data-composition-id="now" data-width="1080" data-height="1920" data-duration="15.061">
-<div id="now-fs" class="abs" style="left:84px;top:1410px;width:912px;opacity:0">
-    <div class="kicker">fiscal sponsorship</div><div class="disp" style="font-size:60px;margin-top:6px">From day one:</div></div>
-<div id="now-cv0" class="tag" style="left:84px;top:1540px;opacity:0;color:#9A5571">✓ gifts</div>
-<div id="now-cv1" class="tag" style="left:364px;top:1540px;opacity:0;color:#9A5571">✓ grants</div>
-<div id="now-cv2" class="tag" style="left:644px;top:1540px;opacity:0;color:#9A5571">✓ contracts</div>
+  <div id="root" data-composition-id="now" data-width="1080" data-height="1920" data-duration="15.511">
+<div id="now-f1" class="kt ink" style="left:72px;top:240px;width:936px;font-size:88px;text-align:left;">A founder today</div>
+<div id="now-f2" class="kt ink" style="left:72px;top:340px;width:936px;font-size:88px;text-align:left;">does not have to start</div>
+<div id="now-f3" class="kt ink" style="left:72px;top:440px;width:936px;font-size:88px;text-align:left;"><i>from nothing.</i></div>
+<div id="now-fs" class="kk ink" style="left:72px;top:250px;width:936px;text-align:left">fiscal sponsorship</div>
+<div id="now-d1" class="kt ink" style="left:72px;top:300px;width:936px;font-size:96px;text-align:left;">From day one:</div>
+<div id="now-c1" class="kt ink" style="left:72px;top:1370px;width:936px;font-size:74px;text-align:left;"><span style="color:#9A5571">✓</span> tax-deductible gifts</div>
+<div id="now-c2" class="kt ink" style="left:72px;top:1462px;width:936px;font-size:74px;text-align:left;"><span style="color:#9A5571">✓</span> grants</div>
+<div id="now-c3" class="kt ink" style="left:72px;top:1554px;width:936px;font-size:74px;text-align:left;"><span style="color:#9A5571">✓</span> contracts</div>
+<div id="now-work" class="kt ink" style="left:72px;top:1670px;width:936px;font-size:64px;text-align:left;color:#5C544E"><i>while the founder does the work.</i></div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo("#now-fs", {"opacity":0,"filter":"blur(6px)","x":-120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.45,"ease":"expo.out","stagger":0}, 3.562);
-    tl.fromTo("#now-cv0", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.35,"ease":"expo.out","stagger":0}, 9.262);
-    tl.fromTo("#now-cv1", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.35,"ease":"expo.out","stagger":0}, 11.262);
-    tl.fromTo("#now-cv2", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.35,"ease":"expo.out","stagger":0}, 12.262);
+    tl.fromTo("#now-f1", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 0.64);
+    tl.fromTo("#now-f2", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 1.5);
+    tl.fromTo("#now-f3", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 2.6);
+    tl.to("#now-f1, #now-f2, #now-f3", {"opacity":0,"filter":"blur(8px)","duration":0.3}, 4.672);
+    tl.fromTo("#now-fs", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 3.752);
+    tl.fromTo("#now-d1", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 8.352);
+    tl.fromTo("#now-c1", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 9.712);
+    tl.fromTo("#now-c2", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 11.712);
+    tl.fromTo("#now-c3", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 12.712);
+    tl.fromTo("#now-work", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 13.572);
     window.__timelines["now"] = tl;
   </script>
 

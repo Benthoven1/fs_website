@@ -1,7 +1,7 @@
 // parts.mjs — the pieces every plot shares, drawn with the Anatomy kit to its
 // craft rules (references/craft.md): many small parts, each resting on another
-// and doing a job. A plinth on flanged feet with a groove, screws, a ruler and
-// a label plate; and the foundation every institution stands on: rules (a
+// and doing a job. A plinth on flanged feet with a groove and corner screws;
+// and the foundation every institution stands on: rules (a
 // lectern with the founding document on its desk), members (a card cabinet of
 // drawers, each with its front, label holder, card, pull and rivets) and money
 // (a strapped, riveted strongbox with corner irons, hinges, hasp and lock).
@@ -11,8 +11,9 @@ import { k } from "./common.mjs";
 
 export const SLAB_H = 14, FOOT = 5;
 
-// The plot's plinth: slab top at z = 0, feet down to -(SLAB_H + FOOT)
-export function plinth(R, { w = 230, d = 220, name = "plinth", build = 0 } = {}) {
+// The plot's plinth: slab top at z = 0, feet down to -(SLAB_H + FOOT); an
+// inlay in a colour, when given, marks the plot as Mulvium's
+export function plinth(R, { w = 230, d = 220, name = "plinth", build = 0, inlay } = {}) {
   return R.part(name, { build, from: "down" }, () => {
     const PL = { x: -w / 2, y: -d / 2, w, d, r: 6 };
     let o = "";
@@ -28,17 +29,7 @@ export function plinth(R, { w = 230, d = 220, name = "plinth", build = 0 } = {})
     const sc = k.corners(PL, 11);
     sc.forEach(([x, y]) => (o += R.ring(x, y, 0.06, 2.6, "lo")));
     o += R.dots(sc.map(([x, y]) => [x, y, 0.06]), "iron", { size: 1.1 });
-    // a brass ruler along the front, ticks hung from its back edge
-    const strip = { x: -w / 2 + 18, y: d / 2 - 15, w: w - 96, d: 7, r: 1 };
-    o += R.box(strip, 0, 0.6, "brass", { bevel: 0.2 });
-    o += R.ticks(strip.x + 3, strip.x + strip.w - 3, 4, 5, strip.y + 0.8, 0.62, [2.2, 4.2]);
-    o += R.dots([[strip.x + 1.8, strip.y + 3.5, 0.62], [strip.x + strip.w - 1.8, strip.y + 3.5, 0.62]], "iron", { size: 0.6 });
-    // the label plate: three engraved rules and two screws
-    const lp = { x: w / 2 - 66, y: d / 2 - 24, w: 50, d: 15, r: 1.4 };
-    o += R.box(lp, 0, 0.9, "brass", { bevel: 0.3 });
-    o += R.groove({ x: lp.x + 1.6, y: lp.y + 1.6, w: lp.w - 3.2, d: lp.d - 3.2 }, 0.92, "lo");
-    [[6, 34], [6, 26], [6, 18]].forEach(([a, b], i) => (o += R.line([[lp.x + a, lp.y + 4.2 + i * 3.2, 0.93], [lp.x + a + b, lp.y + 4.2 + i * 3.2, 0.93]], "mid")));
-    o += R.dots([[lp.x + 3.2, lp.y + lp.d / 2, 0.92], [lp.x + lp.w - 3.2, lp.y + lp.d / 2, 0.92]], "iron", { size: 0.7 });
+    if (inlay) o += R.box({ x: PL.x + 9, y: PL.y + 9, w: w - 18, d: d - 18, r: 2 }, 0, 0.5, inlay, { bevel: 0.15 });
     return o;
   });
 }
