@@ -59,8 +59,6 @@ real narration timing and frames of the delivered MP4.
 
 ## What more time would change
 
-- The "mulvium" label sits close to the star and inner ring in the widest
-  cosmos frame.
 - The library's and fire company's lecterns still carry stand-in documents
   (the 1733 almanac, the 1744 fireplace pamphlet) in place of their founding
   articles.
