@@ -641,7 +641,7 @@ const PLATE = { file: "cosmos-close-held.mp4", hold: 2.86, settle: 19.1 }; // se
 // is set on screen in type, or carried by the picture alone.
 const SPAN = {
   hook2: [9], who2: [0, 11], who3: [0, 8], lib1: [0, 6], lib2: [0, 12], lib3: [0], fire1: [0, 13], fire2: [0, 9],
-  hosp1: [0], hosp3: [0], acad1: [0], acad2: [0, 6], acad3: [10], turn1: [0, 8], now2: [0, 13],
+  hosp1: [0], hosp3: [5], acad1: [0], acad2: [0, 6], acad3: [10], turn1: [0, 8], now2: [0, 13],
 };
 const groups = [];
 for (const l of T.lines) {
