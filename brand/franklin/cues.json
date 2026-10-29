@@ -1,108 +1,108 @@
 {
- "duration": 190.125,
- "voiceEnd": 181.015,
+ "duration": 156.876,
+ "voiceEnd": 147.176,
  "sections": {
   "world": 0,
   "chrome": 0,
   "hook": 0,
-  "who": 15.285,
-  "lib": 38.535,
-  "fire": 69.18,
-  "hosp": 91.465,
-  "acad": 120.07,
-  "turn": 128.405,
-  "now": 148.91,
-  "end": 168.725
+  "who": 15.151,
+  "lib": 34.19,
+  "fire": 59,
+  "hosp": 76.474,
+  "acad": 100.13,
+  "turn": 108.029,
+  "now": 123.219,
+  "end": 138.28
  },
  "sfx": [
   {
    "name": "click-soft",
-   "t": 3.94,
+   "t": 4.31,
    "vol": 0.22
   },
   {
    "name": "click-soft",
-   "t": 4.935,
+   "t": 5.33,
    "vol": 0.22
   },
   {
    "name": "click-soft",
-   "t": 6.31,
+   "t": 6.35,
    "vol": 0.22
   },
   {
    "name": "click-soft",
-   "t": 7.505,
+   "t": 7.63,
    "vol": 0.22
   },
   {
    "name": "whoosh-short",
-   "t": 9.795,
+   "t": 10.738,
    "vol": 0.18
   },
   {
    "name": "whoosh-short",
-   "t": 15.335,
+   "t": 15.201,
    "vol": 0.2
   },
   {
    "name": "whoosh",
-   "t": 47.895,
+   "t": 41.509,
    "vol": 0.16
   },
   {
    "name": "typing",
-   "t": 54.82,
+   "t": 47.549,
    "vol": 0.14
   },
   {
    "name": "whoosh-short",
-   "t": 60.255,
+   "t": 51.957,
    "vol": 0.18
   },
   {
    "name": "whoosh",
-   "t": 79.535,
+   "t": 67.097,
    "vol": 0.16
   },
   {
    "name": "whoosh",
-   "t": 99.595,
+   "t": 83.533,
    "vol": 0.16
   },
   {
    "name": "impact-bass-1",
-   "t": 112.005,
+   "t": 93.474,
    "vol": 0.22
   },
   {
    "name": "click-soft",
-   "t": 132.43,
+   "t": 110.979,
    "vol": 0.2
   },
   {
    "name": "click-soft",
-   "t": 133.915,
+   "t": 112.199,
    "vol": 0.2
   },
   {
    "name": "click-soft",
-   "t": 135.765,
+   "t": 113.539,
    "vol": 0.2
   },
   {
    "name": "whoosh",
-   "t": 147.76,
+   "t": 122.069,
    "vol": 0.16
   },
   {
    "name": "click-soft",
-   "t": 158.675,
+   "t": 130.551,
    "vol": 0.4
   },
   {
    "name": "riser",
-   "t": 178.415,
+   "t": 144.556,
    "vol": 0.2
   }
  ]

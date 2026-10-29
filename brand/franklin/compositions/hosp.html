@@ -31,7 +31,7 @@
 
 
   </style>
-  <div id="root" data-composition-id="hosp" data-width="1080" data-height="1920" data-duration="28.605">
+  <div id="root" data-composition-id="hosp" data-width="1080" data-height="1920" data-duration="23.656">
 <div id="hosp-bond" class="card" style="left:60px;top:380px;width:430px;height:580px;opacity:0">
     <div class="abs" style="left:0;top:0;width:430px;height:516px;overflow:hidden"><div id="hosp-bond-pic" class="pic" style="width:1039px;height:1231px"><img src="assets/img/bond.jpg" alt=""></div></div>
     <div class="cap"><span>Thomas Bond</span></div></div>
@@ -47,13 +47,13 @@
     const tl = gsap.timeline({ paused: true });
     tl.set("#hosp-bond-pic", {"x":-13.648,"y":0,"scale":0.44}, 0);
     tl.fromTo("#hosp-bond", {"opacity":0,"filter":"blur(6px)","x":-120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.6,"ease":"expo.out","stagger":0}, 0.05);
-    tl.fromTo("#hosp-hos", {"opacity":0,"filter":"blur(6px)","x":120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.6,"ease":"expo.out","stagger":0}, 3.005);
-    tl.fromTo("#hosp-hos-pic", {"x":-18.024,"y":0,"scale":0.665}, {"x":-89.05,"y":-41.7,"scale":0.765,"duration":8.68,"ease":"power2.inOut"}, 0.05);
-    tl.to("#hosp-bond, #hosp-hos", {"opacity":0,"filter":"blur(8px)","duration":0.25,"ease":"power2.in"}, 7.93);
-    tl.fromTo("#hosp-cnt", {"opacity":0,"filter":"blur(6px)","x":-120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.45,"ease":"expo.out","stagger":0}, 14.53);
-    tl.fromTo("#hosp-cnt2", {"opacity":0,"filter":"blur(6px)","x":120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.45,"ease":"expo.out","stagger":0}, 14.68);
-    { const o = { v: 0 }, el = document.querySelector("#hosp-dn"); tl.fromTo(o, { v: 0 }, { v: 2000, duration: 5.22, ease: "power2.out", onUpdate: () => { const v = o.v; el.textContent = '£' + (Math.round(v / 100) * 100).toLocaleString('en-GB'); } }, 14.83); }
-    tl.fromTo("#hosp-an", {"color":"#5C544E"}, {"color":"#357F77","duration":0.3}, 20.52);
+    tl.fromTo("#hosp-hos", {"opacity":0,"filter":"blur(6px)","x":120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.6,"ease":"expo.out","stagger":0}, 3.1);
+    tl.fromTo("#hosp-hos-pic", {"x":-18.024,"y":0,"scale":0.665}, {"x":-89.05,"y":-41.7,"scale":0.765,"duration":7.609,"ease":"power2.inOut"}, 0.05);
+    tl.to("#hosp-bond, #hosp-hos", {"opacity":0,"filter":"blur(8px)","duration":0.25,"ease":"power2.in"}, 6.859);
+    tl.fromTo("#hosp-cnt", {"opacity":0,"filter":"blur(6px)","x":-120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.45,"ease":"expo.out","stagger":0}, 12.379);
+    tl.fromTo("#hosp-cnt2", {"opacity":0,"filter":"blur(6px)","x":120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.45,"ease":"expo.out","stagger":0}, 12.529);
+    { const o = { v: 0 }, el = document.querySelector("#hosp-dn"); tl.fromTo(o, { v: 0 }, { v: 2000, duration: 3.831, ease: "power2.out", onUpdate: () => { const v = o.v; el.textContent = '£' + (Math.round(v / 100) * 100).toLocaleString('en-GB'); } }, 12.679); }
+    tl.fromTo("#hosp-an", {"color":"#5C544E"}, {"color":"#357F77","duration":0.3}, 16.98);
     window.__timelines["hosp"] = tl;
   </script>
 
