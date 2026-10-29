@@ -13,8 +13,8 @@ real narration timing and frames of the delivered MP4.
   follows it, as in the launch film: members (a board and community), rules
   (governance, in place), money (tax-exempt accounts), a new project (your
   idea).
-- Under the proverb, its two words defined: prevention, care before a fire
-  starts; cure, fighting it once it has.
+- Under the proverb, its first word defined: prevention, care before a fire
+  starts.
 - Five type sizes throughout (display 180, headline 120, title 80, body 60,
   kicker 38).
 - Subtitles in Libre Caslon Text, cream on a dark band: the face of
