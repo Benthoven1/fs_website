@@ -226,17 +226,18 @@ export async function createWorld(canvas, labelLayer, S) {
   // quarter while it is named there.
   const C0 = new THREE.Vector3(0, 1150, 0), K = 62;
   const COSMOS_DIR = new THREE.Vector3(0.22, 0.38, 1).normalize();
+  const C_AIM = C0.clone().add(new THREE.Vector3(0, -70, 0)); // the cosmos sits a little high, between its callouts
   const porcelain = (c, r = 0.38) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: 0 });
   const cosmos = new THREE.Group(); cosmos.position.copy(C0); scene.add(cosmos);
   cosmos.rotation.set(0.55, 0.3, 0);
   const star = new THREE.Mesh(new THREE.SphereGeometry(1.25 * K, 64, 64), porcelain("#F0D5BB"));
   cosmos.add(star);
-  // aim: the screen direction (0 = right, counter-clockwise) a planet is held to
-  const SPIN = 0.02;
+  // q: the screen quarter a planet passes through while it is named ([-1,-1]
+  // top left); speed: the landing page's, halved (rad/s)
   const ORBITS = [
-    { id: "members", color: "#C4DDB8", radius: 3.0, tilt: [0, 0, 0], aim: (3 * Math.PI) / 4 },
-    { id: "rules", color: "#B8CAE0", radius: 3.8, tilt: [Math.PI / 2, 0, 0], aim: Math.PI / 4 },
-    { id: "money", color: "#E0B8C8", radius: 4.5, tilt: [Math.PI / 3.2, Math.PI / 5 + Math.PI / 2, 0], aim: (5 * Math.PI) / 4 },
+    { id: "members", color: "#C4DDB8", radius: 3.0, tilt: [0, 0, 0], q: [-1, -1], speed: 0.18 },
+    { id: "rules", color: "#B8CAE0", radius: 3.8, tilt: [Math.PI / 2, 0, 0], q: [1, -1], speed: 0.13 },
+    { id: "money", color: "#E0B8C8", radius: 4.5, tilt: [Math.PI / 3.2, Math.PI / 5 + Math.PI / 2, 0], q: [-1, 1], speed: 0.11 },
     { id: "outer", color: null, radius: 5.0, tilt: [Math.PI / 3.2, Math.PI / 5, 0] },
   ];
   const ringMat = porcelain("#CDBE96", 0.35); ringMat.transparent = true;
@@ -249,7 +250,7 @@ export async function createWorld(canvas, labelLayer, S) {
     planet.position.set(o.radius * K, 0, 0); rot.add(planet); planet.visible = false;
     return [o.id, { ...o, pivot, ring, rot, planet }];
   }));
-  const MOONS = ORBITS.filter((o) => o.aim !== undefined);
+  const MOONS = ORBITS.filter((o) => o.q);
   const planetAt = (id) => planets[id].planet.getWorldPosition(new THREE.Vector3());
   // each institution's rules, members and money, and the sphere it turns into
   const KIND_COLOR = { rules: "#B8CAE0", members: "#C4DDB8", money: "#E0B8C8" };
@@ -301,7 +302,7 @@ export async function createWorld(canvas, labelLayer, S) {
     const [kind, plot, what] = s.split(":");
     if (kind === "wide") return { target: new THREE.Vector3(0, 340, 20), dist: 3200, dir: HIGH.clone() };
     if (kind === "all4") return { target: new THREE.Vector3(0, 120, 20), dist: 2900, dir: HIGH.clone() };
-    if (kind === "cosmos") return { target: C0.clone(), dist: 2350, dir: COSMOS_DIR.clone() };
+    if (kind === "cosmos") return { target: C_AIM.clone(), dist: 2550, dir: COSMOS_DIR.clone() };
     if (kind === "cosmosClose") return { target: C0.clone(), dist: 1750, dir: COSMOS_DIR.clone() };
     // the opening's sweep: low from the left, round to the right
     if (kind === "sweepA") return { target: new THREE.Vector3(0, 90, 0), dist: 2000, dir: new THREE.Vector3(-0.9, 0.42, 1).normalize() };
@@ -326,23 +327,25 @@ export async function createWorld(canvas, labelLayer, S) {
     hairlines(cur.dist);
   }
 
-  // where on its ring each planet sits mid-scene: seen from the cosmos shot,
-  // the point nearest its aim, well out from the centre and in front of it
+  // where on its ring each planet is at the middle of its naming: seen from
+  // the cosmos shot, the point that carries it deepest into its quarter, clear
+  // of the centre and the frame's edges (the launch film's quadrant plan)
+  const halfW = W / 2;
+  const eye = new THREE.PerspectiveCamera(34, W / H, 40, 14000);
+  eye.position.copy(C_AIM).addScaledVector(COSMOS_DIR, 2550); eye.lookAt(C_AIM); eye.updateMatrixWorld();
+  const toScreen = (w, cam) => { const q = w.clone().project(cam); return { x: ((q.x + 1) * W) / 2, y: ((1 - q.y) * H) / 2 }; };
   {
-    const eye = new THREE.PerspectiveCamera(34, W / H, 40, 14000);
-    eye.position.copy(C0).addScaledVector(COSMOS_DIR, 2350); eye.lookAt(C0); eye.updateMatrixWorld();
-    const c = C0.clone().project(eye), cd = eye.position.distanceTo(C0);
+    const c = toScreen(C0, eye), cd = eye.position.distanceTo(C0);
     const solve = (o) => {
       let best = null;
       for (let i = 0; i < 720; i++) {
         const th = (i / 720) * Math.PI * 2;
         planets[o.id].rot.rotation.z = th; cosmos.updateMatrixWorld(true);
-        const w = planetAt(o.id), q = w.clone().project(eye);
-        const dx = ((q.x - c.x) * W) / 2, dy = ((q.y - c.y) * H) / 2, r = Math.hypot(dx, dy);
-        const off = Math.abs(Math.atan2(Math.sin(Math.atan2(dy, dx) - o.aim), Math.cos(Math.atan2(dy, dx) - o.aim)));
-        const behind = eye.position.distanceTo(w) > cd && r < 170; // hidden by the centre (about 104 px in radius)
-        const score = off * 250 - r + (behind ? 1e6 : 0);
-        if (!best || score < best.score) best = { th, score };
+        const w = planetAt(o.id), p = toScreen(w, eye);
+        const sx = (p.x - c.x) / halfW, sy = (p.y - c.y) / halfW, [qx, qy] = o.q;
+        if (Math.hypot(sx, sy) < 0.34 || p.x < 110 || p.x > W - 110 || (eye.position.distanceTo(w) > cd && Math.hypot(sx, sy) < 0.4)) continue;
+        const score = Math.min(sx * qx, sy * qy) + 0.35 * (sx * qx + sy * qy);
+        if (!best || score > best.score) best = { th, score };
       }
       return best;
     };
@@ -353,9 +356,53 @@ export async function createWorld(canvas, labelLayer, S) {
     const m = ORBITS.find((o) => o.id === "money"), out = ORBITS.find((o) => o.id === "outer");
     tilt("money", out.tilt); tilt("outer", m.tilt); size("money", out.radius); size("outer", m.radius);
     const alt = solve(m);
-    if (alt.score < m.best.score) { m.best = alt; [m.tilt, out.tilt, m.radius, out.radius] = [out.tilt, m.tilt, out.radius, m.radius]; }
+    if (alt.score > m.best.score) { m.best = alt; [m.tilt, out.tilt, m.radius, out.radius] = [out.tilt, m.tilt, out.radius, m.radius]; }
     else { tilt("money", m.tilt); tilt("outer", out.tilt); size("money", m.radius); size("outer", out.radius); }
     for (const o of MOONS) o.phase = o.best.th;
+  }
+
+  // callouts: each name in its corner, a leader from it to its sphere as the
+  // sphere travels (the launch film's sphere annotations)
+  const NS = "http://www.w3.org/2000/svg";
+  const leads = document.createElementNS(NS, "svg");
+  leads.setAttribute("width", W); leads.setAttribute("height", H); leads.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  leads.style.cssText = "position:absolute;left:0;top:0;overflow:visible";
+  labelLayer.appendChild(leads);
+  const callouts = (S.callouts || []).map((g) => {
+    const el = document.createElement("div");
+    el.className = "co";
+    el.innerHTML = `<b>${g.name}</b><em>${g.status}</em>`;
+    labelLayer.appendChild(el);
+    const line = document.createElementNS(NS, "line"), dot = document.createElementNS(NS, "circle");
+    dot.setAttribute("r", "6");
+    leads.append(line, dot);
+    const [qx, qy] = g.q;
+    return { ...g, el, line, dot, x: qx < 0 ? 270 : W - 270, y: qy < 0 ? 400 : 1270 };
+  });
+  const camUp = new THREE.Vector3();
+  function drawCallouts(t) {
+    camUp.set(0, 1, 0).applyQuaternion(camera.quaternion);
+    for (const g of callouts) {
+      const a = clamp01((t - g.t0) / 0.6) * (1 - clamp01((t - g.t1) / 0.4));
+      const on = a > 0;
+      g.el.style.opacity = on ? outCubic(a) : 0;
+      g.line.style.display = g.dot.style.display = on ? "" : "none";
+      if (!on) continue;
+      const mesh = g.id === "project" ? star : planets[g.id].planet;
+      const w = mesh.getWorldPosition(new THREE.Vector3()), p = toScreen(w, camera);
+      const r = 0.5 * K * (g.id === "project" ? 2.5 : 1) * mesh.scale.x;
+      const e = toScreen(w.clone().addScaledVector(camUp, r), camera), rp = Math.hypot(e.x - p.x, e.y - p.y);
+      const h = g.el.offsetHeight;
+      g.el.style.transform = `translate(${g.x}px, ${(g.y + (1 - outCubic(a)) * 16).toFixed(1)}px)`;
+      const below = p.y > g.y + h / 2, sx = g.x, sy = below ? g.y + h + 14 : g.y - 14;
+      const dx = p.x - sx, dy = p.y - sy, len = Math.hypot(dx, dy) || 1;
+      const ex = p.x - (dx / len) * (rp + 6), ey = p.y - (dy / len) * (rp + 6), k = inOut(clamp01((t - g.t0 - 0.15) / 0.7));
+      g.line.setAttribute("x1", sx); g.line.setAttribute("y1", sy);
+      g.line.setAttribute("x2", (sx + (ex - sx) * k).toFixed(1)); g.line.setAttribute("y2", (sy + (ey - sy) * k).toFixed(1));
+      g.line.setAttribute("opacity", a.toFixed(3));
+      g.dot.setAttribute("cx", ex.toFixed(1)); g.dot.setAttribute("cy", ey.toFixed(1));
+      g.dot.setAttribute("opacity", (a * clamp01((t - g.t0 - 0.75) / 0.2)).toFixed(3));
+    }
   }
 
   // ── labels: names over the model, projected to the screen ────────────────
@@ -455,9 +502,9 @@ export async function createWorld(canvas, labelLayer, S) {
   // the rings draw round an empty centre; the new project rises into the
   // centre, is wired to all three, takes gifts, grants and contracts, and grows
   function cosmosAt(t) {
-    const [a, b] = CO.rise, tRings = CO.star, tNew = CO.project, tWire = CO.wire, [g0, g1] = CO.grow, mid = (a + g1) / 2;
+    const [a, b] = CO.rise, tRings = CO.star, tNew = CO.project, tWire = CO.wire, [g0, g1] = CO.grow, mid = CO.named;
     cosmos.visible = t >= a;
-    for (const o of MOONS) planets[o.id].rot.rotation.z = o.phase + SPIN * (t - mid);
+    for (const o of MOONS) planets[o.id].rot.rotation.z = o.phase + o.speed * (t - mid);
     cosmos.updateMatrixWorld(true);
     // the pieces become spheres, and the spheres rise
     const arrived = { rules: 0, members: 0, money: 0 }, total = { rules: 0, members: 0, money: 0 };
@@ -511,6 +558,7 @@ export async function createWorld(canvas, labelLayer, S) {
     for (const r of rings) if (t < S.events.turn.rules) r.obj.visible = false;
     cameraAt(t);
     renderer.render(scene, camera);
+    drawCallouts(t);
     for (const l of labels) {
       const k = Math.min(span(t, l.t0, l.t0 + 0.3), 1 - span(t, l.t1 - 0.25, l.t1));
       if (k <= 0) { l.el.style.opacity = 0; continue; }

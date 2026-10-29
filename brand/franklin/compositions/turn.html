@@ -8,6 +8,8 @@
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500i.woff2) format("woff2"); font-weight: 500; font-style: italic; font-display: block; }
     @font-face { font-family: "Major Mono Display"; src: url(assets/fonts/MajorMonoDisplay-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
     #root { position: absolute; inset: 0; overflow: hidden; }
 
     .abs { position: absolute; }
@@ -42,28 +44,25 @@
     .flash { position: absolute; inset: 0; background: #FFFFFF; opacity: 0; }
   </style>
   <div id="root" data-composition-id="turn" data-width="1080" data-height="1920" data-duration="15.14">
-<div id="turn-rw" class="kt ink" style="left:72px;top:1360px;width:936px;font-size:82px;text-align:left;">Rules written.</div>
-<div id="turn-mr" class="kt ink" style="left:72px;top:1458px;width:936px;font-size:82px;text-align:left;">Members recruited.</div>
-<div id="turn-mo" class="kt ink" style="left:72px;top:1556px;width:936px;font-size:82px;text-align:left;">Money raised.</div>
-<div id="turn-x4" class="kt ink" style="left:72px;top:260px;width:936px;font-size:150px;text-align:left;color:#B87758"><i>Four times.</i></div>
+<div id="turn-rw" class="kt ink" style="left:72px;top:1360px;width:936px;font-size:80px;text-align:left;">Rules written.</div>
+<div id="turn-mr" class="kt ink" style="left:72px;top:1458px;width:936px;font-size:80px;text-align:left;">Members recruited.</div>
+<div id="turn-mo" class="kt ink" style="left:72px;top:1556px;width:936px;font-size:80px;text-align:left;">Money raised.</div>
+<div id="turn-x4" class="kt ink" style="left:72px;top:260px;width:936px;font-size:180px;text-align:left;color:#B87758"><i>Four times.</i></div>
 <div id="turn-sd0" class="full plate" style="z-index:1;opacity:0">
-    <div class="full" style="overflow:hidden"><img src="assets/img/press.jpg" alt="" style="width:100%;height:100%;object-fit:cover;filter:blur(36px) brightness(0.42) saturate(0.85);transform:scale(1.2)"></div>
     <div class="full" style="overflow:hidden"><div id="turn-sd0-pic" class="pic" style="width:500px;height:501px"><img src="assets/img/press.jpg" alt=""></div></div>
     <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 40%, rgba(14,10,8,0.6) 62%, rgba(14,10,8,0.85) 100%)"></div>
     </div>
-<div id="turn-st0" class="kt white" style="left:72px;top:1560px;width:936px;font-size:104px;text-align:left;z-index:5"><i>a printing business</i></div>
+<div id="turn-st0" class="kt white" style="left:72px;top:1560px;width:936px;font-size:120px;text-align:left;z-index:5"><i>a printing business</i></div>
 <div id="turn-sd1" class="full plate" style="z-index:1;opacity:0">
-    
     <div class="full" style="overflow:hidden"><div id="turn-sd1-pic" class="pic" style="width:628px;height:1033px"><img src="assets/img/almanac.jpg" alt=""></div></div>
     <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 40%, rgba(14,10,8,0.6) 62%, rgba(14,10,8,0.85) 100%)"></div>
     </div>
-<div id="turn-st1" class="kt white" style="left:72px;top:1560px;width:936px;font-size:104px;text-align:left;z-index:5"><i>an almanac</i></div>
+<div id="turn-st1" class="kt white" style="left:72px;top:1560px;width:936px;font-size:120px;text-align:left;z-index:5"><i>an almanac</i></div>
 <div id="turn-sd2" class="full plate" style="z-index:1;opacity:0">
-    
     <div class="full" style="overflow:hidden"><div id="turn-sd2-pic" class="pic" style="width:1920px;height:2573px"><img src="assets/img/kite.jpg" alt=""></div></div>
     <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 40%, rgba(14,10,8,0.6) 62%, rgba(14,10,8,0.85) 100%)"></div>
     </div>
-<div id="turn-st2" class="kt white" style="left:72px;top:1560px;width:936px;font-size:104px;text-align:left;z-index:5"><i>experiments<br>with electricity</i></div>
+<div id="turn-st2" class="kt white" style="left:72px;top:1560px;width:936px;font-size:120px;text-align:left;z-index:5"><i>experiments<br>with electricity</i></div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
@@ -73,19 +72,19 @@
     tl.to("#turn-rw, #turn-mr, #turn-mo", {"opacity":0,"filter":"blur(8px)","duration":0.25}, 7.05);
     tl.fromTo("#turn-x4", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 7.35);
     tl.set("#turn-x4", {"opacity":0}, 8.75);
-    tl.fromTo("#turn-sd0-pic", {"x":0,"y":418.92,"scale":2.16}, {"x":-32.4,"y":386.455,"scale":2.29,"duration":2.16,"ease":"power1.inOut"}, 8.45);
+    tl.fromTo("#turn-sd0-pic", {"x":-475.569,"y":-57.6,"scale":4.062}, {"x":-513.892,"y":-96,"scale":4.216,"duration":2.16,"ease":"power1.inOut"}, 8.45);
     tl.set("#turn-sd0", {"opacity":1}, 8.75);
     tl.fromTo("#turn-sd0", {"scale":1.08}, {"scale":1,"duration":0.45,"ease":"expo.out","immediateRender":false}, 8.75);
     tl.set("#turn-sd0", {"opacity":0}, 10.31);
     tl.fromTo("#turn-st0", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 8.75);
     tl.set("#turn-st0", {"opacity":0}, 10.31);
-    tl.fromTo("#turn-sd1-pic", {"x":-43.621,"y":0,"scale":1.859}, {"x":-101.983,"y":0,"scale":2.045,"duration":2,"ease":"power1.inOut"}, 10.01);
+    tl.fromTo("#turn-sd1-pic", {"x":-43.621,"y":0,"scale":1.859}, {"x":-101.983,"y":-96,"scale":2.045,"duration":2,"ease":"power1.inOut"}, 10.01);
     tl.set("#turn-sd1", {"opacity":1}, 10.31);
     tl.fromTo("#turn-sd1", {"scale":1.08}, {"scale":1,"duration":0.45,"ease":"expo.out","immediateRender":false}, 10.31);
     tl.set("#turn-sd1", {"opacity":0}, 11.71);
     tl.fromTo("#turn-st1", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 10.31);
     tl.set("#turn-st1", {"opacity":0}, 11.71);
-    tl.fromTo("#turn-sd2-pic", {"x":-233.671,"y":0,"scale":0.806}, {"x":-247.998,"y":0,"scale":0.821,"duration":3.63,"ease":"power1.inOut"}, 11.41);
+    tl.fromTo("#turn-sd2-pic", {"x":-219.344,"y":-57.6,"scale":0.791}, {"x":-247.998,"y":-96,"scale":0.821,"duration":3.63,"ease":"power1.inOut"}, 11.41);
     tl.set("#turn-sd2", {"opacity":1}, 11.71);
     tl.fromTo("#turn-sd2", {"scale":1.08}, {"scale":1,"duration":0.45,"ease":"expo.out","immediateRender":false}, 11.71);
     tl.to("#turn-sd2", {"opacity":0,"duration":0.5,"ease":"power1.in"}, 14.24);

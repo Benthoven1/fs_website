@@ -34,8 +34,9 @@ STORY:   one story, told like a reel: the payoff first, then how it was done.
            their president, at their bench and subscription box; College Hall
          - the turn to now: every institution's rules, members and money become
            spheres and rise off the plots into three planets on the landing page's
-           four crossing rings (js/main.js), each held in its own quarter of the
-           screen and named there; a new project rises
+           four crossing rings (js/main.js), travelling them; each passes through its
+           own quarter of the screen while a callout there points to it, as in the
+           launch film (members, rules, money, a new project); a new project rises
            into the centre (the landing page's star), is wired to all three, takes
            gifts, grants and contracts, and grows
          - the close: the launch film's network, held gathered to a point under
@@ -47,9 +48,9 @@ TYPE:    the narration's own words set as the picture where they carry it (the "
          one:"); subtitles elsewhere, never both. Lora for set words, Major Mono
          Display (lower case) for kickers, IBM Plex Sans for subtitles and sources.
 
-LOOK:    archival plates: a picture near the screen's shape fills it, centred, at
-         most 1.1x; a wider one is shown whole across the width over a blurred,
-         darkened copy of itself; a scrim where type sits; between them the
+LOOK:    archival plates fill the screen, centred, at most 1.1x (the opening's
+         panorama pans; the Constitution pans to the signature); a scrim where
+         type sits; between them the
          figures on a backdrop that turns deep in each institution's colour (blue,
          red, teal, green; a plum night for Mulvium's cosmos), porcelain between. No cards, tags,
          timeline or numbering. Figures in stone, walnut, oak, brass, pewter, leather
@@ -60,7 +61,9 @@ MOTION:  parts arrive along one axis with a slight settle (0.75 s, back.out), sl
          Plates enter by cut, punch, wipe or dive (into the model's own document or
          bookcase) and leave by cut, wipe or rise; type slams or lands on its word.
 
-SUBTITLES: only where the screen does not already set the words (CAPTION_FROM).
+SIZES:   five: display 180, headline 120, title 80, body 60, kicker 38 (TS in build.mjs).
+
+SUBTITLES: Libre Caslon Text, cream on a dark band; only where the screen does not already set the words (CAPTION_FROM).
 
 QA:      the model is seen being built at each plot; no frame where a card and a model
          label overlap; the ring lands on "B Franklin"; the readout reads £2,000 a side;

@@ -44,6 +44,9 @@ the licence named here. The pixels of the archival pictures are unaltered
 
 Lora (Cyreal), Major Mono Display (Emre Parlak) and IBM Plex Sans (IBM), the
 Mulvium site's own type, under the SIL Open Font License, from Google Fonts.
+The subtitles are set in Libre Caslon Text (Impallari Type), a revival of
+Caslon, the face Franklin's shop set and the Declaration was first printed
+in; SIL Open Font License, from Google Fonts.
 
 ## Figures
 

@@ -1,9 +1,27 @@
-# Review — Franklin essay v7
+# Review — Franklin essay v8
 
 Rendered 176.0 s, 1080 × 1920, 30 fps. Reviewed from snapshot sheets on the
 real narration timing and frames of the delivered MP4.
 
-## What changed from v6
+## What changed from v7
+
+- Pictures fill the screen again, centred and at most 1.1×; the opening's
+  panorama pans as it did; type keeps to the scrimmed bands.
+- The cosmos's spheres travel their rings (the landing page's speeds,
+  halved). Each is placed so it passes through its own quarter while it is
+  named, and a callout in that corner points to it with a leader that
+  follows it, as in the launch film: members (a board and community), rules
+  (governance, in place), money (tax-exempt accounts), a new project (your
+  idea).
+- Under the proverb, its two words defined: prevention, care before a fire
+  starts; cure, fighting it once it has.
+- Five type sizes throughout (display 180, headline 120, title 80, body 60,
+  kicker 38).
+- Subtitles in Libre Caslon Text, cream on a dark band: the face of
+  Franklin's own printing.
+- The Junto sum reads 50 × 40s under "subscribers × shillings each".
+
+## What changed in v7
 
 - Legibility: type has a tighter, darker shadow; kickers are larger and
   solid white; the plates' scrims are heavier where type sits; type over a
