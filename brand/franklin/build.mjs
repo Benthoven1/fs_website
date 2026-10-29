@@ -217,8 +217,8 @@ const WORLD = (() => {
     { text: "members", anchor: "library.members", t0: arrive("library", 2) + 0.3, t1: at("lib2", "fifty") - 0.2 },
     { text: "money", anchor: "library.money", t0: arrive("library", 3) + 0.3, t1: at("lib2", "fifty") - 0.2 },
     { text: "the collection", anchor: "library.case", t0: after("lib2", "each") + 0.6, t1: start("lib3") - 0.2 },
-    { text: "the alarm bell", anchor: "fire.bell", t0: arrive("fire", 4.5) + 0.4, t1: at("fire2", "thirty") - 0.2 },
-    { text: "academy · 1751", anchor: "academy.roof", t0: at("acad1", "opened") + 0.7, t1: start("turn") - 0.3 },
+    { text: "union fire company", anchor: "fire.posts", t0: arrive("fire", 4.2) + 0.5, t1: start("hosp") - 0.3 },
+    { text: "the academy", anchor: "academy.cupola", t0: at("acad1", "opened") + 0.7, t1: start("turn") - 0.3 },
     { text: "shared services", anchor: "shared.members", t0: at("now2", "existing") - 0.1, t1: start("end") - 0.5 },
     { text: "new project", anchor: "shared.new", t0: at("now2", "new") + 0.2, t1: start("end") - 0.5 },
   ];
@@ -227,10 +227,23 @@ const WORLD = (() => {
     [start("who") - 0.45, after("lib1") + 0.05], [start("lib3") - 0.25, after("fire1") + 0.05],
     [start("hosp") - 0.15, after("hosp1") + 0.05],
   ];
-  return { ghosts: tAll, build: plotBuild, events, cam, labels, veils };
+  // the backdrop's tint: porcelain, leaning to each institution's colour in its part of the story
+  const tints = [
+    ["library", "#D3DEEC", after("lib1") - 0.4], ["fire", "#F0DAC8", after("fire1") - 0.4], ["hospital", "#CFE4E0", after("hosp1") - 0.4],
+    ["academy", "#D9E7CF", at("acad1") - 1.2], ["neutral", "#E6E1D8", at("turn1") - 0.9], ["mulvium", "#ECD6E0", at("now1") - 1.4],
+  ];
+  return { ghosts: tAll, build: plotBuild, events, cam, labels, veils, tints };
 })();
 {
   const s = new Scene("world", 0, start("end") + 0.6, 0);
+  // the backdrop: porcelain, each tint a layer that fades in over the last
+  s.add(`<div id="bg" class="full" style="background:linear-gradient(180deg, #F3F1EC 0%, ${C.paper} 100%)"></div>
+    ${WORLD.tints.map(([n, c]) => `<div id="tint-${n}" class="full" style="opacity:0;background:linear-gradient(180deg, ${c} 0%, #F1EEE8 62%, ${C.paper} 100%)"></div>`).join("")}`);
+  WORLD.tints.forEach(([n, , t], i) => {
+    s.set(`#tint-${n}`, { opacity: 0 }, 0).to(`#tint-${n}`, { opacity: 1, duration: 1.4, ease: "power1.inOut" }, t);
+    const next = WORLD.tints[i + 1];
+    if (next) s.to(`#tint-${n}`, { opacity: 0, duration: 1.4, ease: "power1.inOut" }, next[2] + 1.4);
+  });
   s.add(`<canvas id="cv" class="full" width="${W}" height="${H}" data-layout-ignore></canvas>
     <div id="lab" class="full" data-layout-ignore></div>
     <div id="veil" class="full" style="background:${C.paper};opacity:0"></div>`);

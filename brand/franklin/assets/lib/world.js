@@ -1,25 +1,21 @@
-// world.js — the film's one 3D world: a clean, modern model of an
-// eighteenth-century commons. A sage meadow by the Delaware, stylised trees,
-// sand paths, and four stone plots on which Franklin's institutions are built
-// one after the other, plus a fifth plot with one foundation shared. Every
-// frame is a pure function of the film's time t (HyperFrames seeks frames out
-// of order): parts arrive on a schedule that build.mjs writes from the
-// narration's word timings.
+// world.js — the film's 3D figures: the isometric designs (made with the
+// Anatomy kit, github.com/wheresryan22/anatomy) built in three dimensions on a
+// plain backdrop. Four plots, one per institution, each standing on its
+// foundation (rules, members, money) and carrying its own work; a fifth with
+// one foundation shared. Every frame is a pure function of the film's time t
+// (HyperFrames seeks frames out of order): parts arrive on a schedule that
+// build.mjs writes from the narration's word timings. Nothing is drawn here but
+// the figures and their shadows: the backdrop is the page behind the canvas.
 //
-// Surfaces are flat colours, never noise textures, so nothing shimmers in
-// motion; the period is in the materials (walnut, oak, brass, pewter, leather,
-// brick, slate) and in the archive's own documents, open on each lectern.
 // Units are centimetres of a table model; y is up; the camera looks from the
 // front right (+x, +z).
 import * as THREE from "./three/three.module.min.js";
 import { RoundedBoxGeometry } from "./three/RoundedBoxGeometry.js";
 
-const SKY = "#EEF0EC";
 const COL = {
   stone: "#E8E3D9", stoneDark: "#CFC7B8", walnut: "#7A5640", oak: "#B68C63", iron: "#45423F",
   brass: "#D2AE66", pewter: "#B9BFC3", leather: "#86523A", leatherRed: "#9C4B35", brick: "#B2664B",
-  trim: "#F6F2EA", slate: "#646C76", copper: "#76A08C", ground: "#C8D2B4", sand: "#E6DDCB", water: "#AAC4CB",
-  rose: "#9A5571", ghost: "#7E7468",
+  ghost: "#7E7468",
 };
 export const PLOTS = { library: [-160, -150], fire: [160, -150], hospital: [-160, 150], academy: [160, 150], shared: [640, 0] };
 const DOCS = { library: "almanac", fire: "stove", hospital: "declaration", academy: "charter", shared: "constitution4" };
@@ -64,18 +60,14 @@ function cyl(rTop, rBot, h, material, { seg = 36 } = {}) {
   const geo = new THREE.CylinderGeometry(rTop, rBot, h, seg); geo.translate(0, h / 2, 0);
   return solid(geo, null, material);
 }
-function roof(w, d, h, material) {
-  const s = new THREE.Shape(); s.moveTo(-w / 2, 0); s.lineTo(w / 2, 0); s.lineTo(0, h); s.closePath();
-  const geo = new THREE.ExtrudeGeometry(s, { depth: d, bevelEnabled: false }); geo.translate(0, 0, -d / 2);
-  return solid(geo, null, material);
-}
 const at = (obj, x, y, z) => { obj.position.set(x, y, z); return obj; };
 const group = (...kids) => { const g = new THREE.Group(); kids.forEach((k) => g.add(k)); return g; };
 
 // ── the world ──────────────────────────────────────────────────────────────
 export async function createWorld(canvas, labelLayer, S) {
   const W = canvas.width, H = canvas.height;
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, premultipliedAlpha: false, preserveDrawingBuffer: true });
+  renderer.setClearColor(0x000000, 0);
   renderer.setPixelRatio(1); renderer.setSize(W, H, false);
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -88,11 +80,9 @@ export async function createWorld(canvas, labelLayer, S) {
   })));
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(SKY);
-  scene.fog = new THREE.Fog(SKY, 2000, 6000);
 
-  // a clear morning: warm sun from the upper left, open sky, a green bounce
-  scene.add(new THREE.HemisphereLight("#FFFFFF", "#C3CCAA", 1.45));
+  // a warm key from the upper left, an open sky, a soft fill
+  scene.add(new THREE.HemisphereLight("#FFFFFF", "#D9D2C6", 1.45));
   const sun = new THREE.DirectionalLight("#FFF6EA", 2.0);
   sun.position.set(-420, 1500, 620); sun.castShadow = true; sun.shadow.mapSize.set(4096, 4096);
   Object.assign(sun.shadow.camera, { left: -1000, right: 1000, top: 1000, bottom: -1000, near: 100, far: 3400 });
@@ -100,46 +90,10 @@ export async function createWorld(canvas, labelLayer, S) {
   sun.target.position.set(240, 0, 0); scene.add(sun, sun.target);
   const fill = new THREE.DirectionalLight("#E4ECF8", 0.35); fill.position.set(700, 380, -300); scene.add(fill);
 
-  // the land: a sage meadow, flat around the commons, easing into low hills
+  // the floor: invisible, it only takes the figures' shadows
   {
-    const geo = new THREE.PlaneGeometry(10000, 10000, 160, 160); geo.rotateX(-Math.PI / 2);
-    const p = geo.attributes.position;
-    for (let i = 0; i < p.count; i++) {
-      const x = p.getX(i), z = p.getZ(i);
-      const d = Math.max(Math.abs(x - 240) - 800, Math.abs(z) - 700, 0);
-      const n = 0.6 + 0.4 * Math.sin(x * 0.0018 + 1.3) * Math.cos(z * 0.0015);
-      p.setY(i, smooth(d / 1400) * 160 * n);
-    }
-    geo.computeVertexNormals();
-    const land = new THREE.Mesh(geo, mat(COL.ground, 0.95)); land.receiveShadow = true; scene.add(land);
-  }
-  // the Delaware, a calm band behind the commons
-  {
-    const river = new THREE.Mesh(new THREE.PlaneGeometry(9000, 140), mat(COL.water, 0.4));
-    river.rotation.x = -Math.PI / 2; river.position.set(0, 0.6, -560); river.receiveShadow = true; scene.add(river);
-  }
-  // sand paths: a cross between the four plots and a lane to the fifth
-  {
-    const lane = (w, d, x, z) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, 0.8, d), mat(COL.sand, 0.9)); m.position.set(x, 0.4, z); m.receiveShadow = true; scene.add(m); };
-    lane(44, 900, 0, 40); lane(1500, 42, 340, 0);
-  }
-  // trees: stylised, faceted crowns in a few greens
-  {
-    const greens = ["#7F9D68", "#6E8F5C", "#8FAA72", "#759566"];
-    const bark = mat(COL.walnut, 0.8);
-    let placed = 0;
-    for (let i = 0; placed < 70 && i < 3000; i++) {
-      const x = -900 + hash(i * 3.1) * 2500, z = -470 + hash(i * 5.7) * 1250;
-      // keep the plots clear, and the ground in front of them, where the camera looks in
-      const nearPlot = Object.values(PLOTS).some(([px, pz]) => x - px > -(px > 500 ? 260 : 190) && x - px < (px > 500 ? 520 : 420) && z - pz > -190 && z - pz < 480);
-      if (nearPlot || (Math.abs(x) < 60 && z > -430 && z < 520) || (Math.abs(z) < 60 && x > -60 && x < 1100) || z < -470) continue;
-      const s = 0.75 + hash(i * 9.3) * 0.6, col = greens[Math.floor(hash(i * 2.9) * greens.length)];
-      const t = new THREE.Group();
-      const tr = new THREE.Mesh(new THREE.CylinderGeometry(2.2 * s, 3 * s, 24 * s, 8), bark); tr.position.y = 12 * s;
-      const crown = new THREE.Mesh(new THREE.IcosahedronGeometry(19 * s, 1), mat(col, 0.85, { flat: true })); crown.position.y = 36 * s; crown.scale.y = 1.15;
-      [tr, crown].forEach((m) => { m.castShadow = true; m.receiveShadow = true; t.add(m); });
-      t.position.set(x, 0, z); t.rotation.y = hash(i) * 6; scene.add(t); placed++;
-    }
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(12000, 12000), new THREE.ShadowMaterial({ color: "#3B2E22", opacity: 0.16 }));
+    floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
   }
 
   const camera = new THREE.PerspectiveCamera(34, W / H, 5, 14000);
@@ -196,6 +150,16 @@ export async function createWorld(canvas, labelLayer, S) {
     return { bz };
   }
 
+  // An institution's own work, as in the foundations figure: a block in its
+  // colour, ribbed on its front face
+  function work(color, w = 50, d = 50, h = 88) {
+    const g = group(box(w, h, d, mat(color, 0.55), { r: 2 }));
+    for (let y = 16; y < h - 8; y += 16) g.add(at(box(w - 8, 1.2, 1, mat("#FFFFFF", 0.5), { r: 0.4 }), 0, y, d / 2));
+    g.add(at(box(w - 8, 1.2, d - 8, mat("#FFFFFF", 0.5), { r: 0.4 }), 0, h, 0));
+    return g;
+  }
+  const ACC = { library: "#4D6D96", fire: "#A8603F", hospital: "#357F77", academy: "#55804A", mulvium: "#9A5571" };
+
   // ── library: subscriptions run into the chest; the chest fills the shelves
   const lib = {};
   {
@@ -228,24 +192,26 @@ export async function createWorld(canvas, labelLayer, S) {
     lib.mouth = new THREE.Vector3(230 / 2 - 40 + PLOTS[P][0], SLAB + 34 + 9 + 2, f.bz + PLOTS[P][1]);
   }
 
-  // ── fire company: thirty leather buckets on the company's rack ───────────
-  {
-    const P = "fire";
+  // ── fire company and academy: their foundations, and the designs drawn
+  // for them with the Anatomy kit (figures/fire.mjs, figures/academy.mjs),
+  // built here part for part from the parts lists the kit wrote down
+  const MATS = {
+    oak: () => mat(COL.oak, 0.6), walnut: () => mat(COL.walnut, 0.6), iron: IRON, brass: BRASS, stoneDark: () => mat(COL.stoneDark, 0.75),
+    brick: () => mat(COL.brick, 0.8), trim: () => mat("#F6F2EA", 0.6), band: () => mat("#EFE6D2", 0.7),
+    "lit:leather": () => mat(COL.leather, 0.7), "lit:leatherRed": () => mat(COL.leatherRed, 0.7),
+  };
+  for (const P of ["fire", "academy"]) {
     foundation(P);
-    const rack = group(), RW = 168, BARS = [36, 66, 96], oak = mat(COL.oak, 0.6);
-    rack.add(at(box(7, 108, 7, oak), -RW / 2, 0, 0), at(box(7, 108, 7, oak), RW / 2, 0, 0), at(box(RW + 16, 6, 12, oak), 0, 0, 0));
-    for (const y of BARS) { const bar = cyl(1.6, 1.6, RW, IRON(), { seg: 12 }); bar.rotation.z = Math.PI / 2; bar.position.set(RW / 2, y, 0); rack.add(bar); }
-    part(P, at(rack, 0, SLAB, 40), { order: 4, from: "down", name: "rack" });
-    BARS.forEach((y, row) => {
-      for (let i = 0; i < 10; i++) {
-        const lm = mat(hash(row * 10 + i) > 0.5 ? COL.leather : COL.leatherRed, 0.7);
-        const bk = group(cyl(5.4, 4.2, 13, lm, { seg: 20 }), at(cyl(5.6, 5.6, 1.4, mat("#EFE6D2", 0.7), { seg: 20 }), 0, 7, 0));
-        const handle = new THREE.Mesh(new THREE.TorusGeometry(4.6, 0.45, 6, 18, Math.PI), IRON()); handle.position.y = 13; handle.castShadow = true; bk.add(handle);
-        part(P, at(bk, -RW / 2 + 12 + i * 16, SLAB + y - 17.5, 40), { order: 5 + (row * 10 + i) * 0.04, from: "up", dist: 300 });
+    const design = await (await fetch(new URL(`../fig/${P}.parts.json`, import.meta.url))).json();
+    for (const d of design) {
+      const g = new THREE.Group();
+      for (const q of d.solids) {
+        const m = q.material === "lit" ? mat(ACC[P], 0.6) : MATS[q.material]();
+        g.add(q.kind === "box" ? at(box(q.w, q.h, q.d, m, { r: Math.min(1.2, q.w / 3, q.d / 3) }), q.x + q.w / 2, SLAB + q.z, q.y + q.d / 2)
+          : at(cyl(q.r, q.r, q.h, m, { seg: 24 }), q.x, SLAB + q.z, q.y));
       }
-    });
-    const bell = group(box(6, 130, 6, oak), at(box(26, 5, 6, oak), 4, 126, 0), at(cyl(5, 9, 13, BRASS()), 12, 110, 0));
-    part(P, at(bell, -100, SLAB, 82), { order: 4.5, from: "up", name: "bell" });
+      part(P, g, { order: d.build, from: d.from, dist: d.from === "up" ? 300 : undefined, name: d.name });
+    }
   }
 
   // ── hospital: the matching grant ─────────────────────────────────────────
@@ -276,18 +242,6 @@ export async function createWorld(canvas, labelLayer, S) {
     anchors["hospital.assembly"] = new THREE.Vector3(AX + PLOTS[P][0], SLAB + HELD + MARK + 10, Z + PLOTS[P][1]);
   }
 
-  // ── academy: a Georgian hall in brick, with a portico and a cupola ───────
-  {
-    const P = "academy", Z = 30, BW = 150, trim = mat(COL.trim, 0.6);
-    foundation(P);
-    part(P, at(box(BW, 8, 80, mat(COL.stoneDark, 0.75), { r: 1 }), 0, SLAB, Z), { order: 4, from: "down" });
-    part(P, at(box(BW - 20, 50, 56, mat(COL.brick, 0.8), { r: 0.8 }), 0, SLAB + 8, Z - 10), { order: 4.4, from: "down", name: "hall" });
-    for (let i = 0; i < 6; i++) part(P, at(cyl(3.4, 4, 46, trim, { seg: 18 }), -50 + i * 20, SLAB + 8, Z + 24), { order: 4.8 + i * 0.08, from: "up", dist: 240 });
-    part(P, at(box(BW - 4, 7, 74, trim, { r: 1 }), 0, SLAB + 56, Z), { order: 5.5, from: "up", dist: 260 });
-    part(P, at(roof(BW, 72, 26, mat(COL.slate, 0.7)), 0, SLAB + 63, Z), { order: 5.8, from: "up", dist: 260, name: "roof" });
-    part(P, at(group(box(16, 14, 16, trim), at(roof(18, 18, 10, mat(COL.copper, 0.6)), 0, 14, 0)), 0, SLAB + 80, Z), { order: 6.1, from: "up", dist: 300 });
-  }
-
   // ── the shared foundation: services once, sockets for projects ──────────
   const shared = {};
   {
@@ -299,11 +253,9 @@ export async function createWorld(canvas, labelLayer, S) {
       part(P, at(box(52, 1.6, 52, mat(COL.stoneDark, 0.8), { r: 1 }), x, SLAB, 50), { order: 4.4 + i * 0.1, from: "down" });
       part(P, at(box(4, 1.6, 50, BRASS(), { r: 0.6 }), x, SLAB, 15), { order: 4.4 + i * 0.1, from: "down" });
     });
-    // three projects already hosted
-    const house = (h, wall, top) => group(box(40, h, 40, wall), at(roof(42, 42, 14, mat(top, 0.7)), 0, h, 0));
-    [[XS[0], house(32, mat(COL.brick, 0.8), COL.slate)], [XS[1], house(26, mat(COL.oak, 0.6), COL.copper)], [XS[2], house(38, mat(COL.trim, 0.6), COL.slate)]]
-      .forEach(([x, g], i) => part(P, at(g, x, SLAB + 1.6, 50), { order: 5 + i * 0.2, from: "up", dist: 300 }));
-    shared.newp = part(P, at(house(36, mat(COL.trim, 0.6), COL.rose), XS[3], SLAB + 1.6, 50), { order: 99, from: "up", dist: 360, name: "new" });
+    // institutions already plugged in, and the new project, in Mulvium's colour
+    ["library", "fire", "hospital"].forEach((c, i) => part(P, at(work(ACC[c], 36, 36, 56), XS[i], SLAB + 1.6, 50), { order: 5 + i * 0.2, from: "up", dist: 300 }));
+    shared.newp = part(P, at(work(ACC.mulvium, 36, 36, 56), XS[3], SLAB + 1.6, 50), { order: 99, from: "up", dist: 360, name: "new" });
   }
 
   // marks for "rules, members, money" on all four plots at once

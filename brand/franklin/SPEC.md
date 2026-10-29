@@ -14,27 +14,32 @@ TIME:    the narration's length + 1.2 s lead-in + the close (~8 s); the voice is
 VOICE:   formal documentary register (Humanizer pass: no staged openers, no one-line
          closers, no aphorisms); declarative sentences, facts and dates.
 
-STORY:   one place, no chapters. A 3D model of an eighteenth-century commons runs under
-         the whole film (assets/lib/world.js, three.js):
+STORY:   one place, no chapters. The isometric designs, drawn with the Anatomy kit
+         (figures/*.mjs), are built in 3D (assets/lib/world.js, three.js) on a plain
+         backdrop under the whole film; nothing else is modelled:
          - open: four empty plots, outlined, named; at "By 1751" the blueprints of
            what will stand on them appear
-         - each institution in turn: the camera flies to its plot and it is built,
-           part by part, every part travelling in and landing in place: a stone slab,
-           then its foundation (rules: a lectern with an archive document open on it;
-           members: a card cabinet; money: an iron-strapped chest), then its own system
+         - each institution in turn: the camera goes to its plot and it is built,
+           part by part, every part travelling in and landing in place: the slab,
+           its foundation (rules, members, money), then its own design
              library   50 brass subscriptions ride into the chest; the shelves fill
-             fire      a rack, a bell, thirty leather buckets
+             fire      a rack, a bell, thirty leather buckets (figures/fire.mjs)
              hospital  the donors' column fills to the mark; the Assembly's pewter drops
-             academy   a brick Georgian hall rises, portico, roof, cupola
+             academy   a brick hall, portico, roof and cupola (figures/academy.mjs)
          - the camera stands back over all four; rules, members, money ringed on each
-         - a fifth plot: one foundation shared, projects in its sockets, a new one set in
-         The archive's pictures and documents come up over the model on cards, with a
-         soft veil, and go again.
+         - a fifth plot: one foundation shared, institutions in its sockets, a new
+           project set in
+         The archive's pictures and documents come up over the figures on cards, with a
+         soft veil, and go again; documents also lie open on each plot's lectern.
+         New figures are designed with the Anatomy kit first: its recorder writes
+         <name>.parts.json, and the world builds that design part for part.
 
-LOOK:    modern first, the period in its materials.
-         - world: sage meadow, sand paths, the Delaware, faceted trees; stone, walnut,
-           oak, brass, pewter, leather, brick, slate; flat colours only (no noise
-           textures, nothing that shimmers); a fine drawn outline on every solid
+LOOK:    modern, predominantly porcelain.
+         - backdrop: porcelain, leaning in turn to each institution's colour (pale blue,
+           apricot, pale teal, sage, then rose for Mulvium); the figures' soft shadows
+           are the only thing on it
+         - figures: stone, walnut, oak, brass, pewter, leather, brick; flat colours only,
+           a fine drawn outline on every solid
          - cards: #F9F8F5, 1 px #D9D4CA, radius 28; ink #1B1613; muted #5C544E; clay #B87758
          - accents: library #4D6D96, fire #A8603F, hospital #357F77, academy #55804A,
            Mulvium #9A5571

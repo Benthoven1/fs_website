@@ -9,10 +9,11 @@ academy that became the University of Pennsylvania; each built from scratch.
 What a fiscal sponsor would do for him today, and Mulvium's close.
 
 It is a [HyperFrames](https://github.com/heygen-com/hyperframes) project:
-HTML and GSAP, rendered frame by frame to MP4. One 3D model runs under the
-whole film (three.js, `assets/lib/world.js`): a commons by the Delaware on
-which Franklin's four institutions are built part by part as the narration
-reaches them, then a fifth plot with one foundation shared. The real
+HTML and GSAP, rendered frame by frame to MP4. Isometric designs drawn
+with the [Anatomy](https://github.com/wheresryan22/anatomy) kit are built in 3D
+(three.js, `assets/lib/world.js`) under the whole film: Franklin's four
+institutions, put together part by part as the narration reaches them, then
+one foundation shared. The real
 paintings, engravings and documents of his city come up over it on cards
 (`CREDITS.md`). `SPEC.md` is the director's brief;
 `REVIEW.md` is the last review of the film against it.
@@ -24,8 +25,12 @@ paintings, engravings and documents of his city come up over it on cards
   `assets/narration.wav` and transcribes every word's time into `timing.json`.
 - `denoise.py` — clears the hiss the designed voice carries (DeepFilterNet3,
   at most 28 dB of reduction, so soft consonants survive).
-- `assets/lib/world.js` — the 3D world: the model, its parts, and a frame for
-  any time t; `build.mjs` writes its schedule (builds, moves, camera, labels).
+- `figures/*.mjs` — the designs, drawn with the Anatomy kit: `node
+  figures/fire.mjs` (and `academy`) writes `assets/fig/<name>.svg` and its
+  parts list, `<name>.parts.json`, which the 3D world builds part for part.
+- `assets/lib/world.js` — the designs in 3D on a plain backdrop, and a frame
+  for any time t; `build.mjs` writes its schedule (builds, moves, camera,
+  labels, backdrop tints).
 - `prep.py` — readies the archival pictures in `assets/img/` (no grade, no
   filter) and records their sizes.
 - `build.mjs` — writes the film: `index.html` (scene hosts, captions, voice,
