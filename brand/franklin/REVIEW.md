@@ -1,9 +1,32 @@
-# Review — Franklin essay v8
+# Review — Franklin essay v9
 
-Rendered 176.1 s, 1080 × 1920, 30 fps. Reviewed from snapshot sheets on the
+Rendered 166.8 s, 1080 × 1920, 30 fps. Reviewed from snapshot sheets on the
 real narration timing and frames of the delivered MP4.
 
-## What changed from v7
+## What changed from v8 (the editor's pass)
+
+- The hook no longer shows the finished models: at "By 1751" Nicholas
+  Scull's 1762 plan of Philadelphia (Scull was a Junto member) fills the
+  screen, north up, and the four light in the order they were founded, each
+  in its section's colour: the Library Company at the State House, the Union
+  Fire Company as a glow over the built town (it had no house), the
+  Pennsylvania Hospital at Eighth and Pine, the Academy at Fourth and Arch.
+- The close is ten seconds shorter: the network breathes at its gathered
+  point instead of freezing, opens on "expansion", then crossfades straight
+  into its gathering; the wordmark's typefaces run at 2.5x and settle. The
+  film ends 5.4 s after the last word.
+- No words twice: the method is one diagram under "One method", its label
+  turning from "a public need" to "met by many members" (the typed lines are
+  gone); the subtitles stop before "one method", "the Junto" and "Franklin's
+  academy opened", which the screen sets.
+- The library model carries no tags (they collided); "24 trustees" has a
+  shade over the model; "University of Pennsylvania" leaves before its plate;
+  the empty plots sink out of frame as the cosmos rises; the method's members
+  are on screen from the first word.
+- The hospital's first plate is a sharp HABS photograph of the Pine Building
+  in place of a soft stereograph; Bond's portrait has a scrim for its kicker.
+
+## What changed in v8
 
 - Pictures fill the screen again, centred and at most 1.1×; the opening's
   panorama pans as it did; type keeps to the scrimmed bands.

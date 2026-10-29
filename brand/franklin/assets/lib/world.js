@@ -255,6 +255,7 @@ export async function createWorld(canvas, labelLayer, S) {
   // each institution's rules, members and money, and the sphere it turns into
   const KIND_COLOR = { rules: "#B8CAE0", members: "#C4DDB8", money: "#E0B8C8" };
   const rising = INSTITUTIONS.flatMap((plot, i) => ["rules", "members", "money"].map((what, j) => ({ p: find(plot, what), what, k: i * 3 + j }))).filter((m) => m.p);
+  const risen = new Set(rising.map((m) => m.p));
   rising.forEach((m) => { m.orb = new THREE.Mesh(new THREE.SphereGeometry(14, 32, 32), porcelain(KIND_COLOR[m.what])); m.orb.visible = false; scene.add(m.orb); });
   // the structure a new project is given: a line to each planet and the star
   const tethers = ["members", "rules", "money"].map((to) => {
@@ -491,6 +492,10 @@ export async function createWorld(canvas, labelLayer, S) {
         hosp.held.obj.position.y = hosp.held.home.y - hosp.HELD * k * k;
       }
     }
+    // once their rules, members and money have risen, the plots sink away
+    // below the frame, so nothing of them shows under the cosmos
+    const sink = clamp01((t - S.events.cosmos.rise[0] - 1.4) / 1.4);
+    if (sink > 0) for (const p of parts) if (inst(p) && !risen.has(p)) { p.obj.position.y -= 900 * sink * sink; if (sink >= 1) p.obj.visible = false; }
     for (const r of rings) {
       const k = (t - S.events.turn[r.what]) / 0.45;
       r.obj.visible = k > 0 && t < S.events.turnEnd;

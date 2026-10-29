@@ -44,9 +44,9 @@ screen between them (`CREDITS.md`). `SPEC.md` is the director's brief;
   ducked under the voice.
 - `assets/cosmos-close.mp4` — the launch film's own close (cosmos and
   wordmark), rendered clean from `brand/film` and set under the last lines;
-  `assets/cosmos-close-held.mp4` is the same with the gathered network held
-  (the ffmpeg command and the hold's length are in `build.mjs`, which warns
-  when the narration's timing asks for a different hold).
+  `assets/cosmos-close-held.mp4` is the same edited for the essay's close by
+  `endcut.sh` (the gathered point breathing, then straight to the wordmark);
+  `build.mjs` warns when the narration's timing asks for a different hold.
 
 To make it again, from this folder:
 

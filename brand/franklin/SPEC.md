@@ -7,7 +7,7 @@ GOAL:    The viewer leaves understanding that Franklin founded four lasting
 
 OUTPUT:  HyperFrames, 1080 x 1920, 30 fps, H.264 + AAC 48 kHz.
 
-TIME:    the narration's length + the close (~15 s); voice and music start at 0:00. The voice is the clock:
+TIME:    the narration's length + the close (~5 s); voice and music start at 0:00. The voice is the clock:
          every move starts on its anchor word in timing.json. Lines that open a build
          carry a held beat before them (pause_before in script.json).
 
@@ -17,13 +17,16 @@ VOICE:   formal documentary register (Humanizer pass: no staged openers, no one-
 STORY:   one story, told like a reel: the payoff first, then how it was done.
          - hook: "1731." on the East Prospect, full screen; "No lending library. No fire
            company. No hospital. No college." lands line by line; at "By 1751" a white
-           flash and the finished model sweeping past, "1751 · All four."; Franklin's
-           portrait wipes in, and behind it the model is taken back to its plinths
+           flash and Nicholas Scull's 1762 plan of the city (Scull was of the Junto),
+           north up, the four lighting in the order they were founded (the fire
+           company, which had no house, lights the built town), "1751 · All four.";
+           Franklin's portrait wipes in
          - the founder in quick full-screen cuts (printer, writer, scientist, inventor);
            Trumbull's Declaration into the Constitution, a quick pan that holds on
            "B Franklin", a ring round the name, 1 of 6
-         - the method, drawn on a dark ground: members scattered as small spheres,
-           a ring for "a public need", the spheres pooled into it until it is full
+         - the method, drawn on a dark ground under "One method": members scattered as
+           small spheres, a ring for "a public need", the spheres pooled into it, the
+           label turning to "met by many members"
          - each institution: archival plates full screen with slow camera moves, cut
            with its plot being built in 3D from the Anatomy designs (figures/*.mjs);
            the library dives into Birch's hall, the hospital out to its Pine Building
@@ -39,9 +42,9 @@ STORY:   one story, told like a reel: the payoff first, then how it was done.
            launch film (members, rules, money, a new project); a new project rises
            into the centre (the landing page's star), is wired to all three, takes
            gifts, grants and contracts, and grows
-         - the close: the launch film's network, held gathered to a point under
-           "Mulvium is building…", opens out on "The next great expansion" and
-           gathers into the wordmark
+         - the close: the launch film's network, breathing at its gathered point under
+           "Mulvium is building…", opens out on "The next great expansion", then
+           gathers straight into the wordmark (endcut.sh)
 
 TYPE:    the narration's own words set as the picture where they carry it (the "No…"
          lines, the proverb, "only if", "Rules written.", "Four times.", "From day

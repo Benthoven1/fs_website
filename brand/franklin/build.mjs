@@ -146,7 +146,7 @@ const BASE = `
     .bar { position: absolute; border-radius: 4px; }
 `;
 const words = (text, cls = "w") => text.split(" ").map((w) => `<span class="${cls}">${w} </span>`).join("");
-const picEl = (id, name) => `<div id="${id}" class="pic" style="width:${SIZES[name].w}px;height:${SIZES[name].h}px"><img src="assets/img/${name}.jpg" alt=""></div>`;
+const picEl = (id, name, inner = "") => `<div id="${id}" class="pic" style="width:${SIZES[name].w}px;height:${SIZES[name].h}px"><img src="assets/img/${name}.jpg" alt="">${inner}</div>`;
 // A camera framing in a w x h window: point (fx, fy) of the picture at the
 // window's centre, at k times the scale that covers the window
 function frame(name, w, h, fx, fy, k = 1) {
@@ -165,7 +165,7 @@ const TS = { display: 180, head: 120, title: 80, body: 60, kick: 38 };
 // ── Cinematic devices ──────────────────────────────────────────────────────
 // A plate: an archival picture filling the screen, a slow camera move across
 // it, a scrim where type sits on it, and a quiet source line
-function plate(s, id, name, { t0, t1, from, to, scrim = "low", credit = "", enter = "cut", exit = "cut", z = 1, pan = null, keep = false }) {
+function plate(s, id, name, { t0, t1, from, to, scrim = "low", credit = "", enter = "cut", exit = "cut", z = 1, pan = null, keep = false, inner = "" }) {
   // the picture fills the screen, on its centre, never far in (at most 1.1x);
   // a pan (the opening's panorama, the move to a signature) keeps its framing
   if (!pan && !keep) { from = [0.5, 0.5, Math.min(from[2], 1.06)]; to = [0.5, 0.5, Math.min(to[2], 1.1)]; }
@@ -175,7 +175,7 @@ function plate(s, id, name, { t0, t1, from, to, scrim = "low", credit = "", ente
     : scrim === "deep" ? "linear-gradient(180deg, rgba(14,10,8,0) 48%, rgba(14,10,8,0.88) 64%, rgba(14,10,8,0.92) 100%)"
     : scrim === "both" ? "linear-gradient(180deg, rgba(14,10,8,0.82) 0%, rgba(14,10,8,0.6) 28%, rgba(14,10,8,0) 40%, rgba(14,10,8,0) 45%, rgba(14,10,8,0.6) 62%, rgba(14,10,8,0.85) 100%)" : "none";
   s.add(`<div id="${id}" class="full plate" style="z-index:${z};opacity:0">
-    <div class="full" style="overflow:hidden">${picEl(`${id}-pic`, name)}</div>
+    <div class="full" style="overflow:hidden">${picEl(`${id}-pic`, name, inner)}</div>
     <div class="full" style="background:${sc}"></div>
     ${credit ? `<div class="credit">${credit}</div>` : ""}</div>`);
   // a slow move across the whole shot, or (pan) a quick move to a detail that then holds still
@@ -275,11 +275,7 @@ const WORLD = (() => {
     { t: at("now1", "founder") - 0.2, dur: 3.0, shot: "cosmos" },
     { t: at("now2", "while") - 0.3, dur: 2.2, shot: "cosmosClose" },
   ];
-  const labels = [
-    { text: "rules", anchor: "library.rules", t0: arrive("library", 1) + 0.3, t1: at("lib2", "fifty") - 0.2 },
-    { text: "members", anchor: "library.members", t0: arrive("library", 2) + 0.3, t1: at("lib2", "fifty") - 0.2 },
-    { text: "money", anchor: "library.money", t0: arrive("library", 3) + 0.3, t1: at("lib2", "fifty") - 0.2 },
-  ];
+  const labels = []; // (the model carries no tags: "rules, members, money" are named at the turn)
   const tints = [
     ["library", "#1F3F6B", "#4E73A3", after("lib1") - 0.4], ["fire", "#7A2817", "#B4583A", after("fire1") - 0.4], ["hospital", "#13514A", "#3F8A80", after("hosp1") - 0.4],
     ["academy", "#264F22", "#5E8A4E", at("acad1") - 1.2], ["neutral", "#E6E1D8", C.paper, start("turn") - 0.9], ["mulvium", "#24122A", "#5A2E4E", at("now1", "founder") - 0.2],
@@ -339,13 +335,44 @@ const WORLD = (() => {
     slam(s, `#${id}`, at("hook1", "no", i + 1) - 0.05);
     s.sound("impact-bass-2", at("hook1", "no", i + 1) - 0.02, 0.12);
   });
-  // "By 1751": a white flash, and the payoff, the whole of it, on the model
+  // "By 1751": a white flash, and the payoff: Nicholas Scull's plan of the city
+  // (Scull was one of the Junto), turned north up, and the four lighting in
+  // the order they were founded; the fire company had no house, so it lights
+  // the built town it served
+  const MAP = "philadelphia-1762", MW = SIZES[MAP].w, MH = SIZES[MAP].h, inv = 1 / (W / MW); // labels keep their size inside the scaled picture
+  const SITES = [
+    ["library", "library company", [0.3947, 0.5548], "#4E73A3", 0.35, "right"], ["fire", "union fire company", [0.8316, 0.463], "#B4583A", 0.75, "glow"],
+    ["hospital", "pennsylvania hospital", [0.0632, 0.8034], "#3F8A80", 1.15, "right"], ["academy", "academy", [0.5342, 0.3771], "#5E8A4E", 1.55, "right"],
+  ];
+  const lights = SITES.map(([id, name, [fx, fy], c, , kind]) => {
+    const x = fx * MW, y = fy * MH;
+    const mark = kind === "glow"
+      ? `<div id="lg-${id}" class="abs" style="left:${x - 360}px;top:${y - 280}px;width:720px;height:560px;border-radius:50%;opacity:0;background:radial-gradient(closest-side, rgba(214,104,50,0.72), rgba(214,104,50,0.32) 60%, rgba(214,104,50,0) 100%)"></div>`
+      : `<div id="lr-${id}" class="abs" style="left:${x - 44}px;top:${y - 44}px;width:88px;height:88px;border-radius:44px;border:${4 * inv}px solid ${c};opacity:0"></div>
+         <div id="ld-${id}" class="abs" style="left:${x - 22}px;top:${y - 22}px;width:44px;height:44px;border-radius:22px;background:${c};box-shadow:0 0 0 ${5 * inv}px #F6EEDF,0 3px 12px rgba(0,0,0,0.35);opacity:0"></div>`;
+    // a paper tag beside the light: to its right, its left, or under the glow
+    const pos = kind === "glow" ? `left:${x + 170}px;top:${y - 30}px;transform:translateX(-100%)` : kind === "left" ? `left:${x - 40}px;top:${y - 30}px;transform:translateX(-100%)` : `left:${x + 40}px;top:${y - 30}px`;
+    return `${mark}<div class="abs" style="${pos}"><div id="ll-${id}" class="maplab" style="font-size:${TS.kick * inv}px;opacity:0">${name}</div></div>`;
+  }).join("");
+  plate(s, "map", MAP, { t0: tB, t1: tBen + 0.6, from: [0.5, 0.5, 1.0], to: [0.5, 0.5, 1.06], scrim: "high", credit: "Nicholas Scull, plan of Philadelphia, 1762 · Library of Congress", enter: "cut", inner: lights });
+  s.style(`.maplab { font-family: "Major Mono Display", monospace; text-transform: lowercase; letter-spacing: 0.04em; color: #1B1613; white-space: nowrap;
+    background: rgba(246,238,223,0.94); padding: 6px 16px 9px; border-radius: 6px; box-shadow: 0 2px 10px rgba(40,25,10,0.25); }`);
+  SITES.forEach(([id, , , , dt, kind]) => {
+    const t = tB + dt;
+    if (kind === "glow") s.fromTo(`#lg-${id}`, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" }, t);
+    else {
+      s.fromTo(`#ld-${id}`, { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2)" }, t);
+      s.fromTo(`#lr-${id}`, { opacity: 0.9, scale: 0.5 }, { opacity: 0, scale: 2.6, duration: 0.9, ease: "power2.out" }, t);
+    }
+    land(s, `#ll-${id}`, t + 0.1, { dy: 10, dur: 0.4 });
+    s.sound("click-soft", t, 0.22);
+  });
   s.add(`<div id="fl" class="flash"></div>`);
   s.fromTo("#fl", { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "power1.in" }, tB - 0.12).to("#fl", { opacity: 0, duration: 0.5, ease: "power2.out" }, tB);
   s.set("#y1731, #phl, #no1, #no2, #no3, #no4", { opacity: 0 }, tB);
   s.sound("riser", tB - 1.9, 0.12).sound("impact-bass-1", tB, 0.22);
-  s.add(kt("y1751", "1751", { y: 230, size: TS.display, cls: "ink" }));
-  s.add(kt("all4", "<i>All four.</i>", { y: 440, size: TS.head, cls: "ink" }));
+  s.add(kt("y1751", "1751", { y: 200, size: TS.display, extra: "z-index:6" }));
+  s.add(kt("all4", "<i>All four.</i>", { y: 400, size: TS.head, extra: "z-index:6" }));
   slam(s, "#y1751", at("hook2", "1751") - 0.05);
   land(s, "#all4", at("hook2", "all") - 0.1);
   s.to("#y1751, #all4", { opacity: 0, filter: "blur(8px)", duration: 0.25 }, tBen - 0.1);
@@ -393,12 +420,14 @@ const WORLD = (() => {
   const tNeed = at("who3", "identify") - 0.1, tPool = at("who3", "pooling") - 0.1, tMany = after("who3", "members");
   s.add(`<div id="mg" class="full" style="opacity:0;background:radial-gradient(120% 80% at 50% 38%, #3A2A22 0%, #1E1612 60%, #120D0B 100%)"></div>`);
   s.set("#mg", { opacity: 1 }, at("who3") - 0.4);
-  const RC = { x: 540, y: 720, r: 200 };
+  const RC = { x: 540, y: 880, r: 210 };
   s.add(`<svg id="need" class="abs" style="left:0;top:0;width:${W}px;height:${H}px;overflow:visible" viewBox="0 0 ${W} ${H}">
     <circle id="needfill" cx="${RC.x}" cy="${RC.y}" r="${RC.r}" fill="#F0D5BB" opacity="0"/>
     <circle id="needring" cx="${RC.x}" cy="${RC.y}" r="${RC.r}" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="5" stroke-dasharray="14 12" pathLength="1000" transform="rotate(-90 ${RC.x} ${RC.y})"/></svg>`);
   s.fromTo("#needring", { strokeDashoffset: 1000, opacity: 0 }, { strokeDashoffset: 0, opacity: 1, duration: 0.9, ease: "power2.inOut" }, tNeed);
-  s.add(kk("needk", "a public need", { y: RC.y + RC.r + 40, align: "center" }));
+  // one label under the ring, which changes as the need is met
+  s.add(kk("needk", "a public need", { y: RC.y + RC.r + 44, align: "center" }));
+  s.add(kk("metk", "met by many members", { y: RC.y + RC.r + 44, align: "center" }));
   land(s, "#needk", at("who3", "need") - 0.1, { dy: 16 });
   // members: small spheres in the cosmos's pastels, scattered round the ring
   // from the start of the line, then pooled into places packed inside it (a
@@ -407,26 +436,26 @@ const WORLD = (() => {
   for (let i = 0; i < N; i++) {
     const a = i * 2.39996, rr = (RC.r - 26) * Math.sqrt((i + 0.5) / N);
     const e = (i * 137.5 * Math.PI) / 180 + 0.6, far = 330 + ((i * 53) % 170);
-    const sx = Math.min(1020, Math.max(60, RC.x + far * Math.cos(e))), sy = Math.min(1180, Math.max(220, RC.y + far * 1.25 * Math.sin(e)));
+    const sx = Math.min(1020, Math.max(60, RC.x + far * Math.cos(e))), sy = Math.min(1420, Math.max(400, RC.y + far * 1.25 * Math.sin(e)));
     dots.push({ id: `dt${i}`, c: PAST[i % 4], tx: RC.x + rr * Math.cos(a), ty: RC.y + rr * Math.sin(a), sx, sy });
   }
   s.add(dots.map((d) => `<div id="${d.id}" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, ${d.c} 45%, ${d.c} 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div>`).join(""));
   dots.forEach((d, i) => {
     const t = tPool + (tMany - tPool) * (i / N);
     s.set(`#${d.id}`, { x: d.sx, y: d.sy, opacity: 0 }, 0);
-    s.to(`#${d.id}`, { opacity: 0.55, duration: 0.6, ease: "power1.out" }, at("who3") + 0.1 + (i % 12) * 0.05);
-    s.to(`#${d.id}`, { y: d.sy - 18, duration: t - at("who3"), ease: "none" }, at("who3"));
+    s.to(`#${d.id}`, { opacity: 0.55, duration: 0.6, ease: "power1.out" }, at("who3") - 0.35 + (i % 12) * 0.04);
+    s.to(`#${d.id}`, { y: d.sy - 18, duration: t - at("who3") + 0.35, ease: "none" }, at("who3") - 0.35);
     s.to(`#${d.id}`, { x: d.tx, y: d.ty, opacity: 1, duration: 0.9, ease: "power3.inOut" }, t);
   });
   // full: the need is met
   s.to("#needfill", { opacity: 0.22, duration: 0.6, ease: "power1.out" }, tMany + 0.5);
   s.to("#needring", { strokeDasharray: "1000 0", duration: 0.5, ease: "power1.out" }, tMany + 0.5);
+  s.to("#needk", { opacity: 0, filter: "blur(6px)", duration: 0.3 }, at("who3", "many") - 0.2);
+  land(s, "#metk", at("who3", "many"), { dy: 16 });
   s.sound("click-soft", tNeed + 0.1, 0.2);
-  const M = [["m1", "Identify a public need.", "identify"], ["m2", "Pool contributions", "pooling"], ["m3", "from many members.", "many"]];
-  s.add(kk("mk", "one method", { y: 1250 }));
-  land(s, "#mk", at("who3", "method") - 0.1);
-  M.forEach(([id, text, w], i) => { s.add(kt(id, text, { y: 1310 + i * 92, size: TS.title })); land(s, `#${id}`, at("who3", w) - 0.1); });
-  s.to("#mk, #m1, #m2, #m3", { opacity: 0, filter: "blur(8px)", duration: 0.3 }, start("lib") - 0.5);
+  s.add(kt("mk", "One method", { y: 330, size: TS.title, align: "center" }));
+  land(s, "#mk", at("who3", "one") - 0.1);
+  s.to("#mk, #metk", { opacity: 0, filter: "blur(8px)", duration: 0.3 }, start("lib") - 0.5);
   scenes.push(s);
 }
 
@@ -497,8 +526,8 @@ const WORLD = (() => {
 {
   const s = new Scene("hosp", start("hosp") - 0.1, start("acad") - 0.1, 14);
   s.raw.push(KT);
-  plate(s, "bond", "bond", { t0: start("hosp") - 0.1, t1: at("hosp1", "hospital") - 0.05, from: [0.5, 0.36, 1.0], to: [0.5, 0.3, 1.2], credit: "Thomas Bond", enter: "wipeRight" });
-  plate(s, "hos", "hospital", { t0: at("hosp1", "hospital") - 0.05, t1: after("hosp1") + 0.2, from: [0.5, 0.45, 1.0], to: [0.56, 0.5, 1.2], scrim: "both", credit: "Pennsylvania Hospital, Pine Street", enter: "punch", exit: "wipeUp" });
+  plate(s, "bond", "bond", { t0: start("hosp") - 0.1, t1: at("hosp1", "hospital") - 0.05, from: [0.5, 0.36, 1.0], to: [0.5, 0.3, 1.2], scrim: "both", credit: "Thomas Bond", enter: "wipeRight" });
+  plate(s, "hos", "hospital-wing", { t0: at("hosp1", "hospital") - 0.05, t1: after("hosp1") + 0.2, from: [0.5, 0.45, 1.0], to: [0.56, 0.5, 1.2], scrim: "both", credit: "Pennsylvania Hospital · HABS, Library of Congress", enter: "punch", exit: "wipeUp" });
   s.add(kk("bk", "1751", { y: 250 }));
   land(s, "#bk", at("hosp1", "1751") - 0.1);
   s.set("#bk", { opacity: 0 }, after("hosp1") - 0.3);
@@ -536,7 +565,10 @@ const WORLD = (() => {
   const AIMS = [["a1", "A school for <i>useful</i> subjects,", "useful"], ["a2", "taught in English,", "english"], ["a3", "alongside Latin and Greek.", "alongside"]];
   AIMS.forEach(([id, text, w], i) => { s.add(kt(id, text, { y: 1450 + i * 82, size: TS.body, extra: "z-index:5" })); land(s, `#${id}`, at("acad2", w) - 0.1); });
   s.to("#y1749, #a1, #a2, #a3", { opacity: 0, filter: "blur(8px)", duration: 0.25 }, start("acad3") - 0.3);
-  // the trustees, on the model: their bench and their subscription box
+  // the trustees, on the model: their bench and their subscription box; a
+  // shade at the top of the frame keeps the type off the model
+  s.add(`<div id="trbg" class="full" style="opacity:0;background:linear-gradient(180deg, rgba(10,24,10,0.78) 0%, rgba(10,24,10,0.55) 22%, rgba(10,24,10,0) 36%)"></div>`);
+  s.fromTo("#trbg", { opacity: 0 }, { opacity: 1, duration: 0.35 }, at("acad3", "twenty-four") - 0.3).to("#trbg", { opacity: 0, duration: 0.3 }, start("acad4") - 0.3);
   s.add(kt("tr24", `24 <i style="font-size:0.42em;opacity:0.85">trustees</i>`, { y: 250, size: TS.display }));
   slam(s, "#tr24", at("acad3", "twenty-four") - 0.05);
   s.add(kt("pres", "<i>Franklin, president</i>", { y: 470, size: TS.title }));
@@ -546,6 +578,7 @@ const WORLD = (() => {
   plate(s, "pen", "penn", { t0: start("acad4") - 0.1, t1: start("turn") - 0.2, from: [0.5, 0.5, 1.15], to: [0.48, 0.42, 1.0], credit: "College Hall, University of Pennsylvania", enter: "wipe", exit: "wipeUp" });
   s.add(kt("upenn", "University<br>of Pennsylvania", { y: 1400, size: TS.head, extra: "z-index:5" }));
   land(s, "#upenn", at("acad4", "university") - 0.1, { dy: 50, dur: 0.6 });
+  s.to("#upenn", { opacity: 0, duration: 0.3 }, start("turn") - 0.7); // before the plate wipes away
   scenes.push(s);
 }
 
@@ -603,20 +636,17 @@ const WORLD = (() => {
 
 // ── END: the launch film's network, from its point outward; the wordmark ───
 // cosmos-close.mp4 is the launch film from 64.6 s on, without its words.
-// The network is gathered to a point only between its frames 36 and 51, and
-// opens out from frame 52, so cosmos-close-held.mp4 plays it from frame 21
-// (where the scene enters), holds frame 51 for HOLD seconds, and plays on:
-//   ffmpeg -i assets/cosmos-close.mp4 -filter_complex "[0:v]trim=start_frame=21:end_frame=52,setpts=PTS-STARTPTS,
-//     tpad=stop_mode=clone:stop_duration=<HOLD>[a];[0:v]trim=start_frame=52,setpts=PTS-STARTPTS[b];[a][b]concat=n=2:v=1:a=0,fps=30"
-//     -c:v libx264 -crf 14 -pix_fmt yuv420p -an assets/cosmos-close-held.mp4
-// The hold is set so the network opens as "The next great expansion" is
-// said; "Mulvium is building…" sits below the point while it is held.
-const PLATE = { file: "cosmos-close-held.mp4", hold: 2.86, settle: 19.1 }; // settle: the wordmark, in the film's time from frame 21
+// endcut.sh edits it into cosmos-close-held.mp4 for the last lines: the
+// network gathers to its point (frames 21-51), breathes there for HOLD seconds
+// under "Mulvium is building…", which sits below it, opens out on "The next
+// great expansion", then gathers straight into the wordmark, its typefaces
+// run at 2.5x. The hold is set so the network opens as "expansion" is said.
+const PLATE = { file: "cosmos-close-held.mp4", hold: 2.86, length: 14.3 };
 {
   const t0 = start("end") - 0.35;
   const want = at("end2", "expansion") - 0.2 - (t0 + 31 / 30);
-  if (Math.abs(want - PLATE.hold) > 0.05) console.warn(`the network's hold should be ${want.toFixed(2)} s: re-encode cosmos-close-held.mp4`);
-  const t1 = t0 + PLATE.settle + PLATE.hold + 1.6;
+  if (Math.abs(want - PLATE.hold) > 0.05) console.warn(`the network's hold should be ${want.toFixed(2)} s: run ./endcut.sh ${want.toFixed(2)}`);
+  const t1 = t0 + PLATE.length;
   const s = new Scene("end", t0, t1, 9);
   s.add(`<div id="pw" class="full" style="opacity:0"><video id="plate" class="full" src="assets/${PLATE.file}" muted playsinline style="object-fit:cover"></video></div>`);
   s.fromTo("#pw", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power1.out" }, t0);
@@ -626,8 +656,9 @@ const PLATE = { file: "cosmos-close-held.mp4", hold: 2.86, settle: 19.1 }; // se
   s.leave("#build", at("end2") - 0.15, 0.25);
   s.add(`<div id="close" class="serif abs" style="left:90px;top:720px;width:900px;text-align:center;font-size:${TS.body}px;line-height:1.25">${words("The next great expansion of human creativity will come from making it easier to create")}<br><span style="font-size:${TS.head}px;color:${C.clay};font-style:italic">${words("institutions.")}</span></div>`);
   s.words("#close .w", at("end2", "the") - 0.05, { stagger: (at("end2", "institutions") - at("end2", "the")) / 15 });
-  s.leave("#close", after("end2") + 0.6, 0.3);
+  s.leave("#close", after("end2") + 0.3, 0.3); // gone before the wordmark forms where it sits
   s.sound("riser", at("end2", "institutions") - 1.6, 0.2);
+  s.sound("impact-bass-1", t0 + 1.033 + PLATE.hold + 140 / 30 - 0.4 + 66 / 30, 0.16); // the wordmark forms
   scenes.push(s);
 }
 
@@ -635,8 +666,8 @@ const PLATE = { file: "cosmos-close-held.mp4", hold: 2.86, settle: 19.1 }; // se
 // Each line is subtitled over a span of its words, [from, to): the rest of it
 // is set on screen in type, or carried by the picture alone.
 const SPAN = {
-  hook2: [9], who2: [0, 11], who3: [0, 8], lib1: [0, 6], lib2: [0, 12], lib3: [0], fire1: [0, 13], fire2: [0, 9],
-  hosp1: [0], hosp3: [5], acad1: [0], acad2: [0, 6], acad3: [10], turn1: [0, 8], now2: [0, 13],
+  hook2: [9], who2: [0, 11], who3: [0, 6], lib1: [0, 4], lib2: [0, 12], lib3: [0], fire1: [0, 13], fire2: [0, 9],
+  hosp1: [0], hosp3: [5], acad2: [0, 6], acad3: [10], turn1: [0, 8], now2: [0, 13],
 };
 const groups = [];
 for (const l of T.lines) {

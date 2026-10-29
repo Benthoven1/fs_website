@@ -1,5 +1,5 @@
 {
- "duration": 176.037,
+ "duration": 166.777,
  "voiceEnd": 161.373,
  "sections": {
   "world": 0,
@@ -33,6 +33,26 @@
    "name": "impact-bass-2",
    "t": 6.22,
    "vol": 0.12
+  },
+  {
+   "name": "click-soft",
+   "t": 7.818,
+   "vol": 0.22
+  },
+  {
+   "name": "click-soft",
+   "t": 8.218,
+   "vol": 0.22
+  },
+  {
+   "name": "click-soft",
+   "t": 8.618,
+   "vol": 0.22
+  },
+  {
+   "name": "click-soft",
+   "t": 9.018,
+   "vol": 0.22
   },
   {
    "name": "riser",
@@ -158,6 +178,11 @@
    "name": "riser",
    "t": 158.753,
    "vol": 0.2
+  },
+  {
+   "name": "impact-bass-1",
+   "t": 162.837,
+   "vol": 0.16
   }
  ]
 }
