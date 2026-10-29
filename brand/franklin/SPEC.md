@@ -7,7 +7,7 @@ GOAL:    The viewer leaves understanding that Franklin founded four lasting
 
 OUTPUT:  HyperFrames, 1080 x 1920, 30 fps, H.264 + AAC 48 kHz.
 
-TIME:    the narration's length + 1.2 s lead-in + the close (~8 s); the voice is the clock:
+TIME:    the narration's length + the close (~15 s); voice and music start at 0:00. The voice is the clock:
          every move starts on its anchor word in timing.json. Lines that open a build
          carry a held beat before them (pause_before in script.json).
 
@@ -20,22 +20,24 @@ STORY:   one story, told like a reel: the payoff first, then how it was done.
            flash and the finished model sweeping past, "1751 · All four."; Franklin's
            portrait wipes in, and behind it the model is taken back to its plinths
          - the founder in quick full-screen cuts (printer, writer, scientist, inventor);
-           Trumbull's Declaration into the Constitution, a ring on "B Franklin", 1 of 6
+           Trumbull's Declaration into the Constitution, a quick pan that holds on
+           "B Franklin", a ring round the name, 1 of 6
          - each institution: archival plates full screen with slow camera moves, cut
            with its plot being built in 3D from the Anatomy designs (figures/*.mjs);
-           the library dives into Birch's hall, the hospital into its 1751 Act
+           the library dives into Birch's hall, the hospital out to its Pine Building
          - "four times": rules, members and money ringed on all four plots, then cuts
            to the press, the almanac and the kite
          - the academy: the hall rises; Franklin's 1749 Proposals full screen (useful
            subjects, in English, alongside Latin and Greek); 24 trustees, Franklin
            their president, at their bench and subscription box; College Hall
          - the turn to now: every institution's rules, members and money become
-           spheres and rise off the plots, into the planets of Mulvium's own cosmos
-           (the landing page's star, rings and pastel porcelain, js/main.js); the star
-           arrives at "fiscal sponsor"; a new project's planet flies up into its orbit,
-           is wired to the rest, takes gifts, grants and contracts, and grows
-         - the close: the launch film's network, entering gathered to a point, opens
-           out on "The next great expansion" and gathers into the wordmark
+           spheres and rise off the plots into three planets on the landing page's
+           rings (js/main.js), named in the screen's quarters; a new project rises
+           into the centre (the landing page's star), is wired to all three, takes
+           gifts, grants and contracts, and grows
+         - the close: the launch film's network, held gathered to a point under
+           "Mulvium is building…", opens out on "The next great expansion" and
+           gathers into the wordmark
 
 TYPE:    the narration's own words set as the picture where they carry it (the "No…"
          lines, the proverb, "only if", "Rules written.", "Four times.", "From day

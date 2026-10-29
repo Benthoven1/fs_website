@@ -36,7 +36,7 @@
       letter-spacing: 0.04em; color: #FFFFFF; white-space: nowrap; text-shadow: 0 1px 12px rgba(0,0,0,0.55); }
 
   </style>
-  <div id="root" data-composition-id="world" data-width="1080" data-height="1920" data-duration="154.627">
+  <div id="root" data-composition-id="world" data-width="1080" data-height="1920" data-duration="153.427">
 <div id="world-bg" class="full" style="background:linear-gradient(180deg, #F3F1EC 0%, #ECEAE5 100%)"></div>
     <div id="world-tint-library" class="full" style="opacity:0;background:linear-gradient(180deg, #1F3F6B 0%, #4E73A3 100%)"></div><div id="world-tint-fire" class="full" style="opacity:0;background:linear-gradient(180deg, #7A2817 0%, #B4583A 100%)"></div><div id="world-tint-hospital" class="full" style="opacity:0;background:linear-gradient(180deg, #13514A 0%, #3F8A80 100%)"></div><div id="world-tint-academy" class="full" style="opacity:0;background:linear-gradient(180deg, #264F22 0%, #5E8A4E 100%)"></div><div id="world-tint-neutral" class="full" style="opacity:0;background:linear-gradient(180deg, #E6E1D8 0%, #ECEAE5 100%)"></div><div id="world-tint-mulvium" class="full" style="opacity:0;background:linear-gradient(180deg, #24122A 0%, #5A2E4E 100%)"></div>
 <canvas id="world-cv" class="full" width="1080" height="1920" data-layout-ignore></canvas>
@@ -45,23 +45,23 @@
   <script>
     const tl = gsap.timeline({ paused: true });
     tl.set("#world-tint-library", {"opacity":0}, 0);
-    tl.to("#world-tint-library", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 41.009);
-    tl.to("#world-tint-library", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 67.797);
+    tl.to("#world-tint-library", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 39.809);
+    tl.to("#world-tint-library", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 66.597);
     tl.set("#world-tint-fire", {"opacity":0}, 0);
-    tl.to("#world-tint-fire", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 66.597);
-    tl.to("#world-tint-fire", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 84.233);
+    tl.to("#world-tint-fire", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 65.397);
+    tl.to("#world-tint-fire", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 83.033);
     tl.set("#world-tint-hospital", {"opacity":0}, 0);
-    tl.to("#world-tint-hospital", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 83.033);
-    tl.to("#world-tint-hospital", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 100.28);
+    tl.to("#world-tint-hospital", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 81.833);
+    tl.to("#world-tint-hospital", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 99.08);
     tl.set("#world-tint-academy", {"opacity":0}, 0);
-    tl.to("#world-tint-academy", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 99.08);
-    tl.to("#world-tint-academy", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 123.926);
+    tl.to("#world-tint-academy", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 97.88);
+    tl.to("#world-tint-academy", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 122.726);
     tl.set("#world-tint-neutral", {"opacity":0}, 0);
-    tl.to("#world-tint-neutral", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 122.726);
-    tl.to("#world-tint-neutral", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 139.906);
+    tl.to("#world-tint-neutral", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 121.526);
+    tl.to("#world-tint-neutral", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 138.706);
     tl.set("#world-tint-mulvium", {"opacity":0}, 0);
-    tl.to("#world-tint-mulvium", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 138.706);
-    tl.to({}, { duration: 154.627 }, 0);
+    tl.to("#world-tint-mulvium", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 137.506);
+    tl.to({}, { duration: 153.427 }, 0);
     window.__timelines["world"] = tl;
   </script>
   <script>
@@ -72,7 +72,7 @@
     import { createWorld } from "../assets/lib/world.js";
     let world = null, last = 0;
     window.addEventListener("hf-seek", (e) => { last = e.detail.time; if (world) world.renderAt(last); });
-    createWorld(document.getElementById("world-cv"), document.getElementById("world-lab"), {"plinths":{"library":7.618,"fire":7.618,"hospital":7.618,"academy":7.618},"preview":[8.618,12.558,14.158],"build":{"library":[41.559,47.299],"fire":[67.197,74.437],"hospital":[83.583,88.673],"academy":[99.43,103.824]},"events":{"libCoins":[47.549,50.369],"libBooks":[50.769,52.407],"hospDonors":[89.153,92.884],"hospTrip":93.004,"turn":{"rules":126.376,"members":127.596,"money":128.936},"turnEnd":139.306,"cosmos":{"rise":[138.906,142.438],"star":142.178,"project":143.088,"wire":144.198,"pulses":[147.978,149.978,150.978],"grow":[151.838,153.877]}},"cam":[{"t":0,"dur":0,"shot":"sweepA"},{"t":8.618,"dur":3.8,"shot":"sweepB"},{"t":14.158,"dur":0.1,"shot":"all4"},{"t":40.909,"dur":1.6,"shot":"plot:library"},{"t":47.149,"dur":1.1,"shot":"mid:library"},{"t":50.469,"dur":1.2,"shot":"close:library:case"},{"t":59.15,"dur":0.1,"shot":"plot:fire"},{"t":71.137,"dur":1.4,"shot":"mid:fire"},{"t":76.624,"dur":0.1,"shot":"plot:hospital"},{"t":88.953,"dur":1.2,"shot":"mid:hospital"},{"t":93.384,"dur":1.4,"shot":"close:hospital:rules"},{"t":98.98,"dur":0.1,"shot":"plot:academy"},{"t":111.224,"dur":0.1,"shot":"close:academy:members"},{"t":115.384,"dur":1.4,"shot":"mid:academy"},{"t":122.726,"dur":0.1,"shot":"all4"},{"t":138.706,"dur":3,"shot":"cosmos"},{"t":151.538,"dur":2.2,"shot":"cosmosClose"}],"labels":[{"text":"rules","anchor":"library.rules","t0":41.859,"t1":47.349},{"text":"members","anchor":"library.members","t0":42.819,"t1":47.349},{"text":"money","anchor":"library.money","t0":43.779,"t1":47.349},{"text":"rules","anchor":"cosmos.rules","t0":142.238,"t1":146.418},{"text":"members","anchor":"cosmos.members","t0":142.238,"t1":146.418},{"text":"money","anchor":"cosmos.money","t0":142.238,"t1":146.418},{"text":"mulvium","anchor":"cosmos.star","t0":142.778,"t1":146.418},{"text":"a new project","anchor":"cosmos.project","t0":144.288,"t1":153.627}],"tints":[["library","#1F3F6B","#4E73A3",41.009],["fire","#7A2817","#B4583A",66.597],["hospital","#13514A","#3F8A80",83.033],["academy","#264F22","#5E8A4E",99.08],["neutral","#E6E1D8","#ECEAE5",122.726],["mulvium","#24122A","#5A2E4E",138.706]]})
+    createWorld(document.getElementById("world-cv"), document.getElementById("world-lab"), {"plinths":{"library":6.418,"fire":6.418,"hospital":6.418,"academy":6.418},"preview":[7.418,11.358,12.958],"build":{"library":[40.359,46.099],"fire":[65.997,73.237],"hospital":[82.383,87.473],"academy":[98.23,102.624]},"events":{"libCoins":[46.349,49.169],"libBooks":[49.569,51.207],"hospDonors":[87.953,91.684],"hospTrip":91.804,"turn":{"rules":125.176,"members":126.396,"money":127.736},"turnEnd":138.106,"cosmos":{"rise":[137.706,141.238],"star":139.566,"project":141.888,"wire":142.998,"pulses":[146.778,148.778,149.778],"grow":[150.638,152.677]}},"cam":[{"t":0,"dur":0,"shot":"sweepA"},{"t":7.418,"dur":3.8,"shot":"sweepB"},{"t":12.958,"dur":0.1,"shot":"all4"},{"t":39.709,"dur":1.6,"shot":"plot:library"},{"t":45.949,"dur":1.1,"shot":"mid:library"},{"t":49.269,"dur":1.2,"shot":"close:library:case"},{"t":57.95,"dur":0.1,"shot":"plot:fire"},{"t":69.937,"dur":1.4,"shot":"mid:fire"},{"t":75.424,"dur":0.1,"shot":"plot:hospital"},{"t":87.753,"dur":1.2,"shot":"mid:hospital"},{"t":92.184,"dur":1.4,"shot":"close:hospital:rules"},{"t":97.78,"dur":0.1,"shot":"plot:academy"},{"t":110.024,"dur":0.1,"shot":"close:academy:members"},{"t":114.184,"dur":1.4,"shot":"mid:academy"},{"t":121.526,"dur":0.1,"shot":"all4"},{"t":137.506,"dur":3,"shot":"cosmos"},{"t":150.338,"dur":2.2,"shot":"cosmosClose"}],"labels":[{"text":"rules","anchor":"library.rules","t0":40.659,"t1":46.149},{"text":"members","anchor":"library.members","t0":41.619,"t1":46.149},{"text":"money","anchor":"library.money","t0":42.579,"t1":46.149}],"tints":[["library","#1F3F6B","#4E73A3",39.809],["fire","#7A2817","#B4583A",65.397],["hospital","#13514A","#3F8A80",81.833],["academy","#264F22","#5E8A4E",97.88],["neutral","#E6E1D8","#ECEAE5",121.526],["mulvium","#24122A","#5A2E4E",137.506]]})
       .then((w) => { world = w; w.renderAt(last); window.__worldReady(); });
   </script>
 </template>

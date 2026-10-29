@@ -1,157 +1,157 @@
 {
- "duration": 174.377,
- "voiceEnd": 162.573,
+ "duration": 176.037,
+ "voiceEnd": 161.373,
  "sections": {
   "world": 0,
   "hook": 0,
-  "who": 12.158,
-  "lib": 33.99,
-  "fire": 59.05,
-  "hosp": 76.524,
-  "acad": 100.18,
-  "turn": 123.426,
-  "now": 138.166,
-  "end": 153.677
+  "who": 10.958,
+  "lib": 32.79,
+  "fire": 57.85,
+  "hosp": 75.324,
+  "acad": 98.98,
+  "turn": 122.226,
+  "now": 136.966,
+  "end": 152.477
  },
  "sfx": [
   {
    "name": "impact-bass-2",
-   "t": 3.76,
+   "t": 2.56,
    "vol": 0.12
   },
   {
    "name": "impact-bass-2",
-   "t": 5.2,
+   "t": 4,
    "vol": 0.12
   },
   {
    "name": "impact-bass-2",
-   "t": 6.24,
+   "t": 5.04,
    "vol": 0.12
   },
   {
    "name": "impact-bass-2",
-   "t": 7.42,
+   "t": 6.22,
    "vol": 0.12
   },
   {
    "name": "riser",
-   "t": 6.768,
+   "t": 5.568,
    "vol": 0.12
   },
   {
    "name": "impact-bass-1",
-   "t": 8.668,
+   "t": 7.468,
    "vol": 0.22
   },
   {
    "name": "whoosh-short",
-   "t": 16.361,
+   "t": 15.161,
    "vol": 0.14
   },
   {
    "name": "whoosh-short",
-   "t": 17.001,
+   "t": 15.801,
    "vol": 0.14
   },
   {
    "name": "whoosh-short",
-   "t": 18.121,
+   "t": 16.921,
    "vol": 0.14
   },
   {
    "name": "whoosh-short",
-   "t": 18.701,
+   "t": 17.501,
    "vol": 0.14
   },
   {
    "name": "whoosh",
-   "t": 41.109,
+   "t": 39.909,
    "vol": 0.16
   },
   {
    "name": "typing",
-   "t": 47.549,
+   "t": 46.349,
    "vol": 0.12
   },
   {
    "name": "whoosh",
-   "t": 67.097,
+   "t": 65.897,
    "vol": 0.16
   },
   {
    "name": "impact-bass-1",
-   "t": 93.474,
+   "t": 92.274,
    "vol": 0.22
   },
   {
    "name": "click-soft",
-   "t": 126.376,
+   "t": 125.176,
    "vol": 0.22
   },
   {
    "name": "click-soft",
-   "t": 127.596,
+   "t": 126.396,
    "vol": 0.22
   },
   {
    "name": "click-soft",
-   "t": 128.936,
+   "t": 127.736,
    "vol": 0.22
   },
   {
    "name": "impact-bass-2",
-   "t": 130.826,
+   "t": 129.626,
    "vol": 0.18
   },
   {
    "name": "whoosh-short",
-   "t": 132.176,
+   "t": 130.976,
    "vol": 0.14
   },
   {
    "name": "whoosh-short",
-   "t": 133.736,
+   "t": 132.536,
    "vol": 0.14
   },
   {
    "name": "whoosh-short",
-   "t": 135.136,
+   "t": 133.936,
    "vol": 0.14
   },
   {
    "name": "riser",
-   "t": 138.366,
+   "t": 137.166,
    "vol": 0.14
   },
   {
    "name": "impact-bass-1",
-   "t": 142.278,
+   "t": 141.078,
    "vol": 0.22
   },
   {
    "name": "whoosh",
-   "t": 142.938,
+   "t": 141.738,
    "vol": 0.16
   },
   {
    "name": "click-soft",
-   "t": 147.928,
+   "t": 146.728,
    "vol": 0.25
   },
   {
    "name": "click-soft",
-   "t": 149.928,
+   "t": 148.728,
    "vol": 0.25
   },
   {
    "name": "click-soft",
-   "t": 150.928,
+   "t": 149.728,
    "vol": 0.25
   },
   {
    "name": "riser",
-   "t": 159.953,
+   "t": 158.753,
    "vol": 0.2
   }
  ]

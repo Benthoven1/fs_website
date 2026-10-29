@@ -57,9 +57,9 @@
 <div id="hosp-dk" class="kk white" style="left:72px;top:1400px;width:936px;text-align:left">private donors</div>
 <div id="hosp-dn" class="kt white" style="left:72px;top:1450px;width:936px;font-size:150px;text-align:left;color:#F6C9A8">£0</div>
 <div id="hosp-act" class="full plate" style="z-index:1;opacity:0">
-    <div class="full" style="overflow:hidden"><div id="hosp-act-pic" class="pic" style="width:1100px;height:1631px"><img src="assets/img/hospital-act.jpg" alt=""></div></div>
-    <div class="full" style="background:none"></div>
-    <div class="credit">An Act to encourage the Establishing of an Hospital, 1751</div></div>
+    <div class="full" style="overflow:hidden"><div id="hosp-act-pic" class="pic" style="width:1380px;height:2064px"><img src="assets/img/hospital-pine.jpg" alt=""></div></div>
+    <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 45%, rgba(14,10,8,0.62) 100%)"></div>
+    <div class="credit">Pennsylvania Hospital, Pine Building · HABS, Library of Congress</div></div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
@@ -82,7 +82,7 @@
     { const o = { v: 0 }, el = document.querySelector("#hosp-dn"); tl.fromTo(o, { v: 0 }, { v: 2000, duration: 3.831, ease: "power2.out", onUpdate: () => { const v = o.v; el.textContent = '£' + (Math.round(v / 100) * 100).toLocaleString('en-GB'); } }, 12.629); }
     tl.fromTo("#hosp-an", {"color":"rgba(255,255,255,0.7)"}, {"color":"#FFFFFF","duration":0.3}, 16.93);
     tl.to("#hosp-ak, #hosp-an, #hosp-oif, #hosp-dk, #hosp-dn", {"opacity":0,"filter":"blur(8px)","duration":0.3}, 17.36);
-    tl.fromTo("#hosp-act-pic", {"x":-366.438,"y":-7.68,"scale":1.648}, {"x":-204.574,"y":-144,"scale":1.354,"duration":6.916,"ease":"power1.inOut"}, 17.04);
+    tl.fromTo("#hosp-act-pic", {"x":-101.86,"y":0,"scale":0.93}, {"x":-178.884,"y":0,"scale":1.042,"duration":6.916,"ease":"power1.inOut"}, 17.04);
     tl.fromTo("#hosp-act", {"opacity":0,"scale":1.22,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.8,"ease":"expo.out"}, 17.34);
     tl.to("#hosp-act", {"opacity":0,"duration":0.5,"ease":"power1.in"}, 23.156);
     window.__timelines["hosp"] = tl;

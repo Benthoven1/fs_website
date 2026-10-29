@@ -28,7 +28,8 @@
       font-family: "Major Mono Display", monospace; font-size: 30px; letter-spacing: 0.04em; text-transform: lowercase; color: #1B1613; white-space: nowrap; }
     .bar { position: absolute; border-radius: 4px; }
 
-
+.quad { display: flex; align-items: center; gap: 18px; opacity: 0; font-family: "Major Mono Display", monospace; font-size: 36px; letter-spacing: 0.04em; color: #FFFFFF; white-space: nowrap; }
+    .quad b { width: 26px; height: 26px; border-radius: 13px; box-shadow: 0 0 0 3px rgba(255,255,255,0.18); }
 
     .plate { overflow: hidden; transform-origin: 50% 50%; }
     .credit { position: absolute; right: 48px; bottom: 120px; font-family: "IBM Plex Sans", sans-serif; font-size: 28px; color: rgba(255,255,255,0.72); text-shadow: 0 1px 6px rgba(0,0,0,0.5); }
@@ -46,6 +47,10 @@
 <div id="now-f2" class="kt white" style="left:72px;top:340px;width:936px;font-size:88px;text-align:left;">does not have to start</div>
 <div id="now-f3" class="kt white" style="left:72px;top:440px;width:936px;font-size:88px;text-align:left;"><i>from nothing.</i></div>
 <div id="now-fs" class="kk white" style="left:72px;top:250px;width:936px;text-align:left">fiscal sponsorship</div>
+<div id="now-qm" class="quad abs" style="left:72px;top:520px;flex-direction:row"><b style="background:#C4DDB8"></b><span>members</span></div>
+<div id="now-qr" class="quad abs" style="right:72px;top:520px;flex-direction:row-reverse"><b style="background:#B8CAE0"></b><span>rules</span></div>
+<div id="now-qy" class="quad abs" style="left:72px;top:1360px;flex-direction:row"><b style="background:#E0B8C8"></b><span>money</span></div>
+<div id="now-qp" class="quad abs" style="right:72px;top:1360px;flex-direction:row-reverse"><b style="background:#F0D5BB"></b><span>a new project</span></div>
 <div id="now-d1" class="kt white" style="left:72px;top:300px;width:936px;font-size:96px;text-align:left;">From day one:</div>
 <div id="now-c1" class="kt white" style="left:72px;top:1370px;width:936px;font-size:74px;text-align:left;"><span style="color:#F2B8CF">✓</span> tax-deductible gifts</div>
 <div id="now-c2" class="kt white" style="left:72px;top:1462px;width:936px;font-size:74px;text-align:left;"><span style="color:#F2B8CF">✓</span> grants</div>
@@ -59,6 +64,11 @@
     tl.fromTo("#now-f3", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 2.6);
     tl.to("#now-f1, #now-f2, #now-f3", {"opacity":0,"filter":"blur(8px)","duration":0.3}, 3.492);
     tl.fromTo("#now-fs", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 3.752);
+    tl.fromTo("#now-qm", {"opacity":0,"y":16,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 3.672);
+    tl.fromTo("#now-qr", {"opacity":0,"y":16,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 3.872);
+    tl.fromTo("#now-qy", {"opacity":0,"y":16,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 4.072);
+    tl.fromTo("#now-qp", {"opacity":0,"y":16,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 5.622);
+    tl.to("#now-qm, #now-qr, #now-qy, #now-qp", {"opacity":0,"duration":0.3}, 8.152);
     tl.fromTo("#now-d1", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 8.352);
     tl.fromTo("#now-c1", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 9.712);
     tl.fromTo("#now-c2", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 11.712);

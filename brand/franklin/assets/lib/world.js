@@ -55,7 +55,15 @@ function material(name, plot) {
   return (materials[key] = new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal, emissive: metal ? color : "#000000", emissiveIntensity: metal ? 0.16 : 0 }));
 }
 const EDGE = new THREE.LineBasicMaterial({ color: "#3B332F", transparent: true, opacity: 0.2 });
-const LINES = Object.fromEntries(Object.entries(TONE).map(([k, [c, o]]) => [k, new THREE.LineBasicMaterial({ color: c, transparent: o < 1, opacity: o })]));
+const LINES = Object.fromEntries(Object.entries(TONE).map(([k, [c, o]]) => [k, new THREE.LineBasicMaterial({ color: c, transparent: true, opacity: o })]));
+// Hairlines are a pixel wide at any distance: from far off, a part's many
+// small edges crowd into a few pixels and crawl as the camera drifts, so
+// they fade as the camera pulls back
+const HAIR = [EDGE, ...Object.values(LINES)].map((m) => [m, m.opacity]);
+function hairlines(dist) {
+  const k = Math.min(1, Math.max(0, (dist - 1000) / 1600));
+  for (const [m, o] of HAIR) m.opacity = o * (1 - 0.8 * k);
+}
 
 // ── records to geometry ────────────────────────────────────────────────────
 const V = (x, y, z) => new THREE.Vector3(x, z + LIFT, y); // design → three
@@ -170,7 +178,8 @@ export async function createWorld(canvas, labelLayer, S) {
           geo.rotateX(-Math.PI / 2);
           const c = V(s.x, s.y, s.z);
           geo.translate(c.x, c.y, c.z);
-          const page = new THREE.Mesh(rotated(geo, s.rot), new THREE.MeshStandardMaterial({ map: docs[s.name], roughness: 0.85 }));
+          // pulled toward the camera in depth, so it never fights the desk under it
+          const page = new THREE.Mesh(rotated(geo, s.rot), new THREE.MeshStandardMaterial({ map: docs[s.name], roughness: 0.85, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -4 }));
           page.receiveShadow = true;
           g.add(page);
           continue;
@@ -206,21 +215,25 @@ export async function createWorld(canvas, labelLayer, S) {
   const hosp = { donors: named("hospital", /^donor\d+$/), held: find("hospital", "held"), paddle: find("hospital", "paddle"), HELD: 34 };
 
   // ── the modern institution: the site's cosmos, high over the plots ───────
-  // The star is Mulvium; three planets are what every institution had to make
-  // for itself (rules, members, money); the fourth is a new project. Sizes,
-  // rings, tilts and colours are the landing page's (js/main.js), scaled.
+  // At the centre, a new project (the landing page's star); round it, the
+  // three things every institution had to make for itself, given to it
+  // ready-made: members, rules, money. Sizes, ring radii and colours are the
+  // landing page's (js/main.js), scaled. The rings face the camera, tipped a
+  // little so they cross, and turn together and slowly, so each planet keeps
+  // to its quarter of the screen while it is named there.
   const C0 = new THREE.Vector3(0, 1150, 0), K = 62;
+  const COSMOS_DIR = new THREE.Vector3(0.22, 0.38, 1).normalize();
   const porcelain = (c, r = 0.38) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: 0 });
   const cosmos = new THREE.Group(); cosmos.position.copy(C0); scene.add(cosmos);
-  // tipped toward the camera so the flat ring reads as an ellipse, not a line
-  cosmos.rotation.set(0.55, 0.3, 0);
+  cosmos.lookAt(C0.clone().add(COSMOS_DIR));
   const star = new THREE.Mesh(new THREE.SphereGeometry(1.25 * K, 64, 64), porcelain("#F0D5BB"));
   cosmos.add(star);
+  // phase: where on its ring (0 = screen right, counter-clockwise) a planet sits mid-scene
+  const SPIN = 0.025;
   const ORBITS = [
-    { id: "members", color: "#C4DDB8", radius: 3.0, tilt: [0, 0, 0], speed: 0.36, phase: 0.0 },
-    { id: "rules", color: "#B8CAE0", radius: 3.8, tilt: [Math.PI / 2, 0, 0], speed: 0.26, phase: 1.1 },
-    { id: "money", color: "#E0B8C8", radius: 4.5, tilt: [Math.PI / 3.2, Math.PI / 5 + Math.PI / 2, 0], speed: 0.22, phase: 2.4 },
-    { id: "project", color: "#B8DDD8", radius: 5.0, tilt: [Math.PI / 3.2, Math.PI / 5, 0], speed: 0.18, phase: 3.8 },
+    { id: "members", color: "#C4DDB8", radius: 3.0, tilt: [0.2, -0.16, 0], phase: (3 * Math.PI) / 4 },
+    { id: "rules", color: "#B8CAE0", radius: 3.8, tilt: [-0.18, 0.2, 0], phase: Math.PI / 4 },
+    { id: "money", color: "#E0B8C8", radius: 4.5, tilt: [0.14, 0.26, 0], phase: (5 * Math.PI) / 4 },
   ];
   const ringMat = porcelain("#CDBE96", 0.35); ringMat.transparent = true;
   const planets = Object.fromEntries(ORBITS.map((o) => {
@@ -238,7 +251,7 @@ export async function createWorld(canvas, labelLayer, S) {
   const rising = INSTITUTIONS.flatMap((plot, i) => ["rules", "members", "money"].map((what, j) => ({ p: find(plot, what), what, k: i * 3 + j }))).filter((m) => m.p);
   rising.forEach((m) => { m.orb = new THREE.Mesh(new THREE.SphereGeometry(14, 32, 32), porcelain(KIND_COLOR[m.what])); m.orb.visible = false; scene.add(m.orb); });
   // the structure a new project is given: a line to each planet and the star
-  const tethers = ["members", "rules", "money", "star"].map((to) => {
+  const tethers = ["members", "rules", "money"].map((to) => {
     const m = new THREE.Mesh(new THREE.CylinderGeometry(1.8, 1.8, 1, 10), new THREE.MeshStandardMaterial({ color: "#FFFFFF", emissive: "#FFFFFF", emissiveIntensity: 0.4, roughness: 0.5 }));
     m.visible = false; scene.add(m);
     return { to, m };
@@ -276,15 +289,15 @@ export async function createWorld(canvas, labelLayer, S) {
   }
 
   // ── camera ───────────────────────────────────────────────────────────────
-  const camera = new THREE.PerspectiveCamera(34, W / H, 5, 14000);
+  const camera = new THREE.PerspectiveCamera(34, W / H, 40, 14000);
   const DIR = new THREE.Vector3(0.62, 0.62, 1).normalize();
   const HIGH = new THREE.Vector3(0.45, 1.05, 1).normalize();
   function shot(s) {
     const [kind, plot, what] = s.split(":");
     if (kind === "wide") return { target: new THREE.Vector3(0, 340, 20), dist: 3200, dir: HIGH.clone() };
     if (kind === "all4") return { target: new THREE.Vector3(0, 120, 20), dist: 2900, dir: HIGH.clone() };
-    if (kind === "cosmos") return { target: C0.clone(), dist: 2350, dir: new THREE.Vector3(0.22, 0.38, 1).normalize() };
-    if (kind === "cosmosClose") return { target: C0.clone().add(new THREE.Vector3(60, -40, 80)), dist: 1500, dir: new THREE.Vector3(0.3, 0.3, 1).normalize() };
+    if (kind === "cosmos") return { target: C0.clone(), dist: 2350, dir: COSMOS_DIR.clone() };
+    if (kind === "cosmosClose") return { target: C0.clone(), dist: 1750, dir: COSMOS_DIR.clone() };
     // the opening's sweep: low from the left, round to the right
     if (kind === "sweepA") return { target: new THREE.Vector3(0, 90, 0), dist: 2000, dir: new THREE.Vector3(-0.9, 0.42, 1).normalize() };
     if (kind === "sweepB") return { target: new THREE.Vector3(0, 70, 0), dist: 2500, dir: new THREE.Vector3(0.95, 0.7, 0.75).normalize() };
@@ -305,6 +318,7 @@ export async function createWorld(canvas, labelLayer, S) {
     const drift = cur.dir.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), 0.06 * Math.sin(t * 0.07));
     camera.position.copy(cur.target).addScaledVector(drift, cur.dist);
     camera.lookAt(cur.target);
+    hairlines(cur.dist);
   }
 
   // ── labels: names over the model, projected to the screen ────────────────
@@ -400,13 +414,13 @@ export async function createWorld(canvas, labelLayer, S) {
     }
     frame(t);
   }
-  // The cosmos at t: the pieces turn to spheres and rise to their planets; the
-  // star and its rings arrive; the new project's planet flies up into its
-  // orbit, is wired to the rest, takes gifts, grants and contracts, and grows
+  // The cosmos at t: the pieces turn to spheres and rise to their planets as
+  // the rings draw round an empty centre; the new project rises into the
+  // centre, is wired to all three, takes gifts, grants and contracts, and grows
   function cosmosAt(t) {
-    const [a, b] = CO.rise, tStar = CO.star, tNew = CO.project, tWire = CO.wire, [g0, g1] = CO.grow;
+    const [a, b] = CO.rise, tRings = CO.star, tNew = CO.project, tWire = CO.wire, [g0, g1] = CO.grow, mid = (a + g1) / 2;
     cosmos.visible = t >= a;
-    for (const o of ORBITS) o.rot = planets[o.id].rot, o.rot.rotation.z = o.phase + o.speed * 0.6 * (t - a);
+    for (const o of ORBITS) planets[o.id].rot.rotation.z = o.phase + SPIN * (t - mid);
     cosmos.updateMatrixWorld(true);
     // the pieces become spheres, and the spheres rise
     const arrived = { rules: 0, members: 0, money: 0 }, total = { rules: 0, members: 0, money: 0 };
@@ -431,30 +445,23 @@ export async function createWorld(canvas, labelLayer, S) {
       planets[id].planet.visible = f > 0;
       planets[id].planet.scale.setScalar(0.35 + 0.65 * Math.sqrt(f));
     }
-    // the star and its rings
-    const ks = clamp01((t - tStar) / 0.8);
-    star.visible = ks > 0; star.scale.setScalar(Math.max(0.001, outBack(ks)));
-    ringMat.opacity = clamp01((t - tStar - 0.2) / 0.8);
-    ORBITS.forEach((o, i) => { planets[o.id].ring.visible = ringMat.opacity > 0; planets[o.id].ring.scale.setScalar(0.85 + 0.15 * outCubic(clamp01((t - tStar - 0.2 - i * 0.12) / 0.8))); });
-    // the new project: up from the plots into its orbit, then growing
-    const np = planets.project, kn = clamp01((t - tNew) / 1.3);
-    np.planet.visible = kn > 0;
-    np.planet.scale.setScalar(0.35 + 0.65 * smooth((t - g0) / Math.max(0.3, g1 - g0)));
-    np.planet.position.set(np.radius * K, 0, 0);
-    if (kn > 0 && kn < 1) {
-      cosmos.updateMatrixWorld(true);
-      const w = planetAt("project"), p = new THREE.Vector3(0, 60, 0).lerp(w, inOut(kn));
-      np.planet.position.copy(np.rot.worldToLocal(p));
-    }
+    // the rings draw in, inner first
+    ringMat.opacity = clamp01((t - tRings) / 0.6);
+    ORBITS.forEach((o, i) => { planets[o.id].ring.visible = ringMat.opacity > 0; planets[o.id].ring.scale.setScalar(0.8 + 0.2 * outCubic(clamp01((t - tRings - i * 0.12) / 0.8))); });
+    // the new project: up from the plots into the centre, then growing
+    const kn = clamp01((t - tNew) / 1.1);
+    star.visible = kn > 0;
+    star.position.copy(cosmos.worldToLocal(new THREE.Vector3(0, 60, 0).lerp(C0, inOut(kn))));
+    // it arrives small, swells as it lands, and grows while the founder works
+    star.scale.setScalar(Math.max(0.001, 0.3 + 0.5 * outBack(kn) + 0.2 * smooth((t - g0) / Math.max(0.3, g1 - g0))));
     cosmos.updateMatrixWorld(true);
-    // the structure: a line from the project to each planet and the star
-    const P = planetAt("project");
+    // the structure: a line from the project to each planet
+    const P = star.getWorldPosition(new THREE.Vector3());
     tethers.forEach((th, i) => {
       const kt = clamp01((t - tWire - i * 0.25) / 0.6);
       th.m.visible = kt > 0;
       if (!th.m.visible) return;
-      const target = th.to === "star" ? star.getWorldPosition(new THREE.Vector3()) : planetAt(th.to);
-      beam(th.m, P, P.clone().lerp(target, outCubic(kt)));
+      beam(th.m, P, P.clone().lerp(planetAt(th.to), outCubic(kt)));
     });
     // gifts, grants, contracts: a pulse from members, money and rules in to the project
     pulses.forEach((pu, i) => {

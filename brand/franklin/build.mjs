@@ -28,7 +28,7 @@ if (SCRIPT.lines.some((l, i) => !T.lines[i] || T.lines[i].text !== l.text)) {
   // The narration is behind the script: lay the words out at a reading pace
   // so the scenes can be worked on, and say so
   console.warn("timing.json does not match script.json: using estimated times");
-  let t = 1.2, prev = null;
+  let t = 0, prev = null;
   T = { lines: SCRIPT.lines.map((l) => {
     const sec = l.id.replace(/\d+$/, "");
     if (prev) t += (sec === prev ? 0.32 : 0.75) + (l.pause_before || 0);
@@ -161,7 +161,7 @@ const LOW = 1400; // type set over the model: the open ground under it
 // ── Cinematic devices ──────────────────────────────────────────────────────
 // A plate: an archival picture filling the screen, a slow camera move across
 // it, a scrim where type sits on it, and a quiet source line
-function plate(s, id, name, { t0, t1, from, to, scrim = "low", credit = "", enter = "cut", exit = "cut", z = 1 }) {
+function plate(s, id, name, { t0, t1, from, to, scrim = "low", credit = "", enter = "cut", exit = "cut", z = 1, pan = null }) {
   const sc = scrim === "low" ? "linear-gradient(180deg, rgba(14,10,8,0) 45%, rgba(14,10,8,0.62) 100%)"
     : scrim === "high" ? "linear-gradient(0deg, rgba(14,10,8,0) 50%, rgba(14,10,8,0.55) 100%)"
     : scrim === "deep" ? "linear-gradient(180deg, rgba(14,10,8,0) 48%, rgba(14,10,8,0.88) 64%, rgba(14,10,8,0.92) 100%)"
@@ -170,7 +170,9 @@ function plate(s, id, name, { t0, t1, from, to, scrim = "low", credit = "", ente
     <div class="full" style="overflow:hidden">${picEl(`${id}-pic`, name)}</div>
     <div class="full" style="background:${sc}"></div>
     ${credit ? `<div class="credit">${credit}</div>` : ""}</div>`);
-  s.cam(`#${id}-pic`, frame(name, W, H, ...from), frame(name, W, H, ...to), t0 - 0.3, t1 - t0 + 0.6, "power1.inOut");
+  // a slow move across the whole shot, or (pan) a quick move to a detail that then holds still
+  if (pan) s.cam(`#${id}-pic`, frame(name, W, H, ...from), frame(name, W, H, ...to), pan.t, pan.dur, pan.ease || "expo.inOut");
+  else s.cam(`#${id}-pic`, frame(name, W, H, ...from), frame(name, W, H, ...to), t0 - 0.3, t1 - t0 + 0.6, "power1.inOut");
   // in
   if (enter === "cut") s.set(`#${id}`, { opacity: 1 }, t0);
   else if (enter === "fade") s.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.out" }, t0);
@@ -230,7 +232,8 @@ const WORLD = (() => {
     turn: { rules: at("turn1", "rules") - 0.05, members: at("turn1", "members") - 0.05, money: at("turn1", "money") - 0.05 },
     turnEnd: at("now1", "founder") + 0.4,
     cosmos: {
-      rise: [at("now1", "founder"), after("now1") + 0.9], star: at("now2", "sponsor") - 0.1,
+      // star: when the rings draw (the project, the centre, arrives later)
+      rise: [at("now1", "founder"), after("now1") + 0.9], star: at("now1", "from") - 0.1,
       project: at("now2", "new") - 0.15, wire: at("now2", "existing") - 0.1,
       pulses: [at("now2", "tax-deductible"), at("now2", "grants"), at("now2", "contracts")],
       grow: [at("now2", "while"), after("now2") + 0.6],
@@ -259,9 +262,6 @@ const WORLD = (() => {
     { text: "rules", anchor: "library.rules", t0: arrive("library", 1) + 0.3, t1: at("lib2", "fifty") - 0.2 },
     { text: "members", anchor: "library.members", t0: arrive("library", 2) + 0.3, t1: at("lib2", "fifty") - 0.2 },
     { text: "money", anchor: "library.money", t0: arrive("library", 3) + 0.3, t1: at("lib2", "fifty") - 0.2 },
-    ...["rules", "members", "money"].map((w) => ({ text: w, anchor: `cosmos.${w}`, t0: events.cosmos.rise[1] - 0.2, t1: at("now2", "from") - 0.2 })),
-    { text: "mulvium", anchor: "cosmos.star", t0: events.cosmos.star + 0.6, t1: at("now2", "from") - 0.2 },
-    { text: "a new project", anchor: "cosmos.project", t0: events.cosmos.project + 1.2, t1: start("end") - 0.4 },
   ];
   const tints = [
     ["library", "#1F3F6B", "#4E73A3", after("lib1") - 0.4], ["fire", "#7A2817", "#B4583A", after("fire1") - 0.4], ["hospital", "#13514A", "#3F8A80", after("hosp1") - 0.4],
@@ -353,13 +353,15 @@ const WORLD = (() => {
   // two signatures: Trumbull's Declaration, then Franklin's name on the Constitution
   const tC = at("who2", "constitution") - 0.1;
   plate(s, "trum", "trumbull", { t0: at("who2") - 0.1, t1: tC, from: [0.3, 0.5, 1.0], to: [0.66, 0.48, 1.05], credit: "John Trumbull, Declaration of Independence, 1818", enter: "wipeRight" });
-  const CF = [0.88, 0.853, 3.0];
-  plate(s, "con", "constitution4", { t0: tC, t1: at("who3") - 0.15, from: [0.8, 0.8, 1.3], to: CF, credit: "Constitution, p. 4, 1787 · National Archives", scrim: "low", enter: "dive", exit: "rise" });
-  // the ring lands where the framing puts "B Franklin" (a framing near the
-  // page's edge is clamped, so the point is not always the screen's centre)
-  const cf = frame("constitution4", W, H, ...CF), RX = cf.x + CF[0] * SIZES.constitution4.w * cf.scale, RY = cf.y + CF[1] * SIZES.constitution4.h * cf.scale + 95; // the signature sits just under the framing point
-  s.add(`<svg id="ring" class="abs" style="left:${r3(RX - 300)}px;top:${r3(RY - 130)}px;width:600px;height:260px;overflow:visible;z-index:6" viewBox="0 0 600 260"><ellipse cx="300" cy="130" rx="280" ry="110" fill="none" stroke="${C.clay}" stroke-width="9" pathLength="100" stroke-dasharray="100 120" stroke-dashoffset="110" stroke-linecap="round"/></svg>`);
-  s.fromTo("#ring ellipse", { strokeDashoffset: 110 }, { strokeDashoffset: 0, duration: 0.6, ease: "power2.inOut" }, at("who2", "one") - 0.5);
+  // the page, then a quick pan onto "B Franklin" (x 2900-3290, y 3600-3700 on
+  // the scan), held still and ringed
+  const SIG = { x: 2900, y: 3600, w: 390, h: 100 }, iw = SIZES.constitution4.w, ih = SIZES.constitution4.h;
+  const CF = [(SIG.x + SIG.w / 2) / iw, (SIG.y + SIG.h / 2) / ih, 4.4], pan = { t: tC + 0.2, dur: 0.75 };
+  plate(s, "con", "constitution4", { t0: tC, t1: at("who3") - 0.15, from: [0.62, 0.66, 1.2], to: CF, pan, credit: "Constitution, p. 4, 1787 · National Archives", scrim: "low", enter: "dive", exit: "rise" });
+  const cf = frame("constitution4", W, H, ...CF);
+  const RX = cf.x + (SIG.x + SIG.w / 2) * cf.scale, RY = cf.y + (SIG.y + SIG.h / 2) * cf.scale, rx = (SIG.w * cf.scale) / 2 + 50, ry = (SIG.h * cf.scale) / 2 + 42;
+  s.add(`<svg id="ring" class="abs" style="left:${r3(RX - rx - 20)}px;top:${r3(RY - ry - 20)}px;width:${r3(2 * rx + 40)}px;height:${r3(2 * ry + 40)}px;overflow:visible;z-index:6" viewBox="0 0 ${r3(2 * rx + 40)} ${r3(2 * ry + 40)}"><ellipse cx="${r3(rx + 20)}" cy="${r3(ry + 20)}" rx="${r3(rx)}" ry="${r3(ry)}" fill="none" stroke="${C.clay}" stroke-width="9" pathLength="100" stroke-dasharray="100 120" stroke-dashoffset="110" stroke-linecap="round"/></svg>`);
+  s.fromTo("#ring ellipse", { strokeDashoffset: 110 }, { strokeDashoffset: 0, duration: 0.6, ease: "power2.inOut" }, Math.max(pan.t + pan.dur, at("who2", "one") - 0.5));
   s.set("#ring", { opacity: 0 }, at("who3") - 0.15);
   s.add(kt("one6", `1 <i style="font-size:0.5em">of</i> 6`, { y: 1330, size: 190, align: "center", extra: "z-index:6" }));
   slam(s, "#one6", at("who2", "six") - 0.05);
@@ -448,8 +450,8 @@ const WORLD = (() => {
   s.fromTo("#an", { color: "rgba(255,255,255,0.7)" }, { color: "#FFFFFF", duration: 0.3 }, tT + 0.45);
   s.sound("impact-bass-1", tT + 0.47, 0.22);
   s.to("#ak, #an, #oif, #dk, #dn", { opacity: 0, filter: "blur(8px)", duration: 0.3 }, d1 + 1.0);
-  // into the lectern: the Act, full screen
-  plate(s, "act", "hospital-act", { t0: at("hosp3", 5) - 0.2, t1: start("acad") - 0.1, from: [0.5, 0.36, 1.4], to: [0.5, 0.5, 1.15], scrim: "none", credit: "An Act to encourage the Establishing of an Hospital, 1751", enter: "dive", exit: "fade" });
+  // out of the lectern, to the hospital itself: the Pine Building, still standing
+  plate(s, "act", "hospital-pine", { t0: at("hosp3", 5) - 0.2, t1: start("acad") - 0.1, from: [0.5, 0.42, 1.0], to: [0.5, 0.36, 1.12], scrim: "low", credit: "Pennsylvania Hospital, Pine Building · HABS, Library of Congress", enter: "dive", exit: "fade" });
   scenes.push(s);
 }
 
@@ -519,6 +521,16 @@ const WORLD = (() => {
   s.add(kk("fs", "fiscal sponsorship", { y: 250 }));
   land(s, "#fs", at("now2", "fiscal") - 0.1);
   s.sound("whoosh", at("now2", "new") - 0.3, 0.16);
+  // the cosmos named in its four quarters, each by its planet's colour
+  const Q = [["qm", "members", "#C4DDB8", "left", 520, WORLD.events.cosmos.rise[1] - 0.6], ["qr", "rules", "#B8CAE0", "right", 520, WORLD.events.cosmos.rise[1] - 0.4],
+    ["qy", "money", "#E0B8C8", "left", 1360, WORLD.events.cosmos.rise[1] - 0.2], ["qp", "a new project", "#F0D5BB", "right", 1360, WORLD.events.cosmos.project + 0.7]];
+  Q.forEach(([id, text, c, side, y, t]) => {
+    s.add(`<div id="${id}" class="quad abs" style="${side}:72px;top:${y}px;flex-direction:${side === "left" ? "row" : "row-reverse"}"><b style="background:${c}"></b><span>${text}</span></div>`);
+    land(s, `#${id}`, t, { dy: 16, dur: 0.5 });
+  });
+  s.to(Q.map(([id]) => `#${id}`).join(", "), { opacity: 0, duration: 0.3 }, at("now2", "from") - 0.3);
+  s.style(`.quad { display: flex; align-items: center; gap: 18px; opacity: 0; font-family: "Major Mono Display", monospace; font-size: 36px; letter-spacing: 0.04em; color: #FFFFFF; white-space: nowrap; }
+    .quad b { width: 26px; height: 26px; border-radius: 13px; box-shadow: 0 0 0 3px rgba(255,255,255,0.18); }`);
   s.add(kt("d1", "From day one:", { y: 300, size: 96 }));
   land(s, "#d1", at("now2", "from") - 0.1);
   const CAN = [["c1", "tax-deductible gifts", "tax-deductible"], ["c2", "grants", "grants"], ["c3", "contracts", "contracts"]];
@@ -533,20 +545,26 @@ const WORLD = (() => {
 }
 
 // ── END: the launch film's network, from its point outward; the wordmark ───
-// cosmos-close.mp4 is the launch film from 64.6 s on, without its words. It
-// enters at 65.3 s, the network still gathered to a point, so the network
-// opens out as "The next great expansion" is said, and later gathers back
-// into the wordmark.
-const PLATE = { file: "cosmos-close.mp4", from: 64.6, enter: 65.3, settle: 84.4 };
+// cosmos-close.mp4 is the launch film from 64.6 s on, without its words.
+// The network is gathered to a point only between its frames 36 and 51, and
+// opens out from frame 52, so cosmos-close-held.mp4 plays it from frame 21
+// (where the scene enters), holds frame 51 for HOLD seconds, and plays on:
+//   ffmpeg -i assets/cosmos-close.mp4 -filter_complex "[0:v]trim=start_frame=21:end_frame=52,setpts=PTS-STARTPTS,
+//     tpad=stop_mode=clone:stop_duration=<HOLD>[a];[0:v]trim=start_frame=52,setpts=PTS-STARTPTS[b];[a][b]concat=n=2:v=1:a=0,fps=30"
+//     -c:v libx264 -crf 14 -pix_fmt yuv420p -an assets/cosmos-close-held.mp4
+// The hold is set so the network opens as "The next great expansion" is
+// said; "Mulvium is building…" sits below the point while it is held.
+const PLATE = { file: "cosmos-close-held.mp4", hold: 2.86, settle: 19.1 }; // settle: the wordmark, in the film's time from frame 21
 {
   const t0 = start("end") - 0.35;
-  const mediaStart = PLATE.enter - PLATE.from;
-  const t1 = t0 + (PLATE.settle + 1.6 - PLATE.enter);
+  const want = at("end2", "expansion") - 0.2 - (t0 + 31 / 30);
+  if (Math.abs(want - PLATE.hold) > 0.05) console.warn(`the network's hold should be ${want.toFixed(2)} s: re-encode cosmos-close-held.mp4`);
+  const t1 = t0 + PLATE.settle + PLATE.hold + 1.6;
   const s = new Scene("end", t0, t1, 9);
   s.add(`<div id="pw" class="full" style="opacity:0"><video id="plate" class="full" src="assets/${PLATE.file}" muted playsinline style="object-fit:cover"></video></div>`);
   s.fromTo("#pw", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power1.out" }, t0);
-  s.mediaStart = r3(mediaStart);
-  s.add(`<div id="build" class="serif abs" style="left:90px;top:840px;width:900px;text-align:center;font-size:56px;line-height:1.25">${words("Mulvium is building that structure for the next Franklin.")}</div>`);
+  s.mediaStart = 0;
+  s.add(`<div id="build" class="serif abs" style="left:90px;top:1250px;width:900px;text-align:center;font-size:56px;line-height:1.25">${words("Mulvium is building that structure for the next Franklin.")}</div>`);
   s.words("#build .w", at("end1") - 0.05, { stagger: (after("end1") - at("end1") - 0.3) / 9 });
   s.leave("#build", at("end2") - 0.15, 0.25);
   s.add(`<div id="close" class="serif abs" style="left:90px;top:760px;width:900px;text-align:center;font-size:46px;line-height:1.3">${words("The next great expansion of human creativity will come from making it easier to create")}<br><span style="font-size:108px;color:${C.clay};font-style:italic">${words("institutions.")}</span></div>`);

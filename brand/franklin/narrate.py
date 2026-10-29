@@ -31,7 +31,7 @@ import soundfile as sf
 HERE = os.path.dirname(os.path.abspath(__file__))
 SCRIPT = json.load(open(os.path.join(HERE, "script.json")))
 API = os.environ.get("VOICESTUDIO", "http://127.0.0.1:3900")
-LEAD_IN = 1.2          # the picture opens before the voice
+LEAD_IN = 0.0          # the voice opens with the picture
 PAUSE = 0.32           # between lines in a section
 SECTION_PAUSE = 0.75   # where the section changes (the id's prefix)
 
