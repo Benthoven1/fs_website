@@ -217,23 +217,27 @@ export async function createWorld(canvas, labelLayer, S) {
   // ── the modern institution: the site's cosmos, high over the plots ───────
   // At the centre, a new project (the landing page's star); round it, the
   // three things every institution had to make for itself, given to it
-  // ready-made: members, rules, money. Sizes, ring radii and colours are the
-  // landing page's (js/main.js), scaled. The rings face the camera, tipped a
-  // little so they cross, and turn together and slowly, so each planet keeps
-  // to its quarter of the screen while it is named there.
+  // ready-made: members, rules, money. Sizes, ring radii, tilts and colours
+  // are the landing page's (js/main.js), scaled, its four rings crossing as
+  // they do there (the fourth carries no planet). The group is tipped so no
+  // ring is seen edge-on. Each planet's place on its ring is found by looking
+  // through the camera: the point that lands in its own quarter of the screen,
+  // in front of the centre; the rings turn slowly, so each planet keeps to its
+  // quarter while it is named there.
   const C0 = new THREE.Vector3(0, 1150, 0), K = 62;
   const COSMOS_DIR = new THREE.Vector3(0.22, 0.38, 1).normalize();
   const porcelain = (c, r = 0.38) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: 0 });
   const cosmos = new THREE.Group(); cosmos.position.copy(C0); scene.add(cosmos);
-  cosmos.lookAt(C0.clone().add(COSMOS_DIR));
+  cosmos.rotation.set(0.55, 0.3, 0);
   const star = new THREE.Mesh(new THREE.SphereGeometry(1.25 * K, 64, 64), porcelain("#F0D5BB"));
   cosmos.add(star);
-  // phase: where on its ring (0 = screen right, counter-clockwise) a planet sits mid-scene
-  const SPIN = 0.025;
+  // aim: the screen direction (0 = right, counter-clockwise) a planet is held to
+  const SPIN = 0.02;
   const ORBITS = [
-    { id: "members", color: "#C4DDB8", radius: 3.0, tilt: [0.2, -0.16, 0], phase: (3 * Math.PI) / 4 },
-    { id: "rules", color: "#B8CAE0", radius: 3.8, tilt: [-0.18, 0.2, 0], phase: Math.PI / 4 },
-    { id: "money", color: "#E0B8C8", radius: 4.5, tilt: [0.14, 0.26, 0], phase: (5 * Math.PI) / 4 },
+    { id: "members", color: "#C4DDB8", radius: 3.0, tilt: [0, 0, 0], aim: (3 * Math.PI) / 4 },
+    { id: "rules", color: "#B8CAE0", radius: 3.8, tilt: [Math.PI / 2, 0, 0], aim: Math.PI / 4 },
+    { id: "money", color: "#E0B8C8", radius: 4.5, tilt: [Math.PI / 3.2, Math.PI / 5 + Math.PI / 2, 0], aim: (5 * Math.PI) / 4 },
+    { id: "outer", color: null, radius: 5.0, tilt: [Math.PI / 3.2, Math.PI / 5, 0] },
   ];
   const ringMat = porcelain("#CDBE96", 0.35); ringMat.transparent = true;
   const planets = Object.fromEntries(ORBITS.map((o) => {
@@ -241,10 +245,11 @@ export async function createWorld(canvas, labelLayer, S) {
     const ring = new THREE.Mesh(new THREE.TorusGeometry(o.radius * K, 0.045 * K, 16, 256), ringMat);
     pivot.add(ring);
     const rot = new THREE.Group(); pivot.add(rot);
-    const planet = new THREE.Mesh(new THREE.SphereGeometry(0.5 * K, 48, 48), porcelain(o.color));
-    planet.position.set(o.radius * K, 0, 0); rot.add(planet);
+    const planet = new THREE.Mesh(new THREE.SphereGeometry(0.5 * K, 48, 48), porcelain(o.color || "#FFFFFF"));
+    planet.position.set(o.radius * K, 0, 0); rot.add(planet); planet.visible = false;
     return [o.id, { ...o, pivot, ring, rot, planet }];
   }));
+  const MOONS = ORBITS.filter((o) => o.aim !== undefined);
   const planetAt = (id) => planets[id].planet.getWorldPosition(new THREE.Vector3());
   // each institution's rules, members and money, and the sphere it turns into
   const KIND_COLOR = { rules: "#B8CAE0", members: "#C4DDB8", money: "#E0B8C8" };
@@ -319,6 +324,38 @@ export async function createWorld(canvas, labelLayer, S) {
     camera.position.copy(cur.target).addScaledVector(drift, cur.dist);
     camera.lookAt(cur.target);
     hairlines(cur.dist);
+  }
+
+  // where on its ring each planet sits mid-scene: seen from the cosmos shot,
+  // the point nearest its aim, well out from the centre and in front of it
+  {
+    const eye = new THREE.PerspectiveCamera(34, W / H, 40, 14000);
+    eye.position.copy(C0).addScaledVector(COSMOS_DIR, 2350); eye.lookAt(C0); eye.updateMatrixWorld();
+    const c = C0.clone().project(eye), cd = eye.position.distanceTo(C0);
+    const solve = (o) => {
+      let best = null;
+      for (let i = 0; i < 720; i++) {
+        const th = (i / 720) * Math.PI * 2;
+        planets[o.id].rot.rotation.z = th; cosmos.updateMatrixWorld(true);
+        const w = planetAt(o.id), q = w.clone().project(eye);
+        const dx = ((q.x - c.x) * W) / 2, dy = ((q.y - c.y) * H) / 2, r = Math.hypot(dx, dy);
+        const off = Math.abs(Math.atan2(Math.sin(Math.atan2(dy, dx) - o.aim), Math.cos(Math.atan2(dy, dx) - o.aim)));
+        const behind = eye.position.distanceTo(w) > cd && r < 170; // hidden by the centre (about 104 px in radius)
+        const score = off * 250 - r + (behind ? 1e6 : 0);
+        if (!best || score < best.score) best = { th, score };
+      }
+      return best;
+    };
+    // money may take the outer ring instead, if that carries it further into its corner
+    const tilt = (id, t) => planets[id].pivot.rotation.set(...t);
+    const size = (id, radius) => { const p = planets[id]; p.ring.geometry.dispose(); p.ring.geometry = new THREE.TorusGeometry(radius * K, 0.045 * K, 16, 256); p.planet.position.x = radius * K; p.radius = radius; };
+    for (const o of MOONS) o.best = solve(o);
+    const m = ORBITS.find((o) => o.id === "money"), out = ORBITS.find((o) => o.id === "outer");
+    tilt("money", out.tilt); tilt("outer", m.tilt); size("money", out.radius); size("outer", m.radius);
+    const alt = solve(m);
+    if (alt.score < m.best.score) { m.best = alt; [m.tilt, out.tilt, m.radius, out.radius] = [out.tilt, m.tilt, out.radius, m.radius]; }
+    else { tilt("money", m.tilt); tilt("outer", out.tilt); size("money", m.radius); size("outer", out.radius); }
+    for (const o of MOONS) o.phase = o.best.th;
   }
 
   // ── labels: names over the model, projected to the screen ────────────────
@@ -420,7 +457,7 @@ export async function createWorld(canvas, labelLayer, S) {
   function cosmosAt(t) {
     const [a, b] = CO.rise, tRings = CO.star, tNew = CO.project, tWire = CO.wire, [g0, g1] = CO.grow, mid = (a + g1) / 2;
     cosmos.visible = t >= a;
-    for (const o of ORBITS) planets[o.id].rot.rotation.z = o.phase + SPIN * (t - mid);
+    for (const o of MOONS) planets[o.id].rot.rotation.z = o.phase + SPIN * (t - mid);
     cosmos.updateMatrixWorld(true);
     // the pieces become spheres, and the spheres rise
     const arrived = { rules: 0, members: 0, money: 0 }, total = { rules: 0, members: 0, money: 0 };
@@ -440,7 +477,7 @@ export async function createWorld(canvas, labelLayer, S) {
       const q = from.clone().multiplyScalar((1 - e) * (1 - e)).addScaledVector(ctrl, 2 * e * (1 - e)).addScaledVector(to, e * e);
       m.orb.position.copy(q); m.orb.scale.setScalar(0.4 + 0.6 * outCubic(k1) + 0.6 * e);
     }
-    for (const id of ["rules", "members", "money"]) {
+    for (const id of ["rules", "members", "money"]) { // (the outer ring has no planet)
       const f = arrived[id] / total[id];
       planets[id].planet.visible = f > 0;
       planets[id].planet.scale.setScalar(0.35 + 0.65 * Math.sqrt(f));

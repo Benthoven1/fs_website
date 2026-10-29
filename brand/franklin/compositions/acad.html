@@ -33,17 +33,18 @@
     .plate { overflow: hidden; transform-origin: 50% 50%; }
     .credit { position: absolute; right: 48px; bottom: 120px; font-family: "IBM Plex Sans", sans-serif; font-size: 28px; color: rgba(255,255,255,0.72); text-shadow: 0 1px 6px rgba(0,0,0,0.5); }
     .kt { position: absolute; z-index: 5; font-family: "Lora", serif; font-weight: 600; letter-spacing: -0.01em; line-height: 1.04; opacity: 0; }
-    .kt.white { color: #FFFFFF; text-shadow: 0 2px 24px rgba(0,0,0,0.45); }
+    .kt.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.55), 0 3px 14px rgba(0,0,0,0.5), 0 6px 40px rgba(0,0,0,0.45); }
     .kt.ink { color: #1B1613; }
     .kt i { font-style: italic; font-weight: 500; }
-    .kk { position: absolute; z-index: 5; font-family: "Major Mono Display", monospace; font-size: 34px; letter-spacing: 0.06em; text-transform: lowercase; opacity: 0; }
-    .kk.white { color: rgba(255,255,255,0.9); text-shadow: 0 1px 10px rgba(0,0,0,0.5); }
+    .kk { position: absolute; z-index: 5; font-family: "Major Mono Display", monospace; font-size: 38px; letter-spacing: 0.06em; text-transform: lowercase; opacity: 0; }
+    .kk.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.7), 0 2px 16px rgba(0,0,0,0.6); }
     .kk.ink { color: #5C544E; }
     .flash { position: absolute; inset: 0; background: #FFFFFF; opacity: 0; }
   </style>
   <div id="root" data-composition-id="acad" data-width="1080" data-height="1920" data-duration="23.246">
 <div id="acad-ac" class="kt white" style="left:72px;top:250px;width:936px;font-size:110px;text-align:left;">Academy <i>1751</i></div>
 <div id="acad-prop" class="full plate" style="z-index:1;opacity:0">
+    
     <div class="full" style="overflow:hidden"><div id="acad-prop-pic" class="pic" style="width:1120px;height:1800px"><img src="assets/img/proposals.jpg" alt=""></div></div>
     <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 48%, rgba(14,10,8,0.88) 64%, rgba(14,10,8,0.92) 100%)"></div>
     <div class="credit">Franklin, Proposals Relating to the Education of Youth in Pensilvania, 1749</div></div>
@@ -54,16 +55,17 @@
 <div id="acad-tr24" class="kt white" style="left:72px;top:250px;width:936px;font-size:190px;text-align:left;">24 <i style="font-size:0.42em;opacity:0.85">trustees</i></div>
 <div id="acad-pres" class="kt white" style="left:72px;top:470px;width:936px;font-size:72px;text-align:left;"><i>Franklin, president</i></div>
 <div id="acad-pen" class="full plate" style="z-index:1;opacity:0">
+    <div class="full" style="overflow:hidden"><img src="assets/img/penn.jpg" alt="" style="width:100%;height:100%;object-fit:cover;filter:blur(36px) brightness(0.42) saturate(0.85);transform:scale(1.2)"></div>
     <div class="full" style="overflow:hidden"><div id="acad-pen-pic" class="pic" style="width:1920px;height:1276px"><img src="assets/img/penn.jpg" alt=""></div></div>
-    <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 45%, rgba(14,10,8,0.62) 100%)"></div>
+    <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 40%, rgba(14,10,8,0.6) 62%, rgba(14,10,8,0.85) 100%)"></div>
     <div class="credit">College Hall, University of Pennsylvania</div></div>
-<div id="acad-upenn" class="kt white" style="left:72px;top:1150px;width:936px;font-size:110px;text-align:left;z-index:5">University<br>of Pennsylvania</div>
+<div id="acad-upenn" class="kt white" style="left:72px;top:1400px;width:936px;font-size:110px;text-align:left;z-index:5">University<br>of Pennsylvania</div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
     tl.fromTo("#acad-ac", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 2.2);
     tl.to("#acad-ac", {"opacity":0,"filter":"blur(8px)","duration":0.25}, 3.464);
-    tl.fromTo("#acad-prop-pic", {"x":-129.013,"y":0,"scale":1.195}, {"x":-69.28,"y":0,"scale":1.088,"duration":8.28,"ease":"power1.inOut"}, 3.264);
+    tl.fromTo("#acad-prop-pic", {"x":-105.12,"y":0,"scale":1.152}, {"x":-69.28,"y":0,"scale":1.088,"duration":8.28,"ease":"power1.inOut"}, 3.264);
     tl.set("#acad-prop", {"opacity":1}, 3.564);
     tl.fromTo("#acad-prop", {"clipPath":"inset(100% 0% 0% 0%)"}, {"clipPath":"inset(0% 0% 0% 0%)","duration":0.55,"ease":"expo.out"}, 3.564);
     tl.to("#acad-prop", {"clipPath":"inset(0% 0% 100% 0%)","duration":0.5,"ease":"expo.in"}, 10.744);
@@ -76,7 +78,7 @@
     tl.fromTo("#acad-tr24", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 11.294);
     tl.fromTo("#acad-pres", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 14.404);
     tl.to("#acad-tr24, #acad-pres", {"opacity":0,"filter":"blur(8px)","duration":0.3}, 18.304);
-    tl.fromTo("#acad-pen-pic", {"x":-1121.191,"y":-144,"scale":1.73}, {"x":-846.734,"y":0,"scale":1.505,"duration":5.342,"ease":"power1.inOut"}, 18.204);
+    tl.fromTo("#acad-pen-pic", {"x":0,"y":601.125,"scale":0.563}, {"x":-32.4,"y":579.593,"scale":0.596,"duration":5.342,"ease":"power1.inOut"}, 18.204);
     tl.set("#acad-pen", {"opacity":1}, 18.504);
     tl.fromTo("#acad-pen", {"clipPath":"inset(100% 0% 0% 0%)"}, {"clipPath":"inset(0% 0% 0% 0%)","duration":0.55,"ease":"expo.out"}, 18.504);
     tl.to("#acad-pen", {"clipPath":"inset(0% 0% 100% 0%)","duration":0.5,"ease":"expo.in"}, 22.746);

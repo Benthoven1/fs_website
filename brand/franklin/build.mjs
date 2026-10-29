@@ -153,6 +153,16 @@ function frame(name, w, h, fx, fy, k = 1) {
   const x = Math.min(0, Math.max(w - s * iw, w / 2 - fx * iw * s)), y = Math.min(0, Math.max(h - s * ih, h / 2 - fy * ih * s));
   return { x: r3(x), y: r3(y), scale: r3(s) };
 }
+// A picture much wider than the screen is shown whole: fitted to the width,
+// at the centre, over a blurred and darkened copy of itself that fills the
+// rest; k zooms in from there. Pictures near the screen's shape fill it.
+const FITS = (name) => SIZES[name].w / SIZES[name].h > 0.9;
+function fitFrame(name, w, h, fx, fy, k = 1) {
+  const { w: iw, h: ih } = SIZES[name];
+  const s = (w / iw) * k;
+  const x = Math.min(0, Math.max(w - s * iw, w / 2 - fx * iw * s)), y = h / 2 - fy * ih * s;
+  return { x: r3(x), y: r3(y), scale: r3(s) };
+}
 const scenes = [];
 const SECTION = (id) => T.lines.filter((l) => l.id.startsWith(id));
 const start = (id) => SECTION(id)[0].t0;
@@ -161,18 +171,27 @@ const LOW = 1400; // type set over the model: the open ground under it
 // ── Cinematic devices ──────────────────────────────────────────────────────
 // A plate: an archival picture filling the screen, a slow camera move across
 // it, a scrim where type sits on it, and a quiet source line
-function plate(s, id, name, { t0, t1, from, to, scrim = "low", credit = "", enter = "cut", exit = "cut", z = 1, pan = null }) {
-  const sc = scrim === "low" ? "linear-gradient(180deg, rgba(14,10,8,0) 45%, rgba(14,10,8,0.62) 100%)"
-    : scrim === "high" ? "linear-gradient(0deg, rgba(14,10,8,0) 50%, rgba(14,10,8,0.55) 100%)"
+function plate(s, id, name, { t0, t1, from, to, scrim = "low", credit = "", enter = "cut", exit = "cut", z = 1, pan = null, zoom = null }) {
+  // never far in, and on the picture's centre: a wide picture whole (zoom: its
+  // own push, for a panorama), a tall one filling the screen; a pan to a
+  // detail keeps its framing
+  const fits = FITS(name), F = fits ? fitFrame : frame;
+  if (!pan) {
+    const [k0, k1] = zoom || (fits ? [1.0, 1.06] : [Math.min(from[2], 1.08), Math.min(to[2], 1.1)]);
+    from = [0.5, fits ? 0.5 : from[1], k0]; to = [0.5, fits ? 0.5 : to[1], k1];
+  }
+  const sc = scrim === "low" ? "linear-gradient(180deg, rgba(14,10,8,0) 40%, rgba(14,10,8,0.6) 62%, rgba(14,10,8,0.85) 100%)"
+    : scrim === "high" ? "linear-gradient(0deg, rgba(14,10,8,0) 55%, rgba(14,10,8,0.7) 100%)"
     : scrim === "deep" ? "linear-gradient(180deg, rgba(14,10,8,0) 48%, rgba(14,10,8,0.88) 64%, rgba(14,10,8,0.92) 100%)"
-    : scrim === "both" ? "linear-gradient(180deg, rgba(14,10,8,0.45) 0%, rgba(14,10,8,0) 30%, rgba(14,10,8,0) 52%, rgba(14,10,8,0.65) 100%)" : "none";
+    : scrim === "both" ? "linear-gradient(180deg, rgba(14,10,8,0.82) 0%, rgba(14,10,8,0.55) 20%, rgba(14,10,8,0) 34%, rgba(14,10,8,0) 45%, rgba(14,10,8,0.6) 62%, rgba(14,10,8,0.85) 100%)" : "none";
   s.add(`<div id="${id}" class="full plate" style="z-index:${z};opacity:0">
+    ${fits ? `<div class="full" style="overflow:hidden"><img src="assets/img/${name}.jpg" alt="" style="width:100%;height:100%;object-fit:cover;filter:blur(36px) brightness(0.42) saturate(0.85);transform:scale(1.2)"></div>` : ""}
     <div class="full" style="overflow:hidden">${picEl(`${id}-pic`, name)}</div>
     <div class="full" style="background:${sc}"></div>
     ${credit ? `<div class="credit">${credit}</div>` : ""}</div>`);
   // a slow move across the whole shot, or (pan) a quick move to a detail that then holds still
-  if (pan) s.cam(`#${id}-pic`, frame(name, W, H, ...from), frame(name, W, H, ...to), pan.t, pan.dur, pan.ease || "expo.inOut");
-  else s.cam(`#${id}-pic`, frame(name, W, H, ...from), frame(name, W, H, ...to), t0 - 0.3, t1 - t0 + 0.6, "power1.inOut");
+  if (pan) s.cam(`#${id}-pic`, F(name, W, H, ...from), F(name, W, H, ...to), pan.t, pan.dur, pan.ease || "expo.inOut");
+  else s.cam(`#${id}-pic`, F(name, W, H, ...from), F(name, W, H, ...to), t0 - 0.3, t1 - t0 + 0.6, "power1.inOut");
   // in
   if (enter === "cut") s.set(`#${id}`, { opacity: 1 }, t0);
   else if (enter === "fade") s.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.out" }, t0);
@@ -197,11 +216,11 @@ const KT = `
     .plate { overflow: hidden; transform-origin: 50% 50%; }
     .credit { position: absolute; right: 48px; bottom: 120px; font-family: "IBM Plex Sans", sans-serif; font-size: 28px; color: rgba(255,255,255,0.72); text-shadow: 0 1px 6px rgba(0,0,0,0.5); }
     .kt { position: absolute; z-index: 5; font-family: "Lora", serif; font-weight: 600; letter-spacing: -0.01em; line-height: 1.04; opacity: 0; }
-    .kt.white { color: #FFFFFF; text-shadow: 0 2px 24px rgba(0,0,0,0.45); }
+    .kt.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.55), 0 3px 14px rgba(0,0,0,0.5), 0 6px 40px rgba(0,0,0,0.45); }
     .kt.ink { color: ${C.ink}; }
     .kt i { font-style: italic; font-weight: 500; }
-    .kk { position: absolute; z-index: 5; font-family: "Major Mono Display", monospace; font-size: 34px; letter-spacing: 0.06em; text-transform: lowercase; opacity: 0; }
-    .kk.white { color: rgba(255,255,255,0.9); text-shadow: 0 1px 10px rgba(0,0,0,0.5); }
+    .kk { position: absolute; z-index: 5; font-family: "Major Mono Display", monospace; font-size: 38px; letter-spacing: 0.06em; text-transform: lowercase; opacity: 0; }
+    .kk.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.7), 0 2px 16px rgba(0,0,0,0.6); }
     .kk.ink { color: ${C.muted}; }
     .flash { position: absolute; inset: 0; background: #FFFFFF; opacity: 0; }`;
 const kt = (id, html, { x = 72, y, size = 96, cls = "white", w = 936, align = "left", extra = "" }) =>
@@ -306,14 +325,14 @@ const WORLD = (() => {
   const tB = at("hook2"), tBen = at("hook2", "benjamin");
   const s = new Scene("hook", 0, tBen + 0.6, 10);
   s.raw.push(KT);
-  plate(s, "pros", "prospect", { t0: 0, t1: tB, from: [0.16, 0.52, 1.05], to: [0.58, 0.5, 1.12], scrim: "both", credit: "Scull &amp; Heap, East Prospect of Philadelphia, 1754", enter: "punch" });
+  plate(s, "pros", "prospect", { t0: 0, t1: tB, from: [0.5, 0.5, 1.7], to: [0.5, 0.5, 1.85], zoom: [1.7, 1.85], scrim: "both", credit: "Scull &amp; Heap, East Prospect of Philadelphia, 1754", enter: "punch" });
   s.add(kt("y1731", "1731.", { y: 250, size: 230 }));
   s.add(kk("phl", "philadelphia", { y: 520 }));
   s.fromTo("#y1731", { opacity: 1, scale: 1.18, filter: "blur(6px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }, 0);
   land(s, "#phl", at("hook1", "philadelphia") - 0.1);
   const NONE = [["no1", "No lending library.", "library"], ["no2", "No fire company.", "fire"], ["no3", "No hospital.", "hospital"], ["no4", "No college.", "college"]];
   NONE.forEach(([id, text, w], i) => {
-    s.add(kt(id, text, { y: 1080 + i * 96, size: 76 }));
+    s.add(kt(id, text, { y: 1330 + i * 96, size: 76 }));
     slam(s, `#${id}`, at("hook1", "no", i + 1) - 0.05);
     s.sound("impact-bass-2", at("hook1", "no", i + 1) - 0.02, 0.12);
   });
@@ -333,7 +352,7 @@ const WORLD = (() => {
 // ── WHO: the founder, in quick cuts; two signatures; one method ────────────
 {
   const tBen = at("hook2", "benjamin");
-  const s = new Scene("who", tBen - 0.05, start("lib") - 0.1, 11);
+  const s = new Scene("who", tBen - 0.05, start("lib") + 0.3, 11); // until the Junto's plate has wiped in over it
   s.raw.push(KT);
   plate(s, "por", "portrait", { t0: tBen, t1: at("who1", "printer"), from: [0.53, 0.42, 1.0], to: [0.53, 0.33, 1.25], credit: "Joseph-Siffred Duplessis, c. 1785", enter: "wipe" });
   s.add(kt("name", "Benjamin<br>Franklin", { y: 1060, size: 120 }));
@@ -345,7 +364,7 @@ const WORLD = (() => {
   ROLES.forEach(([w, img, word, a, b], i) => {
     const t0 = at("who1", w) - 0.04, t1 = i < 3 ? at("who1", ROLES[i + 1][0]) - 0.04 : at("who2") - 0.1;
     plate(s, `r${i}`, img, { t0, t1, from: a, to: b, enter: "punch" });
-    s.add(kt(`rw${i}`, word, { y: 1290, size: 130, extra: "z-index:5" }));
+    s.add(kt(`rw${i}`, word, { y: 1560, size: 130, extra: "z-index:5" }));
     slam(s, `#rw${i}`, t0);
     s.set(`#rw${i}`, { opacity: 0 }, t1);
     s.sound("whoosh-short", t0, 0.14);
@@ -366,11 +385,44 @@ const WORLD = (() => {
   s.add(kt("one6", `1 <i style="font-size:0.5em">of</i> 6`, { y: 1330, size: 190, align: "center", extra: "z-index:6" }));
   slam(s, "#one6", at("who2", "six") - 0.05);
   s.set("#one6", { opacity: 0 }, at("who3") - 0.15);
-  // the method, set in the narration's own words over the bare plinths
+  // the method, drawn: a public need (an empty ring), then contributions from
+  // many members streaming in from every side until the ring is full
+  const tNeed = at("who3", "identify") - 0.1, tPool = at("who3", "pooling") - 0.1, tMany = after("who3", "members");
+  s.add(`<div id="mg" class="full" style="opacity:0;background:radial-gradient(120% 80% at 50% 38%, #3A2A22 0%, #1E1612 60%, #120D0B 100%)"></div>`);
+  s.set("#mg", { opacity: 1 }, at("who3") - 0.4);
+  const RC = { x: 540, y: 720, r: 200 };
+  s.add(`<svg id="need" class="abs" style="left:0;top:0;width:${W}px;height:${H}px;overflow:visible" viewBox="0 0 ${W} ${H}">
+    <circle id="needfill" cx="${RC.x}" cy="${RC.y}" r="${RC.r}" fill="#F0D5BB" opacity="0"/>
+    <circle id="needring" cx="${RC.x}" cy="${RC.y}" r="${RC.r}" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="5" stroke-dasharray="14 12" pathLength="1000" transform="rotate(-90 ${RC.x} ${RC.y})"/></svg>`);
+  s.fromTo("#needring", { strokeDashoffset: 1000, opacity: 0 }, { strokeDashoffset: 0, opacity: 1, duration: 0.9, ease: "power2.inOut" }, tNeed);
+  s.add(kk("needk", "a public need", { y: RC.y + RC.r + 40, align: "center" }));
+  land(s, "#needk", at("who3", "need") - 0.1, { dy: 16 });
+  // members: small spheres in the cosmos's pastels, scattered round the ring
+  // from the start of the line, then pooled into places packed inside it (a
+  // sunflower spiral)
+  const PAST = ["#C4DDB8", "#B8CAE0", "#E0B8C8", "#F0D5BB"], N = 42, dots = [];
+  for (let i = 0; i < N; i++) {
+    const a = i * 2.39996, rr = (RC.r - 26) * Math.sqrt((i + 0.5) / N);
+    const e = (i * 137.5 * Math.PI) / 180 + 0.6, far = 330 + ((i * 53) % 170);
+    const sx = Math.min(1020, Math.max(60, RC.x + far * Math.cos(e))), sy = Math.min(1180, Math.max(220, RC.y + far * 1.25 * Math.sin(e)));
+    dots.push({ id: `dt${i}`, c: PAST[i % 4], tx: RC.x + rr * Math.cos(a), ty: RC.y + rr * Math.sin(a), sx, sy });
+  }
+  s.add(dots.map((d) => `<div id="${d.id}" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, ${d.c} 45%, ${d.c} 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div>`).join(""));
+  dots.forEach((d, i) => {
+    const t = tPool + (tMany - tPool) * (i / N);
+    s.set(`#${d.id}`, { x: d.sx, y: d.sy, opacity: 0 }, 0);
+    s.to(`#${d.id}`, { opacity: 0.55, duration: 0.6, ease: "power1.out" }, at("who3") + 0.1 + (i % 12) * 0.05);
+    s.to(`#${d.id}`, { y: d.sy - 18, duration: t - at("who3"), ease: "none" }, at("who3"));
+    s.to(`#${d.id}`, { x: d.tx, y: d.ty, opacity: 1, duration: 0.9, ease: "power3.inOut" }, t);
+  });
+  // full: the need is met
+  s.to("#needfill", { opacity: 0.22, duration: 0.6, ease: "power1.out" }, tMany + 0.5);
+  s.to("#needring", { strokeDasharray: "1000 0", duration: 0.5, ease: "power1.out" }, tMany + 0.5);
+  s.sound("click-soft", tNeed + 0.1, 0.2);
   const M = [["m1", "Identify a public need.", "identify"], ["m2", "Pool contributions", "pooling"], ["m3", "from many members.", "many"]];
-  s.add(kk("mk", "one method", { y: 1250, cls: "ink" }));
+  s.add(kk("mk", "one method", { y: 1250 }));
   land(s, "#mk", at("who3", "method") - 0.1);
-  M.forEach(([id, text, w], i) => { s.add(kt(id, text, { y: 1310 + i * 92, size: 76, cls: "ink" })); land(s, `#${id}`, at("who3", w) - 0.1); });
+  M.forEach(([id, text, w], i) => { s.add(kt(id, text, { y: 1310 + i * 92, size: 76 })); land(s, `#${id}`, at("who3", w) - 0.1); });
   s.to("#mk, #m1, #m2, #m3", { opacity: 0, filter: "blur(8px)", duration: 0.3 }, start("lib") - 0.5);
   scenes.push(s);
 }
@@ -385,19 +437,29 @@ const WORLD = (() => {
   land(s, "#jk", at("lib1", "junto") - 0.1);
   const ROSTER = [["Joseph Breintnal", "scrivener"], ["Thomas Godfrey", "glazier"], ["Nicholas Scull", "surveyor"], ["William Parsons", "shoemaker"], ["William Maugridge", "joiner"], ["Hugh Meredith", "printer"]];
   ROSTER.forEach(([n, t], i) => {
-    s.add(`<div id="ro${i}" class="abs" style="left:72px;top:${1000 + i * 82}px;width:936px;opacity:0;z-index:5">
-      <span class="serif" style="font-size:52px;font-weight:600;color:#FFF;text-shadow:0 2px 18px rgba(0,0,0,.5)">${n}</span>
-      <span class="kk white" style="position:relative;opacity:1;font-size:30px;margin-left:18px">${t}</span></div>`);
+    s.add(`<div id="ro${i}" class="abs" style="left:72px;top:${1300 + i * 72}px;width:936px;opacity:0;z-index:5">
+      <span class="serif" style="font-size:50px;font-weight:600;color:#FFF;text-shadow:0 1px 3px rgba(0,0,0,.6),0 3px 16px rgba(0,0,0,.55)">${n}</span>
+      <span class="kk" style="position:relative;opacity:1;font-size:32px;margin-left:18px;color:#F6C9A8;text-shadow:0 1px 3px rgba(0,0,0,.7),0 2px 14px rgba(0,0,0,.6)">${t}</span></div>`);
     land(s, `#ro${i}`, at("lib1", "tradesmen") - 0.25 + i * 0.22, { dy: 24 });
   });
   s.set("#jk, #ro0, #ro1, #ro2, #ro3, #ro4, #ro5", { opacity: 0 }, after("lib1") - 0.3);
   s.sound("whoosh", after("lib1") - 0.3, 0.16);
-  // the arithmetic, set on the ground under the model as the subscriptions run in
+  // the arithmetic, a step at a time, set on the ground under the model as the
+  // subscriptions run in: 50 x 40 shillings = 2,000 shillings = £100 (20s to
+  // the pound); then 50 x 10s = 500s = £25 a year
   const c0 = at("lib2", "fifty"), c1 = after("lib2", "each");
-  s.add(`<div id="sum" class="abs" style="left:72px;top:${LOW}px;width:936px;opacity:0">
-    <span id="n50" class="serif" style="font-size:190px;font-weight:600;color:#FFFFFF">0</span><span class="serif" style="font-size:64px;color:rgba(255,255,255,0.75);font-style:italic"> × 40s = </span><span id="fund" class="serif" style="font-size:150px;font-weight:600;color:#FFFFFF">£0</span></div>`);
-  land(s, "#sum", c0).count("#n50", c0, c1 - c0 + 0.4, 0, 50).count("#fund", c0, c1 - c0 + 0.4, 0, 100, "'£' + Math.round(v)");
-  s.to("#sum", { opacity: 0, filter: "blur(8px)", duration: 0.3 }, start("lib3") - 0.5);
+  const NUM = "font-weight:600;color:#FFFFFF", LBL = "font-size:46px;font-style:italic;color:rgba(255,255,255,0.85)";
+  s.add(`<div id="sumbg" class="full" style="opacity:0;background:linear-gradient(180deg, rgba(8,14,32,0) 58%, rgba(8,14,32,0.7) 70%, rgba(8,14,32,0.82) 100%)"></div>`);
+  s.fromTo("#sumbg", { opacity: 0 }, { opacity: 1, duration: 0.4 }, c0 - 0.3).to("#sumbg", { opacity: 0, duration: 0.3 }, start("lib3") - 0.35);
+  s.add(`<div id="sumA" class="kt white abs" style="left:72px;top:${LOW - 60}px;width:936px;font-size:120px"><span id="n50" style="${NUM}">0</span><span style="${LBL}"> subscribers </span><span id="x40" style="opacity:0">× 40s</span></div>
+    <div id="sumB" class="kt white abs" style="left:72px;top:${LOW + 90}px;width:936px;font-size:84px"><span style="${LBL}">= </span><span id="s2k">2,000s</span><span style="${LBL}"> = </span><span id="fund" style="color:#F6C9A8">£100</span></div>
+    <div id="sumC" class="kt white abs" style="left:72px;top:${LOW + 210}px;width:936px;font-size:50px;font-weight:500"><i>then 10s a year each</i> = £25 a year</div>`);
+  s.set("#sumA", { opacity: 1 }, c0 - 0.1).count("#n50", c0, at("lib2", "forty") - c0, 0, 50);
+  s.fromTo("#sumA", { filter: "blur(8px)", y: 30 }, { filter: "blur(0px)", y: 0, duration: 0.5, ease: "expo.out" }, c0 - 0.1);
+  land(s, "#x40", at("lib2", "forty") - 0.1, { dy: 0 });
+  land(s, "#sumB", at("lib2", "each") - 0.15);
+  land(s, "#sumC", at("lib2", "ten") - 0.1);
+  s.to("#sumA, #sumB, #sumC", { opacity: 0, filter: "blur(8px)", duration: 0.25 }, start("lib3") - 0.35);
   s.sound("typing", c0, 0.12);
   // through the bookcase into the Library Company's hall
   plate(s, "hall", "library-hall", { t0: start("lib3") - 0.3, t1: start("fire") - 0.1, from: [0.42, 0.45, 1.25], to: [0.34, 0.42, 1.55], credit: "William Birch, Library and Surgeons Hall, 1799", enter: "dive", exit: "cut" });
@@ -477,7 +539,7 @@ const WORLD = (() => {
   s.to("#tr24, #pres", { opacity: 0, filter: "blur(8px)", duration: 0.3 }, start("acad4") - 0.3);
   // what it became
   plate(s, "pen", "penn", { t0: start("acad4") - 0.1, t1: start("turn") - 0.2, from: [0.5, 0.5, 1.15], to: [0.48, 0.42, 1.0], credit: "College Hall, University of Pennsylvania", enter: "wipe", exit: "wipeUp" });
-  s.add(kt("upenn", "University<br>of Pennsylvania", { y: 1150, size: 110, extra: "z-index:5" }));
+  s.add(kt("upenn", "University<br>of Pennsylvania", { y: 1400, size: 110, extra: "z-index:5" }));
   land(s, "#upenn", at("acad4", "university") - 0.1, { dy: 50, dur: 0.6 });
   scenes.push(s);
 }
@@ -502,7 +564,7 @@ const WORLD = (() => {
   SIDE.forEach(([w, img, text, a, b], i) => {
     const t0 = at("turn2", w) - 0.05, t1 = i < 2 ? at("turn2", SIDE[i + 1][0]) - 0.05 : start("now") - 0.6;
     plate(s, `sd${i}`, img, { t0, t1, from: a, to: b, enter: "punch", exit: i < 2 ? "cut" : "fade" });
-    s.add(kt(`st${i}`, `<i>${text}</i>`, { y: 1460, size: 104, extra: "z-index:5" }));
+    s.add(kt(`st${i}`, `<i>${text}</i>`, { y: 1560, size: 104, extra: "z-index:5" }));
     slam(s, `#st${i}`, t0);
     s.set(`#st${i}`, { opacity: 0 }, t1);
     s.sound("whoosh-short", t0, 0.14);
