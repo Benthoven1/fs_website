@@ -1,6 +1,6 @@
 # Review — Franklin essay v8
 
-Rendered 176.0 s, 1080 × 1920, 30 fps. Reviewed from snapshot sheets on the
+Rendered 176.1 s, 1080 × 1920, 30 fps. Reviewed from snapshot sheets on the
 real narration timing and frames of the delivered MP4.
 
 ## What changed from v7
