@@ -1,3 +1,4 @@
+<meta name="robots" content="noindex">
 <template>
   <style>
     @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
@@ -8,6 +9,8 @@
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500i.woff2) format("woff2"); font-weight: 500; font-style: italic; font-display: block; }
     @font-face { font-family: "Major Mono Display"; src: url(assets/fonts/MajorMonoDisplay-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
     #root { position: absolute; inset: 0; overflow: hidden; }
 
     .abs { position: absolute; }
@@ -30,84 +33,282 @@
 
 
 
+    .plate { overflow: hidden; transform-origin: 50% 50%; }
+    .credit { position: absolute; right: 48px; bottom: 120px; font-family: "IBM Plex Sans", sans-serif; font-size: 28px; color: rgba(255,255,255,0.72); text-shadow: 0 1px 6px rgba(0,0,0,0.5); }
+    .kt { position: absolute; z-index: 5; font-family: "Lora", serif; font-weight: 600; letter-spacing: -0.01em; line-height: 1.04; opacity: 0; }
+    .kt.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.55), 0 3px 14px rgba(0,0,0,0.5), 0 6px 40px rgba(0,0,0,0.45); }
+    .kt.ink { color: #1B1613; }
+    .kt i { font-style: italic; font-weight: 500; }
+    .kk { position: absolute; z-index: 5; font-family: "Major Mono Display", monospace; font-size: 38px; letter-spacing: 0.06em; text-transform: lowercase; opacity: 0; }
+    .kk.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.7), 0 2px 16px rgba(0,0,0,0.6); }
+    .kk.ink { color: #5C544E; }
+    .flash { position: absolute; inset: 0; background: #FFFFFF; opacity: 0; }
   </style>
-  <div id="root" data-composition-id="who" data-width="1080" data-height="1920" data-duration="19.039">
-<div id="who-por" class="card" style="left:60px;top:380px;width:520px;height:700px;">
-    <div class="abs" style="left:0;top:0;width:520px;height:636px;overflow:hidden"><div id="who-por-pic" class="pic" style="width:1920px;height:2364px"><img src="assets/img/portrait.jpg" alt=""></div></div>
-    <div class="cap"><span>Duplessis, c. 1785</span></div></div>
-<div id="who-name" class="abs" style="left:612px;top:388px;width:420px;opacity:0">
-    <div class="disp" style="font-size:44px;font-weight:600;line-height:1.08"><span class="w">Benjamin</span><br><span class="w">Franklin</span></div>
-    <div class="small" style="font-size:28px;margin-top:10px">1706 – 1790</div></div>
-<div id="who-r0" class="abs" style="left:612px;top:560px;width:408px;height:112px;opacity:0">
-      <div class="card" style="left:0;top:0;width:150px;height:112px;border-radius:16px"><div class="abs" style="left:0;top:0;width:150px;height:112px;overflow:hidden"><div id="who-r0-pic" class="pic" style="width:628px;height:1033px"><img src="assets/img/almanac.jpg" alt=""></div></div></div>
-      <div class="disp abs" style="left:176px;top:34px;font-size:36px;font-weight:500">Printer</div></div>
-<div id="who-r1" class="abs" style="left:612px;top:690px;width:408px;height:112px;opacity:0">
-      <div class="card" style="left:0;top:0;width:150px;height:112px;border-radius:16px"><div class="abs" style="left:0;top:0;width:150px;height:112px;overflow:hidden"><div id="who-r1-pic" class="pic" style="width:1920px;height:2396px"><img src="assets/img/martin.jpg" alt=""></div></div></div>
-      <div class="disp abs" style="left:176px;top:34px;font-size:36px;font-weight:500">Writer</div></div>
-<div id="who-r2" class="abs" style="left:612px;top:820px;width:408px;height:112px;opacity:0">
-      <div class="card" style="left:0;top:0;width:150px;height:112px;border-radius:16px"><div class="abs" style="left:0;top:0;width:150px;height:112px;overflow:hidden"><div id="who-r2-pic" class="pic" style="width:1920px;height:2573px"><img src="assets/img/kite.jpg" alt=""></div></div></div>
-      <div class="disp abs" style="left:176px;top:34px;font-size:36px;font-weight:500">Scientist</div></div>
-<div id="who-r3" class="abs" style="left:612px;top:950px;width:408px;height:112px;opacity:0">
-      <div class="card" style="left:0;top:0;width:150px;height:112px;border-radius:16px"><div class="abs" style="left:0;top:0;width:150px;height:112px;overflow:hidden"><div id="who-r3-pic" class="pic" style="width:1280px;height:1304px"><img src="assets/img/stove.jpg" alt=""></div></div></div>
-      <div class="disp abs" style="left:176px;top:34px;font-size:36px;font-weight:500">Inventor</div></div>
-<div id="who-trum" class="card" style="left:60px;top:380px;width:960px;height:620px;opacity:0">
-    <div class="abs" style="left:0;top:0;width:960px;height:556px;overflow:hidden"><div id="who-trum-pic" class="pic" style="width:1920px;height:1273px"><img src="assets/img/trumbull.jpg" alt=""></div></div>
-    <div class="cap"><span>Trumbull, Declaration of Independence, 1818</span></div></div>
-<div id="who-con" class="card" style="left:60px;top:400px;width:960px;height:660px;opacity:0">
-    <div class="abs" style="left:0;top:0;width:960px;height:596px;overflow:hidden"><div id="who-con-pic" class="pic" style="width:3547px;height:4300px"><img src="assets/img/constitution4.jpg" alt=""></div></div>
-    <div class="cap"><span>Constitution, p. 4, 1787 · National Archives</span></div></div>
-<svg id="who-ring" class="abs" style="left:491.437px;top:604.125px;width:460px;height:190px;overflow:visible" viewBox="0 0 460 190"><ellipse cx="230" cy="95" rx="214" ry="78" fill="none" stroke="#B87758" stroke-width="7" pathLength="100" stroke-dasharray="100 120" stroke-dashoffset="110" stroke-linecap="round"/></svg>
-<div id="who-six" class="card" style="left:60px;top:1080px;width:960px;height:150px;border-radius:22px;opacity:0">
-    <div class="disp abs" style="left:34px;top:14px;font-size:96px;font-weight:700;color:#B87758">6</div>
-    <div class="disp abs" style="left:120px;top:26px;width:820px;font-size:32px;line-height:1.3;color:#3B332F">signers of both founding documents<br><span class="small" style="font-size:28px">Clymer, Franklin, Morris, Read, Sherman, Wilson</span></div></div>
-<div id="who-mh" class="kicker abs" style="left:84px;top:390px;opacity:0">The method</div>
-<div id="who-st0" class="card" style="left:84px;top:460px;width:912px;height:136px;border-radius:22px;opacity:0">
-      <div class="small abs" style="left:34px;top:44px;font-size:36px;font-weight:500;color:#B87758">01</div>
-      <div class="disp abs" style="left:128px;top:40px;font-size:44px;font-weight:600">Identify a public need</div></div>
-<div id="who-st1" class="card" style="left:84px;top:636px;width:912px;height:136px;border-radius:22px;opacity:0">
-      <div class="small abs" style="left:34px;top:44px;font-size:36px;font-weight:500;color:#B87758">02</div>
-      <div class="disp abs" style="left:128px;top:40px;font-size:44px;font-weight:600">Pool contributions</div></div>
-<div id="who-ln1" class="bar" style="left:136px;top:596px;width:4px;height:40px;background:#D9D4CA;transform-origin:50% 0;opacity:0"></div>
-<div id="who-st2" class="card" style="left:84px;top:812px;width:912px;height:136px;border-radius:22px;opacity:0">
-      <div class="small abs" style="left:34px;top:44px;font-size:36px;font-weight:500;color:#B87758">03</div>
-      <div class="disp abs" style="left:128px;top:40px;font-size:44px;font-weight:600">From many members</div></div>
-<div id="who-ln2" class="bar" style="left:136px;top:772px;width:4px;height:40px;background:#D9D4CA;transform-origin:50% 0;opacity:0"></div>
-<div id="who-st3" class="card" style="left:84px;top:988px;width:912px;height:136px;border-radius:22px;opacity:0">
-      <div class="small abs" style="left:34px;top:44px;font-size:36px;font-weight:500;color:#B87758">04</div>
-      <div class="disp abs" style="left:128px;top:40px;font-size:44px;font-weight:600">Found the institution</div></div>
-<div id="who-ln3" class="bar" style="left:136px;top:948px;width:4px;height:40px;background:#D9D4CA;transform-origin:50% 0;opacity:0"></div>
+  <div id="root" data-composition-id="who" data-width="1080" data-height="1920" data-duration="22.532">
+<div id="who-por" class="full plate" style="z-index:1;opacity:0">
+    <div class="full" style="overflow:hidden"><div id="who-por-pic" class="pic" style="width:1920px;height:2364px"><img src="assets/img/portrait.jpg" alt=""></div></div>
+    <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 40%, rgba(14,10,8,0.6) 62%, rgba(14,10,8,0.85) 100%)"></div>
+    <div class="credit">Joseph-Siffred Duplessis, c. 1785</div></div>
+<div id="who-name" class="kt white" style="left:72px;top:1060px;width:936px;font-size:120px;text-align:left;">Benjamin<br>Franklin</div>
+<div id="who-r0" class="full plate" style="z-index:1;opacity:0">
+    <div class="full" style="overflow:hidden"><div id="who-r0-pic" class="pic" style="width:500px;height:501px"><img src="assets/img/press.jpg" alt=""></div></div>
+    <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 40%, rgba(14,10,8,0.6) 62%, rgba(14,10,8,0.85) 100%)"></div>
+    </div>
+<div id="who-rw0" class="kt white" style="left:72px;top:1560px;width:936px;font-size:120px;text-align:left;z-index:5">Printer.</div>
+<div id="who-r1" class="full plate" style="z-index:1;opacity:0">
+    <div class="full" style="overflow:hidden"><div id="who-r1-pic" class="pic" style="width:1920px;height:2396px"><img src="assets/img/martin.jpg" alt=""></div></div>
+    <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 40%, rgba(14,10,8,0.6) 62%, rgba(14,10,8,0.85) 100%)"></div>
+    </div>
+<div id="who-rw1" class="kt white" style="left:72px;top:1560px;width:936px;font-size:120px;text-align:left;z-index:5">Writer.</div>
+<div id="who-r2" class="full plate" style="z-index:1;opacity:0">
+    <div class="full" style="overflow:hidden"><div id="who-r2-pic" class="pic" style="width:1920px;height:2573px"><img src="assets/img/kite.jpg" alt=""></div></div>
+    <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 40%, rgba(14,10,8,0.6) 62%, rgba(14,10,8,0.85) 100%)"></div>
+    </div>
+<div id="who-rw2" class="kt white" style="left:72px;top:1560px;width:936px;font-size:120px;text-align:left;z-index:5">Scientist.</div>
+<div id="who-r3" class="full plate" style="z-index:1;opacity:0">
+    <div class="full" style="overflow:hidden"><div id="who-r3-pic" class="pic" style="width:1280px;height:1304px"><img src="assets/img/stove.jpg" alt=""></div></div>
+    <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 40%, rgba(14,10,8,0.6) 62%, rgba(14,10,8,0.85) 100%)"></div>
+    </div>
+<div id="who-rw3" class="kt white" style="left:72px;top:1560px;width:936px;font-size:120px;text-align:left;z-index:5">Inventor.</div>
+<div id="who-trum" class="full plate" style="z-index:1;opacity:0">
+    <div class="full" style="overflow:hidden"><div id="who-trum-pic" class="pic" style="width:1920px;height:1273px"><img src="assets/img/trumbull.jpg" alt=""></div></div>
+    <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 40%, rgba(14,10,8,0.6) 62%, rgba(14,10,8,0.85) 100%)"></div>
+    <div class="credit">John Trumbull, Declaration of Independence, 1818</div></div>
+<div id="who-con" class="full plate" style="z-index:1;opacity:0">
+    <div class="full" style="overflow:hidden"><div id="who-con-pic" class="pic" style="width:3547px;height:4300px"><img src="assets/img/constitution4.jpg" alt=""></div></div>
+    <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 40%, rgba(14,10,8,0.6) 62%, rgba(14,10,8,0.85) 100%)"></div>
+    <div class="credit">Constitution, p. 4, 1787 · National Archives</div></div>
+<svg id="who-ring" class="abs" style="left:87.905px;top:801.023px;width:906.35px;height:320.5px;overflow:visible;z-index:6" viewBox="0 0 906.35 320.5"><ellipse cx="453.175" cy="160.25" rx="433.175" ry="140.25" fill="none" stroke="#B87758" stroke-width="9" pathLength="100" stroke-dasharray="100 120" stroke-dashoffset="110" stroke-linecap="round"/></svg>
+<div id="who-one6" class="kt white" style="left:72px;top:1330px;width:936px;font-size:180px;text-align:center;z-index:6">1 <i style="font-size:0.5em">of</i> 6</div>
+<div id="who-mg" class="full" style="opacity:0;background:radial-gradient(120% 80% at 50% 38%, #3A2A22 0%, #1E1612 60%, #120D0B 100%)"></div>
+<svg id="who-need" class="abs" style="left:0;top:0;width:1080px;height:1920px;overflow:visible" viewBox="0 0 1080 1920">
+    <circle id="who-needfill" cx="540" cy="880" r="210" fill="#F0D5BB" opacity="0"/>
+    <circle id="who-needring" cx="540" cy="880" r="210" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="5" stroke-dasharray="14 12" pathLength="1000" transform="rotate(-90 540 880)"/></svg>
+<div id="who-needk" class="kk white" style="left:72px;top:1134px;width:936px;text-align:center">a public need</div>
+<div id="who-metk" class="kk white" style="left:72px;top:1134px;width:936px;text-align:center">met by many members</div>
+<div id="who-dt0" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #C4DDB8 45%, #C4DDB8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt1" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #B8CAE0 45%, #B8CAE0 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt2" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #E0B8C8 45%, #E0B8C8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt3" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #F0D5BB 45%, #F0D5BB 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt4" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #C4DDB8 45%, #C4DDB8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt5" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #B8CAE0 45%, #B8CAE0 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt6" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #E0B8C8 45%, #E0B8C8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt7" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #F0D5BB 45%, #F0D5BB 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt8" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #C4DDB8 45%, #C4DDB8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt9" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #B8CAE0 45%, #B8CAE0 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt10" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #E0B8C8 45%, #E0B8C8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt11" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #F0D5BB 45%, #F0D5BB 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt12" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #C4DDB8 45%, #C4DDB8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt13" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #B8CAE0 45%, #B8CAE0 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt14" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #E0B8C8 45%, #E0B8C8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt15" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #F0D5BB 45%, #F0D5BB 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt16" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #C4DDB8 45%, #C4DDB8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt17" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #B8CAE0 45%, #B8CAE0 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt18" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #E0B8C8 45%, #E0B8C8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt19" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #F0D5BB 45%, #F0D5BB 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt20" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #C4DDB8 45%, #C4DDB8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt21" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #B8CAE0 45%, #B8CAE0 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt22" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #E0B8C8 45%, #E0B8C8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt23" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #F0D5BB 45%, #F0D5BB 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt24" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #C4DDB8 45%, #C4DDB8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt25" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #B8CAE0 45%, #B8CAE0 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt26" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #E0B8C8 45%, #E0B8C8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt27" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #F0D5BB 45%, #F0D5BB 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt28" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #C4DDB8 45%, #C4DDB8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt29" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #B8CAE0 45%, #B8CAE0 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt30" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #E0B8C8 45%, #E0B8C8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt31" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #F0D5BB 45%, #F0D5BB 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt32" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #C4DDB8 45%, #C4DDB8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt33" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #B8CAE0 45%, #B8CAE0 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt34" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #E0B8C8 45%, #E0B8C8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt35" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #F0D5BB 45%, #F0D5BB 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt36" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #C4DDB8 45%, #C4DDB8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt37" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #B8CAE0 45%, #B8CAE0 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt38" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #E0B8C8 45%, #E0B8C8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt39" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #F0D5BB 45%, #F0D5BB 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt40" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #C4DDB8 45%, #C4DDB8 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div><div id="who-dt41" class="abs" style="left:-13px;top:-13px;width:26px;height:26px;border-radius:13px;opacity:0;background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #B8CAE0 45%, #B8CAE0 100%);box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div>
+<div id="who-mk" class="kt white" style="left:72px;top:330px;width:936px;font-size:80px;text-align:center;">One method</div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.set("#who-r0-pic", {"x":-7.5,"y":-25.423,"scale":0.263}, 0);
-    tl.fromTo("#who-r0", {"opacity":0,"filter":"blur(6px)","x":120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.45,"ease":"expo.out","stagger":0}, 1.17);
-    tl.set("#who-r1-pic", {"x":0,"y":-9.89,"scale":0.086}, 0);
-    tl.fromTo("#who-r1", {"opacity":0,"filter":"blur(6px)","x":120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.45,"ease":"expo.out","stagger":0}, 1.81);
-    tl.set("#who-r2-pic", {"x":-15,"y":-10.335,"scale":0.086}, 0);
-    tl.fromTo("#who-r2", {"opacity":0,"filter":"blur(6px)","x":120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.45,"ease":"expo.out","stagger":0}, 2.93);
-    tl.set("#who-r3-pic", {"x":0,"y":-44.856,"scale":0.129}, 0);
-    tl.fromTo("#who-r3", {"opacity":0,"filter":"blur(6px)","x":120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.45,"ease":"expo.out","stagger":0}, 3.51);
-    tl.fromTo("#who-por", {"opacity":0,"filter":"blur(6px)","x":-120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.6,"ease":"expo.out","stagger":0}, 0.05);
-    tl.fromTo("#who-por-pic", {"x":-56.94,"y":0,"scale":0.311}, {"x":-92.768,"y":0,"scale":0.347,"duration":4.861,"ease":"power1.inOut"}, 0.05);
-    tl.set("#who-name", {"opacity":1}, 0.25);
-    tl.fromTo("#who-name .w", {"opacity":0,"filter":"blur(6px)"}, {"opacity":1,"filter":"blur(0px)","duration":0.16,"ease":"power2.out","stagger":0.12}, 0.25);
-    tl.fromTo("#who-name .small", {"opacity":0}, {"opacity":1,"duration":0.3}, 0.45);
-    tl.to("#who-por, #who-name, #who-r0, #who-r1, #who-r2, #who-r3", {"opacity":0,"filter":"blur(8px)","duration":0.22,"ease":"power2.in"}, 4.181);
-    tl.fromTo("#who-trum", {"opacity":0,"filter":"blur(6px)","scale":0.94}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.6,"ease":"expo.out","stagger":0}, 4.431);
-    tl.fromTo("#who-trum-pic", {"x":0,"y":-40.25,"scale":0.5}, {"x":-323.52,"y":-134.452,"scale":0.675,"duration":3.22,"ease":"power2.inOut"}, 4.431);
-    tl.fromTo("#who-con", {"opacity":0,"filter":"blur(6px)","x":120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 6.921);
-    tl.fromTo("#who-con-pic", {"x":0,"y":-567.8,"scale":0.271}, {"x":-1536,"y":-2283.077,"scale":0.704,"duration":0.9,"ease":"power2.inOut"}, 7.121);
-    tl.fromTo("#who-ring ellipse", {"strokeDashoffset":110}, {"strokeDashoffset":0,"duration":0.5,"ease":"power2.inOut"}, 7.971);
-    tl.fromTo("#who-six", {"opacity":0,"filter":"blur(6px)","y":70}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 5.291);
-    tl.to("#who-trum, #who-con, #who-ring, #who-six", {"opacity":0,"filter":"blur(8px)","duration":0.22,"ease":"power2.in"}, 10.426);
-    tl.fromTo("#who-mh", {"opacity":0}, {"opacity":1,"duration":0.3}, 10.676);
-    tl.fromTo("#who-st0", {"opacity":0,"filter":"blur(6px)","x":-120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.45,"ease":"expo.out","stagger":0}, 12.736);
-    tl.fromTo("#who-ln1", {"opacity":1,"scaleY":0}, {"opacity":1,"scaleY":1,"duration":0.2,"ease":"power2.out"}, 15.966);
-    tl.fromTo("#who-st1", {"opacity":0,"filter":"blur(6px)","x":-120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.45,"ease":"expo.out","stagger":0}, 16.116);
-    tl.fromTo("#who-ln2", {"opacity":1,"scaleY":0}, {"opacity":1,"scaleY":1,"duration":0.2,"ease":"power2.out"}, 17.386);
-    tl.fromTo("#who-st2", {"opacity":0,"filter":"blur(6px)","x":-120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.45,"ease":"expo.out","stagger":0}, 17.536);
-    tl.fromTo("#who-ln3", {"opacity":1,"scaleY":0}, {"opacity":1,"scaleY":1,"duration":0.2,"ease":"power2.out"}, 18.036);
-    tl.fromTo("#who-st3", {"opacity":0,"filter":"blur(6px)","x":-120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.45,"ease":"expo.out","stagger":0}, 18.186);
+    tl.fromTo("#who-por-pic", {"x":-239.695,"y":0,"scale":0.812}, {"x":-317.665,"y":-96,"scale":0.893,"duration":4.793,"ease":"power1.inOut"}, 0);
+    tl.set("#who-por", {"opacity":1}, 0.05);
+    tl.fromTo("#who-por", {"clipPath":"inset(100% 0% 0% 0%)"}, {"clipPath":"inset(0% 0% 0% 0%)","duration":0.55,"ease":"expo.out"}, 0.05);
+    tl.set("#who-por", {"opacity":0}, 4.243);
+    tl.fromTo("#who-name", {"opacity":0,"y":60,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.7,"ease":"expo.out"}, 0.1);
+    tl.to("#who-name", {"opacity":0,"duration":0.2}, 4.193);
+    tl.fromTo("#who-r0-pic", {"x":-465.988,"y":-48,"scale":4.024}, {"x":-513.892,"y":-96,"scale":4.216,"duration":1.24,"ease":"power1.inOut"}, 3.903);
+    tl.set("#who-r0", {"opacity":1}, 4.203);
+    tl.fromTo("#who-r0", {"scale":1.08}, {"scale":1,"duration":0.45,"ease":"expo.out","immediateRender":false}, 4.203);
+    tl.set("#who-r0", {"opacity":0}, 4.843);
+    tl.fromTo("#who-rw0", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 4.203);
+    tl.set("#who-rw0", {"opacity":0}, 4.843);
+    tl.fromTo("#who-r1-pic", {"x":-267.746,"y":-48,"scale":0.841}, {"x":-306.21,"y":-96,"scale":0.881,"duration":1.72,"ease":"power1.inOut"}, 4.543);
+    tl.set("#who-r1", {"opacity":1}, 4.843);
+    tl.fromTo("#who-r1", {"scale":1.08}, {"scale":1,"duration":0.45,"ease":"expo.out","immediateRender":false}, 4.843);
+    tl.set("#who-r1", {"opacity":0}, 5.963);
+    tl.fromTo("#who-rw1", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 4.843);
+    tl.set("#who-rw1", {"opacity":0}, 5.963);
+    tl.fromTo("#who-r2-pic", {"x":-176.362,"y":0,"scale":0.746}, {"x":-247.998,"y":-96,"scale":0.821,"duration":1.18,"ease":"power1.inOut"}, 5.663);
+    tl.set("#who-r2", {"opacity":1}, 5.963);
+    tl.fromTo("#who-r2", {"scale":1.08}, {"scale":1,"duration":0.45,"ease":"expo.out","immediateRender":false}, 5.963);
+    tl.set("#who-r2", {"opacity":0}, 6.543);
+    tl.fromTo("#who-rw2", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 5.963);
+    tl.set("#who-rw2", {"opacity":0}, 6.543);
+    tl.fromTo("#who-r3-pic", {"x":-402.331,"y":0,"scale":1.472}, {"x":-496.564,"y":-96,"scale":1.62,"duration":1.581,"ease":"power1.inOut"}, 6.243);
+    tl.set("#who-r3", {"opacity":1}, 6.543);
+    tl.fromTo("#who-r3", {"scale":1.08}, {"scale":1,"duration":0.45,"ease":"expo.out","immediateRender":false}, 6.543);
+    tl.set("#who-r3", {"opacity":0}, 7.524);
+    tl.fromTo("#who-rw3", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 6.543);
+    tl.set("#who-rw3", {"opacity":0}, 7.524);
+    tl.fromTo("#who-trum-pic", {"x":-907.918,"y":0,"scale":1.508}, {"x":-980.314,"y":-48,"scale":1.584,"duration":3.62,"ease":"power1.inOut"}, 7.224);
+    tl.set("#who-trum", {"opacity":1}, 7.524);
+    tl.fromTo("#who-trum", {"clipPath":"inset(0% 0% 0% 100%)"}, {"clipPath":"inset(0% 0% 0% 0%)","duration":0.55,"ease":"expo.out"}, 7.524);
+    tl.set("#who-trum", {"opacity":0}, 10.544);
+    tl.fromTo("#who-con-pic", {"x":-638.33,"y":-384,"scale":0.536}, {"x":-5540.595,"y":-6210.977,"scale":1.965,"duration":0.75,"ease":"expo.inOut"}, 10.744);
+    tl.fromTo("#who-con", {"opacity":0,"scale":1.22,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.8,"ease":"expo.out"}, 10.544);
+    tl.to("#who-con", {"opacity":0,"scale":1.12,"filter":"blur(8px)","duration":0.45,"ease":"power2.in"}, 13.269);
+    tl.fromTo("#who-ring ellipse", {"strokeDashoffset":110}, {"strokeDashoffset":0,"duration":0.6,"ease":"power2.inOut"}, 11.494);
+    tl.set("#who-ring", {"opacity":0}, 13.719);
+    tl.fromTo("#who-one6", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 12.094);
+    tl.set("#who-one6", {"opacity":0}, 13.719);
+    tl.set("#who-mg", {"opacity":1}, 13.469);
+    tl.fromTo("#who-needring", {"strokeDashoffset":1000,"opacity":0}, {"strokeDashoffset":0,"opacity":1,"duration":0.9,"ease":"power2.inOut"}, 16.649);
+    tl.fromTo("#who-needk", {"opacity":0,"y":16,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 17.529);
+    tl.set("#who-dt0", {"x":812.361,"y":1112.915,"opacity":0}, 0);
+    tl.to("#who-dt0", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.519);
+    tl.to("#who-dt0", {"y":1094.915,"duration":5.59,"ease":"none"}, 13.519);
+    tl.to("#who-dt0", {"x":560.076,"y":880,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.109);
+    tl.set("#who-dt1", {"x":160.842,"y":947.643,"opacity":0}, 0);
+    tl.to("#who-dt1", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.559);
+    tl.to("#who-dt1", {"y":929.643,"duration":5.64,"ease":"none"}, 13.519);
+    tl.to("#who-dt1", {"x":514.36,"y":903.489,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.159);
+    tl.set("#who-dt2", {"x":816.61,"y":458.724,"opacity":0}, 0);
+    tl.to("#who-dt2", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.599);
+    tl.to("#who-dt2", {"y":440.724,"duration":5.691,"ease":"none"}, 13.519);
+    tl.to("#who-dt2", {"x":543.924,"y":835.28,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.21);
+    tl.set("#who-dt3", {"x":566.637,"y":1420,"opacity":0}, 0);
+    tl.to("#who-dt3", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.639);
+    tl.to("#who-dt3", {"y":1402,"duration":5.741,"ease":"none"}, 13.519);
+    tl.to("#who-dt3", {"x":572.318,"y":922.153,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.26);
+    tl.set("#who-dt4", {"x":274.114,"y":554.787,"opacity":0}, 0);
+    tl.to("#who-dt4", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.679);
+    tl.to("#who-dt4", {"y":536.787,"duration":5.792,"ease":"none"}, 13.519);
+    tl.to("#who-dt4", {"x":480.692,"y":869.51,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.311);
+    tl.set("#who-dt5", {"x":964.772,"y":897.405,"opacity":0}, 0);
+    tl.to("#who-dt5", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.719);
+    tl.to("#who-dt5", {"y":879.405,"duration":5.842,"ease":"none"}, 13.519);
+    tl.to("#who-dt5", {"x":596.181,"y":844.261,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.361);
+    tl.set("#who-dt6", {"x":177.191,"y":1269.016,"opacity":0}, 0);
+    tl.to("#who-dt6", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.759);
+    tl.to("#who-dt6", {"y":1251.016,"duration":5.893,"ease":"none"}, 13.519);
+    tl.to("#who-dt6", {"x":521.21,"y":949.904,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.412);
+    tl.set("#who-dt7", {"x":583.228,"y":431.997,"opacity":0}, 0);
+    tl.to("#who-dt7", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.799);
+    tl.to("#who-dt7", {"y":413.997,"duration":5.943,"ease":"none"}, 13.519);
+    tl.to("#who-dt7", {"x":504.161,"y":810.998,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.462);
+    tl.set("#who-dt8", {"x":781.131,"y":1300.661,"opacity":0}, 0);
+    tl.to("#who-dt8", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.839);
+    tl.to("#who-dt8", {"y":1282.661,"duration":5.994,"ease":"none"}, 13.519);
+    tl.to("#who-dt8", {"x":617.754,"y":908.393,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.513);
+    tl.set("#who-dt9", {"x":82.998,"y":759.853,"opacity":0}, 0);
+    tl.to("#who-dt9", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.879);
+    tl.to("#who-dt9", {"y":741.853,"duration":6.044,"ease":"none"}, 13.519);
+    tl.to("#who-dt9", {"x":459.112,"y":913.392,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.563);
+    tl.set("#who-dt10", {"x":841.19,"y":657.146,"opacity":0}, 0);
+    tl.to("#who-dt10", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.919);
+    tl.to("#who-dt10", {"y":639.146,"duration":6.095,"ease":"none"}, 13.519);
+    tl.to("#who-dt10", {"x":578.991,"y":796.671,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.614);
+    tl.set("#who-dt11", {"x":422.999,"y":1362.052,"opacity":0}, 0);
+    tl.to("#who-dt11", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.959);
+    tl.to("#who-dt11", {"y":1344.052,"duration":6.145,"ease":"none"}, 13.519);
+    tl.to("#who-dt11", {"x":568.819,"y":971.867,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.664);
+    tl.set("#who-dt12", {"x":342.807,"y":400,"opacity":0}, 0);
+    tl.to("#who-dt12", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.519);
+    tl.to("#who-dt12", {"y":382,"duration":6.196,"ease":"none"}, 13.519);
+    tl.to("#who-dt12", {"x":453.148,"y":829.672,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.715);
+    tl.set("#who-dt13", {"x":854.586,"y":1037.899,"opacity":0}, 0);
+    tl.to("#who-dt13", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.559);
+    tl.to("#who-dt13", {"y":1019.899,"duration":6.246,"ease":"none"}, 13.519);
+    tl.to("#who-dt13", {"x":641.884,"y":857.597,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.765);
+    tl.set("#who-dt14", {"x":173.119,"y":1052.583,"opacity":0}, 0);
+    tl.to("#who-dt14", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.599);
+    tl.to("#who-dt14", {"y":1034.583,"duration":6.297,"ease":"none"}, 13.519);
+    tl.to("#who-dt14", {"x":477.825,"y":968.446,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.816);
+    tl.set("#who-dt15", {"x":741.177,"y":400,"opacity":0}, 0);
+    tl.to("#who-dt15", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.639);
+    tl.to("#who-dt15", {"y":382,"duration":6.347,"ease":"none"}, 13.519);
+    tl.to("#who-dt15", {"x":525.63,"y":769.149,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.866);
+    tl.set("#who-dt16", {"x":674.111,"y":1420,"opacity":0}, 0);
+    tl.to("#who-dt16", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.679);
+    tl.to("#who-dt16", {"y":1402,"duration":6.398,"ease":"none"}, 13.519);
+    tl.to("#who-dt16", {"x":628.189,"y":954.318,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.917);
+    tl.set("#who-dt17", {"x":216.463,"y":628.49,"opacity":0}, 0);
+    tl.to("#who-dt17", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.719);
+    tl.to("#who-dt17", {"y":610.49,"duration":6.448,"ease":"none"}, 13.519);
+    tl.to("#who-dt17", {"x":421.33,"y":884.914,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 19.967);
+    tl.set("#who-dt18", {"x":966.563,"y":779.997,"opacity":0}, 0);
+    tl.to("#who-dt18", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.759);
+    tl.to("#who-dt18", {"y":761.997,"duration":6.499,"ease":"none"}, 13.519);
+    tl.to("#who-dt18", {"x":626.556,"y":793.856,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.018);
+    tl.set("#who-dt19", {"x":247.749,"y":1366.952,"opacity":0}, 0);
+    tl.to("#who-dt19", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.799);
+    tl.to("#who-dt19", {"y":1348.952,"duration":6.549,"ease":"none"}, 13.519);
+    tl.to("#who-dt19", {"x":534.216,"y":1005.241,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.068);
+    tl.set("#who-dt20", {"x":503.75,"y":419.725,"opacity":0}, 0);
+    tl.to("#who-dt20", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.839);
+    tl.to("#who-dt20", {"y":401.725,"duration":6.6,"ease":"none"}, 13.519);
+    tl.to("#who-dt20", {"x":457.631,"y":781.307,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.119);
+    tl.set("#who-dt21", {"x":854.955,"y":1232.962,"opacity":0}, 0);
+    tl.to("#who-dt21", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.879);
+    tl.to("#who-dt21", {"y":1214.962,"duration":6.65,"ease":"none"}, 13.519);
+    tl.to("#who-dt21", {"x":670.473,"y":897.546,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.169);
+    tl.set("#who-dt22", {"x":64.028,"y":886.465,"opacity":0}, 0);
+    tl.to("#who-dt22", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.919);
+    tl.to("#who-dt22", {"y":868.465,"duration":6.7,"ease":"none"}, 13.519);
+    tl.to("#who-dt22", {"x":429.457,"y":956.925,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.219);
+    tl.set("#who-dt23", {"x":802.032,"y":573.252,"opacity":0}, 0);
+    tl.to("#who-dt23", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.959);
+    tl.to("#who-dt23", {"y":555.252,"duration":6.751,"ease":"none"}, 13.519);
+    tl.to("#who-dt23", {"x":570.198,"y":745.719,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.27);
+    tl.set("#who-dt24", {"x":508.553,"y":1393.498,"opacity":0}, 0);
+    tl.to("#who-dt24", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.519);
+    tl.to("#who-dt24", {"y":1375.498,"duration":6.801,"ease":"none"}, 13.519);
+    tl.to("#who-dt24", {"x":609.879,"y":1001.927,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.32);
+    tl.set("#who-dt25", {"x":252.934,"y":422.735,"opacity":0}, 0);
+    tl.to("#who-dt25", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.559);
+    tl.to("#who-dt25", {"y":404.735,"duration":6.852,"ease":"none"}, 13.519);
+    tl.to("#who-dt25", {"x":403.407,"y":836.435,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.371);
+    tl.set("#who-dt26", {"x":883.349,"y":950.878,"opacity":0}, 0);
+    tl.to("#who-dt26", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.599);
+    tl.to("#who-dt26", {"y":932.878,"duration":6.902,"ease":"none"}, 13.519);
+    tl.to("#who-dt26", {"x":672.674,"y":818.688,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.421);
+    tl.set("#who-dt27", {"x":204.161,"y":1153.899,"opacity":0}, 0);
+    tl.to("#who-dt27", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.639);
+    tl.to("#who-dt27", {"y":1135.899,"duration":6.953,"ease":"none"}, 13.519);
+    tl.to("#who-dt27", {"x":482.532,"y":1017.35,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.472);
+    tl.set("#who-dt28", {"x":652.732,"y":400,"opacity":0}, 0);
+    tl.to("#who-dt28", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.679);
+    tl.to("#who-dt28", {"y":382,"duration":7.003,"ease":"none"}, 13.519);
+    tl.to("#who-dt28", {"x":488.688,"y":737.379,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.522);
+    tl.set("#who-dt29", {"x":698.848,"y":1251.518,"opacity":0}, 0);
+    tl.to("#who-dt29", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.719);
+    tl.to("#who-dt29", {"y":1233.518,"duration":7.054,"ease":"none"}, 13.519);
+    tl.to("#who-dt29", {"x":676.509,"y":951.729,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.573);
+    tl.set("#who-dt30", {"x":172.092,"y":718.252,"opacity":0}, 0);
+    tl.to("#who-dt30", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.759);
+    tl.to("#who-dt30", {"y":700.252,"duration":7.104,"ease":"none"}, 13.519);
+    tl.to("#who-dt30", {"x":388.384,"y":919.981,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.623);
+    tl.set("#who-dt31", {"x":947.413,"y":662.543,"opacity":0}, 0);
+    tl.to("#who-dt31", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.799);
+    tl.to("#who-dt31", {"y":644.543,"duration":7.155,"ease":"none"}, 13.519);
+    tl.to("#who-dt31", {"x":626.168,"y":745.959,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.674);
+    tl.set("#who-dt32", {"x":335.278,"y":1420,"opacity":0}, 0);
+    tl.to("#who-dt32", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.839);
+    tl.to("#who-dt32", {"y":1402,"duration":7.205,"ease":"none"}, 13.519);
+    tl.to("#who-dt32", {"x":567.431,"y":1039.517,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.724);
+    tl.set("#who-dt33", {"x":422.112,"y":429.751,"opacity":0}, 0);
+    tl.to("#who-dt33", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.879);
+    tl.to("#who-dt33", {"y":411.751,"duration":7.256,"ease":"none"}, 13.519);
+    tl.to("#who-dt33", {"x":410.067,"y":779.394,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.775);
+    tl.set("#who-dt34", {"x":916.448,"y":1144.903,"opacity":0}, 0);
+    tl.to("#who-dt34", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.919);
+    tl.to("#who-dt34", {"y":1126.903,"duration":7.306,"ease":"none"}, 13.519);
+    tl.to("#who-dt34", {"x":706.193,"y":866.213,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.825);
+    tl.set("#who-dt35", {"x":67.665,"y":1017.64,"opacity":0}, 0);
+    tl.to("#who-dt35", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.959);
+    tl.to("#who-dt35", {"y":999.64,"duration":7.357,"ease":"none"}, 13.519);
+    tl.to("#who-dt35", {"x":425.138,"y":1004.19,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.876);
+    tl.set("#who-dt36", {"x":747.788,"y":500.346,"opacity":0}, 0);
+    tl.to("#who-dt36", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.519);
+    tl.to("#who-dt36", {"y":482.346,"duration":7.407,"ease":"none"}, 13.519);
+    tl.to("#who-dt36", {"x":540.817,"y":708.472,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.926);
+    tl.set("#who-dt37", {"x":599.483,"y":1400.971,"opacity":0}, 0);
+    tl.to("#who-dt37", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.559);
+    tl.to("#who-dt37", {"y":1382.971,"duration":7.458,"ease":"none"}, 13.519);
+    tl.to("#who-dt37", {"x":656.832,"y":1008.759,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 20.977);
+    tl.set("#who-dt38", {"x":173.606,"y":504.102,"opacity":0}, 0);
+    tl.to("#who-dt38", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.599);
+    tl.to("#who-dt38", {"y":486.102,"duration":7.508,"ease":"none"}, 13.519);
+    tl.to("#who-dt38", {"x":364.583,"y":863.764,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 21.027);
+    tl.set("#who-dt39", {"x":896.47,"y":855.692,"opacity":0}, 0);
+    tl.to("#who-dt39", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.639);
+    tl.to("#who-dt39", {"y":837.692,"duration":7.559,"ease":"none"}, 13.519);
+    tl.to("#who-dt39", {"x":682.124,"y":772.104,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 21.078);
+    tl.set("#who-dt40", {"x":253.253,"y":1246.308,"opacity":0}, 0);
+    tl.to("#who-dt40", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.679);
+    tl.to("#who-dt40", {"y":1228.308,"duration":7.609,"ease":"none"}, 13.519);
+    tl.to("#who-dt40", {"x":507.683,"y":1057.771,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 21.128);
+    tl.set("#who-dt41", {"x":555.169,"y":400,"opacity":0}, 0);
+    tl.to("#who-dt41", {"opacity":0.55,"duration":0.6,"ease":"power1.out"}, 13.719);
+    tl.to("#who-dt41", {"y":382,"duration":7.66,"ease":"none"}, 13.519);
+    tl.to("#who-dt41", {"x":442.565,"y":725.212,"opacity":1,"duration":0.9,"ease":"power3.inOut"}, 21.179);
+    tl.to("#who-needfill", {"opacity":0.22,"duration":0.6,"ease":"power1.out"}, 21.729);
+    tl.to("#who-needring", {"strokeDasharray":"1000 0","duration":0.5,"ease":"power1.out"}, 21.729);
+    tl.to("#who-needk", {"opacity":0,"filter":"blur(6px)","duration":0.3}, 20.429);
+    tl.fromTo("#who-metk", {"opacity":0,"y":16,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 20.629);
+    tl.fromTo("#who-mk", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 15.349);
+    tl.to("#who-mk, #who-metk", {"opacity":0,"filter":"blur(8px)","duration":0.3}, 21.732);
     window.__timelines["who"] = tl;
   </script>
 

@@ -1,3 +1,4 @@
+<meta name="robots" content="noindex">
 <template>
   <style>
     @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
@@ -8,6 +9,8 @@
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500i.woff2) format("woff2"); font-weight: 500; font-style: italic; font-display: block; }
     @font-face { font-family: "Major Mono Display"; src: url(assets/fonts/MajorMonoDisplay-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
     #root { position: absolute; inset: 0; overflow: hidden; }
 
     .abs { position: absolute; }
@@ -28,18 +31,77 @@
       font-family: "Major Mono Display", monospace; font-size: 30px; letter-spacing: 0.04em; text-transform: lowercase; color: #1B1613; white-space: nowrap; }
     .bar { position: absolute; border-radius: 4px; }
 
+.maplab { font-family: "Major Mono Display", monospace; text-transform: lowercase; letter-spacing: 0.04em; color: #1B1613; white-space: nowrap;
+    background: rgba(246,238,223,0.94); padding: 6px 16px 9px; border-radius: 6px; box-shadow: 0 2px 10px rgba(40,25,10,0.25); }
 
-
+    .plate { overflow: hidden; transform-origin: 50% 50%; }
+    .credit { position: absolute; right: 48px; bottom: 120px; font-family: "IBM Plex Sans", sans-serif; font-size: 28px; color: rgba(255,255,255,0.72); text-shadow: 0 1px 6px rgba(0,0,0,0.5); }
+    .kt { position: absolute; z-index: 5; font-family: "Lora", serif; font-weight: 600; letter-spacing: -0.01em; line-height: 1.04; opacity: 0; }
+    .kt.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.55), 0 3px 14px rgba(0,0,0,0.5), 0 6px 40px rgba(0,0,0,0.45); }
+    .kt.ink { color: #1B1613; }
+    .kt i { font-style: italic; font-weight: 500; }
+    .kk { position: absolute; z-index: 5; font-family: "Major Mono Display", monospace; font-size: 38px; letter-spacing: 0.06em; text-transform: lowercase; opacity: 0; }
+    .kk.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.7), 0 2px 16px rgba(0,0,0,0.6); }
+    .kk.ink { color: #5C544E; }
+    .flash { position: absolute; inset: 0; background: #FFFFFF; opacity: 0; }
   </style>
-  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920" data-duration="15.351">
-<div id="hook-pros" class="card" style="left:60px;top:380px;width:960px;height:420px;">
-    <div class="abs" style="left:0;top:0;width:960px;height:356px;overflow:hidden"><div id="hook-pros-pic" class="pic" style="width:5801px;height:1597px"><img src="assets/img/prospect.jpg" alt=""></div></div>
-    <div class="cap"><span>East Prospect of Philadelphia, Scull &amp; Heap, 1754</span></div></div>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920" data-duration="11.608">
+<div id="hook-pros" class="full plate" style="z-index:1;opacity:0">
+    <div class="full" style="overflow:hidden"><div id="hook-pros-pic" class="pic" style="width:5801px;height:1597px"><img src="assets/img/prospect.jpg" alt=""></div></div>
+    <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0.82) 0%, rgba(14,10,8,0.6) 28%, rgba(14,10,8,0) 40%, rgba(14,10,8,0) 45%, rgba(14,10,8,0.6) 62%, rgba(14,10,8,0.85) 100%)"></div>
+    <div class="credit">Scull &amp; Heap, East Prospect of Philadelphia, 1754</div></div>
+<div id="hook-y1731" class="kt white" style="left:72px;top:250px;width:936px;font-size:180px;text-align:left;">1731.</div>
+<div id="hook-phl" class="kk white" style="left:72px;top:520px;width:936px;text-align:left">philadelphia</div>
+<div id="hook-no1" class="kt white" style="left:72px;top:1330px;width:936px;font-size:80px;text-align:left;">No lending library.</div>
+<div id="hook-no2" class="kt white" style="left:72px;top:1426px;width:936px;font-size:80px;text-align:left;">No fire company.</div>
+<div id="hook-no3" class="kt white" style="left:72px;top:1522px;width:936px;font-size:80px;text-align:left;">No hospital.</div>
+<div id="hook-no4" class="kt white" style="left:72px;top:1618px;width:936px;font-size:80px;text-align:left;">No college.</div>
+<div id="hook-map" class="full plate" style="z-index:1;opacity:0">
+    <div class="full" style="overflow:hidden"><div id="hook-map-pic" class="pic" style="width:1215px;height:2160px"><img src="assets/img/philadelphia-1762.jpg" alt=""><div id="hook-lr-library" class="abs" style="left:408.709px;top:1148.536px;width:88px;height:88px;border-radius:44px;border:4.5px solid #4E73A3;opacity:0"></div>
+         <div id="hook-ld-library" class="abs" style="left:422.709px;top:1162.536px;width:60px;height:60px;border-radius:30px;border:6.75px solid #4E73A3;box-sizing:border-box;box-shadow:0 0 0 3.375px #F6EEDF, inset 0 0 0 3.375px #F6EEDF;opacity:0">
+           <div style="position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:5px;background:#4E73A3"></div></div><div class="abs" style="left:492.709px;top:1162.536px"><div id="hook-ll-library" class="maplab" style="font-size:42.75px;opacity:0">library company</div></div><div id="hook-lg-fire" class="abs" style="left:650.394px;top:720.08px;width:720px;height:560px;border-radius:50%;opacity:0;background:radial-gradient(closest-side, rgba(214,104,50,0.72), rgba(214,104,50,0.32) 60%, rgba(214,104,50,0) 100%)"></div><div class="abs" style="left:1180.394px;top:970.08px;transform:translateX(-100%)"><div id="hook-ll-fire" class="maplab" style="font-size:42.75px;opacity:0">union fire company</div></div><div id="hook-lr-hospital" class="abs" style="left:48.70450000000001px;top:1691.344px;width:88px;height:88px;border-radius:44px;border:4.5px solid #3F8A80;opacity:0"></div>
+         <div id="hook-ld-hospital" class="abs" style="left:62.70450000000001px;top:1705.344px;width:60px;height:60px;border-radius:30px;border:6.75px solid #3F8A80;box-sizing:border-box;box-shadow:0 0 0 3.375px #F6EEDF, inset 0 0 0 3.375px #F6EEDF;opacity:0">
+           <div style="position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:5px;background:#3F8A80"></div></div><div class="abs" style="left:132.7045px;top:1705.344px"><div id="hook-ll-hospital" class="maplab" style="font-size:42.75px;opacity:0">pennsylvania hospital</div></div><div id="hook-lr-academy" class="abs" style="left:606.9970000000001px;top:771.1840000000001px;width:88px;height:88px;border-radius:44px;border:4.5px solid #5E8A4E;opacity:0"></div>
+         <div id="hook-ld-academy" class="abs" style="left:620.9970000000001px;top:785.1840000000001px;width:60px;height:60px;border-radius:30px;border:6.75px solid #5E8A4E;box-sizing:border-box;box-shadow:0 0 0 3.375px #F6EEDF, inset 0 0 0 3.375px #F6EEDF;opacity:0">
+           <div style="position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:5px;background:#5E8A4E"></div></div><div class="abs" style="left:690.9970000000001px;top:785.1840000000001px"><div id="hook-ll-academy" class="maplab" style="font-size:42.75px;opacity:0">academy</div></div></div></div>
+    <div class="full" style="background:linear-gradient(0deg, rgba(14,10,8,0) 55%, rgba(14,10,8,0.7) 100%)"></div>
+    <div class="credit">Nicholas Scull, plan of Philadelphia, 1762 · Library of Congress</div></div>
+<div id="hook-fl" class="flash"></div>
+<div id="hook-y1751" class="kt white" style="left:72px;top:200px;width:936px;font-size:180px;text-align:left;z-index:6">1751</div>
+<div id="hook-all4" class="kt white" style="left:72px;top:400px;width:936px;font-size:120px;text-align:left;z-index:6"><i>All four.</i></div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo("#hook-pros-pic", {"x":0,"y":0,"scale":0.223}, {"x":-295.888,"y":0,"scale":0.223,"duration":15.451,"ease":"power1.inOut"}, 0);
-    tl.to("#hook-pros", {"opacity":0,"filter":"blur(8px)","duration":0.25,"ease":"power2.in"}, 15.101);
+    tl.fromTo("#hook-pros-pic", {"x":-631.678,"y":-88.32,"scale":1.262}, {"x":-3990.49,"y":-115.2,"scale":1.347,"duration":8.068,"ease":"power1.inOut"}, 0);
+    tl.set("#hook-pros", {"opacity":1}, 0);
+    tl.fromTo("#hook-pros", {"scale":1.08}, {"scale":1,"duration":0.45,"ease":"expo.out","immediateRender":false}, 0);
+    tl.set("#hook-pros", {"opacity":0}, 7.468);
+    tl.fromTo("#hook-y1731", {"opacity":1,"scale":1.18,"filter":"blur(6px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.7,"ease":"expo.out"}, 0);
+    tl.fromTo("#hook-phl", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 1.78);
+    tl.fromTo("#hook-no1", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 2.53);
+    tl.fromTo("#hook-no2", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 3.97);
+    tl.fromTo("#hook-no3", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 5.01);
+    tl.fromTo("#hook-no4", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 6.19);
+    tl.fromTo("#hook-map-pic", {"x":0,"y":0,"scale":0.889}, {"x":-32.4,"y":-57.6,"scale":0.942,"duration":4.74,"ease":"power1.inOut"}, 7.168);
+    tl.set("#hook-map", {"opacity":1}, 7.468);
+    tl.set("#hook-map", {"opacity":0}, 11.608);
+    tl.fromTo("#hook-ld-library", {"opacity":0,"scale":0.2}, {"opacity":1,"scale":1,"duration":0.45,"ease":"back.out(2)"}, 7.818);
+    tl.fromTo("#hook-lr-library", {"opacity":0.9,"scale":0.5}, {"opacity":0,"scale":2.6,"duration":0.9,"ease":"power2.out"}, 7.818);
+    tl.fromTo("#hook-ll-library", {"opacity":0,"y":10,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.4,"ease":"expo.out"}, 7.918);
+    tl.fromTo("#hook-lg-fire", {"opacity":0,"scale":0.6}, {"opacity":1,"scale":1,"duration":0.6,"ease":"power2.out"}, 8.218);
+    tl.fromTo("#hook-ll-fire", {"opacity":0,"y":10,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.4,"ease":"expo.out"}, 8.318);
+    tl.fromTo("#hook-ld-hospital", {"opacity":0,"scale":0.2}, {"opacity":1,"scale":1,"duration":0.45,"ease":"back.out(2)"}, 8.618);
+    tl.fromTo("#hook-lr-hospital", {"opacity":0.9,"scale":0.5}, {"opacity":0,"scale":2.6,"duration":0.9,"ease":"power2.out"}, 8.618);
+    tl.fromTo("#hook-ll-hospital", {"opacity":0,"y":10,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.4,"ease":"expo.out"}, 8.718);
+    tl.fromTo("#hook-ld-academy", {"opacity":0,"scale":0.2}, {"opacity":1,"scale":1,"duration":0.45,"ease":"back.out(2)"}, 9.018);
+    tl.fromTo("#hook-lr-academy", {"opacity":0.9,"scale":0.5}, {"opacity":0,"scale":2.6,"duration":0.9,"ease":"power2.out"}, 9.018);
+    tl.fromTo("#hook-ll-academy", {"opacity":0,"y":10,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.4,"ease":"expo.out"}, 9.118);
+    tl.fromTo("#hook-fl", {"opacity":0}, {"opacity":1,"duration":0.12,"ease":"power1.in"}, 7.348);
+    tl.to("#hook-fl", {"opacity":0,"duration":0.5,"ease":"power2.out"}, 7.468);
+    tl.set("#hook-y1731, #hook-phl, #hook-no1, #hook-no2, #hook-no3, #hook-no4", {"opacity":0}, 7.468);
+    tl.fromTo("#hook-y1751", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 7.578);
+    tl.fromTo("#hook-all4", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 9.488);
+    tl.to("#hook-y1751, #hook-all4", {"opacity":0,"filter":"blur(8px)","duration":0.25}, 10.908);
     window.__timelines["hook"] = tl;
   </script>
 

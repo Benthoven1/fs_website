@@ -1,3 +1,4 @@
+<meta name="robots" content="noindex">
 <template>
   <style>
     @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
@@ -8,6 +9,8 @@
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500i.woff2) format("woff2"); font-weight: 500; font-style: italic; font-display: block; }
     @font-face { font-family: "Major Mono Display"; src: url(assets/fonts/MajorMonoDisplay-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
     #root { position: absolute; inset: 0; overflow: hidden; }
 
     .abs { position: absolute; }
@@ -30,46 +33,43 @@
 
 
     .wl { position: absolute; left: 0; top: 0; width: 0; height: 0; opacity: 0; }
-    .wl-d { position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 6px; background: #1B1613; border: 2px solid #F9F8F5; }
-    .wl-l { position: absolute; left: -1px; top: -64px; width: 2px; height: 58px; background: #1B1613; }
-    .wl-t { position: absolute; bottom: 66px; left: -300px; width: 600px; text-align: center; font-family: "Major Mono Display", monospace; font-size: 32px;
-      letter-spacing: 0.04em; color: #1B1613; white-space: nowrap; text-shadow: 0 0 10px #F9F8F5, 0 0 4px #F9F8F5; }
+    .wl-d { position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 6px; background: #FFFFFF; border: 2px solid rgba(0,0,0,0.25); }
+    .wl-l { position: absolute; left: -1px; top: -64px; width: 2px; height: 58px; background: rgba(255,255,255,0.85); }
+    .co { position: absolute; left: 0; top: 0; width: 500px; margin-left: -250px; text-align: center; opacity: 0; color: #FFFFFF; text-shadow: 0 1px 10px rgba(0,0,0,0.45); }
+    .co b { display: block; font-family: "Major Mono Display", monospace; font-weight: 400; text-transform: lowercase; font-size: 38px; letter-spacing: 0.04em; line-height: 1.1; }
+    .co em { display: block; margin-top: 8px; font-family: "Lora", serif; font-style: italic; font-size: 38px; color: rgba(255,255,255,0.85); }
+    #world-lab line { stroke: rgba(255,255,255,0.6); stroke-width: 2; }
+    #world-lab circle { fill: rgba(255,255,255,0.85); }
+    .wl-t { position: absolute; bottom: 66px; left: -300px; width: 600px; text-align: center; font-family: "Major Mono Display", monospace; font-size: 38px;
+      letter-spacing: 0.04em; color: #FFFFFF; white-space: nowrap; text-shadow: 0 1px 12px rgba(0,0,0,0.55); }
 
   </style>
-  <div id="root" data-composition-id="world" data-width="1080" data-height="1920" data-duration="139.23">
+  <div id="root" data-composition-id="world" data-width="1080" data-height="1920" data-duration="153.427">
 <div id="world-bg" class="full" style="background:linear-gradient(180deg, #F3F1EC 0%, #ECEAE5 100%)"></div>
-    <div id="world-tint-library" class="full" style="opacity:0;background:linear-gradient(180deg, #D3DEEC 0%, #F1EEE8 62%, #ECEAE5 100%)"></div><div id="world-tint-fire" class="full" style="opacity:0;background:linear-gradient(180deg, #F0DAC8 0%, #F1EEE8 62%, #ECEAE5 100%)"></div><div id="world-tint-hospital" class="full" style="opacity:0;background:linear-gradient(180deg, #CFE4E0 0%, #F1EEE8 62%, #ECEAE5 100%)"></div><div id="world-tint-academy" class="full" style="opacity:0;background:linear-gradient(180deg, #D9E7CF 0%, #F1EEE8 62%, #ECEAE5 100%)"></div><div id="world-tint-neutral" class="full" style="opacity:0;background:linear-gradient(180deg, #E6E1D8 0%, #F1EEE8 62%, #ECEAE5 100%)"></div><div id="world-tint-mulvium" class="full" style="opacity:0;background:linear-gradient(180deg, #ECD6E0 0%, #F1EEE8 62%, #ECEAE5 100%)"></div>
+    <div id="world-tint-library" class="full" style="opacity:0;background:linear-gradient(180deg, #1F3F6B 0%, #4E73A3 100%)"></div><div id="world-tint-fire" class="full" style="opacity:0;background:linear-gradient(180deg, #7A2817 0%, #B4583A 100%)"></div><div id="world-tint-hospital" class="full" style="opacity:0;background:linear-gradient(180deg, #13514A 0%, #3F8A80 100%)"></div><div id="world-tint-academy" class="full" style="opacity:0;background:linear-gradient(180deg, #264F22 0%, #5E8A4E 100%)"></div><div id="world-tint-neutral" class="full" style="opacity:0;background:linear-gradient(180deg, #E6E1D8 0%, #ECEAE5 100%)"></div><div id="world-tint-mulvium" class="full" style="opacity:0;background:linear-gradient(180deg, #24122A 0%, #5A2E4E 100%)"></div>
 <canvas id="world-cv" class="full" width="1080" height="1920" data-layout-ignore></canvas>
     <div id="world-lab" class="full" data-layout-ignore></div>
-    <div id="world-veil" class="full" style="background:#ECEAE5;opacity:0"></div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
     tl.set("#world-tint-library", {"opacity":0}, 0);
-    tl.to("#world-tint-library", {"opacity":1,"duration":1.4,"ease":"power1.inOut"}, 41.009);
-    tl.to("#world-tint-library", {"opacity":0,"duration":1.4,"ease":"power1.inOut"}, 67.997);
+    tl.to("#world-tint-library", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 39.809);
+    tl.to("#world-tint-library", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 66.597);
     tl.set("#world-tint-fire", {"opacity":0}, 0);
-    tl.to("#world-tint-fire", {"opacity":1,"duration":1.4,"ease":"power1.inOut"}, 66.597);
-    tl.to("#world-tint-fire", {"opacity":0,"duration":1.4,"ease":"power1.inOut"}, 84.433);
+    tl.to("#world-tint-fire", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 65.397);
+    tl.to("#world-tint-fire", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 83.033);
     tl.set("#world-tint-hospital", {"opacity":0}, 0);
-    tl.to("#world-tint-hospital", {"opacity":1,"duration":1.4,"ease":"power1.inOut"}, 83.033);
-    tl.to("#world-tint-hospital", {"opacity":0,"duration":1.4,"ease":"power1.inOut"}, 100.48);
+    tl.to("#world-tint-hospital", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 81.833);
+    tl.to("#world-tint-hospital", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 99.08);
     tl.set("#world-tint-academy", {"opacity":0}, 0);
-    tl.to("#world-tint-academy", {"opacity":1,"duration":1.4,"ease":"power1.inOut"}, 99.08);
-    tl.to("#world-tint-academy", {"opacity":0,"duration":1.4,"ease":"power1.inOut"}, 108.729);
+    tl.to("#world-tint-academy", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 97.88);
+    tl.to("#world-tint-academy", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 122.726);
     tl.set("#world-tint-neutral", {"opacity":0}, 0);
-    tl.to("#world-tint-neutral", {"opacity":1,"duration":1.4,"ease":"power1.inOut"}, 107.329);
-    tl.to("#world-tint-neutral", {"opacity":0,"duration":1.4,"ease":"power1.inOut"}, 123.369);
+    tl.to("#world-tint-neutral", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 121.526);
+    tl.to("#world-tint-neutral", {"opacity":0,"duration":1.2,"ease":"power1.inOut"}, 138.706);
     tl.set("#world-tint-mulvium", {"opacity":0}, 0);
-    tl.to("#world-tint-mulvium", {"opacity":1,"duration":1.4,"ease":"power1.inOut"}, 121.969);
-    tl.set("#world-veil", {"opacity":0}, 0);
-    tl.to("#world-veil", {"opacity":0.86,"duration":0.45,"ease":"power2.out"}, 15.151);
-    tl.to("#world-veil", {"opacity":0,"duration":0.5,"ease":"power2.inOut"}, 41.459);
-    tl.to("#world-veil", {"opacity":0.86,"duration":0.45,"ease":"power2.out"}, 51.957);
-    tl.to("#world-veil", {"opacity":0,"duration":0.5,"ease":"power2.inOut"}, 67.897);
-    tl.to("#world-veil", {"opacity":0.86,"duration":0.45,"ease":"power2.out"}, 76.474);
-    tl.to("#world-veil", {"opacity":0,"duration":0.5,"ease":"power2.inOut"}, 83.483);
-    tl.to({}, { duration: 139.23 }, 0);
+    tl.to("#world-tint-mulvium", {"opacity":1,"duration":1.2,"ease":"power1.inOut"}, 137.506);
+    tl.to({}, { duration: 153.427 }, 0);
     window.__timelines["world"] = tl;
   </script>
   <script>
@@ -80,7 +80,7 @@
     import { createWorld } from "../assets/lib/world.js";
     let world = null, last = 0;
     window.addEventListener("hf-seek", (e) => { last = e.detail.time; if (world) world.renderAt(last); });
-    createWorld(document.getElementById("world-cv"), document.getElementById("world-lab"), {"plinths":{"library":4.36,"fire":5.38,"hospital":6.4,"academy":7.68},"build":{"library":[41.559,47.299],"fire":[67.697,74.437],"hospital":[83.583,88.673],"academy":[99.43,103.2],"shared":[122.169,126.341]},"events":{"libCoins":[47.549,50.369],"libBooks":[50.769,52.407],"hospDonors":[89.153,92.884],"hospTrip":93.004,"turn":{"rules":110.979,"members":112.199,"money":113.539},"turnEnd":123.069,"nowNew":129.801},"cam":[{"t":0,"dur":0,"shot":"wide"},{"t":15.001,"dur":3,"shot":"all4"},{"t":41.009,"dur":1.7,"shot":"plot:library"},{"t":47.149,"dur":1.1,"shot":"mid:library"},{"t":50.469,"dur":1,"shot":"close:library:case"},{"t":52.107,"dur":1.6,"shot":"plot:library"},{"t":66.597,"dur":1.8,"shot":"plot:fire"},{"t":71.137,"dur":1.4,"shot":"mid:fire"},{"t":76.424,"dur":2,"shot":"all4"},{"t":83.033,"dur":1.8,"shot":"plot:hospital"},{"t":88.953,"dur":1.2,"shot":"mid:hospital"},{"t":93.784,"dur":4.5,"shot":"plot:hospital"},{"t":99.08,"dur":1.6,"shot":"plot:academy"},{"t":107.329,"dur":1.9,"shot":"all4"},{"t":121.969,"dur":2.2,"shot":"plot:shared"},{"t":127.341,"dur":1,"shot":"mid:shared"}],"labels":[{"text":"lending library","anchor":"library.plinth","t0":4.66,"t1":10.788},{"text":"lending library · 1731","anchor":"library.plinth","t0":10.788,"t1":15.201},{"text":"fire company","anchor":"fire.plinth","t0":5.68,"t1":10.788},{"text":"fire company · 1736","anchor":"fire.plinth","t0":10.788,"t1":15.201},{"text":"hospital","anchor":"hospital.plinth","t0":6.7,"t1":10.788},{"text":"hospital · 1751","anchor":"hospital.plinth","t0":10.788,"t1":15.201},{"text":"college","anchor":"academy.plinth","t0":7.98,"t1":10.788},{"text":"college · 1751","anchor":"academy.plinth","t0":10.788,"t1":15.201},{"text":"rules","anchor":"library.rules","t0":41.859,"t1":47.349},{"text":"members","anchor":"library.members","t0":42.819,"t1":47.349},{"text":"money","anchor":"library.money","t0":43.779,"t1":47.349},{"text":"the collection","anchor":"library.case","t0":50.969,"t1":52.007},{"text":"the academy","anchor":"academy.cupola","t0":103.3,"t1":107.929},{"text":"shared services","anchor":"shared.members","t0":128.801,"t1":138.13},{"text":"new project","anchor":"shared.new","t0":128.041,"t1":138.13}],"veils":[[15.151,41.459],[51.957,67.897],[76.474,83.483]],"tints":[["library","#D3DEEC",41.009],["fire","#F0DAC8",66.597],["hospital","#CFE4E0",83.033],["academy","#D9E7CF",99.08],["neutral","#E6E1D8",107.329],["mulvium","#ECD6E0",121.969]]})
+    createWorld(document.getElementById("world-cv"), document.getElementById("world-lab"), {"plinths":{"library":6.418,"fire":6.418,"hospital":6.418,"academy":6.418},"preview":[7.418,11.358,12.958],"build":{"library":[40.359,46.099],"fire":[65.997,73.237],"hospital":[82.383,87.473],"academy":[98.23,102.624]},"events":{"libCoins":[46.349,49.169],"libBooks":[49.569,51.207],"hospDonors":[87.953,91.684],"hospTrip":91.804,"turn":{"rules":125.176,"members":126.396,"money":127.736},"turnEnd":138.106,"cosmos":{"rise":[137.706,141.238],"star":139.566,"project":141.888,"wire":142.998,"pulses":[146.778,148.778,149.778],"grow":[150.638,152.677],"named":142.878}},"cam":[{"t":0,"dur":0,"shot":"sweepA"},{"t":7.418,"dur":3.8,"shot":"sweepB"},{"t":12.958,"dur":0.1,"shot":"all4"},{"t":39.709,"dur":1.6,"shot":"plot:library"},{"t":45.949,"dur":1.1,"shot":"mid:library"},{"t":49.269,"dur":1.2,"shot":"close:library:case"},{"t":57.95,"dur":0.1,"shot":"plot:fire"},{"t":69.937,"dur":1.4,"shot":"mid:fire"},{"t":75.424,"dur":0.1,"shot":"plot:hospital"},{"t":87.753,"dur":1.2,"shot":"mid:hospital"},{"t":92.184,"dur":1.4,"shot":"close:hospital:rules"},{"t":97.78,"dur":0.1,"shot":"plot:academy"},{"t":110.024,"dur":0.1,"shot":"close:academy:members"},{"t":114.184,"dur":1.4,"shot":"mid:academy"},{"t":121.526,"dur":0.1,"shot":"all4"},{"t":137.506,"dur":3,"shot":"cosmos"},{"t":150.338,"dur":2.2,"shot":"cosmosClose"}],"labels":[],"tints":[["library","#1F3F6B","#4E73A3",39.809],["fire","#7A2817","#B4583A",65.397],["hospital","#13514A","#3F8A80",81.833],["academy","#264F22","#5E8A4E",97.88],["neutral","#E6E1D8","#ECEAE5",121.526],["mulvium","#24122A","#5A2E4E",137.506]],"callouts":[{"id":"members","name":"members","status":"a board and community","q":[-1,-1],"t0":140.638,"t1":145.118},{"id":"rules","name":"rules","status":"governance, in place","q":[1,-1],"t0":140.838,"t1":145.118},{"id":"money","name":"money","status":"tax-exempt accounts","q":[-1,1],"t0":141.038,"t1":145.118},{"id":"project","name":"a new project","status":"your idea","q":[1,1],"t0":142.688,"t1":145.118}]})
       .then((w) => { world = w; w.renderAt(last); window.__worldReady(); });
   </script>
 </template>

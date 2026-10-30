@@ -1,3 +1,4 @@
+<meta name="robots" content="noindex">
 <template>
   <style>
     @font-face { font-family: "IBM Plex Sans"; src: url(assets/fonts/IBMPlexSans-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
@@ -8,6 +9,8 @@
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
     @font-face { font-family: "Lora"; src: url(assets/fonts/Lora-500i.woff2) format("woff2"); font-weight: 500; font-style: italic; font-display: block; }
     @font-face { font-family: "Major Mono Display"; src: url(assets/fonts/MajorMonoDisplay-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+    @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
     #root { position: absolute; inset: 0; overflow: hidden; }
 
     .abs { position: absolute; }
@@ -30,20 +33,62 @@
 
 
 
+    .plate { overflow: hidden; transform-origin: 50% 50%; }
+    .credit { position: absolute; right: 48px; bottom: 120px; font-family: "IBM Plex Sans", sans-serif; font-size: 28px; color: rgba(255,255,255,0.72); text-shadow: 0 1px 6px rgba(0,0,0,0.5); }
+    .kt { position: absolute; z-index: 5; font-family: "Lora", serif; font-weight: 600; letter-spacing: -0.01em; line-height: 1.04; opacity: 0; }
+    .kt.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.55), 0 3px 14px rgba(0,0,0,0.5), 0 6px 40px rgba(0,0,0,0.45); }
+    .kt.ink { color: #1B1613; }
+    .kt i { font-style: italic; font-weight: 500; }
+    .kk { position: absolute; z-index: 5; font-family: "Major Mono Display", monospace; font-size: 38px; letter-spacing: 0.06em; text-transform: lowercase; opacity: 0; }
+    .kk.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.7), 0 2px 16px rgba(0,0,0,0.6); }
+    .kk.ink { color: #5C544E; }
+    .flash { position: absolute; inset: 0; background: #FFFFFF; opacity: 0; }
   </style>
-  <div id="root" data-composition-id="acad" data-width="1080" data-height="1920" data-duration="7.899">
-<div id="acad-yrs" class="abs" style="left:84px;top:1420px;width:440px;opacity:0">
-    <div class="kicker">academy</div><div class="disp" style="font-size:72px;color:#55804A">1751</div>
-    <div class="kicker" style="margin-top:10px">university</div><div class="disp" style="font-size:72px">1791</div></div>
-<div id="acad-pen" class="card" style="left:556px;top:1400px;width:440px;height:330px;opacity:0;border-radius:20px">
-    <div class="abs" style="left:0;top:0;width:440px;height:266px;overflow:hidden"><div id="acad-pen-pic" class="pic" style="width:1920px;height:1276px"><img src="assets/img/penn.jpg" alt=""></div></div>
-    <div class="cap"><span>College Hall, Penn</span></div></div>
+  <div id="root" data-composition-id="acad" data-width="1080" data-height="1920" data-duration="23.246">
+<div id="acad-ac" class="kt white" style="left:72px;top:250px;width:936px;font-size:120px;text-align:left;">Academy <i>1751</i></div>
+<div id="acad-prop" class="full plate" style="z-index:1;opacity:0">
+    <div class="full" style="overflow:hidden"><div id="acad-prop-pic" class="pic" style="width:1120px;height:1800px"><img src="assets/img/proposals.jpg" alt=""></div></div>
+    <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 48%, rgba(14,10,8,0.88) 64%, rgba(14,10,8,0.92) 100%)"></div>
+    <div class="credit">Franklin, Proposals Relating to the Education of Youth in Pensilvania, 1749</div></div>
+<div id="acad-y1749" class="kt white" style="left:72px;top:1270px;width:936px;font-size:180px;text-align:left;z-index:5">1749</div>
+<div id="acad-a1" class="kt white" style="left:72px;top:1450px;width:936px;font-size:60px;text-align:left;z-index:5">A school for <i>useful</i> subjects,</div>
+<div id="acad-a2" class="kt white" style="left:72px;top:1532px;width:936px;font-size:60px;text-align:left;z-index:5">taught in English,</div>
+<div id="acad-a3" class="kt white" style="left:72px;top:1614px;width:936px;font-size:60px;text-align:left;z-index:5">alongside Latin and Greek.</div>
+<div id="acad-trbg" class="full" style="opacity:0;background:linear-gradient(180deg, rgba(10,24,10,0.78) 0%, rgba(10,24,10,0.55) 22%, rgba(10,24,10,0) 36%)"></div>
+<div id="acad-tr24" class="kt white" style="left:72px;top:250px;width:936px;font-size:180px;text-align:left;">24 <i style="font-size:0.42em;opacity:0.85">trustees</i></div>
+<div id="acad-pres" class="kt white" style="left:72px;top:470px;width:936px;font-size:80px;text-align:left;"><i>Franklin, president</i></div>
+<div id="acad-pen" class="full plate" style="z-index:1;opacity:0">
+    <div class="full" style="overflow:hidden"><div id="acad-pen-pic" class="pic" style="width:1920px;height:1276px"><img src="assets/img/penn.jpg" alt=""></div></div>
+    <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0) 40%, rgba(14,10,8,0.6) 62%, rgba(14,10,8,0.85) 100%)"></div>
+    <div class="credit">College Hall, University of Pennsylvania</div></div>
+<div id="acad-upenn" class="kt white" style="left:72px;top:1400px;width:936px;font-size:120px;text-align:left;z-index:5">University<br>of Pennsylvania</div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo("#acad-yrs", {"opacity":0,"filter":"blur(6px)","x":-120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 2.37);
-    tl.fromTo("#acad-pen", {"opacity":0,"filter":"blur(6px)","x":120}, {"opacity":1,"filter":"blur(0px)","x":0,"y":0,"scale":1,"duration":0.5,"ease":"expo.out","stagger":0}, 4.68);
-    tl.fromTo("#acad-pen-pic", {"x":-26.4,"y":-30.753,"scale":0.257}, {"x":0,"y":0,"scale":0.229,"duration":2.4,"ease":"power2.inOut"}, 4.68);
+    tl.fromTo("#acad-ac", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 2.2);
+    tl.to("#acad-ac", {"opacity":0,"filter":"blur(8px)","duration":0.25}, 3.464);
+    tl.fromTo("#acad-prop-pic", {"x":-93.173,"y":-57.6,"scale":1.131}, {"x":-69.28,"y":-19.2,"scale":1.088,"duration":8.28,"ease":"power1.inOut"}, 3.264);
+    tl.set("#acad-prop", {"opacity":1}, 3.564);
+    tl.fromTo("#acad-prop", {"clipPath":"inset(100% 0% 0% 0%)"}, {"clipPath":"inset(0% 0% 0% 0%)","duration":0.55,"ease":"expo.out"}, 3.564);
+    tl.to("#acad-prop", {"clipPath":"inset(0% 0% 100% 0%)","duration":0.5,"ease":"expo.in"}, 10.744);
+    tl.set("#acad-prop", {"opacity":0}, 11.244);
+    tl.fromTo("#acad-y1749", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 4.794);
+    tl.fromTo("#acad-a1", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 7.424);
+    tl.fromTo("#acad-a2", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 8.504);
+    tl.fromTo("#acad-a3", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 9.384);
+    tl.to("#acad-y1749, #acad-a1, #acad-a2, #acad-a3", {"opacity":0,"filter":"blur(8px)","duration":0.25}, 11.044);
+    tl.fromTo("#acad-trbg", {"opacity":0}, {"opacity":1,"duration":0.35}, 11.044);
+    tl.to("#acad-trbg", {"opacity":0,"duration":0.3}, 18.304);
+    tl.fromTo("#acad-tr24", {"opacity":0,"scale":1.35,"filter":"blur(10px)"}, {"opacity":1,"scale":1,"filter":"blur(0px)","duration":0.42,"ease":"expo.out"}, 11.294);
+    tl.fromTo("#acad-pres", {"opacity":0,"y":40,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.5,"ease":"expo.out"}, 14.404);
+    tl.to("#acad-tr24, #acad-pres", {"opacity":0,"filter":"blur(8px)","duration":0.3}, 18.304);
+    tl.fromTo("#acad-pen-pic", {"x":-991.185,"y":-57.6,"scale":1.595}, {"x":-904.514,"y":0,"scale":1.505,"duration":5.342,"ease":"power1.inOut"}, 18.204);
+    tl.set("#acad-pen", {"opacity":1}, 18.504);
+    tl.fromTo("#acad-pen", {"clipPath":"inset(100% 0% 0% 0%)"}, {"clipPath":"inset(0% 0% 0% 0%)","duration":0.55,"ease":"expo.out"}, 18.504);
+    tl.to("#acad-pen", {"clipPath":"inset(0% 0% 100% 0%)","duration":0.5,"ease":"expo.in"}, 22.746);
+    tl.set("#acad-pen", {"opacity":0}, 23.246);
+    tl.fromTo("#acad-upenn", {"opacity":0,"y":50,"filter":"blur(8px)"}, {"opacity":1,"y":0,"filter":"blur(0px)","duration":0.6,"ease":"expo.out"}, 19.924);
+    tl.to("#acad-upenn", {"opacity":0,"duration":0.3}, 22.746);
     window.__timelines["acad"] = tl;
   </script>
 

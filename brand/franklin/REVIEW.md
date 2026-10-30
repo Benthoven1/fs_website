@@ -1,48 +1,122 @@
-# Review — Franklin essay v2
+# Review — Franklin essay v9
 
-Rendered 140.6 s, 1080 × 1920, 30 fps; `npx hyperframes check` passes with
-no errors or warnings left. Reviewed from `snapshot --review` sheets, sixteen
-mid-beat snapshots and twenty frames of the delivered MP4.
+Rendered 166.9 s, 1080 × 1920, 30 fps. Reviewed from snapshot sheets on the
+real narration timing and frames of the delivered MP4.
 
-## Creative calls
+## What changed from v8 (the editor's pass)
 
-- The look is the subject's own medium, Franklin's print shop: laid paper,
-  letterpress ink, the Fell and Caslon types, and the almanac's red as the
-  single accent per frame. Type is pressed, strikes and rings are pen
-  strokes, papers are laid on a pile, the library page burns into the fire.
-- Real artifacts carry every section; drawn things only where nothing
-  survives (the broadside of what the city lacked, the subscribers' list,
-  the ledger, the printer's chase).
-- The engrossed Declaration is too faded to point at a name, so the camera
-  reads its heading; Franklin's own signature is circled on page 4 of the
-  Constitution, where it is legible.
-- The Library Company statue photograph never arrived (Commons
-  rate-limited this machine), so Birch's 1799 engraving carries the whole
-  library beat, walking up to the statue in its niche — it keeps the beat
-  inside the print medium, and is arguably better.
-- The narrator is a designed voice (VoxCPM2): the "statesman" timbre, with
-  its delivery directed by a control (normal English intonation, statements
-  falling) instead of copied from the audition; six rushed lines were
-  re-taken slower and two slowed 14%.
-- The close is the launch film's own (cosmos, wordmark), rendered clean, so
-  the essay ends exactly as the brand does.
+- The hook no longer shows the finished models: at "By 1751" Nicholas
+  Scull's 1762 plan of Philadelphia (Scull was a Junto member) fills the
+  screen, north up, and the four light in the order they were founded, each
+  in its section's colour: the Library Company at the State House, the Union
+  Fire Company as a glow over the built town (it had no house), the
+  Pennsylvania Hospital at Eighth and Pine, the Academy at Fourth and Arch.
+- The close is ten seconds shorter: the network breathes at its gathered
+  point instead of freezing, opens on "expansion", then crossfades straight
+  into its gathering; the wordmark's typefaces run at 2.5x and settle. The
+  film ends 5.4 s after the last word.
+- No words twice: the method is one diagram under "One method", its label
+  turning from "a public need" to "met by many members" (the typed lines are
+  gone); the subtitles stop before "one method", "the Junto" and "Franklin's
+  academy opened", which the screen sets.
+- The library model carries no tags (they collided); "24 trustees" has a
+  shade over the model; "University of Pennsylvania" leaves before its plate;
+  the empty plots sink out of frame as the cosmos rises; the method's members
+  are on screen from the first word.
+- The hospital's first plate is a sharp HABS photograph of the Pine Building
+  in place of a soft stereograph; Bond's portrait has a scrim for its kicker.
+
+## What changed in v8
+
+- Pictures fill the screen again, centred and at most 1.1×; the opening's
+  panorama pans as it did; type keeps to the scrimmed bands.
+- The cosmos's spheres travel their rings (the landing page's speeds,
+  halved). Each is placed so it passes through its own quarter while it is
+  named, and a callout in that corner points to it with a leader that
+  follows it, as in the launch film: members (a board and community), rules
+  (governance, in place), money (tax-exempt accounts), a new project (your
+  idea).
+- Five type sizes throughout (display 180, headline 120, title 80, body 60,
+  kicker 38).
+- Subtitles in Libre Caslon Text, cream on a dark band: the face of
+  Franklin's own printing.
+- The Junto sum reads 50 × 40s under "subscribers × shillings each".
+
+## What changed in v7
+
+- Legibility: type has a tighter, darker shadow; kickers are larger and
+  solid white; the plates' scrims are heavier where type sits; type over a
+  fitted picture moves onto the dark band beneath it; the Junto's roster
+  sits below the State House, trades in a warm accent; the library's sum has
+  a dark band of its own over the model.
+- The library's arithmetic, step by step: 50 subscribers × 40s, = 2,000s =
+  £100 (20 shillings to the pound), then 10s a year each = £25 a year.
+- The method is drawn rather than set over bare plinths: members scattered
+  as small spheres, a ring for "a public need", the spheres pooled into it.
+- The cosmos keeps the landing page's four crossing rings (tilts as in
+  js/main.js; the fourth carries no planet). Each planet's place on its ring
+  is solved through the camera so it sits in its own quarter, and money takes
+  whichever of the two outer rings carries it further into its corner.
+- Pictures are no longer far in or off-centre: wide ones are shown whole
+  across the width over a blurred copy of themselves, near-portrait ones fill
+  the screen centred at no more than 1.1×. The Constitution keeps its pan.
+
+## What changed in v6
+
+- Voice and music start at 0:00: the 1.2 s lead-in and the Prelude
+  recording's 1.4 s of silence are gone.
+- The rules lecterns no longer shimmer in wide shots. The founding document
+  sat 0.06 units above its desk, too close for the depth buffer at 3,000
+  units, so the two surfaces fought. The page is now offset in depth, the
+  near plane is tighter, and hairlines fade as the camera pulls back.
+  Measured on the "Rules written." wide shot, frame-to-frame change across
+  the lectern pages is gone.
+- The cosmos: the new project is the centre sphere; members, rules and money
+  orbit it on the landing page's rings, turning slowly so each stays in its
+  quarter of the screen, where its name sits with a dot of its colour.
+- The network plate holds its gathered point (frame 51 of the launch film's
+  close, for 2.86 s) under "Mulvium is building that structure…", now set
+  below the point, and opens out on "expansion".
+- The Constitution: a quick pan (0.75 s) that comes to rest on "B Franklin",
+  with the ring sized from the signature's measured place on the scan.
+- The hospital closes on a HABS photograph of the Pine Building in place of
+  the 1751 Act page.
+
+## What changed in v5
+
+- **The modern institution is the landing page's cosmos.** The cabinet-building
+  "fifth plot" is gone. On "A founder today", every institution's rules,
+  members and money shrink into porcelain spheres and rise off the four plots
+  into three planets (members green, rules blue, money pink), each growing as
+  its spheres arrive. The star (Mulvium) lands with its rings on "fiscal
+  sponsor"; a new project's planet flies up into the outer orbit, is wired to
+  the star and the three planets, takes gifts, grants and contracts as pulses
+  of light, and grows while "the founder does the work". Colours, ring radii,
+  tilts and the star's size are the site's (js/main.js), scaled; the group is
+  tipped toward the camera so no ring is seen edge-on.
+- **The academy has substance.** Four lines instead of one: Franklin's 1749
+  *Proposals* (its title page full screen; "useful subjects, in English,
+  alongside Latin and Greek" set as type), the 24 trustees with Franklin as
+  president buying the hall built for George Whitefield (their bench and
+  subscription box on the model), and College Hall for the University of
+  Pennsylvania.
+- **The network opens out.** The launch film's close enters gathered to a
+  point and expands on "The next great expansion" before resolving into the
+  wordmark.
+- **Deeper grounds.** When the backdrop leaves porcelain it goes to a deep
+  gradient in the institution's colour: navy for the library, oxblood for the
+  fire company, teal for the hospital, forest green for the academy, and a
+  plum night for the cosmos. Type on those grounds is white.
 
 ## Measured, not heard
 
-- Every narrated line transcribed back and matched to the script (all
-  match; years read as years). Speaking pace evened to 2.3–3.1 words/s.
-- Mix: music bed about 19 dB under the voice, up in the pauses and under
-  the close; delivered file −15.2 LUFS integrated, peak −0.8 dBFS.
-- Nobody has listened to the film; the voice and mix were judged by pitch,
-  pace and loudness measurements only.
+- The four new academy lines were transcribed back and match the script;
+  1749 is read as a year.
+- Delivered file −15.0 LUFS integrated, true peak −0.5 dBFS.
+- Nobody has listened to the film; voice and mix were judged by measurement.
 
-## Weakest shots, and what more time would change
+## What more time would change
 
-- The press (`press.jpg`, 500 px) is the softest picture; it is shown as a
-  small plate. A better scan of a period press (or the 1920 engraving of
-  Franklin as an apprentice) would replace it.
-- The burn's char ring is a flat dark band; a scorch gradient at its inner
-  edge would read more as paper and less as ink.
-- Captions sit on paper slips throughout; over the paper scenes they are
-  nearly invisible as slips, which is intended, but the slip over the
-  bucket photograph is the one place they compete with the picture.
+- The library's and fire company's lecterns still carry stand-in documents
+  (the 1733 almanac, the 1744 fireplace pamphlet) in place of their founding
+  articles.
