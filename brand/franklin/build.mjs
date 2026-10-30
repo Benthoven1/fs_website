@@ -93,8 +93,11 @@ class Scene {
   cam(sel, from, to, t, dur, ease = "power2.inOut") {
     return this.fromTo(sel, from, { ...to, duration: dur, ease }, t);
   }
+  // The film's pages are served with the site (GitHub Pages) but are working
+  // files, not pages for search: each carries a noindex
   file() {
-    return `<template>
+    return `<meta name="robots" content="noindex">
+<template>
   <style>
 ${FONTS}
     #root { position: absolute; inset: 0; overflow: hidden; }
@@ -729,6 +732,7 @@ const index = `<!doctype html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=${W}, height=${H}" />
+    <meta name="robots" content="noindex" />
     <title>Franklin, institution builder</title>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>

@@ -53,7 +53,7 @@ export function writeFigure(name, { width, height, accent, label, body, moves = 
   writeFileSync(join(OUT, `${name}.svg`), svg);
   writeFileSync(join(OUT, `${name}.json`), JSON.stringify({ width, height, accent, moves }, null, 1));
   // a standalone page to look at the figure on its own
-  const page = `<!doctype html><meta charset="utf-8"><style>${scopedKitCss(".fig")}${themeCss(".fig")}
+  const page = `<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex"><style>${scopedKitCss(".fig")}${themeCss(".fig")}
 body{margin:0;background:#eceae5}.fig{width:${width}px;margin:0 auto;background:#f9f8f5}</style><div class="fig">${svg}</div>`;
   writeFileSync(join(OUT, `${name}.html`), page);
   console.log(name, (svg.length / 1024).toFixed(0) + " KB");
