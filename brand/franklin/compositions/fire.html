@@ -11,6 +11,7 @@
     @font-face { font-family: "Major Mono Display"; src: url(assets/fonts/MajorMonoDisplay-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
     @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
     @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+    @font-face { font-family: "Jost"; src: url(assets/fonts/Jost-400.woff2) format("woff2"); font-weight: 400 500; font-style: normal; font-display: block; }
     #root { position: absolute; inset: 0; overflow: hidden; }
 
     .abs { position: absolute; }
@@ -39,12 +40,15 @@
     .kt.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.55), 0 3px 14px rgba(0,0,0,0.5), 0 6px 40px rgba(0,0,0,0.45); }
     .kt.ink { color: #1B1613; }
     .kt i { font-style: italic; font-weight: 500; }
-    .kk { position: absolute; z-index: 5; font-family: "Major Mono Display", monospace; font-size: 38px; letter-spacing: 0.06em; text-transform: lowercase; opacity: 0; }
+    .kk { position: absolute; z-index: 5; font-family: "Jost", "Futura", sans-serif; font-weight: 500; font-size: 30px; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0; }
+    .flank { position: absolute; z-index: 6; font-family: "Jost", "Futura", sans-serif; font-weight: 500; font-size: 30px; letter-spacing: 0.24em; text-transform: uppercase; color: #FFFFFF; white-space: nowrap; opacity: 0;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8), 0 0 18px rgba(0,0,0,0.6); }
     .kk.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.7), 0 2px 16px rgba(0,0,0,0.6); }
     .kk.ink { color: #5C544E; }
     .flash { position: absolute; inset: 0; background: #FFFFFF; opacity: 0; }
   </style>
   <div id="root" data-composition-id="fire" data-width="1080" data-height="1920" data-duration="17.474">
+<div id="fire-chL" class="flank" style="left:72px;top:250px">The Fire Company</div><div id="fire-chR" class="flank" style="right:72px;top:250px;text-align:right">1736</div>
 <div id="fire-buck" class="full plate" style="z-index:1;opacity:0">
     <div class="full" style="overflow:hidden"><div id="fire-buck-pic" class="pic" style="width:1920px;height:2428px"><img src="assets/img/bucket.jpg" alt=""></div></div>
     <div class="full" style="background:linear-gradient(180deg, rgba(14,10,8,0.82) 0%, rgba(14,10,8,0.6) 28%, rgba(14,10,8,0) 40%, rgba(14,10,8,0) 45%, rgba(14,10,8,0.6) 62%, rgba(14,10,8,0.85) 100%)"></div>
@@ -56,6 +60,9 @@
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#fire-chL", {"opacity":0,"x":-24,"filter":"blur(6px)"}, {"opacity":1,"x":0,"filter":"blur(0px)","duration":0.9,"ease":"expo.out"}, 9.567);
+    tl.fromTo("#fire-chR", {"opacity":0,"x":24,"filter":"blur(6px)"}, {"opacity":1,"x":0,"filter":"blur(0px)","duration":0.9,"ease":"expo.out"}, 9.567);
+    tl.to("#fire-chL, #fire-chR", {"opacity":0,"filter":"blur(6px)","duration":0.3}, 11.737);
     tl.fromTo("#fire-buck-pic", {"x":-257.1,"y":-48,"scale":0.83}, {"x":-295.058,"y":-96,"scale":0.87,"duration":10.167,"ease":"power1.inOut"}, 0);
     tl.set("#fire-buck", {"opacity":1}, 0);
     tl.to("#fire-buck", {"clipPath":"inset(0% 0% 100% 0%)","duration":0.5,"ease":"expo.in"}, 9.067);

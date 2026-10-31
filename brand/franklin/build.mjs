@@ -127,6 +127,8 @@ const FONTS = [
   ["Major Mono Display", "MajorMonoDisplay-400", 400, "normal"],
   // subtitles: Caslon, the face Franklin's shop set and the Declaration was first printed in
   ["Libre Caslon Text", "LibreCaslonText-400", 400, "normal"], ["Libre Caslon Text", "LibreCaslonText-400i", 400, "italic"],
+  // titles and labels: Jost, a geometric sans (one variable file, 400-500)
+  ["Jost", "Jost-400", "400 500", "normal"],
 ].map(([f, file, w, s]) => `    @font-face { font-family: "${f}"; src: url(assets/fonts/${file}.woff2) format("woff2"); font-weight: ${w}; font-style: ${s}; font-display: block; }`).join("\n");
 
 const BASE = `
@@ -163,7 +165,7 @@ const SECTION = (id) => T.lines.filter((l) => l.id.startsWith(id));
 const start = (id) => SECTION(id)[0].t0;
 const LOW = 1400; // type set over the model: the open ground under it
 // The type scale: every set word is one of these sizes
-const TS = { display: 180, head: 120, title: 80, body: 60, kick: 38 };
+const TS = { display: 180, head: 120, title: 80, body: 60, kick: 30 };
 
 // ── Cinematic devices ──────────────────────────────────────────────────────
 // A plate: an archival picture filling the screen, a slow camera move across
@@ -204,6 +206,31 @@ function land(s, sel, t, { dy = 40, dur = 0.5 } = {}) {
 function slam(s, sel, t) {
   return s.fromTo(sel, { opacity: 0, scale: 1.35, filter: "blur(10px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.42, ease: "expo.out" }, t);
 }
+// Two small titles either side of the subject, at mid height (the reel's "THE SUN · HELIOS")
+function flank(s, id, left, right, t0, t1, { y = 1150 } = {}) {
+  s.add(`<div id="${id}L" class="flank" style="left:72px;top:${y}px">${left}</div><div id="${id}R" class="flank" style="right:72px;top:${y}px;text-align:right">${right}</div>`);
+  s.fromTo(`#${id}L`, { opacity: 0, x: -24, filter: "blur(6px)" }, { opacity: 1, x: 0, filter: "blur(0px)", duration: 0.9, ease: "expo.out" }, t0);
+  s.fromTo(`#${id}R`, { opacity: 0, x: 24, filter: "blur(6px)" }, { opacity: 1, x: 0, filter: "blur(0px)", duration: 0.9, ease: "expo.out" }, t0);
+  s.to(`#${id}L, #${id}R`, { opacity: 0, filter: "blur(6px)", duration: 0.3 }, t1 - 0.3);
+}
+// A hero shot: a figure cut from its portrait, centred on a dark stage, backlit
+// by Mulvium's porcelain sphere, pushing in slowly
+function hero(s, id, cut, { t0, t1, credit = "", enter = "cut", glow = "#E8C9A6", figH = 1100, sun = { y: 380, d: 860 } }) {
+  const c = SIZES[cut], fw = Math.round((c.w * figH) / c.h), fx = Math.round((W - fw) / 2), fy = H - figH;
+  s.add(`<div id="${id}" class="full plate" style="z-index:1;opacity:0;background:radial-gradient(70% 42% at 50% ${Math.round(((sun.y + sun.d / 2) / H) * 100)}%, ${glow}40 0%, #0C0A09 58%, #040303 100%)">
+    <div id="${id}-sun" class="abs" style="left:${(W - sun.d) / 2}px;top:${sun.y}px;width:${sun.d}px;height:${sun.d}px">
+      <img src="assets/img/mulvium-sphere.png" alt="" class="abs" style="left:-8%;top:-8%;width:116%;height:116%;filter:blur(46px) brightness(1.5);opacity:0.75">
+      <img src="assets/img/mulvium-sphere.png" alt="" class="abs" style="left:0;top:0;width:100%;height:100%">
+    </div>
+    <img id="${id}-fig" src="assets/img/${cut}.png" alt="" class="abs" style="left:${fx}px;top:${fy}px;width:${fw}px;height:${figH}px;transform-origin:50% 100%;filter:drop-shadow(0 -6px 26px rgba(255,236,214,0.35))">
+    ${credit ? `<div class="credit">${credit}</div>` : ""}</div>`);
+  s.set(`#${id}`, { opacity: 1 }, t0);
+  if (enter === "wipe") s.fromTo(`#${id}`, { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.55, ease: "expo.out", immediateRender: false }, t0);
+  if (enter === "wipeRight") s.fromTo(`#${id}`, { clipPath: "inset(0% 0% 0% 100%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.55, ease: "expo.out", immediateRender: false }, t0);
+  s.fromTo(`#${id}-sun`, { y: 40, scale: 0.94 }, { y: -20, scale: 1.04, duration: t1 - t0 + 0.4, ease: "none" }, t0 - 0.2);
+  s.fromTo(`#${id}-fig`, { scale: 1.0 }, { scale: 1.06, duration: t1 - t0 + 0.4, ease: "none" }, t0 - 0.2);
+  s.set(`#${id}`, { opacity: 0 }, t1);
+}
 const KT = `
     .plate { overflow: hidden; transform-origin: 50% 50%; }
     .credit { position: absolute; right: 48px; bottom: 120px; font-family: "IBM Plex Sans", sans-serif; font-size: 28px; color: rgba(255,255,255,0.72); text-shadow: 0 1px 6px rgba(0,0,0,0.5); }
@@ -211,7 +238,9 @@ const KT = `
     .kt.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.55), 0 3px 14px rgba(0,0,0,0.5), 0 6px 40px rgba(0,0,0,0.45); }
     .kt.ink { color: ${C.ink}; }
     .kt i { font-style: italic; font-weight: 500; }
-    .kk { position: absolute; z-index: 5; font-family: "Major Mono Display", monospace; font-size: ${TS.kick}px; letter-spacing: 0.06em; text-transform: lowercase; opacity: 0; }
+    .kk { position: absolute; z-index: 5; font-family: "Jost", "Futura", sans-serif; font-weight: 500; font-size: ${TS.kick}px; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0; }
+    .flank { position: absolute; z-index: 6; font-family: "Jost", "Futura", sans-serif; font-weight: 500; font-size: ${TS.kick}px; letter-spacing: 0.24em; text-transform: uppercase; color: #FFFFFF; white-space: nowrap; opacity: 0;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8), 0 0 18px rgba(0,0,0,0.6); }
     .kk.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.7), 0 2px 16px rgba(0,0,0,0.6); }
     .kk.ink { color: ${C.muted}; }
     .flash { position: absolute; inset: 0; background: #FFFFFF; opacity: 0; }`;
@@ -281,14 +310,15 @@ const WORLD = (() => {
   const labels = []; // (the model carries no tags: "rules, members, money" are named at the turn)
   const tints = [
     ["library", "#1F3F6B", "#4E73A3", after("lib1") - 0.4], ["fire", "#7A2817", "#B4583A", after("fire1") - 0.4], ["hospital", "#13514A", "#3F8A80", after("hosp1") - 0.4],
-    ["academy", "#264F22", "#5E8A4E", at("acad1") - 1.2], ["neutral", "#E6E1D8", C.paper, start("turn") - 0.9], ["mulvium", "#24122A", "#5A2E4E", at("now1", "founder") - 0.2],
+    ["academy", "#264F22", "#5E8A4E", at("acad1") - 1.2], ["neutral", "#1C1714", "#3A302A", start("turn") - 0.9], ["mulvium", "#24122A", "#5A2E4E", at("now1", "founder") - 0.2],
   ];
   return { plinths, preview: [p0, p1, p2], build: plotBuild, events, cam, labels, tints, callouts };
 })();
 {
   const s = new Scene("world", 0, start("end") + 0.6, 0);
-  s.add(`<div id="bg" class="full" style="background:linear-gradient(180deg, #F3F1EC 0%, ${C.paper} 100%)"></div>
-    ${WORLD.tints.map(([n, c1, c2]) => `<div id="tint-${n}" class="full" style="opacity:0;background:linear-gradient(180deg, ${c1} 0%, ${c2} 100%)"></div>`).join("")}`);
+  // a dark stage: each chapter lit from behind the subject in its own colour, falling to black
+  s.add(`<div id="bg" class="full" style="background:radial-gradient(80% 55% at 50% 44%, #241E1A 0%, #0D0B0A 60%, #050404 100%)"></div>
+    ${WORLD.tints.map(([n, c1, c2]) => `<div id="tint-${n}" class="full" style="opacity:0;background:radial-gradient(82% 56% at 50% 44%, ${c2} 0%, ${c1} 38%, #070608 82%, #040305 100%)"></div>`).join("")}`);
   WORLD.tints.forEach(([n, , , t], i) => {
     s.set(`#tint-${n}`, { opacity: 0 }, 0).to(`#tint-${n}`, { opacity: 1, duration: 1.2, ease: "power1.inOut" }, t);
     const next = WORLD.tints[i + 1];
@@ -301,7 +331,7 @@ const WORLD = (() => {
     .wl-d { position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 6px; background: #FFFFFF; border: 2px solid rgba(0,0,0,0.25); }
     .wl-l { position: absolute; left: -1px; top: -64px; width: 2px; height: 58px; background: rgba(255,255,255,0.85); }
     .co { position: absolute; left: 0; top: 0; width: 500px; margin-left: -250px; text-align: center; opacity: 0; color: #FFFFFF; text-shadow: 0 1px 10px rgba(0,0,0,0.45); }
-    .co b { display: block; font-family: "Major Mono Display", monospace; font-weight: 400; text-transform: lowercase; font-size: ${TS.kick}px; letter-spacing: 0.04em; line-height: 1.1; }
+    .co b { display: block; font-family: "Jost", "Futura", sans-serif; font-weight: 500; text-transform: uppercase; font-size: ${TS.kick}px; letter-spacing: 0.24em; line-height: 1.1; }
     .co em { display: block; margin-top: 8px; font-family: "Lora", serif; font-style: italic; font-size: ${TS.kick}px; color: rgba(255,255,255,0.85); }
     #lab line { stroke: rgba(255,255,255,0.6); stroke-width: 2; }
     #lab circle { fill: rgba(255,255,255,0.85); }
@@ -362,7 +392,7 @@ const WORLD = (() => {
     return `${mark}<div class="abs" style="${pos}"><div id="ll-${id}" class="maplab" style="font-size:${TS.kick * inv}px;opacity:0">${name}</div></div>`;
   }).join("");
   plate(s, "map", MAP, { t0: tB, t1: tBen + 0.6, from: [0.5, 0.5, 1.0], to: [0.5, 0.5, 1.06], scrim: "high", credit: "Nicholas Scull, plan of Philadelphia, 1762 · Library of Congress", enter: "cut", inner: lights });
-  s.style(`.maplab { font-family: "Major Mono Display", monospace; text-transform: lowercase; letter-spacing: 0.04em; color: #1B1613; white-space: nowrap;
+  s.style(`.maplab { font-family: "Jost", "Futura", sans-serif; font-weight: 500; text-transform: uppercase; letter-spacing: 0.2em; color: #1B1613; white-space: nowrap;
     background: rgba(246,238,223,0.94); padding: 6px 16px 9px; border-radius: 6px; box-shadow: 0 2px 10px rgba(40,25,10,0.25); }`);
   SITES.forEach(([id, , , , dt, kind]) => {
     const t = tB + dt;
@@ -391,10 +421,8 @@ const WORLD = (() => {
   const tBen = at("hook2", "benjamin");
   const s = new Scene("who", tBen - 0.05, start("lib") + 0.3, 11); // until the Junto's plate has wiped in over it
   s.raw.push(KT);
-  plate(s, "por", "portrait", { t0: tBen, t1: at("who1", "printer"), from: [0.53, 0.42, 1.0], to: [0.53, 0.33, 1.25], credit: "Joseph-Siffred Duplessis, c. 1785", enter: "wipe" });
-  s.add(kt("name", "Benjamin<br>Franklin", { y: 1060, size: TS.head }));
-  land(s, "#name", tBen + 0.05, { dy: 60, dur: 0.7 });
-  s.to("#name", { opacity: 0, duration: 0.2 }, at("who1", "printer") - 0.05);
+  hero(s, "por", "portrait-cut", { t0: tBen, t1: at("who1", "printer"), credit: "Joseph-Siffred Duplessis, c. 1785", enter: "wipe" });
+  flank(s, "nm", "Benjamin", "Franklin", tBen + 0.1, at("who1", "printer"), { y: 1010 });
   // printer, writer, scientist, inventor: a cut on every word
   const ROLES = [["printer", "press", "Printer.", [0.5, 0.5, 1.05], [0.5, 0.46, 1.18]], ["writer", "martin", "Writer.", [0.5, 0.36, 1.05], [0.5, 0.32, 1.2]],
     ["scientist", "kite", "Scientist.", [0.5, 0.32, 1.0], [0.5, 0.28, 1.15]], ["inventor", "stove", "Inventor.", [0.36, 0.52, 1.0], [0.4, 0.5, 1.12]]];
@@ -470,6 +498,7 @@ const WORLD = (() => {
 {
   const s = new Scene("lib", start("lib") - 0.4, start("fire") - 0.1, 12);
   s.raw.push(KT);
+  flank(s, "ch", "The Library", "1731", after("lib1") + 0.25, at("lib2", "fifty") - 0.3, { y: 250 });
   // the Junto's members, from Franklin's own list, over the city they worked in
   plate(s, "jun", "statehouse", { t0: start("lib") - 0.35, t1: after("lib1") + 0.15, from: [0.5, 0.5, 1.0], to: [0.45, 0.55, 1.2], scrim: "both", credit: "The State House, from Scull &amp; Heap, 1754", enter: "wipe", exit: "wipeUp" });
   s.add(kk("jk", "the junto, 1727", { y: 250 }));
@@ -513,6 +542,7 @@ const WORLD = (() => {
 {
   const s = new Scene("fire", start("fire") - 0.1, start("hosp") - 0.1, 13);
   s.raw.push(KT);
+  flank(s, "ch", "The Fire Company", "1736", start("fire2") - 0.1, at("fire2", "thirty") - 0.25, { y: 250 });
   plate(s, "buck", "bucket", { t0: start("fire") - 0.1, t1: start("fire2") - 0.1, from: [0.5, 0.55, 1.05], to: [0.5, 0.45, 1.3], scrim: "both", credit: "Leather fire bucket, Dedham Historical Society", enter: "cut", exit: "wipeUp" });
   s.add(kk("gz", "pennsylvania gazette · 1735", { y: 250 }));
   land(s, "#gz", at("fire1", "newspaper") - 0.1);
@@ -533,7 +563,9 @@ const WORLD = (() => {
 {
   const s = new Scene("hosp", start("hosp") - 0.1, start("acad") - 0.1, 14);
   s.raw.push(KT);
-  plate(s, "bond", "bond", { t0: start("hosp") - 0.1, t1: at("hosp1", "hospital") - 0.05, from: [0.5, 0.36, 1.0], to: [0.5, 0.3, 1.2], scrim: "both", credit: "Thomas Bond", enter: "wipeRight" });
+  flank(s, "ch", "The Hospital", "1751", after("hosp1") + 0.3, start("hosp2") + 0.2, { y: 250 });
+  hero(s, "bond", "bond-cut", { t0: start("hosp") - 0.1, t1: at("hosp1", "hospital") - 0.05, credit: "Thomas Bond", enter: "wipeRight", glow: "#9FD3CB", figH: 1080 });
+  flank(s, "tb", "Thomas", "Bond", at("hosp1", "doctor") - 0.1, at("hosp1", "hospital") - 0.05, { y: 1010 });
   plate(s, "hos", "hospital-wing", { t0: at("hosp1", "hospital") - 0.05, t1: after("hosp1") + 0.2, from: [0.5, 0.45, 1.0], to: [0.56, 0.5, 1.2], scrim: "both", credit: "Pennsylvania Hospital · HABS, Library of Congress", enter: "punch", exit: "wipeUp" });
   s.add(kk("bk", "1751", { y: 250 }));
   land(s, "#bk", at("hosp1", "1751") - 0.1);
@@ -562,9 +594,7 @@ const WORLD = (() => {
 {
   const s = new Scene("acad", start("acad") - 0.1, start("turn") - 0.2, 15);
   s.raw.push(KT);
-  s.add(kt("ac", `Academy <i>1751</i>`, { y: 250, size: TS.head }));
-  land(s, "#ac", at("acad1", "academy") - 0.1);
-  s.to("#ac", { opacity: 0, filter: "blur(8px)", duration: 0.25 }, start("acad2") - 0.3);
+  flank(s, "ch", "The Academy", "1751", at("acad1", "academy") - 0.1, start("acad2") - 0.25, { y: 250 });
   // the plan, in Franklin's own printing, and what it asked for
   plate(s, "prop", "proposals", { t0: start("acad2") - 0.2, t1: start("acad3") - 0.1, from: [0.5, 0.36, 1.12], to: [0.5, 0.4, 1.02], scrim: "deep", credit: "Franklin, Proposals Relating to the Education of Youth in Pensilvania, 1749", enter: "wipe", exit: "wipeUp" });
   s.add(kt("y1749", "1749", { y: 1270, size: TS.display, extra: "z-index:5" }));
@@ -595,12 +625,12 @@ const WORLD = (() => {
   s.raw.push(KT);
   const RMM = [["rw", "Rules written.", "rules"], ["mr", "Members recruited.", "members"], ["mo", "Money raised.", "money"]];
   RMM.forEach(([id, text, w], i) => {
-    s.add(kt(id, text, { y: LOW - 40 + i * 98, size: TS.title, cls: "ink" }));
+    s.add(kt(id, text, { y: LOW - 40 + i * 98, size: TS.title }));
     land(s, `#${id}`, at("turn1", w) - 0.1);
     s.sound("click-soft", at("turn1", w) - 0.05, 0.22);
   });
   s.to("#rw, #mr, #mo", { opacity: 0, filter: "blur(8px)", duration: 0.25 }, at("turn2", "four") - 0.35);
-  s.add(kt("x4", `<i>Four times.</i>`, { y: 260, size: TS.display, cls: "ink", extra: `color:${C.clay}` }));
+  s.add(kt("x4", `<i>Four times.</i>`, { y: 260, size: TS.display, extra: `color:#E3A27A` }));
   slam(s, "#x4", at("turn2", "four") - 0.05);
   s.sound("impact-bass-2", at("turn2", "four"), 0.18);
   s.set("#x4", { opacity: 0 }, at("turn2", "printing") - 0.05);
@@ -669,6 +699,18 @@ const PLATE = { file: "cosmos-close-held.mp4", hold: 2.86, length: 14.3 };
   scenes.push(s);
 }
 
+// ── Burns: the frame overexposes to white between worlds, then clears ─────
+{
+  const BURNS = [start("fire") - 0.1, start("hosp") - 0.1, start("acad") - 0.1, at("now1", "founder") - 0.15];
+  const s = new Scene("burns", 0, at("now1", "founder") + 1.0, 45);
+  BURNS.forEach((t, i) => {
+    s.add(`<div id="b${i}" class="full" style="opacity:0;background:radial-gradient(60% 45% at 50% 46%, #FFFFFF 0%, #FFF6EA 45%, rgba(255,240,224,0.85) 100%)"></div>`);
+    s.fromTo(`#b${i}`, { opacity: 0 }, { opacity: 1, duration: 0.14, ease: "power2.in", immediateRender: false }, t - 0.14).to(`#b${i}`, { opacity: 0, duration: 0.55, ease: "power2.out" }, t + 0.04);
+    s.sound("impact-bass-1", t, 0.16);
+  });
+  scenes.push(s);
+}
+
 // ── Captions: only where the screen does not already say it ────────────────
 // Each line is subtitled over a span of its words, [from, to): the rest of it
 // is set on screen in type, or carried by the picture alone.
@@ -696,9 +738,10 @@ groups.forEach((g, i) => {
 caps.style(`
     #root { background: none; }
     .cap { position: absolute; left: 0; top: 1440px; width: ${W}px; height: 130px; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; }
-    .cap span { max-width: 900px; text-align: center; font-family: "Libre Caslon Text", serif; font-weight: 400; font-size: 46px; line-height: 1.3; color: #F6EEDF;
-      background: rgba(24, 17, 12, 0.84); border-radius: 6px; padding: 8px 26px 12px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }`);
-const content = scenes.filter((s) => s.id !== "chrome" && s.id !== "world");
+    .cap span { max-width: 900px; text-align: center; font-family: "Libre Caslon Text", serif; font-weight: 400; font-size: 44px; line-height: 1.3; color: #F6EEDF;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.9), 0 2px 10px rgba(0,0,0,0.8), 0 0 34px rgba(0,0,0,0.7); }`);
+const LAYERS = ["chrome", "world", "burns"]; // layers that run over or under the scenes, not scenes of their own
+const content = scenes.filter((s) => !LAYERS.includes(s.id));
 caps.t1 = content[content.length - 1].t0;
 
 // ── The root: scenes, captions, voice, music, sound ────────────────────────
@@ -709,7 +752,7 @@ for (const s of [...scenes, caps]) fs.writeFileSync(path.join(HERE, "composition
 // Each scene runs until the next one is on top of it; the chrome over all of them
 const hosts = scenes.map((s, i) => {
   const next = content[content.indexOf(s) + 1];
-  const end = s.id === "chrome" || s.id === "world" ? s.t1 : next ? Math.max(s.t1, next.t0 + 0.05) : s.t1;
+  const end = LAYERS.includes(s.id) ? s.t1 : next ? Math.max(s.t1, next.t0 + 0.05) : s.t1;
   return `      <div id="${s.id}" data-composition-id="${s.id}" data-composition-src="compositions/${s.id}.html" data-start="${r3(s.t0)}" data-duration="${r3(end - s.t0)}" data-track-index="${i % 2 + 1}" data-track-kind="graphics" data-width="${W}" data-height="${H}" style="z-index:${s.z}"></div>`;
 });
 const end = scenes[scenes.length - 1];
@@ -759,5 +802,6 @@ fs.writeFileSync(path.join(HERE, "index.html"), index);
 const endFile = path.join(HERE, "compositions", "end.html");
 fs.writeFileSync(endFile, fs.readFileSync(endFile, "utf8").replace('<video id="end-plate"', `<video id="end-plate" data-start="0" data-media-start="${end.mediaStart}" data-duration="${r3(end.t1 - end.t0)}"`).replace('class="full" src', 'class="full clip" src'));
 // what the sound mix and the README need to know
-fs.writeFileSync(path.join(HERE, "cues.json"), JSON.stringify({ duration: DUR, voiceEnd: VOICE_END, sections: Object.fromEntries(scenes.map((s) => [s.id, r3(s.t0)])), sfx: scenes.flatMap((s) => s.sfx) }, null, 1));
+// drop: the music falls silent from the end of the turn until "founder"
+fs.writeFileSync(path.join(HERE, "cues.json"), JSON.stringify({ duration: DUR, voiceEnd: VOICE_END, drop: [r3(after("turn2") + 0.3), r3(at("now1", "founder") - 0.05)], sections: Object.fromEntries(scenes.map((s) => [s.id, r3(s.t0)])), sfx: scenes.flatMap((s) => s.sfx) }, null, 1));
 console.log(`${scenes.length} scenes, ${groups.length} caption groups, ${DUR}s`);
