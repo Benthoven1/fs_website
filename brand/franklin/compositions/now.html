@@ -11,6 +11,7 @@
     @font-face { font-family: "Major Mono Display"; src: url(assets/fonts/MajorMonoDisplay-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
     @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
     @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+    @font-face { font-family: "Jost"; src: url(assets/fonts/Jost-400.woff2) format("woff2"); font-weight: 400 500; font-style: normal; font-display: block; }
     #root { position: absolute; inset: 0; overflow: hidden; }
 
     .abs { position: absolute; }
@@ -39,7 +40,9 @@
     .kt.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.55), 0 3px 14px rgba(0,0,0,0.5), 0 6px 40px rgba(0,0,0,0.45); }
     .kt.ink { color: #1B1613; }
     .kt i { font-style: italic; font-weight: 500; }
-    .kk { position: absolute; z-index: 5; font-family: "Major Mono Display", monospace; font-size: 38px; letter-spacing: 0.06em; text-transform: lowercase; opacity: 0; }
+    .kk { position: absolute; z-index: 5; font-family: "Jost", "Futura", sans-serif; font-weight: 500; font-size: 30px; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0; }
+    .flank { position: absolute; z-index: 6; font-family: "Jost", "Futura", sans-serif; font-weight: 500; font-size: 30px; letter-spacing: 0.24em; text-transform: uppercase; color: #FFFFFF; white-space: nowrap; opacity: 0;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8), 0 0 18px rgba(0,0,0,0.6); }
     .kk.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.7), 0 2px 16px rgba(0,0,0,0.6); }
     .kk.ink { color: #5C544E; }
     .flash { position: absolute; inset: 0; background: #FFFFFF; opacity: 0; }

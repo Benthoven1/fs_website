@@ -19,6 +19,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 cues = json.load(open(os.path.join(HERE, "cues.json")))
 dur = cues["duration"]
+d0, d1 = cues.get("drop", [dur, dur])  # the music falls silent here, and returns on the word
 voice = os.path.join(HERE, "assets", "narration.wav")
 out = os.path.join(HERE, "assets", "music-bed.m4a")
 
@@ -30,7 +31,8 @@ graph = (
     "highpass=f=90,equalizer=f=3000:t=q:w=1.2:g=-4,volume=2.3[m];"
     "[1:a]aresample=48000,aformat=channel_layouts=stereo,apad[vk];"
     f"[m][vk]sidechaincompress=threshold=0.02:ratio=4:attack=40:release=650:makeup=1,atrim=0:{dur}[d];"
-    f"[d]afade=t=out:st={dur - 3.2:.2f}:d=3.2[o]"
+    f"[d]volume='1-clip((t-{d0})/0.6,0,1)*(1-clip((t-{d1})/0.08,0,1))':eval=frame,"
+    f"afade=t=out:st={dur - 3.2:.2f}:d=3.2[o]"
 )
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", sys.argv[1], "-i", voice, "-filter_complex", graph,
                 "-map", "[o]", "-ac", "2", "-c:a", "aac", "-b:a", "192k", out], check=True)

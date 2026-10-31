@@ -11,6 +11,7 @@
     @font-face { font-family: "Major Mono Display"; src: url(assets/fonts/MajorMonoDisplay-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
     @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
     @font-face { font-family: "Libre Caslon Text"; src: url(assets/fonts/LibreCaslonText-400i.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+    @font-face { font-family: "Jost"; src: url(assets/fonts/Jost-400.woff2) format("woff2"); font-weight: 400 500; font-style: normal; font-display: block; }
     #root { position: absolute; inset: 0; overflow: hidden; }
 
     .abs { position: absolute; }
@@ -31,7 +32,7 @@
       font-family: "Major Mono Display", monospace; font-size: 30px; letter-spacing: 0.04em; text-transform: lowercase; color: #1B1613; white-space: nowrap; }
     .bar { position: absolute; border-radius: 4px; }
 
-.maplab { font-family: "Major Mono Display", monospace; text-transform: lowercase; letter-spacing: 0.04em; color: #1B1613; white-space: nowrap;
+.maplab { font-family: "Jost", "Futura", sans-serif; font-weight: 500; text-transform: uppercase; letter-spacing: 0.2em; color: #1B1613; white-space: nowrap;
     background: rgba(246,238,223,0.94); padding: 6px 16px 9px; border-radius: 6px; box-shadow: 0 2px 10px rgba(40,25,10,0.25); }
 
     .plate { overflow: hidden; transform-origin: 50% 50%; }
@@ -40,7 +41,9 @@
     .kt.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.55), 0 3px 14px rgba(0,0,0,0.5), 0 6px 40px rgba(0,0,0,0.45); }
     .kt.ink { color: #1B1613; }
     .kt i { font-style: italic; font-weight: 500; }
-    .kk { position: absolute; z-index: 5; font-family: "Major Mono Display", monospace; font-size: 38px; letter-spacing: 0.06em; text-transform: lowercase; opacity: 0; }
+    .kk { position: absolute; z-index: 5; font-family: "Jost", "Futura", sans-serif; font-weight: 500; font-size: 30px; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0; }
+    .flank { position: absolute; z-index: 6; font-family: "Jost", "Futura", sans-serif; font-weight: 500; font-size: 30px; letter-spacing: 0.24em; text-transform: uppercase; color: #FFFFFF; white-space: nowrap; opacity: 0;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8), 0 0 18px rgba(0,0,0,0.6); }
     .kk.white { color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.7), 0 2px 16px rgba(0,0,0,0.6); }
     .kk.ink { color: #5C544E; }
     .flash { position: absolute; inset: 0; background: #FFFFFF; opacity: 0; }
@@ -59,11 +62,11 @@
 <div id="hook-map" class="full plate" style="z-index:1;opacity:0">
     <div class="full" style="overflow:hidden"><div id="hook-map-pic" class="pic" style="width:1215px;height:2160px"><img src="assets/img/philadelphia-1762.jpg" alt=""><div id="hook-lr-library" class="abs" style="left:408.709px;top:1148.536px;width:88px;height:88px;border-radius:44px;border:4.5px solid #4E73A3;opacity:0"></div>
          <div id="hook-ld-library" class="abs" style="left:422.709px;top:1162.536px;width:60px;height:60px;border-radius:30px;border:6.75px solid #4E73A3;box-sizing:border-box;box-shadow:0 0 0 3.375px #F6EEDF, inset 0 0 0 3.375px #F6EEDF;opacity:0">
-           <div style="position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:5px;background:#4E73A3"></div></div><div class="abs" style="left:492.709px;top:1162.536px"><div id="hook-ll-library" class="maplab" style="font-size:42.75px;opacity:0">library company</div></div><div id="hook-lg-fire" class="abs" style="left:650.394px;top:720.08px;width:720px;height:560px;border-radius:50%;opacity:0;background:radial-gradient(closest-side, rgba(214,104,50,0.72), rgba(214,104,50,0.32) 60%, rgba(214,104,50,0) 100%)"></div><div class="abs" style="left:1180.394px;top:970.08px;transform:translateX(-100%)"><div id="hook-ll-fire" class="maplab" style="font-size:42.75px;opacity:0">union fire company</div></div><div id="hook-lr-hospital" class="abs" style="left:48.70450000000001px;top:1691.344px;width:88px;height:88px;border-radius:44px;border:4.5px solid #3F8A80;opacity:0"></div>
+           <div style="position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:5px;background:#4E73A3"></div></div><div class="abs" style="left:492.709px;top:1162.536px"><div id="hook-ll-library" class="maplab" style="font-size:33.75px;opacity:0">library company</div></div><div id="hook-lg-fire" class="abs" style="left:650.394px;top:720.08px;width:720px;height:560px;border-radius:50%;opacity:0;background:radial-gradient(closest-side, rgba(214,104,50,0.72), rgba(214,104,50,0.32) 60%, rgba(214,104,50,0) 100%)"></div><div class="abs" style="left:1180.394px;top:970.08px;transform:translateX(-100%)"><div id="hook-ll-fire" class="maplab" style="font-size:33.75px;opacity:0">union fire company</div></div><div id="hook-lr-hospital" class="abs" style="left:48.70450000000001px;top:1691.344px;width:88px;height:88px;border-radius:44px;border:4.5px solid #3F8A80;opacity:0"></div>
          <div id="hook-ld-hospital" class="abs" style="left:62.70450000000001px;top:1705.344px;width:60px;height:60px;border-radius:30px;border:6.75px solid #3F8A80;box-sizing:border-box;box-shadow:0 0 0 3.375px #F6EEDF, inset 0 0 0 3.375px #F6EEDF;opacity:0">
-           <div style="position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:5px;background:#3F8A80"></div></div><div class="abs" style="left:132.7045px;top:1705.344px"><div id="hook-ll-hospital" class="maplab" style="font-size:42.75px;opacity:0">pennsylvania hospital</div></div><div id="hook-lr-academy" class="abs" style="left:606.9970000000001px;top:771.1840000000001px;width:88px;height:88px;border-radius:44px;border:4.5px solid #5E8A4E;opacity:0"></div>
+           <div style="position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:5px;background:#3F8A80"></div></div><div class="abs" style="left:132.7045px;top:1705.344px"><div id="hook-ll-hospital" class="maplab" style="font-size:33.75px;opacity:0">pennsylvania hospital</div></div><div id="hook-lr-academy" class="abs" style="left:606.9970000000001px;top:771.1840000000001px;width:88px;height:88px;border-radius:44px;border:4.5px solid #5E8A4E;opacity:0"></div>
          <div id="hook-ld-academy" class="abs" style="left:620.9970000000001px;top:785.1840000000001px;width:60px;height:60px;border-radius:30px;border:6.75px solid #5E8A4E;box-sizing:border-box;box-shadow:0 0 0 3.375px #F6EEDF, inset 0 0 0 3.375px #F6EEDF;opacity:0">
-           <div style="position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:5px;background:#5E8A4E"></div></div><div class="abs" style="left:690.9970000000001px;top:785.1840000000001px"><div id="hook-ll-academy" class="maplab" style="font-size:42.75px;opacity:0">academy</div></div></div></div>
+           <div style="position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:5px;background:#5E8A4E"></div></div><div class="abs" style="left:690.9970000000001px;top:785.1840000000001px"><div id="hook-ll-academy" class="maplab" style="font-size:33.75px;opacity:0">academy</div></div></div></div>
     <div class="full" style="background:linear-gradient(0deg, rgba(14,10,8,0) 55%, rgba(14,10,8,0.7) 100%)"></div>
     <div class="credit">Nicholas Scull, plan of Philadelphia, 1762 · Library of Congress</div></div>
 <div id="hook-fl" class="flash"></div>
